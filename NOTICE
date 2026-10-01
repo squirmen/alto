@@ -1,0 +1,19 @@
+Required Notice: Copyright (c) 2026 Waipapa Taumata Rau | The University of Auckland (Better Places Lab). https://github.com/squirmen/alto
+
+ALTO: Aotearoa Long-term Tree Observatory
+
+The software in this repository is licensed under the PolyForm Noncommercial License 1.0.0
+(see LICENSE, or https://polyformproject.org/licenses/noncommercial/1.0.0). Commercial use
+needs a separate licence: contact Tim Welch, t.welch@auckland.ac.nz.
+
+The documents in docs/ are licensed under Creative Commons Attribution-NonCommercial 4.0
+International (CC BY-NC 4.0); see docs/LICENSE.md.
+
+Third-party material keeps its own licence:
+- web/vendor/three/: three.js, MIT License (web/vendor/three/LICENSE).
+- pipeline/base/config/notable_tree_identity_registry.json: features from Auckland Council's
+  Notable Trees Overlay, Auckland Council open data, CC BY 4.0.
+- Data the pipeline downloads or produces from Auckland Council, Auckland Transport and
+  Toitu Te Whenua LINZ (CC BY 4.0) and from OpenStreetMap (Open Database Licence) remains under
+  those terms. Exports containing OpenStreetMap-derived records carry the ODbL share-alike
+  condition.

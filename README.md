@@ -126,9 +126,21 @@ assessment of an individual tree.
 
 ## Licence
 
-A licence for this code and documentation has not been chosen yet. Until one is added, the
-repository is published for transparency and review, and all rights are reserved by the
-University of Auckland. To reuse or adapt any part of it, contact Tim Welch.
+ALTO is open to read, run and build on for noncommercial work, and needs a licence for anything
+commercial.
+
+- **Code** is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). You can use,
+  modify and share it for research, teaching, personal study and other noncommercial purposes.
+  Universities, charities, public research organisations and government bodies can use it on
+  those terms whatever their funding.
+- **Documents** in `docs/` are licensed under [CC BY-NC 4.0](docs/LICENSE.md): share and adapt
+  them for noncommercial purposes with credit.
+- **Commercial use**, including paid services, consulting deliverables or products built on ALTO's
+  code, needs a separate licence from the University of Auckland. Contact Tim Welch.
+- **Third-party material** keeps its own terms: three.js (MIT), and Auckland Council, Auckland
+  Transport, LINZ (CC BY 4.0) and OpenStreetMap (ODbL) data. See [`NOTICE`](NOTICE).
+
+When you use ALTO, cite it as below.
 
 ## Citing ALTO
 
