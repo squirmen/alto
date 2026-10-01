@@ -5,7 +5,6 @@
   let ids=[], config, dialog, returnFocus, modelDispose;
   function dispose(){if(modelDispose){modelDispose();modelDispose=null;}}
   try{const stored=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(stored))ids=[...new Set(stored.filter(x=>typeof x==='string'&&x.length<200))].slice(0,MAX);}catch{}
-  function download(text,type,filename){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   function persist(){try{localStorage.setItem(KEY,JSON.stringify(ids));return true;}catch{return false;}}
   function update(){const b=document.getElementById('compareSavedTrees');if(b)b.textContent=`Compare saved trees (${ids.length})`;}
   function init(options){
@@ -22,8 +21,8 @@
   }
   async function show(){
     if(!dialog.open){returnFocus=document.activeElement;dialog.showModal();}
-    const body=document.getElementById('comparisonBody'), csv=document.getElementById('comparisonCsv'),json=document.getElementById('comparisonJson');
-    body.textContent='Loading saved trees from this release…';csv.disabled=json.disabled=true;
+    const body=document.getElementById('comparisonBody');
+    body.textContent='Loading saved trees from this release…';
     const version=ids.join('|');
     const results=await Promise.allSettled(ids.map(id=>config.load(id)));
     if(version!==ids.join('|'))return;
@@ -34,9 +33,6 @@
       results.forEach((r,i)=>{if(r.status!=='rejected')return;const button=document.createElement('button');button.type='button';button.dataset.removeTree=ids[i];button.textContent='Remove '+ids[i];p.append(button);});
     }
     body.querySelectorAll('[data-remove-tree]').forEach(b=>b.addEventListener('click',()=>{ids=ids.filter(id=>id!==b.dataset.removeTree);persist();update();show();}));
-    csv.disabled=json.disabled=!records.length;
-    csv.onclick=()=>download(ALTOEvidence.csv(records),'text/csv;charset=utf-8','alto-tree-comparison.csv');
-    json.onclick=()=>download(JSON.stringify({exported_at:new Date().toISOString(),scope:'Explicitly saved individual trees; no area total. Source values and assumptions retained.',records},null,2),'application/json','alto-tree-comparison.json');
   }
   function bind(container,record,groundPromise){
     dispose();

@@ -89,7 +89,7 @@
     return esc(v);
   }
   function render(schema,record) {
-    let html='<div class="pp-section pp-research"><h3>All evidence &amp; estimates</h3><p class="pp-note">Browse the source records, survey observations and estimates behind this tree. Alternative estimates and review flags are included. Values are rounded here; the JSON download keeps full precision.</p><button type="button" class="pp-download-record">Download this tree’s full record</button></div>';
+    let html='<div class="pp-section pp-research"><h3>All evidence &amp; estimates</h3><p class="pp-note">Browse the source records, survey observations and estimates behind this tree. Alternative estimates and review flags are included. Values are rounded for display.</p></div>';
     const crownDBH=record.datasets.assets?.dbh_cm_crown_est,rootDBH=record.datasets.roots?.dbh_cm;
     if(crownDBH!=null&&rootDBH!=null&&Math.abs(crownDBH-rootDBH)>0.01)html+=`<div class="pp-section"><p class="pp-note"><strong>The models disagree:</strong> the crown-based trunk estimate is ${formatted('dbh',crownDBH)} cm; the root model used ${formatted('dbh',rootDBH)} cm. Both are retained here so their inputs can be compared and checked on the ground.</p></div>`;
     for(const d of schema.datasets) {

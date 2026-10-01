@@ -834,7 +834,6 @@
         <button id="compareSavedTrees" class="action-button" type="button">Compare saved trees (0)</button>
         <a class="action-button" href="./kyte/">KYTE · explore with a photo ↗</a>
         <a class="action-button" href="./field/">Open field notebook ↗</a>
-        <button id="downloadView" class="action-button" type="button" disabled>Download visible records · GeoJSON</button>
       </section>
       <div id="status" class="status" role="status" aria-live="polite">Loading tree inventory…</div>
     </aside>
@@ -855,12 +854,12 @@
     <div class="dock-heading"><button id="revealAside" class="reveal-aside" type="button" title="Open map controls" aria-label="Open map controls" aria-controls="explorer" aria-expanded="false"><img src="./alto-logo.png?v=20260928-v5b" alt="ALTO" width="3934" height="1170"><span class="dock-action">Explore</span><span id="dockFilterCount" class="filter-count" hidden></span></button><button id="aboutDockBtn" class="about-dock" type="button" aria-label="About ALTO" title="About ALTO" aria-haspopup="dialog" aria-controls="aboutBackdrop"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7v1"></path></svg></button></div>
     <button id="floatingStats" class="floating-stats" type="button" aria-label="Show statistics for records in this view"><strong id="floatingTrees">—</strong> map markers <span aria-hidden="true">·</span> <strong id="floatingCanopy">—</strong> ha crown area</button>
   </div>
-  <script src="./tree-details.js?v=20260928-v5b"></script>
+  <script src="./tree-details.js?v=20261001-v5c"></script>
   <script src="./tree-evidence.js?v=20260928-v5b"></script>
   <script src="./tree-future.js?v=20260928-v5b"></script>
   <script src="./tree-architecture.js?v=20260928-v5b"></script>
   <script src="./tree-model.js?v=20260928-v5b"></script>
-  <script src="./evidence-workspace.js?v=20260928-v5b"></script>
+  <script src="./evidence-workspace.js?v=20261001-v5c"></script>
   <script src="./map-analysis.js?v=20260928-v5b"></script>
   <script src="./tree-identity.js?v=20260928-v5b"></script>
   <script src="./tree-ground.js?v=20260928-v5b"></script>
@@ -1639,22 +1638,10 @@
           ["Most recorded taxon", summary.topSpecies || "No recorded species"]
         ];
         document.getElementById("viewDetails").innerHTML = details.map(([k,v]) => `<dt>${safe(k)}</dt><dd>${safe(v)}</dd>`).join("");
-        document.getElementById("downloadView").disabled = !summary.count;
       } catch (error) {
         document.getElementById("viewScope").textContent = "Map updating…";
       }
     }
-    document.getElementById("downloadView").addEventListener("click", () => {
-      updateViewportStats();
-      const collection = {type: "FeatureCollection", metadata: {
-        scope: "Drawn v5 crown representatives and source records after filters and tile sampling. Linked source records remain in the per-tree details.",
-        identity_method: ALTOIdentity.context({tree_id:"",datasets:{}}).method_id,
-        zoom: map.getZoom(), bounds: map.getBounds().toArray(), exported_at: new Date().toISOString()
-      }, features: viewportFeatures.map(f => ({type: "Feature", geometry: f.geometry, properties: {...f.properties,proposed_identity_group:ALTOIdentity.context({tree_id:f.properties.tree_id,datasets:{}}).proposed_group?.group_id||null}}))};
-      const url = URL.createObjectURL(new Blob([JSON.stringify(collection)], {type: "application/geo+json"}));
-      const link = document.createElement("a"); link.href = url; link.download = "alto-auckland-drawn-trees.geojson"; link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    });
     // moveend and idle fire back-to-back after a pan/zoom; debounce so the
     // (potentially thousands of features) queryRenderedFeatures runs once —
     // trailing edge, so the last event (final rendered state) always wins.
@@ -2585,14 +2572,6 @@
         window.ALTOFieldBridge?.mount(profileBody,record);
         window.ALTOSurveyTime?.mount(profileBody,record,DATA_BASE,TILE_VERSION);
         profileBody.scrollTop=scroll;
-        profileBody.querySelector('.pp-download-record').addEventListener('click',async()=>{
-          let exported={...record,derived:{vertical_structure:ALTOTreeModel.metrics(record)}};
-          try {const model=await ALTOFuture.load(DATA_BASE,TILE_VERSION);const prepared=await ALTOFuture.prepare(record,model,DATA_BASE,TILE_VERSION);exported={...record,derived:{vertical_structure:ALTOTreeModel.metrics(record),canopy_height_scenario:ALTOFuture.project(prepared,model),local_growth_context:prepared.model_context?.local_growth||null,model_id:model.model_id,model_snapshot:model.generated_utc,limitations:model.limitations}};} catch {}
-          exported.derived.record_identity=ALTOIdentity.context(record);
-          try{exported.derived.survey_timing=ALTOSurveyTime.assess(record,await ALTOSurveyTime.load(DATA_BASE,TILE_VERSION));}catch{exported.derived.survey_timing={status:"unavailable"};}
-          const url=URL.createObjectURL(new Blob([JSON.stringify(exported,null,2)],{type:'application/json'}));
-          const link=document.createElement('a');link.href=url;link.download=record.tree_id+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-        });
       } catch(error) {
         if(requestId!==profileRequestId || profilePanel.hidden)return;
         let extra=document.getElementById('profileRichData');
@@ -2604,7 +2583,7 @@
   </script>
   <dialog id="treeComparison" class="tree-comparison" aria-labelledby="comparisonTitle">
     <header><div><h2 id="comparisonTitle">Compare your trees</h2><p>Save up to four trees. Your selection stays in this browser.</p></div><button id="comparisonClose" type="button" aria-label="Close comparison">✕</button></header>
-    <div id="comparisonBody"></div><div class="comparison-actions"><button id="comparisonCsv" type="button" disabled>Download comparison · CSV</button><button id="comparisonJson" type="button" disabled>Download full records · JSON</button></div>
+    <div id="comparisonBody"></div>
   </dialog>
   <p id="treeLinkStatus" class="tree-link-status" role="status" hidden></p>
   <div id="aboutBackdrop" class="about-backdrop" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" aria-hidden="true">
@@ -2630,7 +2609,7 @@
       <p id="headlineScopeCaption" class="stats-scope">Service totals exclude nominal crownless-tree scenarios.</p>
 
       <h3>Explore a tree’s data</h3>
-      <p>Select a tree to explore its source records, dimensions, root estimates, environmental benefits and canopy history. You can download that tree’s complete record as JSON from its profile.</p>
+      <p>Select a tree to explore its source records, dimensions, root estimates, environmental benefits and canopy history. For bulk data or a research partnership, <a href="mailto:t.welch@auckland.ac.nz">contact the Better Places Lab</a>.</p>
       <div class="about-dl">
         <a id="dlModel" href="#" download>Forecast method &amp; benchmark<small>parameters, errors and assumptions · JSON</small></a>
         <a id="dlDict" href="#">Data dictionary<small>field definitions</small></a>

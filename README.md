@@ -13,8 +13,9 @@ assumptions behind every estimate.
 
 - **Map:** https://alto.tfwelch.com
 - **Release notes for v5:** https://alto.tfwelch.com/v5-methods.html
-- **Data downloads:** the full inventory as Parquet and CSV, with a data dictionary, from the
-  About panel on the map, or [`docs/data-dictionary.md`](docs/data-dictionary.md)
+- **Data:** explore any tree on the map; field definitions are in
+  [`docs/data-dictionary.md`](docs/data-dictionary.md). Bulk data is available to research
+  partners on request.
 - **KYTE**, the companion phone app for adding ground observations: https://alto.tfwelch.com/kyte/
 
 This is a research beta. The release is reproducible and openly documented, but it has not been
