@@ -1,0 +1,77 @@
+# Run PHP 8.3 on this subdomain. KYTE's API needs 8.2 or newer; the account
+# default is 7.0, which has been end of life since 2019.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php83 .php .php8 .phtml
+</IfModule>
+
+# Aotearoa Long-term Tree Observatory (ALTO) — Apache config for shared hosting.
+# Copied to ".htaccess" at the deploy root by scripts/build_web_deploy.sh.
+#
+# The map is a static MapLibre GL page that streams vector tiles out of three
+# .pmtiles archives using HTTP Range requests. The two things that MUST hold on
+# the server: (1) Range requests work, and (2) the .pmtiles are never gzipped
+# (gzip + Range = corrupt tiles). Everything else here is caching + compression.
+
+# ---- MIME types -------------------------------------------------------------
+AddType application/octet-stream .pmtiles
+AddType text/javascript .js .mjs
+AddType model/gltf-binary .glb
+AddType application/json         .json .geojson
+
+# ---- Browser security -------------------------------------------------------
+# The page currently keeps its application code inline and loads pinned
+# MapLibre/PMTiles assets from unpkg, so those narrowly scoped allowances are
+# explicit. Map tiles are limited to the providers configured in index.html.
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' blob: https://unpkg.com https://server.arcgisonline.com https://*.tile.openstreetmap.org; img-src 'self' data: blob: https://server.arcgisonline.com https://*.tile.openstreetmap.org; font-src 'self' data:; worker-src 'self' blob:; frame-src 'none'; manifest-src 'self'"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# ---- Range requests ---------------------------------------------------------
+# Apache advertises byte ranges for static files by default; make it explicit
+# so a host-level tweak can't silently disable it and break tile streaming.
+<IfModule mod_headers.c>
+  <FilesMatch "\.pmtiles$">
+    Header set Accept-Ranges bytes
+  </FilesMatch>
+</IfModule>
+
+# ---- Compression ------------------------------------------------------------
+# Compress text assets. Crucially do NOT compress .pmtiles (already packed, and
+# gzipping a Range-served file corrupts partial reads).
+<IfModule mod_deflate.c>
+  <IfModule mod_filter.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain
+    AddOutputFilterByType DEFLATE application/javascript text/javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+  </IfModule>
+  SetEnvIfNoCase Request_URI "\.pmtiles$" no-gzip dont-vary
+</IfModule>
+
+# ---- Caching ----------------------------------------------------------------
+# Tiles are content-addressed per build (rebuilt wholesale, never edited in
+# place), so they can cache hard. HTML stays short so a redeploy shows up fast.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType application/octet-stream "access plus 1 year"
+  ExpiresByType text/css                 "access plus 1 week"
+  ExpiresByType application/javascript   "access plus 1 week"
+  ExpiresByType image/svg+xml            "access plus 1 month"
+  ExpiresByType text/html                "access plus 10 minutes"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.pmtiles$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=600, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ---- Misc -------------------------------------------------------------------
+Options -Indexes
+DirectoryIndex index.html

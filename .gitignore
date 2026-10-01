@@ -1,0 +1,33 @@
+# Keys and local settings
+.env
+*.env
+config.local.*
+
+# Python and editor leftovers
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+*.bak
+
+# Data and build outputs live under the data root (/data/alto), never in the repository
+*.sqlite
+*.sqlite-*
+*.parquet
+*.npz
+*.laz
+*.las
+*.tif
+*.tiff
+*.vrt
+*.pmtiles
+*.mbtiles
+*.geojsonl
+*.json.gz
+pipeline/base/data/raw/*
+pipeline/base/data/interim/*
+pipeline/base/data/processed/*
+!pipeline/base/data/*/.gitkeep
+pipeline/base/outputs/
+pipeline/base/logs/

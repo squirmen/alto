@@ -1,0 +1,116 @@
+{
+  "project": "akl_trees",
+  "pilot_bbox_4326": [174.69278638057528, -36.90792693116982, 174.8183947382679, -36.80699037126152],
+  "pilot_bbox_2193": [1751000.0, 5914000.0, 1762000.0, 5925000.0],
+  "pilot_area_km2": 121.0,
+  "sources": [
+    {
+      "slug": "flood_plains",
+      "name": "Flood Plains",
+      "type": "arcgis_feature_layer",
+      "category": "flood_hazard",
+      "valuation_role": "Identifies trees in mapped flood plains where canopy interception and soil storage have higher stormwater relevance.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Flood_Plains/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 12672
+    },
+    {
+      "slug": "flood_prone_areas",
+      "name": "Flood Prone Areas",
+      "type": "arcgis_feature_layer",
+      "category": "flood_hazard",
+      "valuation_role": "Provides local flood-prone status and depth fields for prioritising stormwater benefit.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Flood_Prone_Areas/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 35338
+    },
+    {
+      "slug": "overland_flow_paths",
+      "name": "Overland Flow Paths",
+      "type": "arcgis_feature_layer",
+      "category": "stormwater_hydrology",
+      "valuation_role": "Measures distance to overland flow paths and likely surface-runoff routing near each tree.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Overland_Flow_Paths/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 1176253
+    },
+    {
+      "slug": "stormwater_pipe",
+      "name": "Stormwater Pipe",
+      "type": "arcgis_feature_layer",
+      "category": "stormwater_asset",
+      "valuation_role": "Supports distance-to-pipe and network-capacity context for avoided runoff valuation.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Stormwater_Pipe/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 323397
+    },
+    {
+      "slug": "stormwater_catchpit",
+      "name": "Stormwater Catchpit",
+      "type": "arcgis_feature_layer",
+      "category": "stormwater_asset",
+      "valuation_role": "Supports distance-to-inlet context and street-tree stormwater routing assumptions.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Stormwater_Catchpit/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 136252
+    },
+    {
+      "slug": "stormwater_manhole_chamber",
+      "name": "Stormwater Manhole And Chamber",
+      "type": "arcgis_feature_layer",
+      "category": "stormwater_asset",
+      "valuation_role": "Provides local stormwater network access context and asset-density indicators.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Stormwater_Manhole_And_Chamber/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 203730
+    },
+    {
+      "slug": "stormwater_inlet_outlet",
+      "name": "Stormwater Inlet And Outlet",
+      "type": "arcgis_feature_layer",
+      "category": "stormwater_asset",
+      "valuation_role": "Supports drainage outlet/inlet proximity and local drainage context around each tree.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Stormwater_Inlet_And_Outlet/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 37154
+    },
+    {
+      "slug": "stormwater_treatment_facility",
+      "name": "Stormwater Treatment Facility",
+      "type": "arcgis_feature_layer",
+      "category": "stormwater_asset",
+      "valuation_role": "Identifies nearby treatment assets and contributing catchment fields for avoided-treatment valuation.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Stormwater_Treatment_Facility/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 1001
+    },
+    {
+      "slug": "average_daily_air_temperature_2021_2022",
+      "name": "Auckland's Predicted Air Temperature Distribution (Nov 2021-Mar 2022)",
+      "type": "arcgis_feature_layer",
+      "category": "heat_exposure",
+      "valuation_role": "Provides spatial air-temperature fields for identifying trees in hotter locations and calibrating cooling benefit.",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Average_Daily_Air_Temperature_C/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 104181
+    },
+    {
+      "slug": "impervious_surfaces_2017",
+      "name": "Impervious Surfaces 2017",
+      "type": "arcgis_item",
+      "category": "surface_cover",
+      "valuation_role": "Needed for local runoff coefficients and surface-heating context around each tree.",
+      "item_id": "3b8a6d1d29224763b41242a102d71fd2",
+      "web_url": "https://www.arcgis.com/home/item.html?id=3b8a6d1d29224763b41242a102d71fd2"
+    },
+    {
+      "slug": "land_cover_2017",
+      "name": "Land Cover 2017",
+      "type": "arcgis_item",
+      "category": "surface_cover",
+      "valuation_role": "Needed to distinguish paved, grass, bare, water, building, and vegetation contexts around each tree.",
+      "item_id": "017febe483a14ba99108215cc1a3804c",
+      "web_url": "https://www.arcgis.com/home/item.html?id=017febe483a14ba99108215cc1a3804c"
+    }
+  ]
+}

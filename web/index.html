@@ -1,0 +1,2655 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aotearoa Long-term Tree Observatory — Auckland release</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+  <link rel="apple-touch-icon" href="data:image/png;base64,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">
+  <meta name="theme-color" content="#4a6f46">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+        integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
+        crossorigin="anonymous">
+  <script>window.AKL_DATA_BASE="./data";window.AKL_TILE_VERSION="20260928-v5b";</script>
+  <!-- AKL_DATA_BASE: build_web_deploy.sh injects window.AKL_DATA_BASE here so a
+       self-contained upload can point at its own ./data folder. Untouched for
+       local dev, where tiles live two levels up in data/processed. -->
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17201a;
+      --muted: #5b655f;
+      --line: #d8ddd6;
+      --surface: #f7f8f5;
+      --panel: #ffffff;
+      --accent: #4a6f46;   /* ALTO green: 5.75:1 on white, 5.19:1 on #f7f3ea */
+      --protected: #b02e6f;
+      --review: #b57918;
+      --road: #4267ac;
+      --park: #2f7d4d;
+      --inferred: #8a4ea8;
+      --no-crown: #e6861a;
+      --low-canopy: #0f9f9a;
+      --unknown: #7b7267;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      height: 100%;
+      transition: grid-template-columns 220ms ease;
+    }
+
+    body[data-aside-collapsed="true"] .app { grid-template-columns: 0 1fr; }
+    body[data-aside-collapsed="true"] #explorer { transform: translateX(-100%); pointer-events: none; }
+
+    #explorer {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      border-right: 1px solid var(--line);
+      background: var(--panel);
+      transition: transform 220ms ease;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* The observatory's full name needs the sidebar's width, so the title takes
+       its own row and the controls wrap underneath it. */
+    header { flex-wrap: wrap; }
+    header .title-block { min-width: 0; flex: 1 1 100%; }
+
+    h1 {
+      margin: 0 0 2px;
+      font-size: 16px;
+      line-height: 1.2;
+      font-weight: 720;
+      text-wrap: balance;
+    }
+
+    /* The wordmark replaces the h1 text. The alt text carries the name, so the
+       heading keeps its meaning for screen readers and for search. */
+    h1.brand {
+      margin: 0 0 4px;
+      line-height: 0;
+    }
+
+    h1.brand img {
+      width: auto;
+      height: 30px;
+      max-width: 100%;
+    }
+
+    .subhead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.35;
+    }
+
+    .toggle-aside {
+      appearance: none;
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      cursor: pointer;
+      font: 600 14px/1 Inter, sans-serif;
+      transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    }
+
+    .toggle-aside:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .reveal-aside {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1100;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 9px;
+      background: rgba(23, 32, 26, 0.82);
+      color: #fff;
+      cursor: pointer;
+      font: 700 18px/1 Inter, sans-serif;
+      box-shadow: 0 4px 14px rgba(20, 28, 24, 0.28);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reveal-aside:hover { background: var(--accent); }
+    body[data-aside-collapsed="true"] .reveal-aside { display: inline-flex; }
+
+    .floating-stats {
+      position: fixed;
+      top: 64px;
+      left: 16px;
+      z-index: 1000;
+      display: none;
+      color: var(--ink);
+      padding: 16px 20px 18px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.62);
+      backdrop-filter: saturate(140%) blur(14px);
+      -webkit-backdrop-filter: saturate(140%) blur(14px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.45) inset,
+        0 12px 32px rgba(20, 28, 24, 0.18);
+      max-width: 280px;
+    }
+
+    body[data-aside-collapsed="true"] .floating-stats { display: block; }
+
+    .floating-stats .hero {
+      font-size: 34px;
+      font-weight: 760;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    .floating-stats .hero-label {
+      margin-top: 4px;
+      font-size: 11.5px;
+      font-weight: 650;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .floating-stats .secondary {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(20, 28, 24, 0.10);
+      display: grid;
+      gap: 4px;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    .floating-stats .secondary div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .floating-stats .secondary span.label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stat {
+      min-width: 0;
+      padding: 9px 12px;
+      background: var(--panel);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 16px;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .stats-scope {
+      margin: 0;
+      padding: 6px 12px 7px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfa;
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.35;
+    }
+
+    .controls {
+      display: grid;
+      gap: 10px;
+      padding: 12px 14px;
+      overflow: auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    input, select {
+      width: 100%;
+      min-height: 32px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(27, 107, 84, .16);
+    }
+
+    .species-picker { position: relative; }
+
+    .species-trigger {
+      appearance: none;
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 6px 9px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .species-trigger:hover { border-color: rgba(27, 107, 84, 0.5); }
+
+    .species-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: 20;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      box-shadow: 0 10px 24px rgba(20, 28, 24, 0.16);
+    }
+
+    .species-menu[hidden] { display: none; }
+
+    .species-menu input { margin-bottom: 6px; }
+
+    .species-options {
+      max-height: 184px;
+      overflow: auto;
+      display: grid;
+      gap: 2px;
+    }
+
+    .species-option {
+      appearance: none;
+      width: 100%;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: var(--ink);
+      padding: 6px 7px;
+      font: inherit;
+      font-size: 12.5px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .species-option:hover { background: rgba(27, 107, 84, 0.08); }
+    .species-option.active { background: rgba(27, 107, 84, 0.14); color: var(--accent); font-weight: 650; }
+    .species-option .count { color: var(--muted); font-size: 11.5px; }
+
+    .species-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .species-chip {
+      appearance: none;
+      border: 1px solid rgba(27, 107, 84, 0.22);
+      border-radius: 6px;
+      background: #eef5f1;
+      color: var(--accent);
+      padding: 3px 6px;
+      font: 650 11.5px/1.2 Inter, sans-serif;
+      cursor: pointer;
+    }
+
+    .toggle-row { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .toggle-row .check {
+      flex: 1 1 calc(50% - 5px);
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 12.5px;
+      transition: border-color 120ms ease, background 120ms ease;
+    }
+
+    .toggle-row .check:hover { border-color: rgba(27, 107, 84, 0.5); }
+    .toggle-row .check input { pointer-events: none; }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 5px;
+      padding-top: 2px;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .legend-row {
+      appearance: none;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--muted);
+      padding: 5px 6px;
+      font: inherit;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .legend-row[aria-pressed="true"] { color: var(--ink); border-color: rgba(27, 107, 84, 0.28); background: #f6faf7; }
+    .legend-row[aria-pressed="false"] { opacity: 0.45; }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      border: 1px solid rgba(0, 0, 0, .18);
+    }
+
+    .dot.road { background: var(--road); }
+    .dot.park { background: var(--park); }
+    .dot.protected { background: var(--protected); }
+    .dot.inferred { background: var(--inferred); }
+    .dot.no-crown { background: var(--no-crown); }
+    .dot.low-canopy { background: var(--low-canopy); }
+    .dot.other { background: var(--unknown); }
+
+    /* ---- Canopy-growth quick filter ---- */
+    .growth-toggles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 5px;
+      padding-top: 2px;
+    }
+
+    .growth-row {
+      appearance: none;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--muted);
+      padding: 5px 7px;
+      font: 600 11.5px/1.2 Inter, sans-serif;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: border-color 120ms ease, background 120ms ease, color 120ms ease, opacity 120ms ease;
+    }
+
+    .growth-row .gicon { flex: 0 0 auto; width: 13px; font-size: 13px; line-height: 1; text-align: center; }
+    .growth-row .glabel { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .growth-row .gcount { flex: 0 0 auto; color: var(--muted); font-weight: 600; font-size: 10px; }
+
+    .growth-row:hover { border-color: rgba(27, 107, 84, 0.5); }
+
+    /* Bucket accent colours on the glyph (always visible). */
+    .growth-row[data-growth="new"] .gicon { color: var(--low-canopy); }
+    .growth-row[data-growth="expanding"] .gicon { color: var(--park); }
+    .growth-row[data-growth="stable"] .gicon { color: var(--muted); }
+    .growth-row[data-growth="declining"] .gicon { color: var(--no-crown); }
+
+    /* Pressed = actively filtering to this bucket: tint the whole pill. */
+    .growth-row[aria-pressed="true"] { color: var(--ink); }
+    .growth-row[data-growth="new"][aria-pressed="true"] { background: rgba(15, 159, 154, 0.12); border-color: rgba(15, 159, 154, 0.55); }
+    .growth-row[data-growth="expanding"][aria-pressed="true"] { background: rgba(47, 125, 77, 0.12); border-color: rgba(47, 125, 77, 0.55); }
+    .growth-row[data-growth="stable"][aria-pressed="true"] { background: rgba(123, 114, 103, 0.12); border-color: rgba(123, 114, 103, 0.5); }
+    .growth-row[data-growth="declining"][aria-pressed="true"] { background: rgba(230, 134, 26, 0.14); border-color: rgba(230, 134, 26, 0.6); }
+
+    /* Once any bucket is picked, fade the unpicked ones so the filter reads at a glance. */
+    .growth-toggles[data-active="true"] .growth-row[aria-pressed="false"] { opacity: 0.4; }
+
+    .status {
+      min-height: 32px;
+      padding: 8px 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.35;
+    }
+
+    #map {
+      position: relative;
+      min-width: 0;
+      min-height: 100%;
+    }
+
+    /* ---- Tree profile panel (slide-in from right) ---- */
+    .tree-profile {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 380px;
+      max-width: 92vw;
+      background: var(--panel);
+      border-left: 1px solid var(--line);
+      box-shadow: -12px 0 32px rgba(20, 28, 24, 0.12);
+      transform: translateX(100%);
+      transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+    }
+    body[data-profile-open="true"] .tree-profile { transform: translateX(0); }
+
+    .tree-profile-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--line);
+      flex: 0 0 auto;
+    }
+    .tree-profile-head h2 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .tree-profile-close {
+      appearance: none;
+      width: 30px; height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--muted);
+      cursor: pointer;
+      font: 600 16px/1 Inter, sans-serif;
+    }
+    .tree-profile-close:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .tree-profile-body { flex: 1 1 auto; overflow-y: auto; padding: 0 0 24px; }
+
+    /* About / methods & data panel */
+    .about-btn {
+      appearance: none; border: 1px solid rgba(20,28,24,0.15); background: rgba(255,255,255,0.7);
+      color: var(--ink); border-radius: 8px; font: inherit; font-size: 12px; font-weight: 600;
+      padding: 5px 10px; cursor: pointer; white-space: nowrap; align-self: flex-start;
+    }
+    .about-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .about-backdrop {
+      position: fixed; inset: 0; background: rgba(15,20,17,0.45);
+      backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+      display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px;
+    }
+    .about-backdrop[data-open="true"] { display: flex; }
+    .about-modal {
+      background: #fff; color: var(--ink); border-radius: 14px; max-width: 640px; width: 100%;
+      max-height: 86vh; overflow-y: auto; padding: 26px 30px 30px; box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+    }
+    .about-modal h2 { margin: 0 0 4px; font-size: 20px; }
+    .about-modal .about-sub { margin: 0 0 16px; color: #5b665f; font-size: 13px; }
+    .about-modal h3 { margin: 20px 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #5b665f; }
+    .about-modal p { margin: 0 0 10px; font-size: 14px; line-height: 1.55; }
+    .about-dl { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0; }
+    .about-dl a {
+      text-decoration: none; border: 1px solid var(--accent); color: var(--accent); border-radius: 8px;
+      padding: 8px 12px; font-size: 13px; font-weight: 600; line-height: 1.3;
+    }
+    .about-dl a:hover { background: var(--accent); color: #fff; }
+    .about-dl small { display: block; font-weight: 400; opacity: 0.8; }
+    .about-close {
+      float: right; appearance: none; border: 1px solid rgba(20,28,24,0.15); background: #fff;
+      border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 15px; line-height: 1;
+    }
+    .about-close:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .about-modal a.about-link { color: var(--accent); font-weight: 600; }
+    .release-meta {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.7fr) minmax(0, 1.3fr);
+      gap: 1px;
+      overflow: hidden;
+      margin: 6px 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--line);
+    }
+    .release-meta dt, .release-meta dd {
+      margin: 0;
+      padding: 7px 9px;
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .release-meta dt { color: var(--muted); font-weight: 600; }
+    .release-meta dd { overflow-wrap: anywhere; font-weight: 650; }
+    .release-meta-status { color: var(--muted); font-size: 12px; }
+    .release-manifest-link { color: var(--accent); font-size: 12px; font-weight: 600; }
+
+    .pp-hero { padding: 18px 18px 16px; background: linear-gradient(180deg, #f3f8f4, #ffffff); border-bottom: 1px solid var(--line); }
+    .pp-hero-species { font-size: 22px; font-weight: 760; line-height: 1.15; letter-spacing: -0.01em; }
+    .pp-hero-latin { margin-top: 2px; font-size: 12.5px; font-style: italic; color: var(--muted); }
+    .pp-hero-meta { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .pp-confidence { margin-top: 10px; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; display: inline-block; }
+    .pp-conf-high { background: rgba(31,109,58,0.12); color: #1f6d3a; }
+    .pp-conf-med { background: rgba(66,103,172,0.12); color: #2f5394; }
+    .pp-conf-model { background: rgba(138,78,168,0.12); color: #6f3e8a; }
+    .pp-conf-low { background: rgba(176,46,30,0.12); color: #9a3018; }
+    .pp-chip { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; background: #eef1ec; color: var(--ink); }
+    .pp-chip.protected { background: var(--protected); color: #fff; }
+    .pp-chip.muted { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+
+    .pp-section { padding: 14px 18px; border-bottom: 1px solid #eef0ec; }
+    .pp-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 10px; }
+    .pp-row { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: 13px; }
+    .pp-label { color: var(--muted); flex: 0 0 auto; }
+    .pp-value { text-align: right; font-weight: 600; }
+    .pp-sub { display: block; font-size: 11px; font-weight: 400; color: var(--muted); }
+
+    .pp-value { font-variant-numeric: tabular-nums; }
+    .pp-value-hero { font-size: 26px; font-weight: 760; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .pp-value-hero span { display: block; font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .pp-value { }
+    .pp-note { margin-top: 8px; font-size: 11px; color: var(--muted); font-style: italic; }
+
+    .pp-stage { display: flex; gap: 3px; margin-bottom: 6px; }
+    .pp-stage-seg { flex: 1; height: 6px; border-radius: 3px; background: #e3e7e1; }
+    .pp-stage-seg.on { background: var(--accent); }
+    .pp-stage-label { font-size: 13px; font-weight: 650; margin-bottom: 8px; }
+
+    .pp-timeline { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pp-tl-item { font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 6px; background: #eef1ec; }
+    .pp-tl-item.on { background: var(--accent); color: #fff; }
+    .pp-tl-item.muted { color: var(--muted); opacity: 0.7; }
+
+    .pp-prov code { font-size: 11px; background: #f0f2ee; padding: 1px 5px; border-radius: 4px; }
+
+    @media (max-width: 760px) {
+      .tree-profile { width: 100%; }
+    }
+
+    .basemap-switch {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px;
+      border-radius: 9px;
+      background: var(--panel);
+      box-shadow: 0 1px 3px rgba(20, 28, 24, 0.18), 0 0 0 1px rgba(20, 28, 24, 0.08);
+      font: 12px/1 Inter, sans-serif;
+      overflow: hidden;
+    }
+
+    .basemap-switch button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 7px 11px;
+      font: inherit;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 140ms ease, color 140ms ease, max-width 240ms ease, padding 240ms ease, opacity 200ms ease;
+      max-width: 200px;
+      opacity: 1;
+    }
+
+    .basemap-switch:not(:hover) button:not(.active) {
+      max-width: 0;
+      padding-left: 0;
+      padding-right: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .basemap-switch button:hover { background: rgba(27, 107, 84, 0.08); color: var(--ink); }
+    .basemap-switch button.active { background: var(--accent); color: #fff; }
+
+    .maplibregl-popup-content {
+      min-width: 240px;
+      max-width: 320px;
+      margin: 0;
+      padding: 14px 16px;
+      color: var(--ink);
+      font: 13px/1.4 Inter, sans-serif;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(20, 28, 24, 0.18);
+    }
+
+    .popup-title {
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .popup-row {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 8px;
+      padding: 3px 0;
+      border-top: 1px solid #edf0eb;
+    }
+
+    .popup-row span:first-child { color: var(--muted); }
+
+    .loading {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 6;
+      padding: 6px 12px;
+      border-radius: 7px;
+      background: rgba(23, 32, 26, 0.82);
+      color: #fff;
+      font: 600 11.5px/1.2 Inter, sans-serif;
+      letter-spacing: 0.02em;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 160ms ease;
+    }
+
+    .loading.visible { opacity: 1; }
+
+    @media (max-width: 760px) {
+      .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+      #explorer { max-height: 46vh; border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+  </style>
+  <link rel="stylesheet" href="./observatory.css?v=20260914-panel-v1">
+</head>
+<body data-aside-collapsed="false" data-profile-open="false">
+  <div class="app" id="app">
+    <aside id="explorer" aria-label="Explore Auckland trees">
+      <header>
+        <div class="title-block">
+          <h1 class="brand"><img src="./alto-logo.png?v=20260928-v5b" alt="ALTO — Aotearoa Long-term Tree Observatory" width="3934" height="1170" decoding="async"></h1>
+          <div class="release-row"><p class="subhead">Auckland release</p><button id="aboutBtn" class="about-btn" type="button" aria-haspopup="dialog" aria-controls="aboutBackdrop" aria-label="About ALTO"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7v1"></path></svg><span>About</span></button></div>
+        </div>
+        <button id="collapseAside" class="toggle-aside" type="button" title="Collapse sidebar" aria-label="Collapse controls" aria-controls="explorer" aria-expanded="true">‹</button>
+      </header>
+
+      <div class="view-summary" aria-label="Current map summary">
+        <div><strong id="viewportCount">—</strong><span>map markers</span></div>
+        <div><strong><span id="viewCanopy">—</span><small>ha</small></strong><span>Crown area</span></div>
+        <div><strong><span id="viewHeight">—</span><small>m</small></strong><span>Mean height</span></div>
+      </div>
+      <p class="summary-scope" id="viewScope">Loading the current map view…</p>
+      <nav class="panel-tabs" role="tablist" aria-label="Map controls">
+        <button id="tabExplore" role="tab" aria-selected="true" aria-controls="paneExplore" type="button">Explore<span id="filterCount" class="filter-count" hidden></span></button>
+        <button id="tabLayers" role="tab" aria-selected="false" aria-controls="paneLayers" tabindex="-1" type="button">Layers</button>
+        <button id="tabView" role="tab" aria-selected="false" aria-controls="paneView" tabindex="-1" type="button">In view</button>
+      </nav>
+      <section class="controls" id="paneExplore" role="tabpanel" aria-labelledby="tabExplore">
+        <div class="species-picker">
+          <div class="control-heading species-heading"><label for="speciesTrigger">Species</label><button id="resetFilters" class="text-button" type="button" disabled>Clear filters</button></div>
+          <button id="speciesTrigger" class="species-trigger" type="button" aria-expanded="false" aria-controls="speciesMenu">
+            <span id="speciesTriggerText">All species</span><span>⌄</span>
+          </button>
+          <div id="speciesMenu" class="species-menu" hidden>
+            <input id="speciesSearch" type="search" placeholder="Filter species" aria-label="Filter species">
+            <div id="speciesOptions" class="species-options" aria-label="Species options"></div>
+          </div>
+          <div id="speciesChips" class="species-chips"></div>
+        </div>
+        <div>
+          <div class="control-heading">Tree sources<span id="sourceSelection" class="source-selection">All shown</span></div>
+          <div id="legendToggles" class="legend">
+            <button class="legend-row" type="button" data-category="park" aria-pressed="true"><span class="dot park"></span><span>Council Parks</span></button>
+            <button class="legend-row" type="button" data-category="road" aria-pressed="true"><span class="dot road"></span><span>Transport</span></button>
+            <button class="legend-row" type="button" data-category="inferred" aria-pressed="true"><span class="dot inferred"></span><span>Detected from LiDAR</span></button>
+            <button class="legend-row" type="button" data-category="noCrown" aria-pressed="true"><span class="dot no-crown"></span><span>No crown</span></button>
+            <button class="legend-row" type="button" data-category="protected" aria-pressed="true"><span class="dot protected"></span><span>Protected</span></button>
+            <button class="legend-row" type="button" data-category="other" aria-pressed="true"><span class="dot other"></span><span>Other inventory</span></button>
+
+          </div>
+        </div>
+        <div hidden>
+          <label>Canopy growth · 2016→2024</label>
+          <div id="growthToggles" class="growth-toggles"></div>
+        </div>
+      </section>
+      <section class="controls" id="paneLayers" role="tabpanel" aria-labelledby="tabLayers" hidden>
+        <div><label for="colourBy">Colour trees by</label><select id="colourBy">
+          <option value="source">Source &amp; status</option><option value="height">Canopy height</option>
+          <option value="structure">Growth form</option><option value="evidence">Detection evidence</option>
+        </select><div id="colourLegend" class="colour-legend" aria-live="polite">Colours match the sources in Explore.</div></div>
+        <div>
+          <label class="check" for="groupRecords"><input id="groupRecords" type="checkbox" checked><span>One marker per current crown</span></label>
+          <p id="recordLinksStatus" class="control-note" role="status">Loading record matches…</p>
+          <label>Map overlays</label>
+          <div class="toggle-row">            <label class="check" for="showUnknown">
+              <input id="showUnknown" type="checkbox" checked>
+              <span>Unknown spp.</span>
+            </label>
+            <label class="check" for="showUncertain" title="LiDAR detections that may be a hedge, shrub or duplicate, or that the 2024 laser survey did not confirm">
+              <input id="showUncertain" type="checkbox" checked>
+              <span>Possible &amp; unverified trees</span>
+            </label>
+            <label class="check" for="showCrowns">
+              <input id="showCrowns" type="checkbox" checked>
+              <span>Crowns</span>
+            </label>
+
+            <label class="check" for="showChange" title="Individual-tree change 2013→2024: red = removed to open ground, green = newly established">
+              <input id="showChange" type="checkbox">
+              <span>Canopy history ’13–’24</span>
+            </label>
+            <label class="check" for="showRootZone" title="Earlier root-space polygons from the previous crown inputs. Current root scenarios are available in each tree profile.">
+              <input id="showRootZone" type="checkbox">
+              <span>Earlier root-space layer</span>
+            </label>
+            <label class="check" for="showTrunk" title="Scale tree markers by trunk diameter estimated from the crown. Larger dots indicate larger estimated trunks; zoom in for detail.">
+              <input id="showTrunk" type="checkbox">
+              <span>Trunk size (DBH)</span>
+            </label>
+            <label class="check" for="showCanopy" title="Canopy cover by local board: share of land under vegetation canopy at or above 3 m. Dimmed boards sit partly outside the modelled extent, so their figure is a lower bound.">
+              <input id="showCanopy" type="checkbox">
+              <span>Canopy by board · earlier raster</span>
+            </label>
+            <label class="check" for="showKauri" title="Auckland Council kauri dieback surveillance: red = pathogen recorded at the point or a confirmed case within 50 m; orange = symptoms or a nearby suspect/probable case; green = non-symptomatic. Not a tree census or spread prediction.">
+              <input id="showKauri" type="checkbox">
+              <span>Kauri dieback</span>
+            </label>
+          </div>
+        </div>
+        <details class="candidate-layers"><summary>More vegetation &amp; earlier detections</summary>
+<label class="check"><input id="showLowBand" type="checkbox"><span>Low canopy · 2–3 m</span></label>
+<label class="check"><input id="showSubBand" type="checkbox"><span>Low vegetation · under 2 m</span></label>
+<label class="check"><input id="wideCrownOnly" type="checkbox"><span>Only crowns at least 5 m wide</span></label>
+<label class="check"><input id="showEarlierDetections" type="checkbox"><span>Earlier unmatched detections</span></label>
+<label class="check"><input id="showLowCanopy" type="checkbox"><span>Earlier low-canopy candidates</span></label>
+<p class="control-note">The low vegetation layers remain separate from tree counts and service estimates. Earlier detections retain their original records.</p></details>
+        <p class="control-note" id="layerHint">Tap a tree to see its dimensions, evidence and modelled services.</p>
+      </section>
+      <section class="controls" id="paneView" role="tabpanel" aria-labelledby="tabView" hidden>
+        <h2 class="section-heading">Trees in this map view</h2>
+        <dl id="viewDetails" class="view-details"></dl>
+        <p class="control-note">Summarises the drawn map markers after filters. One marker represents each current crown; several source records can share it. Crown area is a sum of footprints, including overlaps, rather than land-cover percentage. Zoomed-out tiles show a sample. Taxon counts include genus-only and unresolved common names.</p>
+        <button id="compareSavedTrees" class="action-button" type="button">Compare saved trees (0)</button>
+        <a class="action-button" href="./kyte/">KYTE · explore with a photo ↗</a>
+        <a class="action-button" href="./field/">Open field notebook ↗</a>
+        <button id="downloadView" class="action-button" type="button" disabled>Download visible records · GeoJSON</button>
+      </section>
+      <div id="status" class="status" role="status" aria-live="polite">Loading tree inventory…</div>
+    </aside>
+
+    <main id="map" aria-label="Tree map">
+      <div id="basemapSwitch" class="basemap-switch" role="group" aria-label="Basemap"></div>
+      <div id="loading" class="loading">Loading tiles…</div>
+    </main>
+    <aside id="treeProfile" class="tree-profile" aria-label="Tree profile" aria-hidden="true" hidden inert>
+      <div class="tree-profile-head">
+        <h2>Tree profile</h2>
+        <button id="treeProfileClose" class="tree-profile-close" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="treeProfileBody" class="tree-profile-body"></div>
+    </aside>
+  </div>
+  <div class="map-dock">
+    <div class="dock-heading"><button id="revealAside" class="reveal-aside" type="button" title="Open map controls" aria-label="Open map controls" aria-controls="explorer" aria-expanded="false"><img src="./alto-logo.png?v=20260928-v5b" alt="ALTO" width="3934" height="1170"><span class="dock-action">Explore</span><span id="dockFilterCount" class="filter-count" hidden></span></button><button id="aboutDockBtn" class="about-dock" type="button" aria-label="About ALTO" title="About ALTO" aria-haspopup="dialog" aria-controls="aboutBackdrop"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7v1"></path></svg></button></div>
+    <button id="floatingStats" class="floating-stats" type="button" aria-label="Show statistics for records in this view"><strong id="floatingTrees">—</strong> map markers <span aria-hidden="true">·</span> <strong id="floatingCanopy">—</strong> ha crown area</button>
+  </div>
+  <script src="./tree-details.js?v=20260928-v5b"></script>
+  <script src="./tree-evidence.js?v=20260928-v5b"></script>
+  <script src="./tree-future.js?v=20260928-v5b"></script>
+  <script src="./tree-architecture.js?v=20260928-v5b"></script>
+  <script src="./tree-model.js?v=20260928-v5b"></script>
+  <script src="./evidence-workspace.js?v=20260928-v5b"></script>
+  <script src="./map-analysis.js?v=20260928-v5b"></script>
+  <script src="./tree-identity.js?v=20260928-v5b"></script>
+  <script src="./tree-ground.js?v=20260928-v5b"></script>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"
+          integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj"
+          crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"
+          integrity="sha384-MjejsnWXHmuz93aE35YWLh5AbS/6ceRB3Vb+ukOwqFzJRTpQ8vvbkLbNV7I0QK4f"
+          crossorigin="anonymous"></script>
+  <script>
+    // ---- Pre-computed pilot-wide totals (from build_pilot_findings.py).
+    // We can't aggregate over vector tiles in the browser efficiently, so the
+    // headline stats are baked in. The viewport count is live.
+    const PILOT_TOTALS = {
+      trees: 5839130,
+      crowns: 5755622,
+      protected: 3932,
+      lidarInferred: 5762318,
+      totalValueNzdY: 246085499,
+      runoffM3Y: 14813817,
+      carbonTco2e: 2393343
+    };
+
+    const SPECIES_OPTIONS = [
+      ["Unknown", 1609469],
+      ["Kauri", 17034],
+      ["Pohutukawa", 5264],
+      ["Titoki", 3778],
+      ["Cherry", 2839],
+      ["Indian Bead Tree", 1798],
+      ["Willow Myrtle", 1519],
+      ["London Plane Tree", 1500],
+      ["Totara", 1326],
+      ["Silver Birch", 1323],
+      ["English Oak", 1212],
+      ["Water Gum", 1125],
+      ["Liquidambar", 1084],
+      ["Tarata", 1053],
+      ["Puriri", 1047],
+      ["Kowhai", 877],
+      ["Queensland Box", 751],
+      ["Cabbage Tree", 723],
+      ["Melia", 720],
+      ["Matipo", 655],
+      ["Pittosporum", 602],
+      ["Karo", 595],
+      ["Kapuka", 578],
+      ["Karaka", 560],
+      ["Monkey Apple", 528],
+      ["Magnolia Grandiflora", 513],
+      ["Coprosma", 509],
+      ["Pin Oak", 451],
+      ["Kauri (PA+ PC+ soil:P. cinnamomi)", 429],
+      ["Kauri (PA+ PC+ soil:Nil)", 419],
+      ["Tulip Tree", 419],
+      ["Bottle Brush", 393],
+      ["Eucalyptus", 387],
+      ["Radiata Pine", 377],
+      ["Phoenix Palm", 295],
+      ["Jacaranda", 291],
+      ["Olive", 283]
+    ];
+
+    const CATEGORY_KEYS = ["park", "road", "inferred", "noCrown", "protected", "other"];
+    const DETECTION_SOURCES = ["lidar_inferred_canopy", "lidar_pointcloud_v4", "lidar_pointcloud_v5", "low_canopy_promoted", "pointcloud_missed_promoted"];
+    const UNCERTAIN_TIERS = ["location_unverified", "earlier_detection","possible", "unverified", "possible_duplicate"];
+    const TIER_TEXT = {
+      very_likely: "Very likely a tree",
+      probable: "Probably a tree",
+      possible: "Possibly a tree (could be a hedge or large shrub)",
+      unverified: "Unverified: the 2024 laser survey shows no canopy here",
+      possible_duplicate: "Possibly the same tree as a nearby record",
+      not_assessed: "Not yet checked against the 2024 laser survey",
+      recorded: "Recorded tree",
+      location_unverified: "Council position unverified",
+      earlier_detection: "Earlier detection without a unique v5 crown",
+      outside_v5_coverage: "Earlier record outside v5 coverage"
+    };
+    function tierText(props) {
+      const text = TIER_TEXT[props.evidence_tier] || "";
+      return props.evidence_reasons && props.evidence_tier !== "recorded" ? `${text} · ${props.evidence_reasons}` : text;
+    }
+    function isDetection(props) { return DETECTION_SOURCES.includes(props.source_primary); }
+    const LOW_CANOPY_HIDDEN_FILTER = ["==", ["get", "candidate_id"], "__hidden__"];
+    const MISSED_HIDDEN_FILTER = ["==", ["get", "candidate_id"], "__hidden__"];
+    const CHANGE_HIDDEN_FILTER = ["==", ["get", "fate"], "__hidden__"];
+    const ROOTZONE_HIDDEN_FILTER = ["==", ["get", "constraint"], "__hidden__"];
+
+    // Canopy-growth quick filter buckets (2016→2024 change detection).
+    // [key, label, glyph, baked-in count]. "new" keys off tree_status;
+    // the rest key off growth_velocity_class. Counts are from
+    // tree_change_pilot and shown as a subtle hint, like the species menu.
+    const GROWTH_BUCKETS = [];
+    function growthBucketExpr(key) {
+      return key === "new"
+        ? ["==", ["get", "tree_status"], "newly_established"]
+        : ["==", ["get", "growth_velocity_class"], key];
+    }
+
+    const formatNumber = new Intl.NumberFormat("en-NZ");
+    const formatCurrency = new Intl.NumberFormat("en-NZ", { style: "currency", currency: "NZD", maximumFractionDigits: 0 });
+    const compactCurrency = (v) => {
+      if (v >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
+      if (v >= 1e6) return `$${(v / 1e6).toFixed(2)}M`;
+      if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
+      return formatCurrency.format(v);
+    };
+    const compactNumber = (v) => {
+      if (v >= 1e6) return `${(v / 1e6).toFixed(1)}M`;
+      if (v >= 1e3) return `${(v / 1e3).toFixed(0)}K`;
+      return formatNumber.format(v);
+    };
+
+    const mobileLayout = window.matchMedia("(max-width: 760px), (max-height: 500px)");
+    const explorer = document.getElementById("explorer");
+    function setSidebarCollapsed(next, focus = false) {
+      document.body.dataset.asideCollapsed = String(next);
+      document.getElementById("collapseAside").textContent = mobileLayout.matches ? "⌄" : "‹";
+      explorer.inert = next;
+      explorer.setAttribute("aria-hidden", String(next));
+      document.getElementById("collapseAside").setAttribute("aria-expanded", String(!next));
+      document.getElementById("revealAside").setAttribute("aria-expanded", String(!next));
+      if (focus) document.getElementById(next ? "revealAside" : "collapseAside").focus({preventScroll: true});
+    }
+    setSidebarCollapsed(mobileLayout.matches);
+    document.getElementById("collapseAside").addEventListener("click", () => setSidebarCollapsed(true, true));
+    document.getElementById("revealAside").addEventListener("click", () => {
+      if (mobileLayout.matches) closeProfile();
+      setSidebarCollapsed(false, true);
+    });
+    mobileLayout.addEventListener("change", () => setSidebarCollapsed(mobileLayout.matches));
+    function selectTab(id) {
+      for (const tab of document.querySelectorAll(".panel-tabs [role=tab]")) {
+        const active = tab.id === id;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        document.getElementById(tab.getAttribute("aria-controls")).hidden = !active;
+      }
+      document.getElementById("speciesMenu").hidden = true;
+      document.getElementById("speciesTrigger").setAttribute("aria-expanded", "false");
+    }
+    const tabs = [...document.querySelectorAll(".panel-tabs [role=tab]")];
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => selectTab(tab.id));
+      tab.addEventListener("keydown", event => {
+        let index;
+        if (event.key === "ArrowRight") index = (i + 1) % tabs.length;
+        if (event.key === "ArrowLeft") index = (i + tabs.length - 1) % tabs.length;
+        if (event.key === "Home") index = 0;
+        if (event.key === "End") index = tabs.length - 1;
+        if (index === undefined) return;
+        event.preventDefault(); selectTab(tabs[index].id); tabs[index].focus({preventScroll: true});
+      });
+    });
+    document.getElementById("floatingStats").addEventListener("click", () => {
+      if (mobileLayout.matches) closeProfile();
+      setSidebarCollapsed(false); selectTab("tabView"); document.getElementById("tabView").focus({preventScroll: true});
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+    // Headline stats baked in from the latest findings build.
+    document.getElementById("visibleCount").textContent = formatNumber.format(PILOT_TOTALS.trees);
+    document.getElementById("crownCount").textContent = formatNumber.format(PILOT_TOTALS.crowns);
+    document.getElementById("inferredCount").textContent = formatNumber.format(PILOT_TOTALS.lidarInferred);
+    document.getElementById("protectedCount").textContent = formatNumber.format(PILOT_TOTALS.protected);
+    document.getElementById("valueTotal").textContent = formatCurrency.format(PILOT_TOTALS.totalValueNzdY);
+    document.getElementById("runoffTotal").textContent = `${formatNumber.format(Math.round(PILOT_TOTALS.runoffM3Y))} m³`;
+    document.getElementById("carbonTotal").textContent = `${formatNumber.format(Math.round(PILOT_TOTALS.carbonTco2e))} tCO₂e`;
+
+    });
+
+    // Register the PMTiles protocol so MapLibre can fetch range requests.
+    const protocol = new pmtiles.Protocol();
+    maplibregl.addProtocol("pmtiles", protocol.tile);
+
+    // Where the .pmtiles live. Local dev serves the repo root, so tiles are two
+    // levels up in data/processed; a deployed build sets window.AKL_DATA_BASE
+    // to its own bundled tile folder (see build_web_deploy.sh).
+    const DATA_BASE = (window.AKL_DATA_BASE || "../../data/processed").replace(/\/+$/, "");
+    // Tile cache-busting: tiles are rebuilt wholesale and cached hard for a year,
+    // so a deploy stamps AKL_TILE_VERSION to force browsers off the stale copies.
+    const TILE_VERSION = (window.AKL_TILE_VERSION || "2");
+    const vq = (u) => `${u}?v=${TILE_VERSION}`;
+
+    const basemaps = {
+      hybrid: {
+        label: "Hybrid",
+        title: "Aerial imagery with street/place labels — best for crown validation.",
+        sources: {
+          "esri-imagery": { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"], tileSize: 256, attribution: "Tiles &copy; Esri" },
+          "esri-labels": { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"], tileSize: 256 }
+        },
+        layers: [
+          { id: "basemap-imagery", type: "raster", source: "esri-imagery" },
+          { id: "basemap-labels", type: "raster", source: "esri-labels", paint: { "raster-opacity": 0.85 } }
+        ]
+      },
+      satellite: {
+        label: "Satellite",
+        title: "Aerial only — cleanest view of canopy.",
+        sources: { "esri-imagery": { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"], tileSize: 256, attribution: "Tiles &copy; Esri" } },
+        layers: [{ id: "basemap-imagery", type: "raster", source: "esri-imagery" }]
+      },
+      light: {
+        label: "Light",
+        title: "Light grey background — highest contrast for analytical overlays.",
+        sources: {
+          "esri-light-base": {
+            type: "raster",
+            tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"],
+            tileSize: 256,
+            maxzoom: 16,
+            attribution: "Tiles &copy; Esri, HERE, Garmin, OpenStreetMap contributors, and the GIS user community"
+          },
+          "esri-light-labels": {
+            type: "raster",
+            tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}"],
+            tileSize: 256,
+            maxzoom: 16
+          }
+        },
+        layers: [
+          { id: "basemap-light-base", type: "raster", source: "esri-light-base" },
+          { id: "basemap-light-labels", type: "raster", source: "esri-light-labels" }
+        ]
+      },
+      streets: {
+        label: "Streets",
+        title: "OpenStreetMap streets and places.",
+        sources: { "osm": { type: "raster", tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png", "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png", "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, attribution: "&copy; OpenStreetMap contributors" } },
+        layers: [{ id: "basemap-osm", type: "raster", source: "osm" }]
+      }
+    };
+
+    let activeBasemapKey = "light";
+
+    function noCrownInventoryExpr() {
+      return [
+        "all",
+        ["has", "crown_pilot"],
+        ["!", ["in", ["get", "source_primary"], ["literal", DETECTION_SOURCES]]],
+        ["!=", ["coalesce", ["to-number", ["get", "crown_pilot"], 0], 0], 1]
+      ];
+    }
+
+    function pointOpacityExpr() {
+      return ["match", primaryCategoryExpr(),
+        "noCrown", 0.95,
+        "inferred", ["match", ["coalesce", ["get", "evidence_tier"], ""],
+          "very_likely", 0.82, "probable", 0.66, "possible", 0.46, "unverified", 0.32, "possible_duplicate", 0.24, "not_assessed", 0.7, 0.7],
+        0.9];
+    }
+
+    function protectedExpr() {
+      return ["==", ["coalesce", ["to-number", ["get", "is_protected_notable"], 0], 0], 1];
+    }
+
+    // Priority-based exclusive classification: each tree resolves to
+    // exactly ONE category (the first one in this order that it matches).
+    // That keeps the legend toggles intuitive — clicking "Park" off
+    // really hides every park tree, even if the same tree is also
+    // technically protected or in the no-crown bucket.
+    //
+    // Priority order (top wins):
+    //   inferred → noCrown → protected → park → road → other
+    function primaryCategoryExpr() {
+      return [
+        "case",
+        ["in", ["get", "source_primary"], ["literal", DETECTION_SOURCES]], "inferred",
+        noCrownInventoryExpr(), "noCrown",
+        protectedExpr(), "protected",
+        ["==", ["get", "owner_class"], "Auckland Council Parks"], "park",
+        ["==", ["get", "owner_class"], "Auckland Transport"], "road",
+        "other"
+      ];
+    }
+
+    function styleFor(key) {
+      const bm = basemaps[key];
+      return {
+        version: 8,
+        sources: Object.assign({}, bm.sources, {
+          "akl-near-canopy": {type:"vector",url:vq(`pmtiles://${DATA_BASE}/near_canopy.pmtiles`)},
+          "akl-points": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/trees_map_points.pmtiles`) },
+          "akl-crowns": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_crowns_pilot.pmtiles`) },
+          "akl-low-canopy": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/low_canopy_candidates.pmtiles`) },
+          "akl-change": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_change.pmtiles`) },
+          "akl-rootshape": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_root_shapes.pmtiles`) },
+          "akl-canopy": { type: "geojson", data: {type: "FeatureCollection", features: []} },
+          "akl-kauri": { type: "geojson", data: {type: "FeatureCollection", features: []} }
+        }),
+        layers: [
+          ...bm.layers,
+          {
+            // Canopy cover by local board (choropleth, drawn under the trees).
+            id: "canopy-fill",
+            type: "fill",
+            source: "akl-canopy",
+            layout: { visibility: "none" },
+            paint: {
+              "fill-color": [
+                "step", ["coalesce", ["get", "canopy_cover_pct"], -1],
+                "#cccccc",
+                0, "#ffffe5", 8, "#d9f0a3", 14, "#addd8e",
+                18, "#78c679", 22, "#41ab5d", 26, "#238443", 30, "#005a32"
+              ],
+              "fill-opacity": ["case", ["==", ["get", "fully_assessed"], 1], 0.6, 0.25]
+            }
+          },
+          {
+            id: "canopy-line",
+            type: "line",
+            source: "akl-canopy",
+            layout: { visibility: "none" },
+            paint: { "line-color": "rgba(255,255,255,0.85)", "line-width": ["interpolate", ["linear"], ["zoom"], 8, 0.6, 13, 2] }
+          },
+          {
+            id: "crowns-fill",
+            type: "fill",
+            source: "akl-crowns",
+            "source-layer": "crowns",
+            minzoom: 12,
+            layout: { visibility: "visible" },
+            paint: {
+              "fill-color": [
+                "step",
+                ["coalesce", ["to-number", ["get", "crown_max_chm_m"], 0], 0],
+                "#b57918",
+                6, "#c1a64b",
+                12, "#87a848",
+                18, "#4f8f44",
+                24, "#2b6d3f"
+              ],
+              "fill-opacity": ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.07, "possible_duplicate", 0.07, "possible", 0.16, 0.3]
+            }
+          },
+          {
+            id: "crowns-outline",
+            type: "line",
+            source: "akl-crowns",
+            "source-layer": "crowns",
+            minzoom: 12,
+            layout: { visibility: "visible" },
+            paint: {
+              "line-color": [
+                "step",
+                ["coalesce", ["to-number", ["get", "crown_max_chm_m"], 0], 0],
+                "#b57918",
+                6, "#c1a64b",
+                12, "#87a848",
+                18, "#4f8f44",
+                24, "#2b6d3f"
+              ],
+              "line-width": ["interpolate", ["linear"], ["zoom"], 12, 0.5, 18, 1.5],
+              "line-opacity": ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.35, "possible_duplicate", 0.35, "possible", 0.6, 0.95]
+            }
+          },
+          {
+            // Root-space scenario (v3): foraging circle ∩ Voronoi cell − mapped buildings.
+            // Below markers, z14+, off by default. Red = modelled space deficit for review;
+            // this is not a measured root footprint or windthrow-risk prediction.
+            id: "tree-rootzone",
+            type: "fill",
+            source: "akl-rootshape",
+            "source-layer": "tree_root_shapes",
+            minzoom: 14,
+            layout: { visibility: "none" },
+            paint: {
+              "fill-color": ["match", ["get", "constraint"], ["at_risk", "space_deficit_review"], "#d6322b", "#3f7d57"],
+              "fill-opacity": ["match", ["get", "constraint"], ["at_risk", "space_deficit_review"], 0.30, 0.17],
+              "fill-outline-color": ["match", ["get", "constraint"], ["at_risk", "space_deficit_review"], "#b02018", "#2f6d47"]
+            }
+          },
+          {
+            id: "points",
+            type: "circle",
+            source: "akl-points",
+            "source-layer": "trees",
+            minzoom: 10,
+            paint: {
+              "circle-radius": [
+                "interpolate", ["linear"], ["zoom"],
+                10, 1.2,
+                14, 2.2,
+                17, 4,
+                20, 7
+              ],
+              // Marker styles keyed off the same priority chain that the
+              // legend filter uses, so a tree's colour always matches the
+              // legend swatch that controls its visibility.
+              "circle-color": [
+                "match", primaryCategoryExpr(),
+                "inferred", "#8a4ea8",
+                "noCrown", "#e6861a",
+                "protected", "#b02e6f",
+                "park", "#2f7d4d",
+                "road", "#4267ac",
+                /* other */ "#7b7267"
+              ],
+              "circle-stroke-color": [
+                "match", primaryCategoryExpr(),
+                "noCrown", "rgba(120, 25, 18, 0.8)",
+                /* default */ "rgba(20, 28, 24, 0.45)"
+              ],
+              "circle-stroke-width": [
+                "match", primaryCategoryExpr(),
+                "noCrown", 1.2,
+                "inferred", 0.4,
+                /* default */ 0.8
+              ],
+              "circle-opacity": pointOpacityExpr()
+            }
+          },
+          {
+ id:"near-canopy",type:"fill",source:"akl-near-canopy","source-layer":"near_canopy",minzoom:12,layout:{visibility:"none"},paint:{"fill-color":["match",["get","canopy_class"],"low_canopy","#8fa955","#c0b97f"],"fill-opacity":0.38,"fill-outline-color":"#6b7850"}
+ },
+           {
+            id: "low-candidates",
+            type: "circle",
+            source: "akl-low-canopy",
+            "source-layer": "low_canopy",
+            minzoom: 12,
+            layout: { visibility: "none" },
+            paint: {
+              "circle-radius": [
+                "interpolate", ["linear"], ["zoom"],
+                12, 1.1,
+                15, 2.4,
+                18, 5
+              ],
+              "circle-color": "#0f9f9a",
+              "circle-stroke-color": "rgba(255,255,255,0.86)",
+              "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 12, 0.6, 18, 1.3],
+              "circle-opacity": 0.72
+            }
+          },
+          {
+            // WS2 cross-time change: red = removed to open ground, green = established.
+            id: "tree-change",
+            type: "circle",
+            source: "akl-change",
+            "source-layer": "tree_change",
+            minzoom: 11,
+            layout: { visibility: "none" },
+            paint: {
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 11, 1.5, 15, 3.2, 18, 6],
+              "circle-color": [
+                "match", ["get", "fate"],
+                "removed_to_open", "#d6322b",
+                "established_since_2013", "#2f9e44",
+                "established_since_2016", "#63c46b",
+                /* default */ "#888888"
+              ],
+              "circle-stroke-color": "rgba(255,255,255,0.85)",
+              "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 11, 0.4, 18, 1.2],
+              "circle-opacity": 0.85
+            }
+          },
+          {
+            // Kauri dieback surveillance (Auckland Council public layer).
+            id: "kauri-dieback",
+            type: "circle",
+            source: "akl-kauri",
+            minzoom: 10,
+            layout: { visibility: "none" },
+            paint: {
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 2, 14, 4, 18, 7],
+              "circle-color": [
+                "match", ["get", "status"],
+                "pathogen_confirmed", "#b3122b",
+                "symptomatic", "#e8821e",
+                "no_symptoms", "#2f9e44",
+                /* other */ "#9aa0a6"
+              ],
+              "circle-stroke-color": "rgba(255,255,255,0.9)",
+              "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 10, 0.4, 18, 1.3],
+              "circle-opacity": 0.9
+            }
+          },
+          {
+            // Ring drawn around the currently-selected tree in the profile.
+            id: "points-highlight",
+            type: "circle",
+            source: "akl-points",
+            "source-layer": "trees",
+            filter: ["==", ["get", "tree_id"], "__none__"],
+            paint: {
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 12, 6, 18, 16],
+              "circle-color": "rgba(0,0,0,0)",
+              "circle-stroke-color": "#1b6b54",
+              "circle-stroke-width": 3,
+              "circle-stroke-opacity": 0.95
+            }
+          }
+        ]
+      };
+    }
+
+    const map = new maplibregl.Map({
+      container: "map",
+      style: styleFor(activeBasemapKey),
+      center: [174.762, -36.856],
+      zoom: 13,
+      hash: false,
+      // Disable the built-in attribution; we add a single compact one below.
+      // (Leaving this on duplicated the attribution control.)
+      attributionControl: false
+    });
+
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
+    map.addControl(new maplibregl.NavigationControl({showCompass: false}), "bottom-right");
+    map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
+
+    // Loading indicator: count active tile requests.
+    const loadingEl = document.getElementById("loading");
+    let loadingShown = false;
+    map.on("dataloading", () => {
+      if (!loadingShown) { loadingShown = true; loadingEl.classList.add("visible"); }
+    });
+    map.on("idle", () => { loadingShown = false; loadingEl.classList.remove("visible"); });
+    map.on("error", (event) => {
+      loadingShown = false;
+      loadingEl.classList.remove("visible");
+      const message = event?.error?.message || "A map resource could not be loaded.";
+      document.getElementById("status").textContent = `Map warning: ${message}`;
+    });
+
+    // ---- Basemap switcher.
+    function setBasemap(key) {
+      if (!basemaps[key] || key === activeBasemapKey) return;
+      activeBasemapKey = key;
+      map.setStyle(styleFor(key), { diff: false });
+      // Re-apply filters as soon as the new style is ready. We listen to
+      // both styledata (early — fires when the style spec is parsed) and
+      // idle (late — fires when tiles finish loading) so the user's
+      // visible/hidden categories are restored without flicker even on
+      // slow connections.
+      const reapply = () => {
+        applyFilters(); applyChangeEmphasis(); applyTrunkScaling(); applyColourMode();
+        if (profileHighlightId && map.getLayer("points-highlight")) map.setFilter("points-highlight", ["==", ["get", "tree_id"], profileHighlightId]);
+      };
+      map.once("styledata", reapply);
+      map.once("idle", reapply);
+      for (const button of document.querySelectorAll("#basemapSwitch button")) {
+        button.classList.toggle("active", button.dataset.basemap === key);
+        button.setAttribute("aria-pressed", String(button.dataset.basemap === key));
+      }
+    }
+    (function buildBasemapControl() {
+      const container = document.getElementById("basemapSwitch");
+      for (const [key, config] of Object.entries(basemaps)) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.dataset.basemap = key;
+        button.textContent = config.label;
+        button.title = config.title;
+        button.className = key === activeBasemapKey ? "active" : "";
+        button.setAttribute("aria-pressed", String(key === activeBasemapKey));
+        button.addEventListener("click", () => setBasemap(key));
+        container.appendChild(button);
+      }
+    })();
+
+    // ---- Filter state.
+    const state = {
+      visibleCategories: new Set(CATEGORY_KEYS),
+      showLowCanopy: false,
+      showLowBand:false, showSubBand:false, wideCrownOnly:false, showEarlierDetections:false,
+      showMissed: false,
+      showChange: false,
+      showRootZone: false,
+      showTrunk: false,
+      showCanopy: false,
+      showKauri: false,
+      showUnknown: true,
+      showUncertain: true,
+      selectedSpecies: new Set(),
+      speciesSearch: "",
+      showCrowns: true,
+      growthFilters: new Set()
+    };
+
+    function buildGrowthFilter() {
+      const active = Array.from(state.growthFilters);
+      if (!active.length) return null;
+      return ["any", ...active.map(growthBucketExpr)];
+    }
+
+    function buildCategoryFilter() {
+      const active = CATEGORY_KEYS.filter((key) => state.visibleCategories.has(key));
+      if (active.length === CATEGORY_KEYS.length) return null;
+      // Nothing selected → hide everything. Must be EXPRESSION syntax: the
+      // legacy-looking ["==", 1, 0] is rejected by map.setFilter (it parses
+      // "1" as a property key), so the previous filter silently stuck and the
+      // last category wouldn't turn off. This match-nothing expression applies.
+      if (!active.length) return ["==", ["get", "tree_id"], "__none__"];
+      // Match the tree's PRIMARY (priority-ranked) category against the
+      // active set. This avoids the OR-overlap problem where a park-and-
+      // protected tree stays visible even after Park is toggled off.
+      return ["match", primaryCategoryExpr(), active, true, false];
+    }
+
+    function buildFilter() {
+      const conditions = ["all"];
+      if(!state.showEarlierDetections)conditions.push(["!=",["get","display_role"],"earlier_detection"]);
+      const categoryFilter = buildCategoryFilter();
+      if (categoryFilter) conditions.push(categoryFilter);
+      if (!state.showUnknown) {
+        conditions.push(["!=", ["get", "species_confidence"], "unknown"]);
+        conditions.push(["!=", ["get", "species_confidence"], "lidar_inferred_no_species"]);
+        conditions.push(["!=", ["get", "species_confidence"], "pointcloud_v4_no_species"]);
+        conditions.push(["!=",["get","species_confidence"],"pointcloud_v5_no_species"]);
+        conditions.push(["!=", ["get", "species_confidence"], "pointcloud_promoted_no_species"]);
+      }
+      if (!state.showUncertain) {
+        conditions.push(["!", ["in", ["coalesce", ["get", "evidence_tier"], "recorded"], ["literal", UNCERTAIN_TIERS]]]);
+      }
+      if (state.selectedSpecies.size) {
+        conditions.push(["match", ["coalesce", ["get", "species_common"], "Unknown"], Array.from(state.selectedSpecies), true, false]);
+      }
+      const growthFilter = buildGrowthFilter();
+      if (growthFilter) conditions.push(growthFilter);
+      if (conditions.length === 1) return null;
+      return conditions;
+    }
+
+    const loadedOverlays = new WeakSet();
+    function loadOverlay(id, file) {
+      const source = map.getSource(id);
+      if (source && !loadedOverlays.has(source)) {
+        loadedOverlays.add(source); source.setData(vq(`${DATA_BASE}/${file}`));
+      }
+    }
+    function updateFilterControls() {
+      const count = state.selectedSpecies.size + state.growthFilters.size + (CATEGORY_KEYS.length - state.visibleCategories.size) + (state.showUnknown ? 0 : 1) + (state.showUncertain ? 0 : 1);
+      const label = `${count} active ${count === 1 ? "filter" : "filters"}`;
+      for (const id of ["filterCount", "dockFilterCount"]) {
+        const badge = document.getElementById(id); badge.hidden = !count; badge.textContent = String(count); badge.setAttribute("aria-label", label);
+      }
+      document.getElementById("resetFilters").disabled = !count;
+      document.getElementById("sourceSelection").textContent = state.visibleCategories.size === CATEGORY_KEYS.length ? "All shown" : `${state.visibleCategories.size} of ${CATEGORY_KEYS.length} shown`;
+    }
+    function applyFilters() {
+      updateFilterControls();
+      if (state.showCanopy) loadOverlay("akl-canopy", "canopy_cover_by_board.geojson");
+      if (state.showKauri) loadOverlay("akl-kauri", "kauri_dieback.geojson");
+      const filter = buildFilter();
+      if(map.getLayer('near-canopy')){
+        const bands=[];if(state.showLowBand)bands.push('low_canopy');if(state.showSubBand)bands.push('sub_canopy');
+        map.setLayoutProperty('near-canopy','visibility',bands.length?'visible':'none');
+        map.setFilter('near-canopy',['all',['in',['get','canopy_class'],['literal',bands]],...(state.wideCrownOnly?[[">=",["get","crown_diameter_m"],5]]:[])]);
+      }
+      for (const layerId of ["points", "points-records", "crowns-fill", "crowns-outline"]) {
+        if (!map.getLayer(layerId)) continue;
+        if (filter) map.setFilter(layerId, filter);
+        else map.setFilter(layerId, null);
+      }
+      if (map.getLayer("low-candidates")) {
+        map.setLayoutProperty("low-candidates", "visibility", state.showLowCanopy ? "visible" : "none");
+      }
+      if (map.getLayer("missed-candidates")) {
+        map.setLayoutProperty("missed-candidates", "visibility", state.showMissed ? "visible" : "none");
+      }
+      if (map.getLayer("tree-change")) {
+        map.setLayoutProperty("tree-change", "visibility", state.showChange ? "visible" : "none");
+      }
+      if (map.getLayer("tree-rootzone")) {
+        map.setLayoutProperty("tree-rootzone", "visibility", state.showRootZone ? "visible" : "none");
+      }
+      if (map.getLayer("canopy-fill")) {
+        const cv = state.showCanopy ? "visible" : "none";
+        map.setLayoutProperty("canopy-fill", "visibility", cv);
+        map.setLayoutProperty("canopy-line", "visibility", cv);
+      }
+      if (map.getLayer("kauri-dieback")) {
+        map.setLayoutProperty("kauri-dieback", "visibility", state.showKauri ? "visible" : "none");
+      }
+      scheduleViewportStats();
+    }
+
+    function applyLayerToggles() {
+      // Crowns hide while the change view is on, so removals/establishments aren't buried.
+      const crownVis = (state.showCrowns && !state.showChange) ? "visible" : "none";
+      if (map.getLayer("crowns-fill")) map.setLayoutProperty("crowns-fill", "visibility", crownVis);
+      if (map.getLayer("crowns-outline")) map.setLayoutProperty("crowns-outline", "visibility", crownVis);
+    }
+
+    // When the change view is on, fade the base trees right down so the red/green
+    // change dots stand out instead of drowning among 300k base markers.
+    function applyChangeEmphasis() {
+      if (map.getLayer("points")) {
+        map.setPaintProperty("points", "circle-opacity", state.showChange
+          ? 0.1
+          : pointOpacityExpr());
+      }
+      applyLayerToggles();
+    }
+
+    // Base (flat) vs trunk-diameter-scaled marker radius. dbh_cm_crown_est is
+    // crown-allometry *modelled* (indicative, not measured); coalesce a small
+    // default so trees lacking an estimate stay visible rather than vanishing.
+    const BASE_POINT_RADIUS = ["interpolate", ["linear"], ["zoom"], 10, 1.2, 14, 2.2, 17, 4, 20, 7];
+    const TRUNK_POINT_RADIUS = [
+      "interpolate", ["linear"], ["zoom"],
+      12, ["interpolate", ["linear"], ["coalesce", ["get", "dbh_cm_crown_est"], 12], 5, 0.8, 30, 2.0, 70, 4.2, 150, 7],
+      16, ["interpolate", ["linear"], ["coalesce", ["get", "dbh_cm_crown_est"], 12], 5, 1.6, 30, 4.2, 70, 9, 150, 16],
+      20, ["interpolate", ["linear"], ["coalesce", ["get", "dbh_cm_crown_est"], 12], 5, 3, 30, 7.5, 70, 16, 150, 28]
+    ];
+    function applyTrunkScaling() {
+      if (map.getLayer("points")) {
+        map.setPaintProperty("points", "circle-radius", state.showTrunk ? TRUNK_POINT_RADIUS : BASE_POINT_RADIUS);
+      }
+    }
+
+    function applyColourMode() {
+      const mode = document.getElementById("colourBy").value;
+      let expression, keys;
+      if (mode === "height") {
+        expression = ["case", ["any", ["has", "height_max_m"], ["has", "crown_max_chm_m"]],
+          ["step", ["coalesce", ["get", "height_max_m"], ["get", "crown_max_chm_m"], 0], "#b9d99b", 5, "#68a657", 15, "#287d65", 25, "#164957"], "#8c9290"];
+        keys = [["#b9d99b", "<5 m"],["#68a657","5–15 m"],["#287d65","15–25 m"],["#164957","25+ m"],["#8c9290","No height"]];
+      } else if (mode === "structure") {
+        expression = ["match", ["get", "growth_form"], "evergreen_broadleaf", "#287d65", "deciduous_broadleaf", "#b77b28", "conifer", "#4668a1", "palm_other", "#a65e91", "#8c9290"];
+        keys = [["#287d65","Evergreen"],["#b77b28","Deciduous"],["#4668a1","Conifer"],["#a65e91","Palm / other"],["#8c9290","Unknown"]];
+      } else if (mode === "evidence") {
+        expression = ["match", ["coalesce", ["get", "evidence_tier"], "recorded"],
+          "recorded", "#4267ac", "very_likely", "#287d65", "probable", "#7fae4e", "possible", "#d9a33a",
+          "unverified", "#c27025", "possible_duplicate", "#b0a8a0", "not_assessed", "#7b8fa3", "#8c9290"];
+        keys = [["#4267ac","Recorded tree"],["#287d65","Very likely"],["#7fae4e","Probable"],["#d9a33a","Possible"],["#c27025","Unverified"],["#b0a8a0","Possible duplicate"],["#7b8fa3","Not yet checked"]];
+      } else {
+        expression = styleFor(activeBasemapKey).layers.find(layer => layer.id === "points").paint["circle-color"];
+      }
+      if (map.getLayer("points")) map.setPaintProperty("points", "circle-color", expression);
+      // Match crowns to the analytical mode while preserving their source styling otherwise.
+      if (map.getLayer("crowns-fill")) map.setPaintProperty("crowns-fill", "fill-color", mode === "source"
+        ? styleFor(activeBasemapKey).layers.find(layer => layer.id === "crowns-fill").paint["fill-color"] : expression);
+      document.getElementById("colourLegend").innerHTML = keys
+        ? keys.map(([colour,label]) => `<span class="colour-key"><i style="background:${colour}"></i>${label}</span>`).join("")
+        : "Colours match the sources in Explore.";
+      document.getElementById("layerHint").textContent = mode === "structure"
+        ? "Growth forms include model predictions. A tree’s profile distinguishes recorded identification from model inference."
+        : "Tap a tree to see its dimensions, evidence and modelled services.";
+    }
+    document.getElementById("colourBy").addEventListener("change", applyColourMode);
+    for(const key of ['showLowBand','showSubBand','wideCrownOnly','showEarlierDetections'])document.getElementById(key).addEventListener('change',event=>{state[key]=event.target.checked;applyFilters();});
+    map.on('click','near-canopy',event=>{const f=event.features?.[0];if(!f)return;const p=f.properties;new maplibregl.Popup({closeButton:true}).setLngLat(event.lngLat).setHTML(`<strong>${p.canopy_class==='low_canopy'?'Low canopy · 2–3 m':'Low vegetation · under 2 m'}</strong><p>Height ${Number(p.height_m).toFixed(1)} m · crown ${Number(p.crown_area_m2).toFixed(1)} m²</p><p>Vegetation candidate; excluded from tree service totals.</p>`).addTo(map);});
+
+    // Drawn features are a sample at low zoom, never an area-wide census.
+    let viewportFeatures = [];
+    let identityReady = false;
+    function updateViewportStats() {
+      if (!map.getLayer("points")) return;
+      try {
+        const bounds = map.getBounds();
+        viewportFeatures = ALTOAnalysis.uniqueTrees(map.queryRenderedFeatures({ layers: [map.getLayer("points-records") ? "points-records" : "points"] }))
+          .filter(f => f.geometry?.type === "Point" && bounds.contains(f.geometry.coordinates));
+        const grouped = identityReady ? ALTOIdentity.update(viewportFeatures) : {markers:viewportFeatures.length,records:viewportFeatures.length,groups:[]};
+        const summary = ALTOAnalysis.summarise(viewportFeatures);
+        const value = (id, text) => { document.getElementById(id).textContent = text; };
+        value("viewportCount", formatNumber.format(grouped.markers));
+        value("floatingTrees", formatNumber.format(grouped.markers));
+        const canopy = summary.crownCount ? (summary.crownArea / 10000).toLocaleString("en-NZ", {maximumFractionDigits: 1}) : "—";
+        value("viewCanopy", canopy); value("floatingCanopy", canopy);
+        value("viewHeight", summary.heightCount ? summary.meanHeight.toFixed(1) : "—");
+        value("viewScope", !state.visibleCategories.size ? "All sources are off. Choose a source in Explore." : !summary.count ? (map.areTilesLoaded?.() === false ? "Loading trees in this view…" : "No trees in view. Move the map or clear filters.") : map.getZoom() < 16 ? "Map sample · zoom in for more trees" : `${summary.count.toLocaleString("en-NZ")} markers · ${grouped.groups.length} crowns with linked records`);
+        const details = [
+          ["Map markers drawn", formatNumber.format(summary.count)],
+          ["Current view markers", formatNumber.format(grouped.markers)],
+          ["Crowns with linked source records", formatNumber.format(grouped.groups.length)],
+          ["With crown area", formatNumber.format(summary.crownCount)],
+          ["With height data", formatNumber.format(summary.heightCount)],
+          ["Recorded taxa", formatNumber.format(summary.speciesCount)],
+          ["Protected / notable", formatNumber.format(summary.protectedCount)],
+          ["Canopy corroborated by LiDAR", formatNumber.format(summary.confirmedCount)],
+          ["No point-cloud coverage", formatNumber.format(summary.noPointcloudCount)],
+          ["Most recorded taxon", summary.topSpecies || "No recorded species"]
+        ];
+        document.getElementById("viewDetails").innerHTML = details.map(([k,v]) => `<dt>${safe(k)}</dt><dd>${safe(v)}</dd>`).join("");
+        document.getElementById("downloadView").disabled = !summary.count;
+      } catch (error) {
+        document.getElementById("viewScope").textContent = "Map updating…";
+      }
+    }
+    document.getElementById("downloadView").addEventListener("click", () => {
+      updateViewportStats();
+      const collection = {type: "FeatureCollection", metadata: {
+        scope: "Drawn v5 crown representatives and source records after filters and tile sampling. Linked source records remain in the per-tree details.",
+        identity_method: ALTOIdentity.context({tree_id:"",datasets:{}}).method_id,
+        zoom: map.getZoom(), bounds: map.getBounds().toArray(), exported_at: new Date().toISOString()
+      }, features: viewportFeatures.map(f => ({type: "Feature", geometry: f.geometry, properties: {...f.properties,proposed_identity_group:ALTOIdentity.context({tree_id:f.properties.tree_id,datasets:{}}).proposed_group?.group_id||null}}))};
+      const url = URL.createObjectURL(new Blob([JSON.stringify(collection)], {type: "application/geo+json"}));
+      const link = document.createElement("a"); link.href = url; link.download = "alto-auckland-drawn-trees.geojson"; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    // moveend and idle fire back-to-back after a pan/zoom; debounce so the
+    // (potentially thousands of features) queryRenderedFeatures runs once —
+    // trailing edge, so the last event (final rendered state) always wins.
+    let statsTimer = null;
+    function scheduleViewportStats() {
+      if (statsTimer) clearTimeout(statsTimer);
+      statsTimer = setTimeout(() => { statsTimer = null; updateViewportStats(); }, 120);
+    }
+    map.on("moveend", scheduleViewportStats);
+    map.on("resize", scheduleViewportStats);
+    map.on("idle", scheduleViewportStats);
+
+    // ---- Sidebar controls.
+    (function bindSidebarControls() {
+      const speciesTrigger = document.getElementById("speciesTrigger");
+      const speciesTriggerText = document.getElementById("speciesTriggerText");
+      const speciesMenu = document.getElementById("speciesMenu");
+      const speciesSearch = document.getElementById("speciesSearch");
+      const speciesOptions = document.getElementById("speciesOptions");
+      const speciesChips = document.getElementById("speciesChips");
+      const legendToggles = document.getElementById("legendToggles");
+      const growthToggles = document.getElementById("growthToggles");
+      const showCrowns = document.getElementById("showCrowns");
+      const showChange = document.getElementById("showChange");
+      const showRootZone = document.getElementById("showRootZone");
+      const showTrunk = document.getElementById("showTrunk");
+      const showUnknown = document.getElementById("showUnknown");
+
+      function renderGrowthToggles() {
+        // No growth-velocity data (e.g. the metro build) — hide the whole section.
+        if (!GROWTH_BUCKETS.length) { growthToggles.parentElement.style.display = "none"; return; }
+        growthToggles.innerHTML = "";
+        for (const [key, label, icon, count] of GROWTH_BUCKETS) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "growth-row";
+          button.dataset.growth = key;
+          button.setAttribute("aria-pressed", state.growthFilters.has(key) ? "true" : "false");
+          button.title = `Show only ${label.toLowerCase()} canopies (${formatNumber.format(count)})`;
+          button.innerHTML = `<span class="gicon">${icon}</span><span class="glabel">${label}</span><span class="gcount">${compactNumber(count)}</span>`;
+          growthToggles.appendChild(button);
+        }
+        growthToggles.dataset.active = state.growthFilters.size ? "true" : "false";
+      }
+      renderGrowthToggles();
+
+      growthToggles.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-growth]");
+        if (!button) return;
+        const key = button.dataset.growth;
+        if (state.growthFilters.has(key)) state.growthFilters.delete(key);
+        else state.growthFilters.add(key);
+        renderGrowthToggles();
+        applyFilters();
+      });
+
+      function renderSpeciesOptions() {
+        const query = state.speciesSearch.trim().toLowerCase();
+        speciesOptions.innerHTML = "";
+        let matches = 0;
+        for (const [name, count] of SPECIES_OPTIONS) {
+          if (query && !name.toLowerCase().includes(query)) continue;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `species-option${state.selectedSpecies.has(name) ? " active" : ""}`;
+          button.dataset.species = name;
+          button.setAttribute("aria-pressed", String(state.selectedSpecies.has(name)));
+          matches++;
+          button.innerHTML = `<span>${safe(name)}</span><span class="count">${formatNumber.format(count)}</span>`;
+          speciesOptions.appendChild(button);
+        }
+        if (!matches) {
+          const empty = document.createElement("p"); empty.className = "species-empty"; empty.setAttribute("role", "status");
+          empty.textContent = "No species match this search. Try a shorter name."; speciesOptions.appendChild(empty);
+        }
+      }
+
+      function renderSpeciesState() {
+        const selected = Array.from(state.selectedSpecies);
+        speciesTriggerText.textContent = selected.length === 1 ? selected[0] : selected.length ? `${selected.length} species` : "All species";
+        speciesChips.innerHTML = "";
+        for (const name of selected) {
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "species-chip";
+          chip.dataset.species = name;
+          chip.setAttribute("aria-label", `Remove ${name} filter`);
+          chip.textContent = `${name} ×`;
+          speciesChips.appendChild(chip);
+        }
+        renderSpeciesOptions();
+      }
+
+      function toggleSpecies(name) {
+        if (state.selectedSpecies.has(name)) state.selectedSpecies.delete(name);
+        else state.selectedSpecies.add(name);
+        renderSpeciesState();
+        applyFilters();
+      }
+
+      renderSpeciesState();
+
+      speciesTrigger.addEventListener("click", () => {
+        const nextOpen = speciesMenu.hidden;
+        speciesMenu.hidden = !nextOpen;
+        speciesTrigger.setAttribute("aria-expanded", nextOpen ? "true" : "false");
+        if (nextOpen) speciesSearch.focus({preventScroll: true});
+      });
+
+      speciesSearch.addEventListener("input", () => {
+        state.speciesSearch = speciesSearch.value;
+        renderSpeciesOptions();
+      });
+
+      speciesOptions.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-species]");
+        if (!button) return;
+        toggleSpecies(button.dataset.species);
+      });
+
+      speciesChips.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-species]");
+        if (!button) return;
+        toggleSpecies(button.dataset.species);
+      });
+
+      document.addEventListener("click", (event) => {
+        if (event.target.closest(".species-picker")) return;
+        speciesMenu.hidden = true;
+        speciesTrigger.setAttribute("aria-expanded", "false");
+      });
+
+      legendToggles.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-category]");
+        if (!button) return;
+        const category = button.dataset.category;
+        if (category === "lowCanopy") {
+          state.showLowCanopy = !state.showLowCanopy;
+          button.setAttribute("aria-pressed", state.showLowCanopy ? "true" : "false");
+          applyFilters();
+          return;
+        }
+        if (category === "missed") {
+          state.showMissed = !state.showMissed;
+          button.setAttribute("aria-pressed", state.showMissed ? "true" : "false");
+          applyFilters();
+          return;
+        }
+        if (state.visibleCategories.has(category)) state.visibleCategories.delete(category);
+        else state.visibleCategories.add(category);
+        button.setAttribute("aria-pressed", state.visibleCategories.has(category) ? "true" : "false");
+        applyFilters();
+      });
+
+      document.getElementById("showLowCanopy").addEventListener("change", event => {
+        state.showLowCanopy = event.target.checked; applyFilters();
+      });
+      document.getElementById("resetFilters").addEventListener("click", () => {
+        state.visibleCategories = new Set(CATEGORY_KEYS); state.selectedSpecies.clear();
+        state.growthFilters.clear(); state.showEarlierDetections=false;document.getElementById('showEarlierDetections').checked=false; state.showUnknown = true; showUnknown.checked = true; state.showUncertain = true; document.getElementById("showUncertain").checked = true;
+        state.speciesSearch = ""; speciesSearch.value = "";
+        legendToggles.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", "true"));
+        renderSpeciesState(); renderGrowthToggles(); applyFilters();
+      });
+      speciesMenu.addEventListener("keydown", event => {
+        if (event.key !== "Escape") return;
+        event.stopPropagation(); speciesMenu.hidden = true;
+        speciesTrigger.setAttribute("aria-expanded", "false"); speciesTrigger.focus({preventScroll: true});
+      });
+      showCrowns.addEventListener("change", () => {
+        state.showCrowns = showCrowns.checked;
+        applyLayerToggles();
+      });
+
+      showUnknown.addEventListener("change", () => {
+        state.showUnknown = showUnknown.checked;
+        applyFilters();
+      });
+      document.getElementById("showUncertain").addEventListener("change", event => {
+        state.showUncertain = event.target.checked;
+        applyFilters();
+      });
+
+      showChange.addEventListener("change", () => {
+        state.showChange = showChange.checked;
+        applyFilters();
+        applyChangeEmphasis();
+      });
+
+      showRootZone.addEventListener("change", () => {
+        state.showRootZone = showRootZone.checked;
+        applyFilters();
+      });
+
+      showTrunk.addEventListener("change", () => {
+        state.showTrunk = showTrunk.checked;
+        applyTrunkScaling();
+      });
+
+      const showCanopy = document.getElementById("showCanopy");
+      showCanopy.addEventListener("change", () => {
+        state.showCanopy = showCanopy.checked;
+        applyFilters();
+      });
+
+      const showKauri = document.getElementById("showKauri");
+      showKauri.addEventListener("change", () => {
+        state.showKauri = showKauri.checked;
+        applyFilters();
+      });
+    })();
+
+    // ---- Popups for trees + crowns.
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+    function safe(value) {
+      return (value === null || value === undefined || value === "") ? "Unknown" : escapeHtml(value);
+    }
+    function fmt(value, digits, suffix) {
+      if (value === null || value === undefined || value === "") return "Unknown";
+      const n = Number(value);
+      if (!Number.isFinite(n)) return "Unknown";
+      return `${n.toFixed(digits ?? 1)}${suffix ?? ""}`;
+    }
+
+    function speciesClassLabel(klass) {
+      switch (klass) {
+        case "evergreen_broadleaf": return "Evergreen broadleaf";
+        case "deciduous_broadleaf": return "Deciduous broadleaf";
+        case "conifer": return "Conifer";
+        case "palm_other": return "Palm / monocot";
+        default: return safe(klass);
+      }
+    }
+
+    function popupHtml(props) {
+      const total = Number(props.total_value_nzd_y || 0);
+      const carbonStored = Number(props.stored_co2e_tonnes_est || 0);
+      const carbonValue = Number(props.carbon_value_nzd_y || 0);
+      const cooling = Number(props.cooling_value_nzd_y || 0);
+      const stormwater = Number(props.stormwater_value_nzd_y || 0);
+      const air = Number(props.air_quality_value_nzd_y || 0);
+      const runoff = Number(props.avoided_runoff_m3_y || 0);
+      const protectedText = props.is_protected_notable ? "Yes" : "No";
+      const inferred = isDetection(props);
+      const hasCrown = Number(props.crown_pilot || (props.crown_area_m2 ? 1 : 0)) === 1;
+      const crownText = hasCrown ? fmt(props.crown_area_m2, 1, " m²") : "No accepted crown";
+
+      // Title: for council-known trees, use species_common; for inferred,
+      // show the ML-predicted class as the headline since there's no
+      // specific species name.
+      const title = inferred
+        ? (props.species_class
+          ? `${TIER_TEXT[props.evidence_tier] || "LiDAR detection"} · predicted ${speciesClassLabel(props.species_class).toLowerCase()}`
+          : (TIER_TEXT[props.evidence_tier] || "LiDAR detection"))
+        : safe(props.species_common || props.species_latin || "Species unrecorded");
+      const speciesClassRow = inferred
+        ? `<div class="popup-row"><span>Predicted class</span><span>${speciesClassLabel(props.species_class)} <em style="color:var(--muted);font-style:normal">· aerial-colour estimate · field check pending</em></span></div>`
+        : `<div class="popup-row"><span>Species class</span><span>${speciesClassLabel(props.species_class)}</span></div>`;
+      const latinRow = inferred
+        ? "" // no Latin name for inferred trees
+        : `<div class="popup-row"><span>Latin</span><span>${safe(props.species_latin)}</span></div>`;
+
+      return `
+        <div class="popup-title">${title}</div>
+        ${latinRow}
+        <div class="popup-row"><span>Source</span><span>${safe(props.source_primary)}</span></div>
+        ${props.evidence_tier ? `<div class="popup-row"><span>Evidence</span><span>${safe(tierText(props))}</span></div>` : ""}
+        <div class="popup-row"><span>Owner</span><span>${safe(props.owner_class)}</span></div>
+        ${speciesClassRow}
+        <div class="popup-row"><span>Protected</span><span>${protectedText}</span></div>
+        <div class="popup-row"><span>Crown</span><span>${crownText}</span></div>
+        <div class="popup-row"><span>Height</span><span>${fmt(props.crown_max_chm_m, 1, " m")}</span></div>
+        ${props.total_value_nzd_y == null && props.scenario_total_value_nzd_y == null
+          ? `<div class="popup-row"><span>Services</span><span>Not estimated yet for this tree</span></div>`
+          : `        <div class="popup-row"><span>Stormwater scenario</span><span>${formatCurrency.format(stormwater)}/yr · ${fmt(runoff, 1, " m³/yr")}</span></div>
+        <div class="popup-row"><span>Carbon scenario</span><span>${formatCurrency.format(carbonValue)}/yr · ${fmt(carbonStored, 2, " tCO₂e")}</span></div>
+        <div class="popup-row"><span>Cooling scenario</span><span>${formatCurrency.format(cooling)}/yr</span></div>
+        <div class="popup-row"><span>Air scenario</span><span>${formatCurrency.format(air)}/yr</span></div>
+        <div class="popup-row"><span>Total scenario</span><span>${formatCurrency.format(total)}/yr</span></div>
+        <div class="popup-row"><span>Scenario tier</span><span>${safe(props.valuation_confidence)}</span></div>`}
+      `;
+    }
+
+    function lowCanopyPopupHtml(props) {
+      return `
+        <div class="popup-title">Low-canopy candidate</div>
+        <div class="popup-row"><span>Height</span><span>${fmt(props.height_m, 1, " m")}</span></div>
+        <div class="popup-row"><span>Greenness</span><span>${fmt(props.gli, 2, "")}</span></div>
+        <div class="popup-row"><span>Nearest tree</span><span>${fmt(props.nearest_tree_m, 1, " m")}</span></div>
+        <div class="popup-row"><span>Score</span><span>${fmt(props.confidence_score, 2, "")}</span></div>
+        <div class="popup-row"><span>Valuation</span><span>Excluded</span></div>
+      `;
+    }
+
+    function missedPopupHtml(props) {
+      return `
+        <div class="popup-title">Possible missed tree</div>
+        <div class="popup-row"><span>Canopy height</span><span>${fmt(props.canopy_height_m, 1, " m")}</span></div>
+        <div class="popup-row"><span>Crown patch</span><span>${fmt(props.patch_area_m2, 0, " m²")}</span></div>
+        <div class="popup-row"><span>Penetration</span><span>${props.multireturn_fraction != null ? Math.round(props.multireturn_fraction*100)+"% multi-return" : "—"}</span></div>
+        <div class="popup-row"><span>Greenness</span><span>${fmt(props.gli, 2, "")}</span></div>
+        <div class="popup-row"><span>Status</span><span>Candidate — not in inventory</span></div>
+        <div class="popup-note">Point-cloud canopy not matched to any inventory tree. High-confidence tier; review before adding.</div>
+      `;
+    }
+
+    map.on("click", "points", (event) => {
+      const f = event.features[0];
+      if (!f) return;
+      openProfile(f.properties);
+    });
+    map.on("click", "crowns-fill", (event) => {
+      // Don't double-fire if a point was clicked at the same spot.
+      const points = map.queryRenderedFeatures(event.point, { layers: ["points"] });
+      if (points.length) return;
+      const f = event.features[0];
+      if (!f) return;
+      openProfile(f.properties);
+    });
+    map.on("click", "missed-candidates", (event) => {
+      const f = event.features[0];
+      if (!f) return;
+      new maplibregl.Popup({ closeButton: true, maxWidth: "300px" })
+        .setLngLat(event.lngLat)
+        .setHTML(missedPopupHtml(f.properties))
+        .addTo(map);
+    });
+    map.on("mouseenter", "missed-candidates", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "missed-candidates", () => { map.getCanvas().style.cursor = ""; });
+    map.on("click", "canopy-fill", (event) => {
+      const p = event.features[0] && event.features[0].properties;
+      if (!p) return;
+      const cover = (p.canopy_cover_pct == null) ? "n/a" : `${(+p.canopy_cover_pct).toFixed(1)}%`;
+      const note = (+p.fully_assessed === 1) ? ""
+        : `<div class="popup-note">Partly inside the modelled extent (${Math.round(p.coverage_fraction * 100)}%); canopy cover is a lower bound.</div>`;
+      new maplibregl.Popup({ closeButton: true, maxWidth: "280px" })
+        .setLngLat(event.lngLat)
+        .setHTML(`<div class="popup-title">${p.board_name}</div>
+          <div class="popup-row"><span>Canopy cover</span><span>${cover}</span></div>
+          <div class="popup-row"><span>Canopy area</span><span>${(+p.canopy_km2).toFixed(1)} km²</span></div>
+          <div class="popup-row"><span>Mapped trees</span><span>${formatNumber.format(p.tree_count || 0)}</span></div>
+          ${note}`)
+        .addTo(map);
+    });
+    map.on("mouseenter", "canopy-fill", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "canopy-fill", () => { map.getCanvas().style.cursor = ""; });
+    map.on("click", "kauri-dieback", (event) => {
+      const p = event.features[0] && event.features[0].properties;
+      if (!p) return;
+      const labels = { pathogen_confirmed: "Pathogen confirmed", symptomatic: "Dieback symptoms",
+                       no_symptoms: "No symptoms recorded", other: "Other / not assessed" };
+      new maplibregl.Popup({ closeButton: true, maxWidth: "280px" })
+        .setLngLat(event.lngLat)
+        .setHTML(`<div class="popup-title">Kauri dieback survey</div>
+          <div class="popup-row"><span>Status</span><span>${labels[p.status] || p.status}</span></div>
+          <div class="popup-row"><span>Field assessment</span><span>${p.field_status}</span></div>
+          <div class="popup-row"><span>Soil sample</span><span>${p.pathogen}</span></div>
+          <div class="popup-row"><span>Surveyed</span><span>${p.survey_year || "—"}</span></div>
+          <div class="popup-note">Auckland Council kauri dieback public surveillance.</div>`)
+        .addTo(map);
+    });
+    map.on("mouseenter", "kauri-dieback", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "kauri-dieback", () => { map.getCanvas().style.cursor = ""; });
+
+    function changePopupHtml(p) {
+      if (p.fate === "removed_to_open") {
+        const priorH = (p.h_2016 != null ? p.h_2016 : p.h_2013);
+        const seen = (p.h_2013 != null && p.h_2016 != null) ? "2013 & 2016"
+          : (p.h_2016 != null ? "2016" : "2013");
+        return `
+          <div class="popup-title">Tree removed · by 2024</div>
+          <div class="popup-row"><span>Confidence</span><span>${safe(p.confidence)}</span></div>
+          <div class="popup-row"><span>Height when present</span><span>${fmt(priorH, 1, " m")}</span></div>
+          <div class="popup-row"><span>Seen in</span><span>${seen}</span></div>
+          ${p.species ? `<div class="popup-row"><span>Likely species</span><span>${safe(p.species)}</span></div>` : ""}
+          <div class="popup-note">An earlier survey detected a canopy here; the 2024 survey shows bare ground. Compare dated aerial photos to check what changed. The displayed basemap may come from another year.</div>`;
+      }
+      const since = p.fate === "established_since_2016" ? "2016" : "2013";
+      return `
+        <div class="popup-title">New tree · since ${since}</div>
+        <div class="popup-row"><span>Height now</span><span>${fmt(p.h_2024, 1, " m")}</span></div>
+        ${p.species ? `<div class="popup-row"><span>Species</span><span>${safe(p.species)}</span></div>` : ""}
+        <div class="popup-note">Bare ground in ${since}; canopy ≥5 m by 2024.</div>`;
+    }
+    map.on("click", "tree-change", (event) => {
+      const f = event.features[0];
+      if (!f) return;
+      new maplibregl.Popup({ closeButton: true, maxWidth: "300px" })
+        .setLngLat(event.lngLat)
+        .setHTML(changePopupHtml(f.properties))
+        .addTo(map);
+    });
+    map.on("mouseenter", "tree-change", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "tree-change", () => { map.getCanvas().style.cursor = ""; });
+
+    map.on("click", "low-candidates", (event) => {
+      const f = event.features[0];
+      if (!f) return;
+      new maplibregl.Popup({ closeButton: true, maxWidth: "300px" })
+        .setLngLat(event.lngLat)
+        .setHTML(lowCanopyPopupHtml(f.properties))
+        .addTo(map);
+    });
+    map.on("mouseenter", "points", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "points", () => { map.getCanvas().style.cursor = ""; });
+    map.on("mouseenter", "crowns-fill", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "crowns-fill", () => { map.getCanvas().style.cursor = ""; });
+    map.on("mouseenter", "low-candidates", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "low-candidates", () => { map.getCanvas().style.cursor = ""; });
+
+    map.on("load", () => {
+      ALTOIdentity.init({map,base:DATA_BASE,version:TILE_VERSION,filter:buildFilter,changed:scheduleViewportStats,open:openProfile});
+      identityReady = true;
+      applyFilters(); applyChangeEmphasis(); applyTrunkScaling(); applyColourMode();
+      document.getElementById("status").textContent = "Select a tree to explore its story";
+    });
+    window.treePilotDebug = { map, state, buildFilter, applyFilters, applyLayerToggles };
+
+    // About / methods & data panel. Deferred to DOMContentLoaded because the
+    // modal markup follows this script in the document.
+    window.addEventListener("DOMContentLoaded", function aboutPanel() {
+      const backdrop = document.getElementById("aboutBackdrop");
+      if (!backdrop) return;
+      const closeButton = document.getElementById("aboutClose");
+      let returnFocus = null;
+      const open = () => {
+        returnFocus = document.activeElement;
+        backdrop.setAttribute("data-open", "true");
+        backdrop.setAttribute("aria-hidden", "false");
+        closeButton.focus({preventScroll: true});
+      };
+      const close = () => {
+        if (!backdrop.hasAttribute("data-open")) return;
+        backdrop.removeAttribute("data-open");
+        backdrop.setAttribute("aria-hidden", "true");
+        if (returnFocus?.focus) returnFocus.focus({preventScroll: true});
+      };
+      document.getElementById("aboutBtn").addEventListener("click", open);
+      document.getElementById("aboutDockBtn").addEventListener("click", open);
+      closeButton.addEventListener("click", close);
+      backdrop.addEventListener("click", (e) => { if (e.target === backdrop) close(); });
+      document.addEventListener("keydown", (e) => {
+        if (!backdrop.hasAttribute("data-open")) return;
+        if (e.key === "Escape") close();
+        if (e.key === "Tab") {
+          const focusable = [...backdrop.querySelectorAll("button, a[href], input, [tabindex]:not([tabindex='-1'])")];
+          if (!focusable.length) return;
+          const first = focusable[0], last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus({preventScroll: true}); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus({preventScroll: true}); }
+        }
+      });
+      document.getElementById("dlModel").href=vq(`${DATA_BASE}/longitudinal/model.json`);
+      const ex = `${DATA_BASE}/exports`;
+      document.getElementById("dlDict").href = `${ex}/akl_trees_data_dictionary.md`;
+      const REPO_URL = "https://github.com/squirmen/alto";
+      const repo = document.getElementById("repoLink");
+      if (REPO_URL) { repo.href = REPO_URL; }
+      else { repo.removeAttribute("href"); repo.style.color = "inherit"; repo.title = "Repository link added on public release"; }
+
+      const releaseMeta = document.getElementById("releaseMeta");
+      const releaseManifestLink = document.getElementById("releaseManifestLink");
+      const metadataUrl = new URL("./release-metadata.json", window.location.href).href;
+      releaseManifestLink.href = metadataUrl;
+      const addMetaRow = (label, value) => {
+        if (value === null || value === undefined || value === "") return;
+        const term = document.createElement("dt");
+        const detail = document.createElement("dd");
+        term.textContent = label;
+        detail.textContent = String(value);
+        releaseMeta.append(term, detail);
+      };
+      fetch(metadataUrl, { cache: "no-store", credentials: "same-origin" })
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then((metadata) => {
+          const release = metadata.release || {};
+          const dataset = metadata.dataset || {};
+          const scope = metadata.headline_scope || {};
+          const models = (metadata.models || []).map(model => model.component.replaceAll("_", " "));
+          releaseMeta.replaceChildren();
+          const releaseStatus = release.status === "research_only_not_independently_validated"
+            ? "Research release · field validation pending"
+            : release.status;
+          addMetaRow("Status", releaseStatus);
+          addMetaRow("Interface built", metadata.assembly?.assembled_utc);
+          addMetaRow("Dataset version", release.dataset_version);
+          addMetaRow("Tool version", release.software_version ? `v${release.software_version}` : null);
+          addMetaRow("Data updated", release.dataset_last_updated_utc);
+          addMetaRow("Inventory", dataset.tree_records != null
+            ? `${formatNumber.format(dataset.tree_records)} tree records · ${formatNumber.format(dataset.crown_records || 0)} crowns`
+            : null);
+          addMetaRow("Models / methods", models.join(" · "));
+          addMetaRow(metadata.assembly ? "Baseline source revision" : "Source revision", release.source_revision
+            ? `${release.source_revision}${release.source_dirty ? " · working tree changes" : ""}`
+            : null);
+          addMetaRow("Service estimates", "Calculated from the stored size and environmental assumptions. The low and high values show how those assumptions affect the result.");
+          if (scope.valuation_records_included != null && scope.modelled_nominal_records_excluded != null) {
+            document.getElementById("headlineScopeCaption").textContent =
+              `Service totals include ${formatNumber.format(scope.valuation_records_included)} valued records and exclude ${formatNumber.format(scope.modelled_nominal_records_excluded)} nominal crownless-tree scenarios.`;
+          }
+        })
+        .catch((error) => {
+          releaseMeta.replaceChildren();
+          addMetaRow("Release metadata", `Unavailable (${error.message})`);
+        });
+    });
+
+    // ====================================================================
+    // TREE PROFILE PANEL — storytelling asset page for a single tree.
+    // ====================================================================
+    const profilePanel = document.getElementById("treeProfile");
+    const profileBody = document.getElementById("treeProfileBody");
+    let profileHighlightId = null;
+    let profileRequestId = 0;
+
+    function closeProfile() {
+      ALTOEvidenceWorkspace.dispose();
+      profileRequestId++;
+      const restoreFocus = profilePanel.contains(document.activeElement);
+      document.body.dataset.profileOpen = "false";
+      profilePanel.setAttribute("aria-hidden", "true");
+      profilePanel.hidden = true; profilePanel.inert = true;
+      profileBody.replaceChildren();
+      if (restoreFocus) map.getCanvas().focus({preventScroll: true});
+      profileHighlightId = null;
+      if (map.getLayer("points-highlight")) {
+        map.setFilter("points-highlight", ["==", ["get", "tree_id"], "__none__"]);
+      }
+    }
+    document.getElementById("treeProfileClose").addEventListener("click", closeProfile);
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || document.getElementById("treeComparison")?.open || document.getElementById("aboutBackdrop")?.hasAttribute("data-open")) return;
+      if (!profilePanel.hidden) closeProfile();
+      else if (mobileLayout.matches && document.body.dataset.asideCollapsed === "false") setSidebarCollapsed(true, true);
+    });
+
+    function num(v) { return ALTOAnalysis.number(v); }
+    function money(v) { const n = num(v); return n === null ? "—" : formatCurrency.format(n); }
+    function metres(v, d = 1) { const n = num(v); return n === null ? "—" : `${n.toFixed(d)} m`; }
+    function litres(m3) { const n = num(m3); return n === null ? "—" : `${formatNumber.format(Math.round(n * 1000))} L`; }
+
+    const LIFE_STAGE_ORDER = ["juvenile", "young", "semi-mature", "mature", "veteran"];
+    const LIFE_STAGE_LABEL = {
+      juvenile: "Juvenile", young: "Young", "semi-mature": "Semi-mature",
+      mature: "Mature", veteran: "Veteran / senescent"
+    };
+    const DOMINANCE_LABEL = {
+      dominant: "Dominant", "co-dominant": "Co-dominant", suppressed: "Suppressed"
+    };
+    const SETTING_LABEL = {
+      standalone: "Standalone tree", cluster: "Part of a cluster", forest_patch: "Within a forest patch"
+    };
+    const IRR_LABEL = {
+      low: "Low", moderate: "Moderate", high: "High", very_high: "Very high",
+      effectively_irreplaceable: "Effectively irreplaceable"
+    };
+    const CONDITION_LABEL = {
+      good: "Good", fair: "Fair", sparse_review: "Sparse — review", unknown: "Unknown"
+    };
+
+    function profileRow(label, value, sub) {
+      if (value === null || value === undefined || value === "" || value === "—") return "";
+      const subHtml = sub ? `<span class="pp-sub">${sub}</span>` : "";
+      return `<div class="pp-row"><span class="pp-label">${label}</span><span class="pp-value">${value}${subHtml}</span></div>`;
+    }
+
+    function lifeStageBar(stage) {
+      const idx = LIFE_STAGE_ORDER.indexOf(stage);
+      const segs = LIFE_STAGE_ORDER.map((s, i) =>
+        `<span class="pp-stage-seg${i <= idx && idx >= 0 ? " on" : ""}" title="${LIFE_STAGE_LABEL[s]}"></span>`
+      ).join("");
+      return `<div class="pp-stage">${segs}</div><div class="pp-stage-label">${LIFE_STAGE_LABEL[stage] || "Unknown"}</div>`;
+    }
+
+    // Per-tree evidence grade, so beta reviewers know what to trust. Combines
+    // the record's provenance with point-cloud corroboration.
+    function dataConfidence(props) {
+      const src = props.source_primary;
+      let level, label;
+      // record_role is the audited provenance class written by the source
+      // remediation. Prefer it over pattern-matching source_primary strings,
+      // and keep the string match as a fallback for older tiles.
+      const ROLE = {
+        managed_inventory: ["high", "Authoritative inventory record"],
+        statutory_or_notable_inventory: ["high", "Statutory or notable register record"],
+        surveillance_observation: ["med", "Disease surveillance record"],
+        crowdsourced_observation: ["med", "Crowd-sourced record"],
+        remote_sensing_detection: ["model", "Machine-detected (LiDAR)"]
+      }[props.record_role];
+      if (ROLE) {
+        [level, label] = ROLE;
+        // Promoted candidates are remote detections that no verification pass
+        // has confirmed, so they sit below an ordinary LiDAR detection.
+        if (src === "pointcloud_missed_promoted" || src === "low_canopy_promoted") {
+          level = "low"; label = "Machine-detected — unverified";
+        }
+      } else if (["tree_register_points", "notable_trees_overlay"].includes(src)) {
+        level = "high"; label = "Authoritative inventory record";
+      } else if (src === "ruru_obskauri_tiaki_public") {
+        level = "med"; label = "Disease surveillance record";
+      } else if (src === "osm_natural_tree") {
+        level = "med"; label = "Crowd-sourced record";
+      } else if (src === "lidar_inferred_canopy") {
+        level = "model"; label = "Machine-detected (LiDAR)";
+      } else if (src === "pointcloud_missed_promoted" || src === "low_canopy_promoted") {
+        level = "low"; label = "Machine-detected — unverified";
+      } else {
+        level = "model"; label = "Modelled record";
+      }
+      const tierConfidence = {
+        very_likely: ["model", "Machine-detected (LiDAR) · very likely a tree"],
+        probable: ["model", "Machine-detected (LiDAR) · probably a tree"],
+        possible: ["low", "Machine-detected (LiDAR) · possibly a tree"],
+        unverified: ["low", "Machine-detected · not confirmed by the 2024 laser survey"],
+        possible_duplicate: ["low", "Possible duplicate of a nearby record"],
+        not_assessed: ["model", "Machine-detected (LiDAR) · not yet checked against the 2024 laser survey"]
+      }[props.evidence_tier];
+      if (tierConfidence) [level, label] = tierConfidence;
+      if (ALTOAnalysis.flag(props.restored)) label += " · restored record";
+      if (ALTOAnalysis.flag(props.pc_canopy_present)) label += " · point-cloud confirmed";
+      else if (ALTOAnalysis.flag(props.pc_review_no_canopy)) label += " · ⚠ no canopy in point cloud";
+      return { level, label };
+    }
+
+    function renderProfile(props) {
+      const inferred = isDetection(props);
+      const speciesName = inferred
+        ? speciesClassLabel(props.species_class)
+        : safe(props.species_common || props.species_latin || "Species unrecorded");
+      const identificationNote = props.species_class_confidence
+        ? `${Math.round(Number(props.species_class_confidence) * 100)}% model score · uncalibrated`
+        : (!inferred && props.species_confidence
+          ? safe(props.species_confidence.replaceAll("_", " "))
+          : null);
+
+      const sourceLabel = {
+        tree_register_points: "Auckland Council Tree Register",
+        notable_trees_overlay: "Notable Trees overlay",
+        ruru_obskauri_tiaki_public: "Kauri survey (RŪRU)",
+        osm_natural_tree: "OpenStreetMap (crowd-sourced)",
+        lidar_inferred_canopy: "LiDAR-inferred",
+        lidar_pointcloud_v4: "2024 LiDAR point cloud",
+        lidar_pointcloud_v5: "2024 LiDAR and NDVI crown detection",
+        low_canopy_promoted: "LiDAR low-canopy detection",
+        pointcloud_missed_promoted: "LiDAR point-cloud detection"
+      }[props.source_primary] || safe(props.source_primary);
+
+      // ---- header
+      const idShort = String(props.tree_id || "").replace(/^akl_tree_/, "");
+      let html = `
+        <div class="pp-hero">
+          <div class="pp-hero-species">${speciesName}</div>
+          ${!inferred && props.species_latin ? `<div class="pp-hero-latin">${safe(props.species_latin)}</div>` : ""}
+          ${inferred ? `<div class="pp-hero-latin">Predicted growth-form class · legacy RGB model</div>` : ""}
+          <div class="pp-hero-meta">
+            <span class="pp-chip">${sourceLabel}</span>
+            ${ALTOAnalysis.flag(props.is_protected_notable) ? `<span class="pp-chip protected">Protected</span>` : ""}
+            ${identificationNote ? `<span class="pp-chip muted">${identificationNote}</span>` : ""}
+            ${inferred ? `<span class="pp-chip muted">Model guess</span>` : ""}
+          </div>
+          <div class="pp-confidence pp-conf-${dataConfidence(props).level}">${dataConfidence(props).label}</div>
+        </div>`;
+
+      // ---- identification (tree_species_attributes)
+      // growth_form_confidence is the honest split: 'known' means the record
+      // carried a species or genus that matched the i-Tree reference, so the
+      // growth form is an actual identification. 'model_inferred' is the legacy
+      // aerial-RGB classifier, which is not independently validated.
+      const GF_PROVENANCE = {
+        known: ["Recorded identification", "matched to the i-Tree species reference"],
+        model_inferred: ["Estimated from imagery", "legacy aerial-RGB classifier"],
+        none: ["Not determined", null]
+      };
+      const gfMeta = GF_PROVENANCE[props.growth_form_confidence] || null;
+      // Never state a growth form without saying where it came from. An
+      // unlabelled class reads as an identification, and for 1.37 million of
+      // these records it is a model guess.
+      //
+      // For a machine-detected record whose growth form is the same model
+      // guess, the predicted-class row above already says so, so this block is
+      // shown only where it adds something: a recorded identification, or an
+      // inventory record whose growth form is modelled rather than matched.
+      const showIdentification = props.growth_form && gfMeta
+        && (props.growth_form_confidence === "known" || !inferred);
+      const idRows = (showIdentification ? [
+        profileRow("Growth form", speciesClassLabel(props.growth_form), gfMeta[0]),
+        profileRow("Basis", gfMeta[1])
+      ] : []).join("");
+      if (idRows.replace(/\s/g, "")) {
+        html += `<div class="pp-section"><div class="pp-section-title">Identification</div>${idRows}</div>`;
+      }
+
+      // ---- dimensions & structure (PRIORITY 1)
+      const structRows = [
+        profileRow("Height (max)", metres(props.height_max_m ?? props.crown_max_chm_m)),
+        profileRow("Canopy area", props.crown_area_m2 ? `${fmt(props.crown_area_m2, 0, " m²")}` : null),
+        profileRow("Crown volume", props.crown_volume_m3 ? `${formatNumber.format(Math.round(props.crown_volume_m3))} m³` : null),
+        profileRow("Crown diameter", metres(props.crown_diameter_m)),
+        profileRow("DBH (estimated)", props.dbh_cm_crown_est ? `${fmt(props.dbh_cm_crown_est, 0, " cm")}` : null, props.dbh_confidence ? safe(props.dbh_confidence.replace("modelled_", "")) : null),
+        profileRow("Height profile", (props.height_p25_m != null) ? `P25 ${fmt(props.height_p25_m,1)} · P50 ${fmt(props.height_p50_m,1)} · P75 ${fmt(props.height_p75_m,1)} · P95 ${fmt(props.height_p95_m,1)} m` : null),
+        profileRow("Canopy density", props.canopy_density_proxy != null ? `${Math.round(props.canopy_density_proxy * 100)}%` : null, "fullness of vertical profile"),
+        profileRow("Structural complexity", props.crown_complexity_index != null ? fmt(props.crown_complexity_index, 2) : null)
+      ].join("");
+      if (structRows) html += `<div class="pp-section"><div class="pp-section-title">Dimensions & structure</div>${structRows}</div>`;
+
+      // ---- life stage (PRIORITY 6) + replacement (PRIORITY 7)
+      let lifeHtml = "";
+      if (props.life_stage) lifeHtml += lifeStageBar(props.life_stage);
+      const replRows = [
+        profileRow("Years to regrow canopy", props.replacement_years_canopy != null ? `${formatNumber.format(Math.round(props.replacement_years_canopy))} yrs` : null),
+        profileRow("Irreplaceability", IRR_LABEL[props.irreplaceability_class] || null),
+        profileRow("Condition (single-snapshot)", CONDITION_LABEL[props.condition_proxy] || null, props.condition_proxy && props.condition_proxy !== "unknown" ? "low confidence" : null)
+      ].join("");
+      if (lifeHtml || replRows) html += `<div class="pp-section"><div class="pp-section-title">Life stage & replacement</div>${lifeHtml}${replRows}</div>`;
+
+      // ---- exploratory ecosystem-service sensitivity scenarios
+      const total = num(props.total_value_nzd_y);
+      const svcRows = [
+        profileRow("Carbon stored", props.stored_co2e_tonnes_est != null ? `${fmt(props.stored_co2e_tonnes_est, 2, " tCO₂e")}` : null, money(props.carbon_value_nzd_y) + "/yr"),
+        profileRow("Stormwater", props.avoided_runoff_m3_y != null ? litres(props.avoided_runoff_m3_y) + "/yr" : null, money(props.stormwater_value_nzd_y) + "/yr"),
+        profileRow("Cooling", num(props.cooling_value_nzd_y) != null ? money(props.cooling_value_nzd_y) + "/yr" : null),
+        profileRow("Air quality (PM2.5)", props.pm25_removed_kg_y != null ? `${fmt(props.pm25_removed_kg_y, 2, " kg")}/yr` : null, money(props.air_quality_value_nzd_y) + "/yr")
+      ].join("");
+      // Records with no segmented crown carry no primary valuation. They are
+      // real, authoritative trees (register, notable, kauri surveillance,
+      // OpenStreetMap), so say why the figure is absent rather than showing a
+      // blank. The nominal crownless scenario is reported per tree and is
+      // deliberately excluded from every headline total.
+      const scenarioOnly = total == null && props.scenario_total_value_nzd_y != null;
+      if (scenarioOnly) {
+        html += `<div class="pp-section pp-value">
+            <div class="pp-section-title">Ecosystem-service estimates</div>
+            <div class="pp-value-hero">${formatCurrency.format(num(props.scenario_total_value_nzd_y))}<span>nominal scenario only</span></div>
+            <div class="pp-note">This record has no measured canopy, so it carries no primary valuation. The figure above substitutes a placeholder crown and is excluded from every headline total.</div>
+          </div>`;
+      } else {
+        html += `<div class="pp-section pp-value">
+            <div class="pp-section-title">Ecosystem-service estimates</div>
+            <div class="pp-value-hero">${total != null ? formatCurrency.format(total) : "—"}<span>modelled annual estimate</span></div>
+            ${svcRows}
+            ${props.valuation_confidence ? `<div class="pp-note">Scenario tier: ${safe(props.valuation_confidence)}</div>` : ""}
+            ${total == null ? `<div class="pp-note">No measured canopy for this record, so no service scenario is calculated.</div>` : ""}
+          </div>`;
+      }
+
+      // ---- growing context (PRIORITY 2 + 8)
+      const ctxRows = [
+        profileRow("Setting", SETTING_LABEL[props.growth_setting] || null),
+        profileRow("Canopy position", DOMINANCE_LABEL[props.dominance_class] || null),
+        profileRow("Nearest tree", metres(props.nearest_tree_m)),
+        profileRow("Neighbours (25 m)", props.neighbours_25m != null ? formatNumber.format(props.neighbours_25m) : null),
+        profileRow("Local canopy density", props.local_canopy_density_25m != null ? `${Math.round(props.local_canopy_density_25m * 100)}% (25 m)` : null),
+        profileRow("Crown overlap", props.crown_overlap_index != null ? `${Math.round(props.crown_overlap_index * 100)}%` : null),
+        profileRow("Neighbourhood diversity", props.neighbourhood_shannon != null ? `${fmt(props.neighbourhood_shannon, 2)} (Shannon)` : null),
+        profileRow("Native share nearby", props.neighbourhood_native_share != null ? `${Math.round(props.neighbourhood_native_share * 100)}%` : null)
+      ].join("");
+      if (ctxRows) html += `<div class="pp-section"><div class="pp-section-title">Growing context</div>${ctxRows}</div>`;
+
+      // ---- growth & change (PRIORITY 3 + 4) — real when historic LiDAR is joined
+      const hy = props.historic_year;
+      const status = props.tree_status;
+      // Data-source year chips: which captures actually inform this tree.
+      // Shown for every tree (incl. the no-change fallback) so it's clear the
+      // 2016 comparison / point-cloud / imagery layers exist per record.
+      function dataYearChips() {
+        const inHistoric = status === "existing" || status === "likely_removed";
+        const hasPc = props.pointcloud_class && props.pointcloud_class !== "no_data";
+        const hasImg = props.growth_form_confidence === "model_inferred";
+        return `
+          <div class="pp-timeline">
+            <span class="pp-tl-item ${inHistoric ? "on" : "muted"}">${hy || "2016"} LiDAR ${inHistoric ? "✓" : "—"}</span>
+            <span class="pp-tl-item ${num(props.height_max_m ?? props.crown_max_chm_m) != null ? "on" : "muted"}">2024 canopy model ${num(props.height_max_m ?? props.crown_max_chm_m) != null ? "✓" : "—"}</span>
+            <span class="pp-tl-item ${hasPc ? "on" : "muted"}">2024 point cloud ${hasPc ? "✓" : "—"}</span>
+            <span class="pp-tl-item ${hasImg ? "on" : "muted"}">2024–25 imagery ${hasImg ? "✓" : "—"}</span>
+          </div>`;
+      }
+      if (hy || status) {
+        const timeline = dataYearChips();
+        const STATUS_LABEL = {
+          existing: "Established (present in both captures)",
+          newly_established: `New since ${hy || "historic capture"}`,
+          likely_removed: "Canopy lost (was present, now gone)"
+        };
+        const VEL_LABEL = {
+          expanding: "Expanding ↑", stable: "Stable →", declining: "Declining ↓",
+          newly_established: "Newly established", unknown: "Unknown"
+        };
+        const growthRows = [
+          profileRow("Status", STATUS_LABEL[status] || safe(status)),
+          profileRow("Growth trend", VEL_LABEL[props.growth_velocity_class] || null),
+          profileRow("Height then → now", (props.historic_height_m != null)
+            ? `${fmt(props.historic_height_m,1)} → ${fmt(props.current_height_m,1)} m` : null),
+          profileRow("Height change", props.height_change_m != null
+            ? `${props.height_change_m > 0 ? "+" : ""}${fmt(props.height_change_m,1)} m (${props.height_change_pct > 0 ? "+" : ""}${fmt(props.height_change_pct,0)}%)` : null),
+          profileRow("Annual growth", props.annual_height_growth_m != null
+            ? `${props.annual_height_growth_m > 0 ? "+" : ""}${fmt(props.annual_height_growth_m,2)} m/yr` : null),
+          profileRow("Canopy change", props.canopy_change_class && props.canopy_change_class !== "unknown" ? safe(props.canopy_change_class.replace(/_/g," ")) : null),
+          props.structural_decline_flag ? `<div class="pp-row"><span class="pp-label">⚠ Flag</span><span class="pp-value" style="color:var(--protected)">Structural decline</span></div>` : ""
+        ].join("");
+        html += `<div class="pp-section"><div class="pp-section-title">Growth &amp; change</div>${timeline}${growthRows}</div>`;
+      } else {
+        html += `<div class="pp-section">
+            <div class="pp-section-title">Detection history</div>
+            ${dataYearChips()}
+            <div class="pp-note">The map tile has no paired historic comparison. Available 2013/2016/2024 estimates appear in the full research record below.</div>
+          </div>`;
+      }
+
+      // ---- point-cloud verification (classified 2024 LiDAR returns)
+      if (props.pointcloud_class && props.pointcloud_class !== "no_data") {
+        const PC_LABEL = {
+          vegetation: "Vegetation confirmed",
+          low_vegetation: "Low vegetation only",
+          building: "Building surface",
+          structure: "Built structure",
+          mixed: "Mixed returns",
+          sparse: "Too few returns"
+        };
+        const isFlag = props.pc_review_no_canopy ? true : false;
+        const verdictColor = (props.pointcloud_class === "vegetation")
+          ? "var(--park)"
+          : (["building", "structure"].includes(props.pointcloud_class) ? "var(--protected)" : "var(--muted)");
+        const pcRows = [
+          `<div class="pp-row"><span class="pp-label">Classification</span><span class="pp-value" style="color:${verdictColor}">${PC_LABEL[props.pointcloud_class] || safe(props.pointcloud_class)}</span></div>`,
+          profileRow("Woody canopy", props.pc_canopy_present ? "Present" : "Not detected"),
+          profileRow("Canopy top (returns)", metres(props.canopy_top_m)),
+          profileRow("Canopy penetration", props.multireturn_fraction != null ? `${Math.round(props.multireturn_fraction * 100)}% multi-return` : null, "Pattern of laser returns through the canopy"),
+          profileRow("Vegetation share", props.veg_fraction != null ? `${Math.round(props.veg_fraction * 100)}%` : null),
+          profileRow("Returns sampled", props.n_points != null ? formatNumber.format(props.n_points) : null),
+          isFlag ? `<div class="pp-row"><span class="pp-label">⚠ Flag</span><span class="pp-value" style="color:var(--no-crown)">No canopy — review</span></div>` : ""
+        ].join("");
+        html += `<div class="pp-section"><div class="pp-section-title">Point-cloud verification</div>${pcRows}<div class="pp-note">Classified 2024 LiDAR point returns over this footprint.</div></div>`;
+
+        // ---- canopy structure (3-D metrics from the point returns)
+        if (ALTOAnalysis.flag(props.pc_canopy_present)) {
+          const layerLabel = props.n_canopy_layers != null
+            ? (props.n_canopy_layers <= 1 ? "Single layer"
+               : `${props.n_canopy_layers} layers${props.understory_present ? " (understory)" : ""}`)
+            : null;
+          const structRows = [
+            profileRow("Canopy cover", props.canopy_cover != null ? `${Math.round(props.canopy_cover * 100)}% closed` : null, "first returns hitting canopy vs. gaps to ground"),
+            profileRow("Height to live crown", metres(props.height_to_live_crown_m), "lowest sustained foliage — clearance / pruning"),
+            profileRow("Vertical structure", layerLabel),
+            profileRow("Canopy roughness", props.canopy_rugosity_m != null ? `${fmt(props.canopy_rugosity_m, 1)} m` : null, "top-surface variation — structural complexity")
+          ].join("");
+          if (structRows.replace(/\s/g, "")) {
+            html += `<div class="pp-section"><div class="pp-section-title">Canopy structure</div>${structRows}</div>`;
+          }
+        }
+      } else if (props.pointcloud_class === "no_data") {
+        // Say the verification is absent rather than leaving a silent gap. About
+        // one in ten machine-detected records sits outside the classified
+        // point-cloud tiles, and an unverified record is not a confirmed one.
+        html += `<div class="pp-section">
+            <div class="pp-section-title">Point-cloud verification</div>
+            <div class="pp-row"><span class="pp-label">Status</span><span class="pp-value" style="color:var(--muted)">Not covered by the classified point cloud</span></div>
+            <div class="pp-note">A check against the classified 2024 laser returns is still needed for this record.</div>
+          </div>`;
+      }
+
+      // ---- provenance
+      const flood = props.in_flood_prone_area == null && props.in_flood_plain == null ? "Not available" : (ALTOAnalysis.flag(props.in_flood_prone_area) ? "Flood-prone" : (ALTOAnalysis.flag(props.in_flood_plain) ? "Flood plain" : "No mapped flood overlap"));
+      html += `<div class="pp-section pp-prov">
+          <div class="pp-section-title">Data & provenance</div>
+          ${profileRow("Tree ID", `<code>${safe(idShort)}</code>`)}
+          ${profileRow("Source dataset", sourceLabel)}
+          ${profileRow("Structure", "2024 LiDAR DSM−DEM (1 m)")}
+          ${profileRow("Growth form", inferred ? "Estimated from aerial colour" : "Derived from council / OSM record")}
+          ${profileRow("Paved fraction", props.paved_fraction_source ? safe(props.paved_fraction_source.replace(/_/g, " ")) : null)}
+          ${profileRow("Flood context", flood)}
+        </div>`;
+
+      return html;
+    }
+
+    const evidenceMapReady = new Promise(resolve => map.on('load',resolve));
+    ALTOGround.init({kyteBase:'./kyte',dataBase:DATA_BASE,version:TILE_VERSION});
+    window.addEventListener('DOMContentLoaded', () => ALTOEvidenceWorkspace.init({
+      dataBase: DATA_BASE, version: TILE_VERSION,
+      load: id => ALTOTreeDetails.load(DATA_BASE,TILE_VERSION,id),
+      ready: evidenceMapReady, open: openProfile,
+      locate: coordinates => map.flyTo({center:coordinates,zoom:18})
+    }));
+
+    async function openProfile(props) {
+      if (!props?.tree_id) return;
+      ALTOEvidenceWorkspace.dispose();
+      if (mobileLayout.matches) setSidebarCollapsed(true);
+      profilePanel.hidden = false; profilePanel.inert = false;
+      const requestId = ++profileRequestId;
+      profileBody.innerHTML = renderProfile(props) + `<div id="profileRichData" class="pp-section pp-loading"><div class="pp-skeleton"><span></span><span></span><span></span><span></span></div><p class="pp-note">Loading the full research record…</p></div>`;
+      profileBody.scrollTop = 0;
+      document.body.dataset.profileOpen = "true";
+      profilePanel.setAttribute("aria-hidden", "false");
+      document.getElementById("treeProfileClose").focus({preventScroll: true});
+      // highlight the selected tree on the map
+      profileHighlightId = props.tree_id;
+      if (map.getLayer("points-highlight")) {
+        map.setFilter("points-highlight", ["==", ["get", "tree_id"], props.tree_id || "__none__"]);
+      }
+      try {
+        const {schema,record} = await ALTOTreeDetails.load(DATA_BASE,TILE_VERSION,props.tree_id);
+        if(requestId!==profileRequestId || profilePanel.hidden)return;
+        const scroll=profileBody.scrollTop;
+        profileBody.innerHTML=ALTOEvidence.render(record)+'<div class="identity-slot"></div><details class="profile-overview"><summary>More dimensions &amp; context</summary>'+renderProfile(ALTOTreeDetails.overviewProps(record,props))+'</details>'+ALTOTreeDetails.render(schema,record);
+        // Ground evidence and place context arrive a moment later; neither blocks the record.
+        const summary=profileBody.querySelector('.evidence-summary');
+        summary?.insertAdjacentHTML('afterend','<div class="ground-slot"><section class="evidence-section ground-section"><h3>Seen from the ground</h3><p class="pp-note">Checking for accepted KYTE visits…</p></section></div>');
+        summary?.querySelector('.evidence-id')?.insertAdjacentHTML('afterend','<p class="evidence-place"></p>');
+        const groundPromise=ALTOGround.load(props.tree_id).then(data=>{
+          const slot=profileBody.querySelector('.ground-slot');if(slot&&requestId===profileRequestId)slot.innerHTML=ALTOGround.render(data,record);
+          return ALTOGround.live(data,record);
+        }).catch(()=>{const slot=profileBody.querySelector('.ground-slot');if(slot&&requestId===profileRequestId)slot.innerHTML=ALTOGround.render(null,record);return null;});
+        const r0=record.datasets.record||{};
+        ALTOGround.board(Number(r0.lon),Number(r0.lat)).then(b=>{const place=profileBody.querySelector('.evidence-place');if(place&&requestId===profileRequestId){if(b)place.innerHTML=ALTOGround.renderBoard(b);else place.remove();}}).catch(()=>profileBody.querySelector('.evidence-place')?.remove());
+        ALTOEvidenceWorkspace.bind(profileBody,record,groundPromise);
+        ALTOIdentity.mount(profileBody,record);
+        window.ALTOFieldBridge?.mount(profileBody,record);
+        window.ALTOSurveyTime?.mount(profileBody,record,DATA_BASE,TILE_VERSION);
+        profileBody.scrollTop=scroll;
+        profileBody.querySelector('.pp-download-record').addEventListener('click',async()=>{
+          let exported={...record,derived:{vertical_structure:ALTOTreeModel.metrics(record)}};
+          try {const model=await ALTOFuture.load(DATA_BASE,TILE_VERSION);const prepared=await ALTOFuture.prepare(record,model,DATA_BASE,TILE_VERSION);exported={...record,derived:{vertical_structure:ALTOTreeModel.metrics(record),canopy_height_scenario:ALTOFuture.project(prepared,model),local_growth_context:prepared.model_context?.local_growth||null,model_id:model.model_id,model_snapshot:model.generated_utc,limitations:model.limitations}};} catch {}
+          exported.derived.record_identity=ALTOIdentity.context(record);
+          try{exported.derived.survey_timing=ALTOSurveyTime.assess(record,await ALTOSurveyTime.load(DATA_BASE,TILE_VERSION));}catch{exported.derived.survey_timing={status:"unavailable"};}
+          const url=URL.createObjectURL(new Blob([JSON.stringify(exported,null,2)],{type:'application/json'}));
+          const link=document.createElement('a');link.href=url;link.download=record.tree_id+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        });
+      } catch(error) {
+        if(requestId!==profileRequestId || profilePanel.hidden)return;
+        let extra=document.getElementById('profileRichData');
+        if(!extra){extra=document.createElement('div');extra.className='pp-section';profileBody.append(extra);}
+        extra.innerHTML='<p class="pp-note">The map summary is available, but the full research record could not load.</p><button type="button" class="pp-retry-details">Retry full record</button>';
+        extra.querySelector('button').addEventListener('click',()=>openProfile(props));
+      }
+    }
+  </script>
+  <dialog id="treeComparison" class="tree-comparison" aria-labelledby="comparisonTitle">
+    <header><div><h2 id="comparisonTitle">Compare your trees</h2><p>Save up to four trees. Your selection stays in this browser.</p></div><button id="comparisonClose" type="button" aria-label="Close comparison">✕</button></header>
+    <div id="comparisonBody"></div><div class="comparison-actions"><button id="comparisonCsv" type="button" disabled>Download comparison · CSV</button><button id="comparisonJson" type="button" disabled>Download full records · JSON</button></div>
+  </dialog>
+  <p id="treeLinkStatus" class="tree-link-status" role="status" hidden></p>
+  <div id="aboutBackdrop" class="about-backdrop" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" aria-hidden="true">
+    <div class="about-modal">
+      <button id="aboutClose" class="about-close" type="button" aria-label="Close">✕</button>
+      <img class="about-logo" src="./alto-logo.png?v=20260928-v5b" alt="ALTO" width="3934" height="1170">
+      <h2 id="aboutTitle">Aotearoa Long-term Tree Observatory</h2>
+      <p class="about-sub">An open observatory from the Better Places Lab. Explore Auckland’s trees, investigate our estimates and help test what the models get right or wrong.</p>
+
+      <p>ALTO brings Auckland’s tree records, aerial laser surveys and imagery together. For each tree, it estimates size, form, roots and environmental benefits, and links earlier canopy records where available. Open a profile to see the source data, compare estimates and find observations that could improve them.</p>
+
+      <h3>Auckland release totals</h3>
+      <section class="stats" aria-label="Auckland release totals">
+        <div class="stat"><strong id="visibleCount">0</strong><span>total trees</span></div>
+
+        <div class="stat"><strong id="crownCount">0</strong><span>crowns</span></div>
+        <div class="stat"><strong id="inferredCount">0</strong><span>detected from LiDAR</span></div>
+        <div class="stat"><strong id="protectedCount">0</strong><span>protected</span></div>
+        <div class="stat"><strong id="valueTotal">$0</strong><span>modelled value / year</span></div>
+        <div class="stat"><strong id="runoffTotal">0 m³</strong><span>estimated runoff / year</span></div>
+        <div class="stat"><strong id="carbonTotal">0 tCO₂e</strong><span>estimated carbon</span></div>
+      </section>
+      <p id="headlineScopeCaption" class="stats-scope">Service totals exclude nominal crownless-tree scenarios.</p>
+
+      <h3>Explore a tree’s data</h3>
+      <p>Select a tree to explore its source records, dimensions, root estimates, environmental benefits and canopy history. You can download that tree’s complete record as JSON from its profile.</p>
+      <div class="about-dl">
+        <a id="dlModel" href="#" download>Forecast method &amp; benchmark<small>parameters, errors and assumptions · JSON</small></a>
+        <a id="dlDict" href="#">Data dictionary<small>field definitions</small></a>
+      </div>
+
+      <h3>Methods and sources</h3>
+      <p>The methods explain how ALTO finds trees, estimates their dimensions and benefits, links surveys through time, and tests its predictions. They include the assumptions, test results and gaps still to resolve. <a id="repoLink" class="about-link" href="#" target="_blank" rel="noopener">Model code and documentation</a>.</p>
+
+      <h3>V5 crown redraw</h3><p>V5 combines the 2024 laser survey with aerial NDVI to redraw the canopy. Fewer or different crowns reflect the new segmentation. Earlier detections, dimensions and field observations remain in each tree’s full record.</p><p>Unverified Council notable-tree positions stay separate from automatic crown matches. Crown boundaries can still split one tree or join several trees. <a href="./v5-methods.html">Read the v5 release notes</a>.</p><h3>Coverage and limitations</h3>
+      <p>Trees found only in the 2024 laser survey are labelled by how strong the evidence is: very likely, probably or possibly a tree. A possible tree may be a hedge or a large shrub. The “Possible &amp; unverified trees” switch in Layers hides them.</p>
+      <p>The current map covers metropolitan Auckland. Earlier canopy records depend on historic survey coverage and successful matching. Records outside the v5 footprint retain earlier measurements. Unmatched records remain available for review. Trunk diameter and roots are estimated; field measurements would improve both. Species names come from source inventories, while the classifier estimates four broad tree types.</p>
+
+      <h3>Release provenance</h3>
+      <dl id="releaseMeta" class="release-meta" aria-live="polite"><dt>Release</dt><dd class="release-meta-status">Loading metadata…</dd></dl>
+      <a id="releaseManifestLink" class="release-manifest-link" href="./release-metadata.json">Release metadata (JSON)</a>
+
+      <h3>Attribution</h3>
+      <p>Developed by the Better Places Lab (Dr Timothy F. Welch), Waipapa Taumata Rau | University of Auckland. Built on Auckland Council open data, LINZ LiDAR and imagery, and i-Tree species references.</p>
+    </div>
+  </div>
+</body>
+</html>

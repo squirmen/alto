@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const path='/data/alto/working/alto_v5_20260922/deploy/alto_v5_upload_20260923/';
+const details=require(path+'tree-details.js'),evidence=require(path+'tree-evidence.js'),identity=require(path+'tree-identity.js'),future=require(path+'tree-future.js'),analysis=require(path+'map-analysis.js');
+const r={tree_id:'akl_tree_lid_1097624',database_mtime_ns:'123',datasets:{record:{species_common:'Unknown',source_primary:'lidar_inferred_canopy'},identity:{current_primary_tree_id:'akl_tree_lid_1097624',source_records:5,old_overlapping_crowns:3,within_v5_footprint:1},crown:{crown_max_chm_m:12.76,crown_area_m2:191,crown_diameter_m:15.59,crown_source:'v5'},assets:{height_max_m:12.76},previous_assets:{height_p95_m:18},lidar:{chm_local_max_2m_m:30},trajectory:{present_2024:1,h_2024:15,present_2016:1,h_2016:12}}};
+assert.equal(details.overviewProps(r,{}).crown_max_chm_m,12.76);
+assert.equal(evidence.explain(r).height,12.76);
+assert.ok(identity.render({...r,datasets:{...r.datasets,location_review:{source_position_status:'unverified'}}}).includes('Council position is unverified'));
+assert.ok(identity.render(r).includes('5 source records'));
+const model={application_database_mtime_ns:'123',database_mtime_ns:'older fit',projection:{cohort_model:{cohorts:[{low_height_m:0,high_height_m:100,n:50,annual_change_quantiles:[.1,.2,.3]}]},personal_trend_weight:.3,neighbour_trend_weight:.2,annual_band_halfwidth_m:.1,horizons:[2030,2040]},interpolation:{validation_abs_error_90_m:1},model_id:'existing-fit',fit_id:'existing'};
+const projection=future.project(r,model);assert.equal(projection.anchor_height_m,12.76);assert.equal(projection.personal_rate,null);assert.ok(projection.points[0].height_m>=12.76);assert.ok(projection.points[1].height_m>=projection.points[0].height_m);
+assert.ok(future.project({...r,datasets:{record:r.datasets.record,identity:{evidence_tier:'location_unverified'},trajectory:r.datasets.trajectory}},model).unavailable);
+assert.ok(future.project({...r,database_mtime_ns:'wrong'},model).unavailable);
+const ps=future.project({...r,datasets:{...r.datasets,identity:{old_overlapping_crowns:1,new_overlapping_crowns:1}}},model);assert.equal(ps.personal_rate,3/8);
+assert.equal(analysis.summarise([{properties:{tree_id:'x',species_common:'Species not recorded',crown_source:'v5',crown_max_chm_m:12,crown_area_m2:0}}]).speciesCount,0);
+assert.equal(details.bucketId('akl_tree_not_336').length,3);
+console.log('V5 current dimensions, identity, forecast anchoring, unknown taxa and snapshot checks passed.');

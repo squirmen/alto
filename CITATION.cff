@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use ALTO, please cite it as below."
+title: "ALTO: Aotearoa Long-term Tree Observatory"
+version: "v5 (2026-09-23 Auckland release)"
+date-released: 2026-09-23
+url: "https://alto.tfwelch.com"
+repository-code: "https://github.com/squirmen/alto"
+abstract: >-
+  A tree-by-tree map and database of Auckland's urban forest, combining council and Auckland
+  Transport tree registers with the 2024 LINZ aerial laser survey, aerial NDVI and earlier canopy
+  surveys. Each tree carries its source records, crown, height, canopy history, modelled trunk,
+  root and environmental-benefit estimates, and an evidence grade.
+keywords:
+  - urban forest
+  - tree inventory
+  - LiDAR
+  - tree crown segmentation
+  - Auckland
+  - Aotearoa New Zealand
+authors:
+  - family-names: Welch
+    given-names: Timothy F.
+    affiliation: "Better Places Lab, Waipapa Taumata Rau | University of Auckland"
+    email: t.welch@auckland.ac.nz

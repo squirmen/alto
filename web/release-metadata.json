@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "release": {
+    "name": "ALTO — Auckland metropolitan research snapshot",
+    "status": "research_only_not_independently_validated",
+    "public_claims_enabled": false,
+    "software_version": "0.1.0",
+    "dataset_version": "metro-2026.09.23-pointcloud-v5",
+    "dataset_last_updated_utc": "2026-09-23T09:33:49.900331+00:00",
+    "metadata_generated_utc": "2026-09-23T09:33:49.900331+00:00",
+    "source_revision": "isolated reproducible build alto_v5_20260922; source hashes in build provenance",
+    "source_dirty": null
+  },
+  "dataset": {
+    "extent_id": "auckland_metro",
+    "new_pointcloud_tree_records": 399290,
+    "evidence_tiers": {
+      "location_unverified": 647,
+      "possible": 58516,
+      "probable": 914878,
+      "shared_crown_candidate": 2030877,
+      "unmatched": 854045,
+      "very_likely": 2379457
+    },
+    "current_v5_service_records": 3352851,
+    "tree_records": 6238420,
+    "current_map_markers": 3581353,
+    "crown_records": 3522567,
+    "pointcloud_v5_tree_crowns": 3352851,
+    "near_canopy_candidates": 1499603,
+    "display_roles": {
+      "current_crown": 3352851,
+      "source_record": 41397,
+      "earlier_detection": 626190,
+      "outside_v5_coverage": 187105
+    },
+    "near_canopy_classes": {
+      "low_canopy": 594370,
+      "sub_canopy": 905233
+    },
+    "tile_coverage": {
+      "expected": 3149,
+      "completed": 3149,
+      "empty_tiles": 41
+    }
+  },
+  "headline_scope": {
+    "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy."
+  },
+  "models": [
+    {
+      "component": "crown_segmentation",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "chm_point_constrained_chunked_v1"
+        },
+        {
+          "id": "pointcloud_v4_vegetation_watershed"
+        },
+        {
+          "id": "pointcloud_v5_ndvi_watershed",
+          "configuration": "shipping_config.json",
+          "height_floor_m": 3,
+          "lower_vegetation_retained": true
+        }
+      ]
+    },
+    {
+      "component": "growth_form_classifier",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_growth_form_rgb_prior_adjusted_not_calibrated"
+        }
+      ]
+    },
+    {
+      "component": "pointcloud_verification",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_unversioned_pointcloud_verification_output"
+        }
+      ]
+    },
+    {
+      "component": "tree_change",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_unversioned_tree_change_output"
+        }
+      ]
+    },
+    {
+      "component": "root_space",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_unversioned_root_space_output"
+        }
+      ],
+      "application": "Existing sensitivity equations recalculated from v5 dimensions; earlier estimates retained separately."
+    },
+    {
+      "component": "ecosystem_services",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "valuation_v4_exploratory_sensitivity_not_release_eligible"
+        }
+      ],
+      "application": "Existing sensitivity equations recalculated from v5 dimensions; earlier estimates retained separately."
+    },
+    {
+      "component": "canopy_height_forecast",
+      "validation_status": "geographic_hindcast",
+      "implementations": [
+        {
+          "id": "alto-local-canopy-v2",
+          "fit_id": "alto-local-canopy-v2-75d02fd784b11815"
+        }
+      ],
+      "heldout_mae_m": 1.1420940417315344,
+      "v5_transfer_validation": "not_yet_tested",
+      "benchmark_scope": "Original fitted model and historical crown matching, before the v5 redraw."
+    },
+    {
+      "component": "vertical_return_structure",
+      "validation_status": "derived_from_stored_profile",
+      "implementations": [
+        {
+          "id": "alto-return-profile-structure-v1"
+        }
+      ]
+    },
+    {
+      "component": "botanical_illustration",
+      "validation_status": "illustrative_geometry",
+      "implementations": [
+        {
+          "id": "alto-botanical-tree-v2"
+        }
+      ]
+    },
+    {
+      "component": "record_identity",
+      "validation_status": "unvalidated_match_hypotheses",
+      "implementations": [
+        {
+          "id": "v5_actual_polygon_containment_and_overlap"
+        }
+      ],
+      "counts": {
+        "source_links": 4984438,
+        "prior_crown_intersections": 9336539
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "data/near_canopy.pmtiles",
+      "bytes": 554280732,
+      "last_modified_utc": "2026-09-23T03:41:23.737510+00:00"
+    },
+    {
+      "path": "data/tree_crowns_pilot.pmtiles",
+      "bytes": 1902415911,
+      "last_modified_utc": "2026-09-23T03:39:02.212352+00:00"
+    },
+    {
+      "path": "data/trees_map_points.pmtiles",
+      "bytes": 1507939468,
+      "last_modified_utc": "2026-09-23T03:24:25.519779+00:00"
+    }
+  ],
+  "provenance": {
+    "source_catalog": "config/sources.json",
+    "methods": "docs/methodology.md",
+    "validation_directory": "docs/validation",
+    "working_crs": "EPSG:2193",
+    "web_crs": "EPSG:4326"
+  },
+  "assembly": {
+    "assembled_utc": "2026-09-23T09:33:49.900331+00:00",
+    "tile_version": "20260923-v5",
+    "database_mtime_ns": "1790137249826592397",
+    "mode": "isolated_v5_additive_rebuild",
+    "note": "All previous tree IDs and field observations retained. Static products share one frozen database snapshot. Unchanged historical layers remain available with their earlier methods."
+  },
+  "derived_products": {
+    "longitudinal_model": "data/longitudinal/model.json",
+    "record_identity": "data/tree_details/schema.json",
+    "kyte_nearby": "kyte/data/nearby/manifest.json"
+  },
+  "previous_release": {
+    "release": {
+      "name": "ALTO — Auckland metropolitan research snapshot",
+      "status": "research_only_not_independently_validated",
+      "public_claims_enabled": false,
+      "software_version": "0.1.0",
+      "dataset_version": "metro-2026.09.17-pointcloud-v4",
+      "dataset_last_updated_utc": "2026-09-17T16:20:54+00:00",
+      "metadata_generated_utc": "2026-09-17T16:20:54+00:00",
+      "source_revision": "uncommitted working build (alto_v4_20260917)",
+      "source_dirty": null
+    },
+    "dataset": {
+      "extent_id": "auckland_metro",
+      "tree_records": 5839130,
+      "crown_records": 5755622,
+      "root_space_records": 1416984,
+      "pointcloud_records": 1444293,
+      "pointcloud_v4_crowns": 5576618,
+      "new_pointcloud_tree_records": 4017307,
+      "restored_records": 144385,
+      "evidence_tiers": {
+        "not_assessed": 186948,
+        "possible": 281449,
+        "possible_duplicate": 29619,
+        "probable": 993487,
+        "recorded": 76812,
+        "unverified": 8603,
+        "very_likely": 4262212
+      }
+    },
+    "headline_scope": {
+      "valuation_records_included": 1650129,
+      "modelled_nominal_records_excluded": 27309,
+      "description": "Headline service totals exclude modelled_nominal crownless scenarios. All remaining ecosystem-service totals are unvalidated sensitivity scenarios, not release-eligible economic or physical claims."
+    },
+    "artifacts": [
+      {
+        "path": "trees_map_points.pmtiles",
+        "bytes": 978504601,
+        "last_modified_utc": "2026-07-31T03:35:56+00:00"
+      },
+      {
+        "path": "tree_crowns_pilot.pmtiles",
+        "bytes": 729005935,
+        "last_modified_utc": "2026-07-31T03:36:06+00:00"
+      },
+      {
+        "path": "low_canopy_candidates.pmtiles",
+        "bytes": 166942442,
+        "last_modified_utc": "2026-07-31T03:36:09+00:00"
+      },
+      {
+        "path": "tree_change.pmtiles",
+        "bytes": 16786506,
+        "last_modified_utc": "2026-09-09T11:36:59+00:00"
+      },
+      {
+        "path": "tree_root_shapes.pmtiles",
+        "bytes": 341179482,
+        "last_modified_utc": "2026-07-30T05:10:53+00:00"
+      },
+      {
+        "path": "canopy_cover_by_board.geojson",
+        "bytes": 2467726,
+        "last_modified_utc": "2026-07-31T02:56:52+00:00"
+      },
+      {
+        "path": "kauri_dieback.geojson",
+        "bytes": 11215272,
+        "last_modified_utc": "2026-06-23T00:51:31+00:00"
+      },
+      {
+        "path": "exports/akl_trees_metro.parquet",
+        "bytes": 280372437,
+        "last_modified_utc": "2026-09-09T11:41:14+00:00"
+      },
+      {
+        "path": "exports/akl_trees_metro.csv.gz",
+        "bytes": 355217944,
+        "last_modified_utc": "2026-09-09T11:41:14+00:00"
+      },
+      {
+        "path": "exports/akl_trees_data_dictionary.md",
+        "bytes": 9596,
+        "last_modified_utc": "2026-09-09T11:41:15+00:00"
+      }
+    ],
+    "assembly": {
+      "assembled_utc": "2026-09-17T16:20:54+00:00",
+      "mode": "verified_prior_release_data",
+      "baseline_manifest_sha256": "74ea376b7e0817de2d9e9a6a2bdb8ee6c0190fcf0e7e88d52a51ab8686d913d5",
+      "baseline_built_utc": "2026-09-10T19:08:22.224196+00:00",
+      "database_mtime_ns": 1788953767904543374,
+      "note": "UI, record identity hypotheses, vertical structure and local canopy-change model updated outside Dropbox. Carried-forward data and complete canopy history verified against the prior upload manifest; regenerated products verified against their own manifests from the same snapshot.",
+      "tile_version": "20260918015343"
+    },
+    "derived_products": {
+      "longitudinal_model": "data/longitudinal/model.json",
+      "vertical_structure": "data/structure/manifest.json",
+      "growth_context": "data/growth_context/manifest.json",
+      "record_identity": "data/identity/manifest.json",
+      "source_audit": "data/identity/source-audit.json"
+    }
+  },
+  "v5_changes": [
+    "All 3,149 survey tiles completed successfully, including 16 retries.",
+    "V5 crown dimensions use 2024 point-cloud structure and aerial NDVI.",
+    "Every previous ALTO tree ID remains available. Current representatives link to original source records.",
+    "Crown identity uses actual containment and polygon intersection; shared crowns can contain several trees.",
+    "Unverified notable-tree positions are excluded from automatic crown attachment. Council renumbering has a versioned crosswalk.",
+    "Existing service and trunk sensitivity equations use the new crown dimensions once per representative. Earlier estimates remain in the full records.",
+    "Lower vegetation is available as separate layers and excluded from tree service totals.",
+    "Earlier crown outlines are retained outside the new survey footprint.",
+    "KYTE nearby matching uses the same current representatives. Saved observations and original IDs remain valid."
+  ],
+  "limitations_v5": [
+    "Segmentation changes are not tree removals or growth observations.",
+    "A crown can contain more than one tree, and a multi-stem tree can remain split.",
+    "Three polygon validity repairs and four area corrections are logged; original outputs are preserved.",
+    "Growth-form predictions and historical matching were not refitted on v5 crowns.",
+    "The earlier fitted forecast is applied to current crown height; its original benchmark does not validate this transfer. Nearby-history weighting awaits refreshed spatial matching.",
+    "The service, DBH and root coefficients remain sensitivity assumptions requiring field calibration.",
+    "Summed crown areas include overlaps and are not a measure of land-cover percentage."
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "project": "akl_trees",
+  "crs": {
+    "working": "EPSG:2193",
+    "web": "EPSG:4326"
+  },
+  "sources": [
+    {
+      "slug": "tree_register_points",
+      "name": "TreeRegisterPoints",
+      "type": "arcgis_feature_layer",
+      "category": "tree_inventory",
+      "priority": "highest",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/TreeRegisterPoints/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 50311,
+      "license": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "known_fields": ["FID", "TreeID", "TreeCommon", "TreeLatin", "TreeOwner"],
+      "notes": "Tree register points surfaced through the Waitemata Urban Forest public ArcGIS content. Strong first candidate for tree-by-tree species inventory, but spatial coverage appears local rather than all Auckland."
+    },
+    {
+      "slug": "notable_trees_overlay",
+      "name": "Notable Trees Overlay",
+      "type": "arcgis_feature_layer",
+      "category": "protected_tree_inventory",
+      "priority": "high",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Notable_Trees_Overlay/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 3718,
+      "license": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "known_fields": ["OBJECTID", "TYPE", "SUBTYPE", "SCHEDULE", "NAME", "DocumentURL", "GlobalID"],
+      "notes": "Auckland Unitary Plan D13 / Schedule 10 notable tree point overlay. Useful for protected status and validation, not a complete tree inventory."
+    },
+    {
+      "slug": "notable_group_trees_overlay",
+      "name": "Notable Group of Trees Overlay",
+      "type": "arcgis_feature_layer",
+      "category": "protected_tree_group_inventory",
+      "priority": "high",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Notable_Group_of_Trees_Overlay/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 229,
+      "license": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "notes": "Polygon overlay for protected/notable groups of trees. Useful for protected status and validation; tree counts inside polygons must be inferred or sourced separately."
+    },
+    {
+      "slug": "ruru_obskauri_tiaki_public",
+      "name": "Ruru ObsKauri Tiaki (Valid and Public)",
+      "type": "arcgis_feature_layer",
+      "category": "kauri_survey",
+      "priority": "medium",
+      "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Ruru_ObsKauri_Tiaki_(Valid_and_Public)/FeatureServer",
+      "layer_id": 0,
+      "observed_count_2026_06_04": 52047,
+      "license": "Auckland Council data licence with biosecurity caveats",
+      "known_fields": [
+        "OBJECTID",
+        "ShortID",
+        "SurveyName",
+        "StartDate",
+        "SoilSampleResult",
+        "PhytAgathidicida",
+        "KDBFieldStatus",
+        "FinancialYear"
+      ],
+      "notes": "Public valid kauri survey and Phytophthora observations. The source description says it does not provide a complete picture of kauri or kauri dieback distribution."
+    },
+    {
+      "slug": "linz_auckland_part_1_lidar_dem_2024",
+      "name": "Auckland Part 1 LiDAR 1m DEM (2024)",
+      "type": "linz_layer",
+      "category": "elevation_dem",
+      "priority": "highest",
+      "layer_id": 121990,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121990/",
+      "notes": "Bare-earth elevation, needed with DSM for canopy height."
+    },
+    {
+      "slug": "linz_auckland_part_2_lidar_dem_2024",
+      "name": "Auckland Part 2 LiDAR 1m DEM (2024)",
+      "type": "linz_layer",
+      "category": "elevation_dem",
+      "priority": "highest",
+      "layer_id": 122580,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/122580/",
+      "notes": "Bare-earth elevation, second Auckland 2024 coverage segment."
+    },
+    {
+      "slug": "linz_auckland_part_1_lidar_dsm_2024",
+      "name": "Auckland Part 1 LiDAR 1m DSM (2024)",
+      "type": "linz_layer",
+      "category": "elevation_dsm",
+      "priority": "highest",
+      "layer_id": 121992,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121992/",
+      "notes": "Surface elevation including buildings and vegetation, needed with DEM for canopy height."
+    },
+    {
+      "slug": "linz_auckland_part_2_lidar_dsm_2024",
+      "name": "Auckland Part 2 LiDAR 1m DSM (2024)",
+      "type": "linz_layer",
+      "category": "elevation_dsm",
+      "priority": "highest",
+      "layer_id": 122581,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/122581/",
+      "notes": "Surface elevation, second Auckland 2024 coverage segment."
+    },
+    {
+      "slug": "linz_auckland_part_1_lidar_index_tiles_2024",
+      "name": "Auckland Part 1 LiDAR Index Tiles (2024)",
+      "type": "linz_layer",
+      "category": "tile_index",
+      "priority": "high",
+      "layer_id": 121993,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121993/",
+      "notes": "Tile index for targeted downloading."
+    },
+    {
+      "slug": "linz_auckland_part_2_lidar_index_tiles_2024",
+      "name": "Auckland Part 2 LiDAR Index Tiles (2024)",
+      "type": "linz_layer",
+      "category": "tile_index",
+      "priority": "high",
+      "layer_id": 122590,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/122590/",
+      "notes": "Tile index for targeted downloading."
+    },
+    {
+      "slug": "linz_auckland_part_1_lidar_point_cloud_2024",
+      "name": "Auckland Part 1 LiDAR Point Cloud (2024)",
+      "type": "linz_web_layer",
+      "category": "lidar_point_cloud",
+      "priority": "highest",
+      "web_url": "https://data.linz.govt.nz/layer/d3VcCb5rKzNsNGk/auckland-lidar-point-cloud-2024/",
+      "notes": "Point cloud layer referenced by the Part 1 LiDAR index tile metadata. The v1 API metadata endpoint did not accept this opaque web-layer ID; confirm API/export route before bulk downloading."
+    },
+    {
+      "slug": "linz_auckland_part_2_lidar_point_cloud_2024",
+      "name": "Auckland Part 2 LiDAR 1m Point Cloud (2024)",
+      "type": "linz_web_layer",
+      "category": "lidar_point_cloud",
+      "priority": "highest",
+      "web_url": "https://data.linz.govt.nz/layer/d3W9HT9YGf35Ph8/auckland-part-2-lidar-1m-pointcloud-2024/",
+      "notes": "Point cloud layer referenced by the Part 2 LiDAR index tile metadata. The v1 API metadata endpoint did not accept this opaque web-layer ID; confirm API/export route before bulk downloading."
+    },
+    {
+      "slug": "linz_auckland_urban_aerial_2024_2025",
+      "name": "Auckland 0.075m Urban Aerial Photos (2024-2025)",
+      "type": "linz_layer",
+      "category": "aerial_imagery",
+      "priority": "highest",
+      "layer_id": 121752,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121752/",
+      "notes": "High-resolution urban imagery for canopy delineation and species/crown model features."
+    },
+    {
+      "slug": "linz_auckland_urban_aerial_index_2024_2025",
+      "name": "Auckland 0.075m Urban Aerial Photos Index Tiles (2024-2025)",
+      "type": "linz_layer",
+      "category": "tile_index",
+      "priority": "high",
+      "layer_id": 121852,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121852/",
+      "notes": "Aerial imagery tile index for targeted downloading."
+    },
+    {
+      "slug": "linz_auckland_rural_aerial_2024",
+      "name": "Auckland 0.25m Rural Aerial Photos (2024)",
+      "type": "linz_layer",
+      "category": "aerial_imagery",
+      "priority": "medium",
+      "layer_id": 119795,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/119795/",
+      "notes": "Rural imagery for regional coverage outside the 7.5 cm urban layer."
+    },
+    {
+      "slug": "linz_nz_building_outlines",
+      "name": "NZ Building Outlines",
+      "type": "linz_layer",
+      "category": "building_footprints",
+      "priority": "highest",
+      "layer_id": 101290,
+      "api_url": "https://data.linz.govt.nz/services/api/v1/layers/101290/",
+      "notes": "Authoritative building footprint source needed to mask buildings from DSM-DEM canopy candidates. Metadata is public; spatial query/WFS service advertises API-key authentication."
+    },
+    {
+      "slug": "osm_overpass_buildings_waitemata_pilot",
+      "name": "OpenStreetMap Buildings via Overpass (Waitemata Pilot)",
+      "type": "overpass_query",
+      "category": "building_footprints",
+      "priority": "pilot_interim",
+      "service_url": "https://overpass-api.de/api/interpreter",
+      "notes": "Interim public building mask used only for the Waitemata crown segmentation pilot until authoritative LINZ building outlines are wired into the processing pipeline."
+    },
+    {
+      "slug": "auckland_council_dsm_2024_imageservice",
+      "name": "Auckland Region Digital Surface Model (DSM) 2024",
+      "type": "arcgis_image_service",
+      "category": "elevation_dsm",
+      "priority": "high",
+      "service_url": "https://tiledimageservices1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Auckland_DSM_2024/ImageServer",
+      "notes": "Auckland Council image service for regional 1m DSM, useful for viewing and targeted export. Full download may require contacting gis@aklc.govt.nz."
+    },
+    {
+      "slug": "auckland_council_dem_2024_imageservice",
+      "name": "Auckland Region Digital Elevation Model (DEM) 2024",
+      "type": "arcgis_image_service",
+      "category": "elevation_dem",
+      "priority": "high",
+      "service_url": "https://tiledimageservices1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Auckland_Region_Digital_Elevation_Model__DEM__2024/ImageServer",
+      "notes": "Auckland Council 1m DEM tiled ImageServer used in the Waitemata LiDAR pilot. DEM is paired with the 2024 DSM to compute canopy height."
+    }
+  ]
+}

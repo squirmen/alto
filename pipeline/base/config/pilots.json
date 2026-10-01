@@ -1,0 +1,24 @@
+{
+  "description": "Named bboxes (EPSG:2193) for staged pipeline scaling. The active pilot is set in scripts via DEFAULT_PILOT_BBOX_2193 or the --bbox CLI flag.",
+  "pilots": {
+    "waitemata_v1": {
+      "bbox_2193": [1751000.0, 5914000.0, 1762000.0, 5925000.0],
+      "area_km2": 121.0,
+      "label": "Waitemata Local Board (current)",
+      "notes": "Original pilot — 100% of TreeRegisterPoints fall inside this bbox. Used through October 2026."
+    },
+    "auckland_isthmus_v1": {
+      "bbox_2193": [1749000.0, 5907000.0, 1766000.0, 5925000.0],
+      "area_km2": 306.0,
+      "label": "Auckland Isthmus (Waitemata + Albert-Eden + Puketāpapa + Maungakiekie-Tāmaki + Ōrākei + Whau)",
+      "notes": "Adds the urban isthmus south of Waitemata down to Mt Roskill / Onehunga / Mt Wellington. ~2.5× the Waitemata bbox."
+    },
+    "auckland_metro_v1": {
+      "bbox_2193": [1740000.0, 5895000.0, 1782000.0, 5935000.0],
+      "area_km2": 1680.0,
+      "label": "Auckland urban metro (incl. North Shore + Manukau + Waitakere fringe)",
+      "notes": "Much larger — needs cloud / overnight compute and pmtiles geographic chunking."
+    }
+  },
+  "default": "waitemata_v1"
+}

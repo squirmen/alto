@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "release": {
+    "name": "ALTO — Auckland metropolitan research snapshot",
+    "status": "research_only_not_independently_validated",
+    "public_claims_enabled": false,
+    "software_version": "0.1.0",
+    "dataset_version": "metro-2026.09.09",
+    "dataset_last_updated_utc": "2026-09-09T11:36:07+00:00",
+    "metadata_generated_utc": "2026-09-09T11:48:46+00:00",
+    "source_revision": "30cab8c2afc3",
+    "source_dirty": true
+  },
+  "dataset": {
+    "extent_id": "auckland_metro",
+    "tree_records": 1677438,
+    "crown_records": 1650129,
+    "root_space_records": 1416984,
+    "pointcloud_records": 1444293
+  },
+  "headline_scope": {
+    "valuation_records_included": 1650129,
+    "modelled_nominal_records_excluded": 27309,
+    "description": "Headline service totals exclude modelled_nominal crownless scenarios. All remaining ecosystem-service totals are unvalidated sensitivity scenarios, not release-eligible economic or physical claims."
+  },
+  "models": [
+    {
+      "component": "crown_segmentation",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "chm_point_constrained_chunked_v1"
+        }
+      ]
+    },
+    {
+      "component": "growth_form_classifier",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_growth_form_rgb_prior_adjusted_not_calibrated"
+        }
+      ]
+    },
+    {
+      "component": "pointcloud_verification",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_unversioned_pointcloud_verification_output"
+        }
+      ]
+    },
+    {
+      "component": "tree_change",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_unversioned_tree_change_output"
+        }
+      ]
+    },
+    {
+      "component": "root_space",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "legacy_unversioned_root_space_output"
+        }
+      ]
+    },
+    {
+      "component": "ecosystem_services",
+      "validation_status": "not_independently_validated",
+      "release_eligible": false,
+      "implementations": [
+        {
+          "id": "valuation_v4_exploratory_sensitivity_not_release_eligible"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "trees_map_points.pmtiles",
+      "bytes": 978504601,
+      "last_modified_utc": "2026-07-31T03:35:56+00:00"
+    },
+    {
+      "path": "tree_crowns_pilot.pmtiles",
+      "bytes": 729005935,
+      "last_modified_utc": "2026-07-31T03:36:06+00:00"
+    },
+    {
+      "path": "low_canopy_candidates.pmtiles",
+      "bytes": 166942442,
+      "last_modified_utc": "2026-07-31T03:36:09+00:00"
+    },
+    {
+      "path": "tree_change.pmtiles",
+      "bytes": 16786506,
+      "last_modified_utc": "2026-09-09T11:36:59+00:00"
+    },
+    {
+      "path": "tree_root_shapes.pmtiles",
+      "bytes": 341179482,
+      "last_modified_utc": "2026-07-31T03:36:14+00:00"
+    },
+    {
+      "path": "canopy_cover_by_board.geojson",
+      "bytes": 2467726,
+      "last_modified_utc": "2026-07-31T02:56:52+00:00"
+    },
+    {
+      "path": "kauri_dieback.geojson",
+      "bytes": 11215272,
+      "last_modified_utc": "2026-06-23T00:51:31+00:00"
+    },
+    {
+      "path": "exports/akl_trees_metro.parquet",
+      "bytes": 280372437,
+      "last_modified_utc": "2026-09-09T11:41:14+00:00"
+    },
+    {
+      "path": "exports/akl_trees_metro.csv.gz",
+      "bytes": 355217944,
+      "last_modified_utc": "2026-09-09T11:41:14+00:00"
+    },
+    {
+      "path": "exports/akl_trees_data_dictionary.md",
+      "bytes": 9596,
+      "last_modified_utc": "2026-09-09T11:41:15+00:00"
+    }
+  ],
+  "provenance": {
+    "source_catalog": "config/sources.json",
+    "methods": "docs/methodology.md",
+    "validation_directory": "docs/validation",
+    "working_crs": "EPSG:2193",
+    "web_crs": "EPSG:4326"
+  }
+}

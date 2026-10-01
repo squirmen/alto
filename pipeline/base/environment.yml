@@ -1,0 +1,29 @@
+name: akl-trees
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - duckdb
+  - geopandas
+  - jupyterlab
+  - laspy
+  - lazrs-python
+  - numpy
+  - pandas
+  - pdal
+  - pillow
+  - pytest
+  - pyarrow
+  - pyogrio
+  - pyproj
+  - rasterio
+  - requests
+  - rioxarray
+  - scikit-learn
+  - scikit-image
+  - scipy
+  - shapely
+  - pytorch
+  - torchvision
+  - xarray
+  - pip

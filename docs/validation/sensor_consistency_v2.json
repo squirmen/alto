@@ -1,0 +1,166 @@
+{
+  "generated": "2026-07-12T23:55:39+00:00",
+  "status": "diagnostic_not_independent_validation",
+  "canopy_evidence": {
+    "n_reference_locations": 72012,
+    "n_machine": 1367481,
+    "interpretation": "internal_consistency_not_detection_accuracy",
+    "overall": {
+      "pc_canopy_rate_when_covered": 0.8764957562265201,
+      "pc_coverage": 0.7984224851413654,
+      "chm_canopy_rate_when_covered": 0.8762267139561309,
+      "chm_coverage": 0.8065600177748153
+    },
+    "by_height_band": {
+      "15-25m": {
+        "n": 11965,
+        "pc_canopy_rate_when_covered": 0.9914968849974743,
+        "pc_coverage": 0.9927287923109068,
+        "chm_canopy_rate_when_covered": 0.9979941496030088,
+        "chm_coverage": 1.0
+      },
+      "25m+": {
+        "n": 2742,
+        "pc_canopy_rate_when_covered": 0.9892830746489283,
+        "pc_coverage": 0.986870897155361,
+        "chm_canopy_rate_when_covered": 0.99963530269876,
+        "chm_coverage": 1.0
+      },
+      "3-8m": {
+        "n": 16085,
+        "pc_canopy_rate_when_covered": 0.931430383761497,
+        "pc_coverage": 0.980105688529686,
+        "chm_canopy_rate_when_covered": 0.9508859185576625,
+        "chm_coverage": 1.0
+      },
+      "8-15m": {
+        "n": 17757,
+        "pc_canopy_rate_when_covered": 0.9782831737346102,
+        "pc_coverage": 0.9880047305288056,
+        "chm_canopy_rate_when_covered": 0.9906515740271442,
+        "chm_coverage": 1.0
+      },
+      "<3m (sub-canopy)": {
+        "n": 9533,
+        "pc_canopy_rate_when_covered": 0.39923664122137403,
+        "pc_coverage": 0.9619217455155775,
+        "chm_canopy_rate_when_covered": 0.34878841917549563,
+        "chm_coverage": 1.0
+      },
+      "no-CHM": {
+        "n": 13930,
+        "pc_canopy_rate_when_covered": 1.0,
+        "pc_coverage": 0.031083991385498923,
+        "chm_canopy_rate_when_covered": null,
+        "chm_coverage": 0.0
+      }
+    },
+    "by_owner_class": {
+      "Auckland Council Parks": {
+        "n": 16699,
+        "pc_canopy_rate_when_covered": 0.9127582017010936,
+        "pc_coverage": 0.9856877657344751,
+        "chm_canopy_rate_when_covered": 0.9248457991496497,
+        "chm_coverage": 1.0
+      },
+      "Auckland Transport": {
+        "n": 32793,
+        "pc_canopy_rate_when_covered": 0.8389284608237845,
+        "pc_coverage": 0.9846613606562377,
+        "chm_canopy_rate_when_covered": 0.8302076662702406,
+        "chm_coverage": 1.0
+      },
+      "Kauri Observation (Public Survey)": {
+        "n": 18379,
+        "pc_canopy_rate_when_covered": 0.9842317565089842,
+        "pc_coverage": 0.29675172751509876,
+        "chm_canopy_rate_when_covered": 0.9792981072555205,
+        "chm_coverage": 0.2759671364056804
+      },
+      "Notable Tree (Council Schedule)": {
+        "n": 3322,
+        "pc_canopy_rate_when_covered": 0.8979127134724858,
+        "pc_coverage": 0.7931968693558098,
+        "chm_canopy_rate_when_covered": 0.9388662467580585,
+        "chm_coverage": 0.812462372065021
+      },
+      "Unknown": {
+        "n": 819,
+        "pc_canopy_rate_when_covered": 0.8340943683409436,
+        "pc_coverage": 0.8021978021978022,
+        "chm_canopy_rate_when_covered": 0.8827838827838828,
+        "chm_coverage": 1.0
+      }
+    },
+    "by_source": {
+      "notable_trees_overlay": {
+        "n": 3322,
+        "pc_canopy_rate_when_covered": 0.8979127134724858,
+        "pc_coverage": 0.7931968693558098,
+        "chm_canopy_rate_when_covered": 0.9388662467580585,
+        "chm_coverage": 0.812462372065021
+      },
+      "ruru_obskauri_tiaki_public": {
+        "n": 18379,
+        "pc_canopy_rate_when_covered": 0.9842317565089842,
+        "pc_coverage": 0.29675172751509876,
+        "chm_canopy_rate_when_covered": 0.9792981072555205,
+        "chm_coverage": 0.2759671364056804
+      },
+      "tree_register_points": {
+        "n": 50311,
+        "pc_canopy_rate_when_covered": 0.8634606432286923,
+        "pc_coverage": 0.9820317624376379,
+        "chm_canopy_rate_when_covered": 0.8624754029933812,
+        "chm_coverage": 1.0
+      }
+    }
+  },
+  "height_agreement": {
+    "n": 1274985,
+    "overall": {
+      "rmse_m": 3.5871181519356674,
+      "mae_m": 2.440051737441523,
+      "bias_m": -2.205901872033556,
+      "r": 0.9393383288834445
+    },
+    "by_height_band": {
+      "<3m (sub-canopy)": {
+        "n": 728,
+        "rmse_m": 15.047720768366489,
+        "bias_m": 10.948002424069813
+      },
+      "3-8m": {
+        "n": 107337,
+        "rmse_m": 3.1697574069588175,
+        "bias_m": -0.10138769768308753
+      },
+      "8-15m": {
+        "n": 506747,
+        "rmse_m": 2.4040812269800904,
+        "bias_m": -1.3786911955099899
+      },
+      "15-25m": {
+        "n": 457078,
+        "rmse_m": 3.6715205371032518,
+        "bias_m": -2.782266022609945
+      },
+      "25m+": {
+        "n": 203095,
+        "rmse_m": 5.467948134459246,
+        "bias_m": -4.132150355447497
+      }
+    }
+  },
+  "species": {
+    "n_known_species": 65695,
+    "growth_form_balance": {
+      "conifer": 21454,
+      "deciduous_broadleaf": 13383,
+      "evergreen_broadleaf": 29258,
+      "palm_other": 1600
+    },
+    "predictions_on_labelled_trees": 0,
+    "note": "Species/growth-form confusion matrix is BLOCKED: the CNN scored only unlabelled inferred trees, so there are ~0 predictions on labelled trees. WS1 phase 2 = re-run inference on the labelled set with a held-out split."
+  }
+}

@@ -1,0 +1,27 @@
+# Python 3.11. Versions are those the v5 release was built with.
+numpy==2.4.6
+pandas==3.0.3
+pyarrow==22.0.0
+scipy==1.17.1
+scikit-image==0.26.0
+scikit-learn==1.9.0
+joblib==1.5.3
+shapely==2.1.2
+pyproj==3.7.2
+pyogrio==0.12.1
+rasterio==1.4.4
+affine==2.4.0
+laspy[lazrs]==2.7.0
+pillow==12.2.0
+requests==2.34.2
+matplotlib==3.10.9
+
+# Base pipeline only: GeoPandas workflows and the species-class experiments
+geopandas==1.1.3
+fiona
+deepforest==2.1.0
+torch==2.14.0
+torchvision==0.29.0
+
+# Tests
+pytest

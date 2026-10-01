@@ -1,0 +1,150 @@
+{
+  "generated": "2026-06-19T00:50:18+00:00",
+  "detection": {
+    "n_verified": 72012,
+    "n_machine": 184362,
+    "overall": {
+      "pc_confirmed_rate": 0.649336221740821,
+      "chm_canopy_rate": 0.6430178303616064,
+      "chm_coverage": 0.7410014997500417,
+      "either_rate": 0.6850386046769983
+    },
+    "by_height_band": {
+      "15-25m": {
+        "n": 9514,
+        "pc_rate": 0.9886483077569898,
+        "chm_rate": 0.9966365356317006,
+        "chm_coverage": 1.0
+      },
+      "25m+": {
+        "n": 1596,
+        "pc_rate": 0.9830827067669173,
+        "chm_rate": 0.9981203007518797,
+        "chm_coverage": 1.0
+      },
+      "3-8m": {
+        "n": 16155,
+        "pc_rate": 0.9387186629526463,
+        "chm_rate": 0.9501702259362427,
+        "chm_coverage": 1.0
+      },
+      "8-15m": {
+        "n": 16753,
+        "pc_rate": 0.9763027517459559,
+        "chm_rate": 0.9908076165462902,
+        "chm_coverage": 1.0
+      },
+      "<3m (sub-canopy)": {
+        "n": 9343,
+        "pc_rate": 0.450390666809376,
+        "chm_rate": 0.351172000428128,
+        "chm_coverage": 1.0
+      },
+      "no-CHM": {
+        "n": 18651,
+        "pc_rate": 0.0030025199721194573,
+        "chm_rate": 0.0,
+        "chm_coverage": 0.0
+      }
+    },
+    "by_owner_class": {
+      "Auckland Council Parks": {
+        "n": 16699,
+        "pc_rate": 0.9189173004371519,
+        "chm_rate": 0.9247260314988921,
+        "chm_coverage": 1.0
+      },
+      "Auckland Transport": {
+        "n": 32793,
+        "pc_rate": 0.8512792364224072,
+        "chm_rate": 0.8302076662702406,
+        "chm_coverage": 1.0
+      },
+      "Kauri Observation (Public Survey)": {
+        "n": 18379,
+        "pc_rate": 0.08656618967299635,
+        "chm_rate": 0.08531476141248164,
+        "chm_coverage": 0.08787202785788127
+      },
+      "Notable Tree (Council Schedule)": {
+        "n": 3322,
+        "pc_rate": 0.40096327513546054,
+        "chm_rate": 0.40848886213124624,
+        "chm_coverage": 0.4319686935580975
+      },
+      "Unknown": {
+        "n": 819,
+        "pc_rate": 0.7032967032967034,
+        "chm_rate": 0.8705738705738706,
+        "chm_coverage": 1.0
+      }
+    },
+    "by_source": {
+      "notable_trees_overlay": {
+        "n": 3322,
+        "pc_rate": 0.40096327513546054,
+        "chm_rate": 0.40848886213124624,
+        "chm_coverage": 0.4319686935580975
+      },
+      "ruru_obskauri_tiaki_public": {
+        "n": 18379,
+        "pc_rate": 0.08656618967299635,
+        "chm_rate": 0.08531476141248164,
+        "chm_coverage": 0.08787202785788127
+      },
+      "tree_register_points": {
+        "n": 50311,
+        "pc_rate": 0.8713203871916678,
+        "chm_rate": 0.8622368865655622,
+        "chm_coverage": 1.0
+      }
+    }
+  },
+  "height_agreement": {
+    "n": 227627,
+    "overall": {
+      "rmse_m": 3.1575091904054338,
+      "mae_m": 1.9852717403990838,
+      "bias_m": -1.6426765259517573,
+      "r": 0.9145372433219437
+    },
+    "by_height_band": {
+      "<3m (sub-canopy)": {
+        "n": 217,
+        "rmse_m": 9.782236606281717,
+        "bias_m": 6.789952356496715
+      },
+      "3-8m": {
+        "n": 33157,
+        "rmse_m": 2.7063682836371243,
+        "bias_m": -0.26975532383985923
+      },
+      "8-15m": {
+        "n": 123556,
+        "rmse_m": 2.4052469277648725,
+        "bias_m": -1.3118552560846255
+      },
+      "15-25m": {
+        "n": 54752,
+        "rmse_m": 3.5624820335988603,
+        "bias_m": -2.4556723425650997
+      },
+      "25m+": {
+        "n": 15945,
+        "rmse_m": 6.1144020939141885,
+        "bias_m": -4.384202686779924
+      }
+    }
+  },
+  "species": {
+    "n_known_species": 65695,
+    "growth_form_balance": {
+      "conifer": 21454,
+      "deciduous_broadleaf": 13383,
+      "evergreen_broadleaf": 29258,
+      "palm_other": 1600
+    },
+    "predictions_on_labelled_trees": 0,
+    "note": "Species/growth-form confusion matrix is BLOCKED: the CNN scored only unlabelled inferred trees, so there are ~0 predictions on labelled trees. WS1 phase 2 = re-run inference on the labelled set with a held-out split."
+  }
+}

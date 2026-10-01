@@ -1,0 +1,1910 @@
+{
+ "note": "LINZ national 1m DSM/DEM layers for the national CHM fetcher. A CHM epoch = DSM-DEM.",
+ "national_mosaic": {
+  "DSM": 122082,
+  "DEM": 121859
+ },
+ "layers": [
+  {
+   "id": 53405,
+   "title": "Auckland LiDAR 1m DEM (2013)",
+   "region": "Auckland",
+   "year": "2013",
+   "kind": "DEM"
+  },
+  {
+   "id": 53406,
+   "title": "Auckland LiDAR 1m DSM (2013)",
+   "region": "Auckland",
+   "year": "2013",
+   "kind": "DSM"
+  },
+  {
+   "id": 106410,
+   "title": "Auckland North LiDAR 1m DEM (2016-2018)",
+   "region": "Auckland North",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 105089,
+   "title": "Auckland North LiDAR 1m DSM (2016-2018)",
+   "region": "Auckland North",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 121990,
+   "title": "Auckland Part 1 LiDAR 1m DEM (2024)",
+   "region": "Auckland Part 1",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 121992,
+   "title": "Auckland Part 1 LiDAR 1m DSM (2024)",
+   "region": "Auckland Part 1",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 122580,
+   "title": "Auckland Part 2 LiDAR 1m DEM (2024)",
+   "region": "Auckland Part 2",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 122581,
+   "title": "Auckland Part 2 LiDAR 1m DSM (2024)",
+   "region": "Auckland Part 2",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 104318,
+   "title": "Auckland South LiDAR 1m DEM (2016-2017)",
+   "region": "Auckland South",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 104382,
+   "title": "Auckland South LiDAR 1m DSM (2016-2017)",
+   "region": "Auckland South",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 104736,
+   "title": "Bay of Plenty LiDAR 1m DEM (2018-2019)",
+   "region": "Bay of Plenty",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 104741,
+   "title": "Bay of Plenty LiDAR 1m DSM (2018-2019)",
+   "region": "Bay of Plenty",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 105690,
+   "title": "Bay of Plenty LiDAR 1m DEM (2019-2022)",
+   "region": "Bay of Plenty",
+   "year": "2019",
+   "kind": "DEM"
+  },
+  {
+   "id": 105691,
+   "title": "Bay of Plenty LiDAR 1m DSM (2019-2022)",
+   "region": "Bay of Plenty",
+   "year": "2019",
+   "kind": "DSM"
+  },
+  {
+   "id": 120366,
+   "title": "Bay of Plenty LiDAR 1m DEM (2024)",
+   "region": "Bay of Plenty",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 120367,
+   "title": "Bay of Plenty LiDAR 1m DSM (2024)",
+   "region": "Bay of Plenty",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 116086,
+   "title": "Bay of Plenty - Tauranga LiDAR 1m DEM (2022)",
+   "region": "Bay of Plenty - Tauranga",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 122642,
+   "title": "Bay of Plenty - Tauranga LiDAR 1m DEM (2025)",
+   "region": "Bay of Plenty - Tauranga",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 122643,
+   "title": "Bay of Plenty - Tauranga LiDAR 1m DSM (2025)",
+   "region": "Bay of Plenty - Tauranga",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 53556,
+   "title": "Bay of Plenty - Tauranga and Coast LiDAR 1m DEM (2015)",
+   "region": "Bay of Plenty - Tauranga and Coast",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 53557,
+   "title": "Bay of Plenty - Tauranga and Coast LiDAR 1m DSM (2015)",
+   "region": "Bay of Plenty - Tauranga and Coast",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 124355,
+   "title": "Bay of Plenty - Waioweka Gorge LiDAR 1m DEM (2026)",
+   "region": "Bay of Plenty - Waioweka Gorge",
+   "year": "2026",
+   "kind": "DEM"
+  },
+  {
+   "id": 124356,
+   "title": "Bay of Plenty - Waioweka Gorge LiDAR 1m DSM (2026)",
+   "region": "Bay of Plenty - Waioweka Gorge",
+   "year": "2026",
+   "kind": "DSM"
+  },
+  {
+   "id": 121960,
+   "title": "Canterbury LiDAR 1m DEM (2010)",
+   "region": "Canterbury",
+   "year": "2010",
+   "kind": "DEM"
+  },
+  {
+   "id": 121961,
+   "title": "Canterbury LiDAR 1m DSM (2010)",
+   "region": "Canterbury",
+   "year": "2010",
+   "kind": "DSM"
+  },
+  {
+   "id": 99231,
+   "title": "Canterbury LiDAR 1m DEM (2016-2017)",
+   "region": "Canterbury",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 99232,
+   "title": "Canterbury LiDAR 1m DSM (2016-2017)",
+   "region": "Canterbury",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 104931,
+   "title": "Canterbury LiDAR 1m DEM (2018-2019)",
+   "region": "Canterbury",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 104936,
+   "title": "Canterbury LiDAR 1m DSM (2018-2019)",
+   "region": "Canterbury",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 111133,
+   "title": "Canterbury LiDAR 1m DEM (2020-2025)",
+   "region": "Canterbury",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 111135,
+   "title": "Canterbury LiDAR 1m DSM (2020-2025)",
+   "region": "Canterbury",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 53546,
+   "title": "Canterbury - Amberley LiDAR 1m DEM (2012)",
+   "region": "Canterbury - Amberley",
+   "year": "2012",
+   "kind": "DEM"
+  },
+  {
+   "id": 53547,
+   "title": "Canterbury - Amberley LiDAR 1m DSM (2012)",
+   "region": "Canterbury - Amberley",
+   "year": "2012",
+   "kind": "DSM"
+  },
+  {
+   "id": 105027,
+   "title": "Canterbury - Banks Peninsula LiDAR 1m DEM (2018-2019)",
+   "region": "Canterbury - Banks Peninsula",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 105032,
+   "title": "Canterbury - Banks Peninsula LiDAR 1m DSM (2018-2019)",
+   "region": "Canterbury - Banks Peninsula",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 115802,
+   "title": "Canterbury - Banks Peninsula LiDAR 1m DEM (2023)",
+   "region": "Canterbury - Banks Peninsula",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 115803,
+   "title": "Canterbury - Banks Peninsula LiDAR 1m DSM (2023)",
+   "region": "Canterbury - Banks Peninsula",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 53548,
+   "title": "Canterbury - Cheviot LiDAR 1m DEM (2015)",
+   "region": "Canterbury - Cheviot",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 53549,
+   "title": "Canterbury - Cheviot LiDAR 1m DSM (2015)",
+   "region": "Canterbury - Cheviot",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 109641,
+   "title": "Canterbury - Christchurch LiDAR 1m DEM (2020-2021)",
+   "region": "Canterbury - Christchurch",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 109642,
+   "title": "Canterbury - Christchurch LiDAR 1m DSM (2020-2021)",
+   "region": "Canterbury - Christchurch",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 123193,
+   "title": "Canterbury - Christchurch LiDAR 1m DEM (2024-2025)",
+   "region": "Canterbury - Christchurch",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 123194,
+   "title": "Canterbury - Christchurch LiDAR 1m DSM (2024-2025)",
+   "region": "Canterbury - Christchurch",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 104497,
+   "title": "Canterbury - Christchurch and Ashley River LiDAR 1m DEM (2018-2019)",
+   "region": "Canterbury - Christchurch and Ashley River",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 104498,
+   "title": "Canterbury - Christchurch and Ashley River LiDAR 1m DSM (2018-2019)",
+   "region": "Canterbury - Christchurch and Ashley River",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 53587,
+   "title": "Canterbury - Christchurch and Selwyn LiDAR 1m DEM (2015)",
+   "region": "Canterbury - Christchurch and Selwyn",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 53588,
+   "title": "Canterbury - Christchurch and Selwyn LiDAR 1m DSM (2015)",
+   "region": "Canterbury - Christchurch and Selwyn",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 53550,
+   "title": "Canterbury - Hawarden LiDAR 1m DEM (2015)",
+   "region": "Canterbury - Hawarden",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 53551,
+   "title": "Canterbury - Hawarden LiDAR 1m DSM (2015)",
+   "region": "Canterbury - Hawarden",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 53582,
+   "title": "Canterbury - Hurunui Rivers LiDAR 1m DEM (2013)",
+   "region": "Canterbury - Hurunui Rivers",
+   "year": "2013",
+   "kind": "DEM"
+  },
+  {
+   "id": 53580,
+   "title": "Canterbury - Hurunui Rivers LiDAR 1m DSM (2013)",
+   "region": "Canterbury - Hurunui Rivers",
+   "year": "2013",
+   "kind": "DSM"
+  },
+  {
+   "id": 53542,
+   "title": "Canterbury - Kaik\u014dura LiDAR 1m DEM (2012)",
+   "region": "Canterbury - Kaik\u014dura",
+   "year": "2012",
+   "kind": "DEM"
+  },
+  {
+   "id": 53545,
+   "title": "Canterbury - Kaik\u014dura LiDAR 1m DSM (2012)",
+   "region": "Canterbury - Kaik\u014dura",
+   "year": "2012",
+   "kind": "DSM"
+  },
+  {
+   "id": 110632,
+   "title": "Canterbury - Kaik\u014dura LiDAR 1m DEM (2016)",
+   "region": "Canterbury - Kaik\u014dura",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 114019,
+   "title": "Canterbury - Kaik\u014dura and Waimakariri LiDAR 1m DEM (2022)",
+   "region": "Canterbury - Kaik\u014dura and Waimakariri",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 114018,
+   "title": "Canterbury - Kaik\u014dura and Waimakariri LiDAR 1m DSM (2022)",
+   "region": "Canterbury - Kaik\u014dura and Waimakariri",
+   "year": "2022",
+   "kind": "DSM"
+  },
+  {
+   "id": 98769,
+   "title": "Canterbury - Mackenzie LiDAR 1m DEM (2015)",
+   "region": "Canterbury - Mackenzie",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 99122,
+   "title": "Canterbury - Mackenzie LiDAR 1m DSM (2015)",
+   "region": "Canterbury - Mackenzie",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 53552,
+   "title": "Canterbury - Rangiora LiDAR 1m DEM (2014)",
+   "region": "Canterbury - Rangiora",
+   "year": "2014",
+   "kind": "DEM"
+  },
+  {
+   "id": 53553,
+   "title": "Canterbury - Rangiora LiDAR 1m DSM (2014)",
+   "region": "Canterbury - Rangiora",
+   "year": "2014",
+   "kind": "DSM"
+  },
+  {
+   "id": 115805,
+   "title": "Canterbury - Selwyn LiDAR 1m DEM (2023)",
+   "region": "Canterbury - Selwyn",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 115806,
+   "title": "Canterbury - Selwyn LiDAR 1m DSM (2023)",
+   "region": "Canterbury - Selwyn",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 53554,
+   "title": "Canterbury - Timaru Rivers LiDAR 1m DEM (2014)",
+   "region": "Canterbury - Timaru Rivers",
+   "year": "2014",
+   "kind": "DEM"
+  },
+  {
+   "id": 53555,
+   "title": "Canterbury - Timaru Rivers LiDAR 1m DSM (2014)",
+   "region": "Canterbury - Timaru Rivers",
+   "year": "2014",
+   "kind": "DSM"
+  },
+  {
+   "id": 115795,
+   "title": "Canterbury - Waimakariri LiDAR 1m DEM (2023)",
+   "region": "Canterbury - Waimakariri",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 115796,
+   "title": "Canterbury - Waimakariri LiDAR 1m DSM (2023)",
+   "region": "Canterbury - Waimakariri",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 123066,
+   "title": "Dannevirke LiDAR 1m DEM (2022)",
+   "region": "Dannevirke",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 123067,
+   "title": "Dannevirke LiDAR 1m DSM (2022)",
+   "region": "Dannevirke",
+   "year": "2022",
+   "kind": "DSM"
+  },
+  {
+   "id": 105614,
+   "title": "Gisborne LiDAR 1m DEM (2018-2020)",
+   "region": "Gisborne",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 105396,
+   "title": "Gisborne LiDAR 1m DSM (2018-2020)",
+   "region": "Gisborne",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 115847,
+   "title": "Gisborne LiDAR 1m DEM (2023)",
+   "region": "Gisborne",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 115846,
+   "title": "Gisborne LiDAR 1m DSM (2023)",
+   "region": "Gisborne",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 123851,
+   "title": "Gisborne - Hicks Bay LiDAR 1m DEM (2026)",
+   "region": "Gisborne - Hicks Bay",
+   "year": "2026",
+   "kind": "DEM"
+  },
+  {
+   "id": 124648,
+   "title": "Gisborne - Hicks Bay LiDAR 1m DSM (2026)",
+   "region": "Gisborne - Hicks Bay",
+   "year": "2026",
+   "kind": "DSM"
+  },
+  {
+   "id": 114544,
+   "title": "Gisborne and Hawke's Bay - Cyclone Gabrielle River Flood LiDAR 1m DEM (2023)",
+   "region": "Gisborne and Hawke's Bay - Cyclone Gabrielle River Flood",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 114639,
+   "title": "Gisborne and Hawke's Bay - Cyclone Gabrielle River Flood LiDAR 1m DSM (2023)",
+   "region": "Gisborne and Hawke's Bay - Cyclone Gabrielle River Flood",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 112889,
+   "title": "Hawke's Bay LiDAR 1m DEM (2020-2021)",
+   "region": "Hawke's Bay",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 112888,
+   "title": "Hawke's Bay LiDAR 1m DSM (2020-2021)",
+   "region": "Hawke's Bay",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 118755,
+   "title": "Hawke's Bay LiDAR 1m DEM (2023-2024)",
+   "region": "Hawke's Bay",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 118754,
+   "title": "Hawke's Bay LiDAR 1m DSM (2023-2024)",
+   "region": "Hawke's Bay",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 102475,
+   "title": "Manawatu - Whanganui LiDAR 1m DEM (2015-2016)",
+   "region": "Manawatu - Whanganui",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 120816,
+   "title": "Manawat\u016b - Whanganui LiDAR 1m DEM (2024)",
+   "region": "Manawat\u016b - Whanganui",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 120821,
+   "title": "Manawat\u016b - Whanganui LiDAR 1m DSM (2024)",
+   "region": "Manawat\u016b - Whanganui",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 102476,
+   "title": "Manawat\u016b-Whanganui LiDAR 1m DSM (2015-2016)",
+   "region": "Manawat\u016b-Whanganui",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 114948,
+   "title": "Manawat\u016b-Whanganui LiDAR 1m DEM (2022-2023)",
+   "region": "Manawat\u016b-Whanganui",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 114947,
+   "title": "Manawat\u016b-Whanganui LiDAR 1m DSM (2022-2023)",
+   "region": "Manawat\u016b-Whanganui",
+   "year": "2022",
+   "kind": "DSM"
+  },
+  {
+   "id": 123374,
+   "title": "Manawat\u016b-Whanganui - Levin LiDAR 1m DEM (2024)",
+   "region": "Manawat\u016b-Whanganui - Levin",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 123375,
+   "title": "Manawat\u016b-Whanganui - Levin LiDAR 1m DSM (2024)",
+   "region": "Manawat\u016b-Whanganui - Levin",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 123340,
+   "title": "Manawat\u016b-Whanganui - Oroua LiDAR 1m DEM (2025)",
+   "region": "Manawat\u016b-Whanganui - Oroua",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 123341,
+   "title": "Manawat\u016b-Whanganui - Oroua LiDAR 1m DSM (2025)",
+   "region": "Manawat\u016b-Whanganui - Oroua",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 104502,
+   "title": "Manawat\u016b-Whanganui - Palmerston North LiDAR 1m DEM (2018)",
+   "region": "Manawat\u016b-Whanganui - Palmerston North",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 104503,
+   "title": "Manawat\u016b-Whanganui - Palmerston North LiDAR 1m DSM (2018)",
+   "region": "Manawat\u016b-Whanganui - Palmerston North",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 122069,
+   "title": "Manawat\u016b-Whanganui - Rangit\u012bkei River LiDAR 1m DEM (2021)",
+   "region": "Manawat\u016b-Whanganui - Rangit\u012bkei River",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 122068,
+   "title": "Manawat\u016b-Whanganui - Rangit\u012bkei River LiDAR 1m DSM (2021)",
+   "region": "Manawat\u016b-Whanganui - Rangit\u012bkei River",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 122648,
+   "title": "Manawat\u016b-Whanganui - Whanganui River Catchment LiDAR 1m DEM (2025)",
+   "region": "Manawat\u016b-Whanganui - Whanganui River Catchment",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 122649,
+   "title": "Manawat\u016b-Whanganui - Whanganui River Catchment LiDAR 1m DSM (2025)",
+   "region": "Manawat\u016b-Whanganui - Whanganui River Catchment",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 105693,
+   "title": "Manawat\u016b-Whanganui - Whanganui Urban LiDAR 1m DEM (2020-2021)",
+   "region": "Manawat\u016b-Whanganui - Whanganui Urban",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 105694,
+   "title": "Manawat\u016b-Whanganui - Whanganui Urban LiDAR 1m DSM (2020-2021)",
+   "region": "Manawat\u016b-Whanganui - Whanganui Urban",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 103535,
+   "title": "Marlborough LiDAR 1m DEM (2018)",
+   "region": "Marlborough",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 103537,
+   "title": "Marlborough LiDAR 1m DSM (2018)",
+   "region": "Marlborough",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 105911,
+   "title": "Marlborough LiDAR 1m DEM (2020-2022)",
+   "region": "Marlborough",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 105912,
+   "title": "Marlborough LiDAR 1m DSM (2020-2022)",
+   "region": "Marlborough",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 95483,
+   "title": "Marlborough - Blenheim LiDAR 1m DEM (2014)",
+   "region": "Marlborough - Blenheim",
+   "year": "2014",
+   "kind": "DEM"
+  },
+  {
+   "id": 95484,
+   "title": "Marlborough - Blenheim LiDAR 1m DSM (2014)",
+   "region": "Marlborough - Blenheim",
+   "year": "2014",
+   "kind": "DSM"
+  },
+  {
+   "id": 106837,
+   "title": "Nelson LiDAR 1m DEM (2021)",
+   "region": "Nelson",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 106842,
+   "title": "Nelson LiDAR 1m DSM (2021)",
+   "region": "Nelson",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 122952,
+   "title": "Nelson LiDAR 1m DEM (2025)",
+   "region": "Nelson",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 122953,
+   "title": "Nelson LiDAR 1m DSM (2025)",
+   "region": "Nelson",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 95817,
+   "title": "Nelson and Tasman LiDAR 1m DEM (2008-2015)",
+   "region": "Nelson and Tasman",
+   "year": "2008",
+   "kind": "DEM"
+  },
+  {
+   "id": 112785,
+   "title": "Nelson and Tasman - Top of the South Flood LiDAR 1m DEM (2022)",
+   "region": "Nelson and Tasman - Top of the South Flood",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 112784,
+   "title": "Nelson and Tasman - Top of the South Flood LiDAR 1m DSM (2022)",
+   "region": "Nelson and Tasman - Top of the South Flood",
+   "year": "2022",
+   "kind": "DSM"
+  },
+  {
+   "id": 121859,
+   "title": "New Zealand LiDAR 1m DEM",
+   "region": "New Zealand",
+   "year": "national",
+   "kind": "DEM"
+  },
+  {
+   "id": 121943,
+   "title": "New Zealand LiDAR 1m DEM Survey Index",
+   "region": "New Zealand",
+   "year": "national",
+   "kind": "DEM"
+  },
+  {
+   "id": 122082,
+   "title": "New Zealand LiDAR 1m DSM",
+   "region": "New Zealand",
+   "year": "national",
+   "kind": "DSM"
+  },
+  {
+   "id": 122149,
+   "title": "New Zealand LiDAR 1m DSM Survey Index",
+   "region": "New Zealand",
+   "year": "national",
+   "kind": "DSM"
+  },
+  {
+   "id": 122508,
+   "title": "New Zealand Coastal LiDAR 1m DEM",
+   "region": "New Zealand Coastal",
+   "year": "national",
+   "kind": "DEM"
+  },
+  {
+   "id": 122509,
+   "title": "New Zealand Coastal LiDAR 1m DEM Survey Index",
+   "region": "New Zealand Coastal",
+   "year": "national",
+   "kind": "DEM"
+  },
+  {
+   "id": 123048,
+   "title": "New Zealand Coastal LiDAR 1m DSM",
+   "region": "New Zealand Coastal",
+   "year": "national",
+   "kind": "DSM"
+  },
+  {
+   "id": 123050,
+   "title": "New Zealand Coastal LiDAR 1m DSM Survey Index",
+   "region": "New Zealand Coastal",
+   "year": "national",
+   "kind": "DSM"
+  },
+  {
+   "id": 110757,
+   "title": "Northland LiDAR 1m DEM (2018-2020)",
+   "region": "Northland",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 110911,
+   "title": "Northland LiDAR 1m DSM (2018-2020)",
+   "region": "Northland",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 121115,
+   "title": "Northland LiDAR 1m DEM (2024)",
+   "region": "Northland",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 121116,
+   "title": "Northland LiDAR 1m DSM (2024)",
+   "region": "Northland",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 104802,
+   "title": "Northland - Marsden Point LiDAR 1m DEM (2016)",
+   "region": "Northland - Marsden Point",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 104803,
+   "title": "Northland - Marsden Point LiDAR 1m DSM (2016)",
+   "region": "Northland - Marsden Point",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 104236,
+   "title": "Northland - Whangarei Heads LiDAR 1m DEM (2016)",
+   "region": "Northland - Whangarei Heads",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 104237,
+   "title": "Northland - Whangarei Heads LiDAR 1m DSM (2016)",
+   "region": "Northland - Whangarei Heads",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 99123,
+   "title": "Otago LiDAR 1m DEM (2016)",
+   "region": "Otago",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 99196,
+   "title": "Otago LiDAR 1m DSM (2016)",
+   "region": "Otago",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 104763,
+   "title": "Otago - Balclutha LiDAR 1m DEM (2020)",
+   "region": "Otago - Balclutha",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 104764,
+   "title": "Otago - Balclutha LiDAR 1m DSM (2020)",
+   "region": "Otago - Balclutha",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 123388,
+   "title": "Otago - Cardrona LiDAR 1m DEM (2025)",
+   "region": "Otago - Cardrona",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 123389,
+   "title": "Otago - Cardrona LiDAR 1m DSM (2025)",
+   "region": "Otago - Cardrona",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 114888,
+   "title": "Otago - Central Otago LiDAR 1m DEM (2021)",
+   "region": "Otago - Central Otago",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 114887,
+   "title": "Otago - Central Otago LiDAR 1m DSM (2021)",
+   "region": "Otago - Central Otago",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 114891,
+   "title": "Otago - Central Otago LiDAR 1m DEM (2022-2023)",
+   "region": "Otago - Central Otago",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 114890,
+   "title": "Otago - Central Otago LiDAR 1m DSM (2022-2023)",
+   "region": "Otago - Central Otago",
+   "year": "2022",
+   "kind": "DSM"
+  },
+  {
+   "id": 109627,
+   "title": "Otago - Coastal Catchments LiDAR 1m DEM (2021)",
+   "region": "Otago - Coastal Catchments",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 109628,
+   "title": "Otago - Coastal Catchments LiDAR 1m DSM (2021)",
+   "region": "Otago - Coastal Catchments",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 107710,
+   "title": "Otago - Dunedin and Mosgiel LiDAR 1m DEM (2021)",
+   "region": "Otago - Dunedin and Mosgiel",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 107705,
+   "title": "Otago - Dunedin and Mosgiel LiDAR 1m DSM (2021)",
+   "region": "Otago - Dunedin and Mosgiel",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 123404,
+   "title": "Otago - Kingston LiDAR 1m DEM (2025)",
+   "region": "Otago - Kingston",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 123405,
+   "title": "Otago - Kingston LiDAR 1m DSM (2025)",
+   "region": "Otago - Kingston",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 99115,
+   "title": "Otago - Queenstown LiDAR 1m DEM (2016)",
+   "region": "Otago - Queenstown",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 99119,
+   "title": "Otago - Queenstown LiDAR 1m DSM (2016)",
+   "region": "Otago - Queenstown",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 105898,
+   "title": "Otago - Queenstown LiDAR 1m DEM (2021)",
+   "region": "Otago - Queenstown",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 105855,
+   "title": "Otago - Queenstown LiDAR 1m DSM (2021)",
+   "region": "Otago - Queenstown",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 113095,
+   "title": "Otago - Wanaka LiDAR 1m DEM (2022-2023)",
+   "region": "Otago - Wanaka",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 113096,
+   "title": "Otago - Wanaka LiDAR 1m DSM (2022-2023)",
+   "region": "Otago - Wanaka",
+   "year": "2022",
+   "kind": "DSM"
+  },
+  {
+   "id": 113172,
+   "title": "Southland LiDAR 1m DEM (2020-2024)",
+   "region": "Southland",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 113173,
+   "title": "Southland LiDAR 1m DSM (2020-2024)",
+   "region": "Southland",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 107474,
+   "title": "Stewart Island / Rakiura - Oban LiDAR 1m DEM (2021)",
+   "region": "Stewart Island / Rakiura - Oban",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 107475,
+   "title": "Stewart Island / Rakiura - Oban LiDAR 1m DSM (2021)",
+   "region": "Stewart Island / Rakiura - Oban",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 107436,
+   "title": "Taranaki LiDAR 1m DEM (2021)",
+   "region": "Taranaki",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 107437,
+   "title": "Taranaki LiDAR 1m DSM (2021)",
+   "region": "Taranaki",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 112854,
+   "title": "Tasman LiDAR 1m DEM (2020-2022)",
+   "region": "Tasman",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 112856,
+   "title": "Tasman LiDAR 1m DSM (2020-2022)",
+   "region": "Tasman",
+   "year": "2020",
+   "kind": "DSM"
+  },
+  {
+   "id": 95578,
+   "title": "Tasman - Abel Tasman and Golden Bay LiDAR 1m DEM (2016)",
+   "region": "Tasman - Abel Tasman and Golden Bay",
+   "year": "2016",
+   "kind": "DEM"
+  },
+  {
+   "id": 95579,
+   "title": "Tasman - Abel Tasman and Golden Bay LiDAR 1m DSM (2016)",
+   "region": "Tasman - Abel Tasman and Golden Bay",
+   "year": "2016",
+   "kind": "DSM"
+  },
+  {
+   "id": 115728,
+   "title": "Tasman - Abel Tasman and Golden Bay LiDAR 1m DEM (2023)",
+   "region": "Tasman - Abel Tasman and Golden Bay",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 115777,
+   "title": "Tasman - Abel Tasman and Golden Bay LiDAR 1m DSM (2023)",
+   "region": "Tasman - Abel Tasman and Golden Bay",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 95503,
+   "title": "Tasman - Golden Bay LiDAR 1m DEM (2017)",
+   "region": "Tasman - Golden Bay",
+   "year": "2017",
+   "kind": "DEM"
+  },
+  {
+   "id": 95512,
+   "title": "Tasman - Golden Bay LiDAR 1m DSM (2017)",
+   "region": "Tasman - Golden Bay",
+   "year": "2017",
+   "kind": "DSM"
+  },
+  {
+   "id": 104811,
+   "title": "Tasman - Motueka River Valley LiDAR 1m DEM (2018-2019)",
+   "region": "Tasman - Motueka River Valley",
+   "year": "2018",
+   "kind": "DEM"
+  },
+  {
+   "id": 104812,
+   "title": "Tasman - Motueka River Valley LiDAR 1m DSM (2018-2019)",
+   "region": "Tasman - Motueka River Valley",
+   "year": "2018",
+   "kind": "DSM"
+  },
+  {
+   "id": 122618,
+   "title": "Tasman - Motueka River Valley LiDAR 1m DEM (2024)",
+   "region": "Tasman - Motueka River Valley",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 122619,
+   "title": "Tasman - Motueka River Valley LiDAR 1m DSM (2024)",
+   "region": "Tasman - Motueka River Valley",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 95629,
+   "title": "Tasman - Richmond and Motueka LiDAR 1m DEM (2015)",
+   "region": "Tasman - Richmond and Motueka",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 95630,
+   "title": "Tasman - Richmond and Motueka LiDAR 1m DSM (2015)",
+   "region": "Tasman - Richmond and Motueka",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 112583,
+   "title": "Tasman - Tasman Bay LiDAR 1m DEM (2022)",
+   "region": "Tasman - Tasman Bay",
+   "year": "2022",
+   "kind": "DEM"
+  },
+  {
+   "id": 112581,
+   "title": "Tasman - Tasman Bay LiDAR 1m DSM (2022)",
+   "region": "Tasman - Tasman Bay",
+   "year": "2022",
+   "kind": "DSM"
+  },
+  {
+   "id": 112890,
+   "title": "Tasman - Waimea Dam LiDAR 1m DEM (2023)",
+   "region": "Tasman - Waimea Dam",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 112891,
+   "title": "Tasman - Waimea Dam LiDAR 1m DSM (2023)",
+   "region": "Tasman - Waimea Dam",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 113203,
+   "title": "Waikato LiDAR 1m DEM (2021)",
+   "region": "Waikato",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 113202,
+   "title": "Waikato LiDAR 1m DSM (2021)",
+   "region": "Waikato",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 120347,
+   "title": "Waikato LiDAR 1m DEM (2024)",
+   "region": "Waikato",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 120348,
+   "title": "Waikato LiDAR 1m DSM (2024)",
+   "region": "Waikato",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 104772,
+   "title": "Waikato - Hamilton LiDAR 1m DEM (2019)",
+   "region": "Waikato - Hamilton",
+   "year": "2019",
+   "kind": "DEM"
+  },
+  {
+   "id": 104773,
+   "title": "Waikato - Hamilton LiDAR 1m DSM (2019)",
+   "region": "Waikato - Hamilton",
+   "year": "2019",
+   "kind": "DSM"
+  },
+  {
+   "id": 117092,
+   "title": "Waikato - Hamilton LiDAR 1m DEM (2023)",
+   "region": "Waikato - Hamilton",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 117093,
+   "title": "Waikato - Hamilton LiDAR 1m DSM (2023)",
+   "region": "Waikato - Hamilton",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 104494,
+   "title": "Waikato - Huntly LiDAR 1m DEM (2015-2019)",
+   "region": "Waikato - Huntly",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 104495,
+   "title": "Waikato - Huntly LiDAR 1m DSM (2015-2019)",
+   "region": "Waikato - Huntly",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 104108,
+   "title": "Waikato - Reporoa and Upper Piako River LiDAR 1m DEM (2019)",
+   "region": "Waikato - Reporoa and Upper Piako River",
+   "year": "2019",
+   "kind": "DEM"
+  },
+  {
+   "id": 104113,
+   "title": "Waikato - Reporoa and Upper Piako River LiDAR 1m DSM (2019)",
+   "region": "Waikato - Reporoa and Upper Piako River",
+   "year": "2019",
+   "kind": "DSM"
+  },
+  {
+   "id": 104172,
+   "title": "Waikato - Thames LiDAR 1m DEM (2017-2019)",
+   "region": "Waikato - Thames",
+   "year": "2017",
+   "kind": "DEM"
+  },
+  {
+   "id": 104173,
+   "title": "Waikato - Thames LiDAR 1m DSM (2017-2019)",
+   "region": "Waikato - Thames",
+   "year": "2017",
+   "kind": "DSM"
+  },
+  {
+   "id": 53622,
+   "title": "Waikato - West Coast and Hauraki Plains LiDAR 1m DEM (2015)",
+   "region": "Waikato - West Coast and Hauraki Plains",
+   "year": "2015",
+   "kind": "DEM"
+  },
+  {
+   "id": 53623,
+   "title": "Waikato - West Coast and Hauraki Plains LiDAR 1m DSM (2015)",
+   "region": "Waikato - West Coast and Hauraki Plains",
+   "year": "2015",
+   "kind": "DSM"
+  },
+  {
+   "id": 53621,
+   "title": "Wellington LiDAR 1m DEM (2013-2014)",
+   "region": "Wellington",
+   "year": "2013",
+   "kind": "DEM"
+  },
+  {
+   "id": 53592,
+   "title": "Wellington LiDAR 1m DSM (2013-2014)",
+   "region": "Wellington",
+   "year": "2013",
+   "kind": "DSM"
+  },
+  {
+   "id": 123727,
+   "title": "Wellington - City LiDAR 1m DEM (2025)",
+   "region": "Wellington - City",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 123728,
+   "title": "Wellington - City LiDAR 1m DSM (2025)",
+   "region": "Wellington - City",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 107356,
+   "title": "Wellington - Hutt City LiDAR 1m DEM (2021)",
+   "region": "Wellington - Hutt City",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 107355,
+   "title": "Wellington - Hutt City LiDAR 1m DSM (2021)",
+   "region": "Wellington - Hutt City",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 124060,
+   "title": "Wellington - Hutt City LiDAR 1m DEM (2025)",
+   "region": "Wellington - Hutt City",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 124061,
+   "title": "Wellington - Hutt City LiDAR 1m DSM (2025)",
+   "region": "Wellington - Hutt City",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 106990,
+   "title": "Wellington - Kapiti Coast LiDAR 1m DEM (2021)",
+   "region": "Wellington - Kapiti Coast",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 106989,
+   "title": "Wellington - Kapiti Coast LiDAR 1m DSM (2021)",
+   "region": "Wellington - Kapiti Coast",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 123782,
+   "title": "Wellington - Kapiti Coast LiDAR 1m DEM (2024)",
+   "region": "Wellington - Kapiti Coast",
+   "year": "2024",
+   "kind": "DEM"
+  },
+  {
+   "id": 123783,
+   "title": "Wellington - Kapiti Coast LiDAR 1m DSM (2024)",
+   "region": "Wellington - Kapiti Coast",
+   "year": "2024",
+   "kind": "DSM"
+  },
+  {
+   "id": 114377,
+   "title": "Wellington - Porirua LiDAR 1m DEM (2023)",
+   "region": "Wellington - Porirua",
+   "year": "2023",
+   "kind": "DEM"
+  },
+  {
+   "id": 114378,
+   "title": "Wellington - Porirua LiDAR 1m DSM (2023)",
+   "region": "Wellington - Porirua",
+   "year": "2023",
+   "kind": "DSM"
+  },
+  {
+   "id": 123962,
+   "title": "Wellington - South Wairarapa LiDAR 1m DEM (2025)",
+   "region": "Wellington - South Wairarapa",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 123963,
+   "title": "Wellington - South Wairarapa LiDAR 1m DSM (2025)",
+   "region": "Wellington - South Wairarapa",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 108848,
+   "title": "Wellington - Upper Hutt City LiDAR 1m DEM (2021)",
+   "region": "Wellington - Upper Hutt City",
+   "year": "2021",
+   "kind": "DEM"
+  },
+  {
+   "id": 108847,
+   "title": "Wellington - Upper Hutt City LiDAR 1m DSM (2021)",
+   "region": "Wellington - Upper Hutt City",
+   "year": "2021",
+   "kind": "DSM"
+  },
+  {
+   "id": 123973,
+   "title": "Wellington - Upper Hutt City LiDAR 1m DEM (2025)",
+   "region": "Wellington - Upper Hutt City",
+   "year": "2025",
+   "kind": "DEM"
+  },
+  {
+   "id": 123974,
+   "title": "Wellington - Upper Hutt City LiDAR 1m DSM (2025)",
+   "region": "Wellington - Upper Hutt City",
+   "year": "2025",
+   "kind": "DSM"
+  },
+  {
+   "id": 105023,
+   "title": "Wellington City LiDAR 1m DEM (2019-2020)",
+   "region": "Wellington City",
+   "year": "2019",
+   "kind": "DEM"
+  },
+  {
+   "id": 105024,
+   "title": "Wellington City LiDAR 1m DSM (2019-2020)",
+   "region": "Wellington City",
+   "year": "2019",
+   "kind": "DSM"
+  },
+  {
+   "id": 110163,
+   "title": "West Coast LiDAR 1m DEM (2020-2025)",
+   "region": "West Coast",
+   "year": "2020",
+   "kind": "DEM"
+  },
+  {
+   "id": 110164,
+   "title": "West Coast LiDAR 1m DSM (2020-2025)",
+   "region": "West Coast",
+   "year": "2020",
+   "kind": "DSM"
+  }
+ ],
+ "chm_epochs_with_both": {
+  "New Zealand|national": {
+   "DEM": 121943,
+   "DSM": 122149
+  },
+  "Northland|2024": {
+   "DEM": 121115,
+   "DSM": 121116
+  },
+  "Waikato|2021": {
+   "DEM": 113203,
+   "DSM": 113202
+  },
+  "Waikato|2024": {
+   "DEM": 120347,
+   "DSM": 120348
+  },
+  "Taranaki|2021": {
+   "DEM": 107436,
+   "DSM": 107437
+  },
+  "Gisborne|2023": {
+   "DEM": 115847,
+   "DSM": 115846
+  },
+  "Auckland|2013": {
+   "DEM": 53405,
+   "DSM": 53406
+  },
+  "Wellington - City|2025": {
+   "DSM": 123728,
+   "DEM": 123727
+  },
+  "Nelson|2025": {
+   "DEM": 122952,
+   "DSM": 122953
+  },
+  "Southland|2020": {
+   "DEM": 113172,
+   "DSM": 113173
+  },
+  "Canterbury|2010": {
+   "DEM": 121960,
+   "DSM": 121961
+  },
+  "Wellington|2013": {
+   "DEM": 53621,
+   "DSM": 53592
+  },
+  "Canterbury|2020": {
+   "DEM": 111133,
+   "DSM": 111135
+  },
+  "Otago|2016": {
+   "DEM": 99123,
+   "DSM": 99196
+  },
+  "Waikato - Hamilton|2023": {
+   "DEM": 117092,
+   "DSM": 117093
+  },
+  "Northland|2018": {
+   "DEM": 110757,
+   "DSM": 110911
+  },
+  "New Zealand Coastal|national": {
+   "DEM": 122509,
+   "DSM": 123050
+  },
+  "Nelson|2021": {
+   "DEM": 106837,
+   "DSM": 106842
+  },
+  "Bay of Plenty|2024": {
+   "DEM": 120366,
+   "DSM": 120367
+  },
+  "Dannevirke|2022": {
+   "DEM": 123066,
+   "DSM": 123067
+  },
+  "Auckland Part 1|2024": {
+   "DEM": 121990,
+   "DSM": 121992
+  },
+  "Canterbury - Selwyn|2023": {
+   "DEM": 115805,
+   "DSM": 115806
+  },
+  "Marlborough|2018": {
+   "DEM": 103535,
+   "DSM": 103537
+  },
+  "Otago - Queenstown|2021": {
+   "DEM": 105898,
+   "DSM": 105855
+  },
+  "West Coast|2020": {
+   "DEM": 110163,
+   "DSM": 110164
+  },
+  "Gisborne|2018": {
+   "DEM": 105614,
+   "DSM": 105396
+  },
+  "Auckland Part 2|2024": {
+   "DEM": 122580,
+   "DSM": 122581
+  },
+  "Canterbury - Christchurch|2024": {
+   "DEM": 123193,
+   "DSM": 123194
+  },
+  "Tasman|2020": {
+   "DEM": 112854,
+   "DSM": 112856
+  },
+  "Marlborough|2020": {
+   "DEM": 105911,
+   "DSM": 105912
+  },
+  "Marlborough - Blenheim|2014": {
+   "DEM": 95483,
+   "DSM": 95484
+  },
+  "Wellington - Kapiti Coast|2024": {
+   "DEM": 123782,
+   "DSM": 123783
+  },
+  "Hawke's Bay|2023": {
+   "DEM": 118755,
+   "DSM": 118754
+  },
+  "Canterbury - Kaik\u014dura|2012": {
+   "DSM": 53545,
+   "DEM": 53542
+  },
+  "Wellington - Hutt City|2025": {
+   "DEM": 124060,
+   "DSM": 124061
+  },
+  "Wellington - Porirua|2023": {
+   "DEM": 114377,
+   "DSM": 114378
+  },
+  "Otago - Queenstown|2016": {
+   "DEM": 99115,
+   "DSM": 99119
+  },
+  "Bay of Plenty|2019": {
+   "DEM": 105690,
+   "DSM": 105691
+  },
+  "Canterbury|2018": {
+   "DEM": 104931,
+   "DSM": 104936
+  },
+  "Canterbury - Rangiora|2014": {
+   "DSM": 53553,
+   "DEM": 53552
+  },
+  "Manawat\u016b - Whanganui|2024": {
+   "DEM": 120816,
+   "DSM": 120821
+  },
+  "Canterbury|2016": {
+   "DSM": 99232,
+   "DEM": 99231
+  },
+  "Canterbury - Mackenzie|2015": {
+   "DEM": 98769,
+   "DSM": 99122
+  },
+  "Otago - Cardrona|2025": {
+   "DEM": 123388,
+   "DSM": 123389
+  },
+  "Auckland North|2016": {
+   "DEM": 106410,
+   "DSM": 105089
+  },
+  "Otago - Balclutha|2020": {
+   "DEM": 104763,
+   "DSM": 104764
+  },
+  "Wellington - South Wairarapa|2025": {
+   "DEM": 123962,
+   "DSM": 123963
+  },
+  "Waikato - Hamilton|2019": {
+   "DSM": 104773,
+   "DEM": 104772
+  },
+  "Canterbury - Cheviot|2015": {
+   "DSM": 53549,
+   "DEM": 53548
+  },
+  "Canterbury - Hawarden|2015": {
+   "DSM": 53551,
+   "DEM": 53550
+  },
+  "Bay of Plenty - Tauranga|2025": {
+   "DEM": 122642,
+   "DSM": 122643
+  },
+  "Canterbury - Waimakariri|2023": {
+   "DSM": 115796,
+   "DEM": 115795
+  },
+  "Gisborne - Hicks Bay|2026": {
+   "DEM": 123851,
+   "DSM": 124648
+  },
+  "Otago - Kingston|2025": {
+   "DEM": 123404,
+   "DSM": 123405
+  },
+  "Canterbury - Amberley|2012": {
+   "DSM": 53547,
+   "DEM": 53546
+  },
+  "Otago - Coastal Catchments|2021": {
+   "DEM": 109627,
+   "DSM": 109628
+  },
+  "Auckland South|2016": {
+   "DEM": 104318,
+   "DSM": 104382
+  },
+  "Hawke's Bay|2020": {
+   "DEM": 112889,
+   "DSM": 112888
+  },
+  "Tasman - Tasman Bay|2022": {
+   "DEM": 112583,
+   "DSM": 112581
+  },
+  "Canterbury - Banks Peninsula|2023": {
+   "DEM": 115802,
+   "DSM": 115803
+  },
+  "Otago - Dunedin and Mosgiel|2021": {
+   "DEM": 107710,
+   "DSM": 107705
+  },
+  "Canterbury - Christchurch|2020": {
+   "DEM": 109641,
+   "DSM": 109642
+  },
+  "Otago - Central Otago|2021": {
+   "DEM": 114888,
+   "DSM": 114887
+  },
+  "Otago - Wanaka|2022": {
+   "DEM": 113095,
+   "DSM": 113096
+  },
+  "Bay of Plenty|2018": {
+   "DEM": 104736,
+   "DSM": 104741
+  },
+  "Wellington City|2019": {
+   "DEM": 105023,
+   "DSM": 105024
+  },
+  "Wellington - Hutt City|2021": {
+   "DEM": 107356,
+   "DSM": 107355
+  },
+  "Canterbury - Kaik\u014dura and Waimakariri|2022": {
+   "DEM": 114019,
+   "DSM": 114018
+  },
+  "Manawat\u016b-Whanganui|2022": {
+   "DEM": 114948,
+   "DSM": 114947
+  },
+  "Wellington - Kapiti Coast|2021": {
+   "DEM": 106990,
+   "DSM": 106989
+  },
+  "Manawat\u016b-Whanganui - Oroua|2025": {
+   "DEM": 123340,
+   "DSM": 123341
+  },
+  "Canterbury - Timaru Rivers|2014": {
+   "DEM": 53554,
+   "DSM": 53555
+  },
+  "Tasman - Golden Bay|2017": {
+   "DEM": 95503,
+   "DSM": 95512
+  },
+  "Otago - Central Otago|2022": {
+   "DEM": 114891,
+   "DSM": 114890
+  },
+  "Wellington - Upper Hutt City|2025": {
+   "DEM": 123973,
+   "DSM": 123974
+  },
+  "Tasman - Waimea Dam|2023": {
+   "DSM": 112891,
+   "DEM": 112890
+  },
+  "Northland - Whangarei Heads|2016": {
+   "DEM": 104236,
+   "DSM": 104237
+  },
+  "Canterbury - Hurunui Rivers|2013": {
+   "DSM": 53580,
+   "DEM": 53582
+  },
+  "Manawat\u016b-Whanganui - Palmerston North|2018": {
+   "DEM": 104502,
+   "DSM": 104503
+  },
+  "Manawat\u016b-Whanganui - Levin|2024": {
+   "DEM": 123374,
+   "DSM": 123375
+  },
+  "Bay of Plenty - Waioweka Gorge|2026": {
+   "DEM": 124355,
+   "DSM": 124356
+  },
+  "Canterbury - Christchurch and Selwyn|2015": {
+   "DEM": 53587,
+   "DSM": 53588
+  },
+  "Waikato - Huntly|2015": {
+   "DSM": 104495,
+   "DEM": 104494
+  },
+  "Northland - Marsden Point|2016": {
+   "DSM": 104803,
+   "DEM": 104802
+  },
+  "Waikato - Thames|2017": {
+   "DEM": 104172,
+   "DSM": 104173
+  },
+  "Tasman - Richmond and Motueka|2015": {
+   "DSM": 95630,
+   "DEM": 95629
+  },
+  "Manawat\u016b-Whanganui - Rangit\u012bkei River|2021": {
+   "DSM": 122068,
+   "DEM": 122069
+  },
+  "Manawat\u016b-Whanganui - Whanganui River Catchment|2025": {
+   "DEM": 122648,
+   "DSM": 122649
+  },
+  "Tasman - Motueka River Valley|2024": {
+   "DEM": 122618,
+   "DSM": 122619
+  },
+  "Canterbury - Banks Peninsula|2018": {
+   "DEM": 105027,
+   "DSM": 105032
+  },
+  "Stewart Island / Rakiura - Oban|2021": {
+   "DEM": 107474,
+   "DSM": 107475
+  },
+  "Wellington - Upper Hutt City|2021": {
+   "DSM": 108847,
+   "DEM": 108848
+  },
+  "Bay of Plenty - Tauranga and Coast|2015": {
+   "DEM": 53556,
+   "DSM": 53557
+  },
+  "Tasman - Abel Tasman and Golden Bay|2023": {
+   "DEM": 115728,
+   "DSM": 115777
+  },
+  "Canterbury - Christchurch and Ashley River|2018": {
+   "DEM": 104497,
+   "DSM": 104498
+  },
+  "Tasman - Abel Tasman and Golden Bay|2016": {
+   "DSM": 95579,
+   "DEM": 95578
+  },
+  "Manawat\u016b-Whanganui - Whanganui Urban|2020": {
+   "DEM": 105693,
+   "DSM": 105694
+  },
+  "Waikato - West Coast and Hauraki Plains|2015": {
+   "DSM": 53623,
+   "DEM": 53622
+  },
+  "Nelson and Tasman - Top of the South Flood|2022": {
+   "DSM": 112784,
+   "DEM": 112785
+  },
+  "Tasman - Motueka River Valley|2018": {
+   "DSM": 104812,
+   "DEM": 104811
+  },
+  "Waikato - Reporoa and Upper Piako River|2019": {
+   "DSM": 104113,
+   "DEM": 104108
+  },
+  "Gisborne and Hawke's Bay - Cyclone Gabrielle River Flood|2023": {
+   "DSM": 114639,
+   "DEM": 114544
+  }
+ }
+}
