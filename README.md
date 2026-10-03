@@ -16,6 +16,9 @@ assumptions behind every estimate.
 - **Data:** explore any tree on the map; field definitions are in
   [`docs/data-dictionary.md`](docs/data-dictionary.md). Bulk data is available to research
   partners on request.
+- **Your property:** search an address on the map to see the trees on that parcel, the canopy over it and an estimate of
+  the services they provide each year. Every tree also carries an inferred land type (street, park, institutional,
+  private), which the map's Land filter uses. See [`docs/methods/property_tenure.md`](docs/methods/property_tenure.md).
 - **KYTE**, the companion phone app for adding ground observations: https://alto.tfwelch.com/kyte/
 
 This is a research beta. The release is reproducible and openly documented, but it has not been
@@ -73,6 +76,11 @@ docs/     Methods, validation notes, the v5 release review, segmentation notes a
    `build_tree_details_v5.py` produce the map tiles and per-tree records; `verify_v5_*.py` and
    `seal_v5_bundle.py` check and seal the bundle; `upload_v5.py` stages, verifies and activates it.
 
+5. **Property totals and land tenure** (`pipeline/v5`). `property_sources.py` fetches the open zoning, designation, park
+   and conservation layers; `build_property_tenure_v5.py` assigns every map tree a land-tenure class and a LINZ parcel,
+   measures canopy over each parcel, writes per-property summaries, parcel tiles and an OpenStreetMap address index;
+   `property_spot_checks.py` reconciles the property sums with the release totals.
+
 Per-tree records are split into 65,536 hashed buckets (`reshard_tree_details.py`) so a profile
 loads about 60 KB rather than a whole region.
 
@@ -110,7 +118,7 @@ native library on some builds of the scientific stack.
 
 ## Data sources and attribution
 
-- Auckland Council: tree register, notable trees and notable groups overlays, flood plains and overland flow paths, stormwater assets, predicted air temperature
+- Auckland Council: tree register, notable trees and notable groups overlays, Unitary Plan base zones and designations, park extents, flood plains and overland flow paths, stormwater assets, predicted air temperature
   (Nov 2021–Mar 2022), impervious surfaces and land cover. Auckland Council open data, CC BY 4.0,
   with the Council's caveats.
 - Auckland Transport: street tree records in the tree register.
@@ -118,7 +126,8 @@ native library on some builds of the scientific stack.
   data licence with biosecurity caveats.
 - Toitū Te Whenua Land Information New Zealand: 2024 Auckland LiDAR point cloud, DEM and DSM,
   2013 and 2016 surface models, 2024–2025 urban aerial imagery and NZ Building Outlines, CC BY 4.0.
-- OpenStreetMap contributors: mapped trees and buildings, under the Open Database Licence. Exports
+- Department of Conservation: public conservation land, CC BY 4.0.
+- OpenStreetMap contributors: mapped trees, buildings, addresses, golf courses and island roads, under the Open Database Licence. Exports
   that contain OpenStreetMap-derived records carry its share-alike condition.
 - i-Tree species references for growth form and mature size.
 

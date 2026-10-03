@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
         integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
         crossorigin="anonymous">
-  <script>window.AKL_DATA_BASE="./data";window.AKL_TILE_VERSION="20260928-v5b";</script>
+  <script>window.AKL_DATA_BASE="./data";window.AKL_TILE_VERSION="20261002-v5d";</script>
   <!-- AKL_DATA_BASE: build_web_deploy.sh injects window.AKL_DATA_BASE here so a
        self-contained upload can point at its own ./data folder. Untouched for
        local dev, where tiles live two levels up in data/processed. -->
@@ -721,7 +721,7 @@
       #explorer { max-height: 46vh; border-right: 0; border-bottom: 1px solid var(--line); }
     }
   </style>
-  <link rel="stylesheet" href="./observatory.css?v=20260914-panel-v1">
+  <link rel="stylesheet" href="./observatory.css?v=20261002-v5d">
 </head>
 <body data-aside-collapsed="false" data-profile-open="false">
   <div class="app" id="app">
@@ -740,6 +740,12 @@
         <div><strong><span id="viewHeight">—</span><small>m</small></strong><span>Mean height</span></div>
       </div>
       <p class="summary-scope" id="viewScope">Loading the current map view…</p>
+      <div class="property-search" role="search">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"></path><path d="M5.5 10v9.5h13V10"></path><path d="M10 19.5V14h4v5.5"></path></svg>
+        <input id="propertySearch" type="search" placeholder="Find a property by address" aria-label="Find a property by street address" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="propertyOptions">
+        <ul id="propertyOptions" class="property-options" role="listbox" aria-label="Matching addresses" hidden></ul>
+        <p id="propertyStatus" class="property-status" role="status" aria-live="polite" hidden></p>
+      </div>
       <nav class="panel-tabs" role="tablist" aria-label="Map controls">
         <button id="tabExplore" role="tab" aria-selected="true" aria-controls="paneExplore" type="button">Explore<span id="filterCount" class="filter-count" hidden></span></button>
         <button id="tabLayers" role="tab" aria-selected="false" aria-controls="paneLayers" tabindex="-1" type="button">Layers</button>
@@ -769,6 +775,16 @@
 
           </div>
         </div>
+        <div>
+          <div class="control-heading"><span title="Land type is inferred from zoning and parcel records, not ownership.">Land <span class="info-tip" role="img" aria-label="Land type is inferred from zoning and parcel records, not ownership.">ⓘ</span></span><span id="landSelection" class="source-selection">All shown</span></div>
+          <div id="landToggles" class="legend">
+            <button class="legend-row" type="button" data-land="street" aria-pressed="true"><span class="dot land-street"></span><span>Street</span></button>
+            <button class="legend-row" type="button" data-land="park" aria-pressed="true"><span class="dot land-park"></span><span>Park &amp; reserve</span></button>
+            <button class="legend-row" type="button" data-land="institutional" aria-pressed="true"><span class="dot land-institutional"></span><span>Schools &amp; institutions</span></button>
+            <button class="legend-row" type="button" data-land="private" aria-pressed="true"><span class="dot land-private"></span><span>Private property</span></button>
+            <button class="legend-row" type="button" data-land="other" aria-pressed="true"><span class="dot land-other"></span><span>Other / unknown</span></button>
+          </div>
+        </div>
         <div hidden>
           <label>Canopy growth · 2016→2024</label>
           <div id="growthToggles" class="growth-toggles"></div>
@@ -777,7 +793,7 @@
       <section class="controls" id="paneLayers" role="tabpanel" aria-labelledby="tabLayers" hidden>
         <div><label for="colourBy">Colour trees by</label><select id="colourBy">
           <option value="source">Source &amp; status</option><option value="height">Canopy height</option>
-          <option value="structure">Growth form</option><option value="evidence">Detection evidence</option>
+          <option value="structure">Growth form</option><option value="evidence">Detection evidence</option><option value="tenure">Land (inferred)</option>
         </select><div id="colourLegend" class="colour-legend" aria-live="polite">Colours match the sources in Explore.</div></div>
         <div>
           <label class="check" for="groupRecords"><input id="groupRecords" type="checkbox" checked><span>One marker per current crown</span></label>
@@ -794,6 +810,10 @@
             <label class="check" for="showCrowns">
               <input id="showCrowns" type="checkbox" checked>
               <span>Crowns</span>
+            </label>
+            <label class="check" for="showProperties" title="LINZ parcel outlines, drawn from zoom 16. Tap a parcel for the trees on it and their estimated services.">
+              <input id="showProperties" type="checkbox">
+              <span>Property boundaries</span>
             </label>
 
             <label class="check" for="showChange" title="Individual-tree change 2013→2024: red = removed to open ground, green = newly established">
@@ -844,7 +864,8 @@
     </main>
     <aside id="treeProfile" class="tree-profile" aria-label="Tree profile" aria-hidden="true" hidden inert>
       <div class="tree-profile-head">
-        <h2>Tree profile</h2>
+        <button id="profileBack" class="profile-back" type="button" hidden>‹ Property</button>
+        <h2 id="treeProfileTitle">Tree profile</h2>
         <button id="treeProfileClose" class="tree-profile-close" type="button" aria-label="Close">✕</button>
       </div>
       <div id="treeProfileBody" class="tree-profile-body"></div>
@@ -855,6 +876,7 @@
     <button id="floatingStats" class="floating-stats" type="button" aria-label="Show statistics for records in this view"><strong id="floatingTrees">—</strong> map markers <span aria-hidden="true">·</span> <strong id="floatingCanopy">—</strong> ha crown area</button>
   </div>
   <script src="./tree-details.js?v=20261001-v5c"></script>
+  <script src="./property.js?v=20261002-v5d"></script>
   <script src="./tree-evidence.js?v=20260928-v5b"></script>
   <script src="./tree-future.js?v=20260928-v5b"></script>
   <script src="./tree-architecture.js?v=20260928-v5b"></script>
@@ -883,7 +905,7 @@
       carbonTco2e: 2393343
     };
 
-    const SPECIES_OPTIONS = [
+    let SPECIES_OPTIONS = [
       ["Unknown", 1609469],
       ["Kauri", 17034],
       ["Pohutukawa", 5264],
@@ -924,6 +946,15 @@
     ];
 
     const CATEGORY_KEYS = ["park", "road", "inferred", "noCrown", "protected", "other"];
+    // Land chips over the inferred "tenure" tile field (zoning, designations, park extents and
+    // parcels; not ownership). Coastal or water land and unknown land share one chip.
+    const LAND_GROUPS = [["street", ["street"]], ["park", ["park"]], ["institutional", ["institutional"]], ["private", ["private"]], ["other", ["other", "unknown"]]];
+    const LAND_COLOURS = { street: "#4267ac", park: "#2f7d4d", institutional: "#b57918", private: "#a65e91", other: "#8c9290", unknown: "#8c9290" };
+    // The parcel tiles and every source carrying the land class credit the land data. The map
+    // credit stays short because the compact attribution opens over the bottom of the map; About ›
+    // Attribution and the property panel name each dataset in full. One string on all three
+    // sources, so the attribution control shows it once.
+    const LAND_CREDIT = "Land data: LINZ, Auckland Council, DOC (CC BY 4.0); © OpenStreetMap contributors (ODbL)";
     const DETECTION_SOURCES = ["lidar_inferred_canopy", "lidar_pointcloud_v4", "lidar_pointcloud_v5", "low_canopy_promoted", "pointcloud_missed_promoted"];
     const UNCERTAIN_TIERS = ["location_unverified", "earlier_detection","possible", "unverified", "possible_duplicate"];
     const TIER_TEXT = {
@@ -974,6 +1005,7 @@
     };
 
     const mobileLayout = window.matchMedia("(max-width: 760px), (max-height: 500px)");
+    const controlsBesidePanel = window.matchMedia("(min-width: 1101px)");
     const explorer = document.getElementById("explorer");
     function setSidebarCollapsed(next, focus = false) {
       document.body.dataset.asideCollapsed = String(next);
@@ -1143,8 +1175,9 @@
         version: 8,
         sources: Object.assign({}, bm.sources, {
           "akl-near-canopy": {type:"vector",url:vq(`pmtiles://${DATA_BASE}/near_canopy.pmtiles`)},
-          "akl-points": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/trees_map_points.pmtiles`) },
-          "akl-crowns": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_crowns_pilot.pmtiles`) },
+          "akl-points": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/trees_map_points.pmtiles`), attribution: LAND_CREDIT },
+          "akl-crowns": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_crowns_pilot.pmtiles`), attribution: LAND_CREDIT },
+          "akl-properties": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/properties.pmtiles`), attribution: LAND_CREDIT },
           "akl-low-canopy": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/low_canopy_candidates.pmtiles`) },
           "akl-change": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_change.pmtiles`) },
           "akl-rootshape": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_root_shapes.pmtiles`) },
@@ -1218,6 +1251,25 @@
             }
           },
           {
+            // LINZ parcels from z16, off by default. The fill is transparent and only takes clicks.
+            id: "properties-fill",
+            type: "fill",
+            source: "akl-properties",
+            "source-layer": "properties",
+            minzoom: 16,
+            layout: { visibility: "none" },
+            paint: { "fill-color": "#ffffff", "fill-opacity": 0 }
+          },
+          {
+            id: "properties-line",
+            type: "line",
+            source: "akl-properties",
+            "source-layer": "properties",
+            minzoom: 16,
+            layout: { visibility: "none" },
+            paint: { "line-color": "#3d4a42", "line-width": ["interpolate", ["linear"], ["zoom"], 16, 0.6, 19, 1.4], "line-opacity": 0.75 }
+          },
+          {
             // Root-space scenario (v3): foraging circle ∩ Voronoi cell − mapped buildings.
             // Below markers, z14+, off by default. Red = modelled space deficit for review;
             // this is not a measured root footprint or windthrow-risk prediction.
@@ -1232,6 +1284,26 @@
               "fill-opacity": ["match", ["get", "constraint"], ["at_risk", "space_deficit_review"], 0.30, 0.17],
               "fill-outline-color": ["match", ["get", "constraint"], ["at_risk", "space_deficit_review"], "#b02018", "#2f6d47"]
             }
+          },
+          {
+            // The selected property, outlined under the tree markers. Hidden until a property is
+            // chosen so the parcel tiles load only for people who use them.
+            id: "property-selected-casing",
+            type: "line",
+            source: "akl-properties",
+            "source-layer": "properties",
+            filter: ["==", ["get", "pid"], "__none__"],
+            layout: { visibility: "none" },
+            paint: { "line-color": "#ffffff", "line-width": ["interpolate", ["linear"], ["zoom"], 14, 4, 19, 7], "line-opacity": 0.9 }
+          },
+          {
+            id: "property-selected",
+            type: "line",
+            source: "akl-properties",
+            "source-layer": "properties",
+            filter: ["==", ["get", "pid"], "__none__"],
+            layout: { visibility: "none" },
+            paint: { "line-color": "#17201a", "line-width": ["interpolate", ["linear"], ["zoom"], 14, 2, 19, 3.5] }
           },
           {
             id: "points",
@@ -1340,6 +1412,21 @@
             }
           },
           {
+            // Rings on the trees counted in the selected property; street trees just outside it in blue.
+            id: "points-property",
+            type: "circle",
+            source: "akl-points",
+            "source-layer": "trees",
+            filter: ["==", ["get", "tree_id"], "__none__"],
+            paint: {
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 12, 4, 18, 11],
+              "circle-color": "rgba(0,0,0,0)",
+              "circle-stroke-color": "#e09a00",
+              "circle-stroke-width": 2.5,
+              "circle-stroke-opacity": 0.95
+            }
+          },
+          {
             // Ring drawn around the currently-selected tree in the profile.
             id: "points-highlight",
             type: "circle",
@@ -1373,6 +1460,39 @@
     map.addControl(new maplibregl.NavigationControl({showCompass: false}), "bottom-right");
     map.addControl(new maplibregl.ScaleControl({ unit: "metric" }), "bottom-left");
 
+    // The compact attribution opens over the bottom of the map until the first drag, and its height
+    // follows the credits of the visible layers and the screen width. Publish how far its top sits
+    // above the bottom of the screen, so the basemap switch stays above it, and lift the scale bar
+    // over the attribution or the switch when it would otherwise sit under them.
+    (function keepClearOfAttribution() {
+      const root = document.documentElement, container = map.getContainer();
+      const attrib = container.querySelector(".maplibregl-ctrl-attrib");
+      const scale = container.querySelector(".maplibregl-ctrl-scale");
+      const basemapSwitch = document.getElementById("basemapSwitch");
+      if (!attrib || !scale || !basemapSwitch) return;
+      const shown = (el) => {
+        const r = el.getBoundingClientRect();
+        return r.width && r.height && getComputedStyle(el).visibility !== "hidden" ? r : null;
+      };
+      function place() {
+        const a = shown(attrib);
+        root.style.setProperty("--attrib-clear", `${a ? Math.ceil(window.innerHeight - a.top) : 0}px`);
+        root.style.setProperty("--scale-lift", "0px");
+        const s = scale.getBoundingClientRect(), gap = 6;
+        let lift = 0;
+        for (const r of [a, shown(basemapSwitch)]) {
+          if (r && r.left < s.right + 2 && r.right > s.left - 2 && r.top < s.bottom - lift + gap && r.bottom > s.top - lift - gap) lift = Math.ceil(s.bottom - r.top + gap);
+        }
+        root.style.setProperty("--scale-lift", `${lift}px`);
+      }
+      const watch = new ResizeObserver(place);
+      for (const el of [attrib, scale, basemapSwitch]) watch.observe(el);
+      new MutationObserver(place).observe(document.body, { attributes: true, attributeFilter: ["data-aside-collapsed", "data-profile-open"] });
+      container.querySelector(".maplibregl-ctrl-bottom-right")?.addEventListener("transitionend", place);
+      window.addEventListener("resize", place);
+      place();
+    })();
+
     // Loading indicator: count active tile requests.
     const loadingEl = document.getElementById("loading");
     let loadingShown = false;
@@ -1380,11 +1500,27 @@
       if (!loadingShown) { loadingShown = true; loadingEl.classList.add("visible"); }
     });
     map.on("idle", () => { loadingShown = false; loadingEl.classList.remove("visible"); });
+    // One tile failing on a weak connection is retried the next time the view changes, so it gets a
+    // passing note that clears itself rather than a warning that stays on screen for the whole visit.
+    let mapNoteTimer = null;
     map.on("error", (event) => {
       loadingShown = false;
       loadingEl.classList.remove("visible");
       const message = event?.error?.message || "A map resource could not be loaded.";
-      document.getElementById("status").textContent = `Map warning: ${message}`;
+      const status = document.getElementById("status");
+      console.warn("Map resource error", event?.sourceId || "", message);
+      if (event?.tile || event?.sourceId || /failed to fetch|networkerror|load failed|network connection/i.test(message)) {
+        const previous = status.dataset.mapNote ? status.dataset.previous : status.textContent;
+        const note = "Some map tiles did not load. Move or zoom the map to try again.";
+        status.dataset.previous = previous; status.dataset.mapNote = "1"; status.textContent = note;
+        clearTimeout(mapNoteTimer);
+        mapNoteTimer = setTimeout(() => {
+          if (status.textContent === note) status.textContent = status.dataset.previous || "";
+          delete status.dataset.mapNote; delete status.dataset.previous;
+        }, 6000);
+        return;
+      }
+      status.textContent = `Map warning: ${message}`;
     });
 
     // ---- Basemap switcher.
@@ -1398,7 +1534,7 @@
       // visible/hidden categories are restored without flicker even on
       // slow connections.
       const reapply = () => {
-        applyFilters(); applyChangeEmphasis(); applyTrunkScaling(); applyColourMode();
+        applyFilters(); applyChangeEmphasis(); applyTrunkScaling(); applyColourMode(); applyPropertySelection();
         if (profileHighlightId && map.getLayer("points-highlight")) map.setFilter("points-highlight", ["==", ["get", "tree_id"], profileHighlightId]);
       };
       map.once("styledata", reapply);
@@ -1426,6 +1562,8 @@
     // ---- Filter state.
     const state = {
       visibleCategories: new Set(CATEGORY_KEYS),
+      visibleLand: new Set(LAND_GROUPS.map(([key]) => key)),
+      showProperties: false,
       showLowCanopy: false,
       showLowBand:false, showSubBand:false, wideCrownOnly:false, showEarlierDetections:false,
       showMissed: false,
@@ -1462,11 +1600,20 @@
       return ["match", primaryCategoryExpr(), active, true, false];
     }
 
+    function buildLandFilter() {
+      if (state.visibleLand.size === LAND_GROUPS.length) return null;
+      const values = LAND_GROUPS.filter(([key]) => state.visibleLand.has(key)).flatMap(([, tenures]) => tenures);
+      if (!values.length) return ["==", ["get", "tree_id"], "__none__"];
+      return ["match", ["coalesce", ["get", "tenure"], "unknown"], values, true, false];
+    }
+
     function buildFilter() {
       const conditions = ["all"];
       if(!state.showEarlierDetections)conditions.push(["!=",["get","display_role"],"earlier_detection"]);
       const categoryFilter = buildCategoryFilter();
       if (categoryFilter) conditions.push(categoryFilter);
+      const landFilter = buildLandFilter();
+      if (landFilter) conditions.push(landFilter);
       if (!state.showUnknown) {
         conditions.push(["!=", ["get", "species_confidence"], "unknown"]);
         conditions.push(["!=", ["get", "species_confidence"], "lidar_inferred_no_species"]);
@@ -1494,13 +1641,14 @@
       }
     }
     function updateFilterControls() {
-      const count = state.selectedSpecies.size + state.growthFilters.size + (CATEGORY_KEYS.length - state.visibleCategories.size) + (state.showUnknown ? 0 : 1) + (state.showUncertain ? 0 : 1);
+      const count = state.selectedSpecies.size + state.growthFilters.size + (CATEGORY_KEYS.length - state.visibleCategories.size) + (LAND_GROUPS.length - state.visibleLand.size) + (state.showUnknown ? 0 : 1) + (state.showUncertain ? 0 : 1);
       const label = `${count} active ${count === 1 ? "filter" : "filters"}`;
       for (const id of ["filterCount", "dockFilterCount"]) {
         const badge = document.getElementById(id); badge.hidden = !count; badge.textContent = String(count); badge.setAttribute("aria-label", label);
       }
       document.getElementById("resetFilters").disabled = !count;
       document.getElementById("sourceSelection").textContent = state.visibleCategories.size === CATEGORY_KEYS.length ? "All shown" : `${state.visibleCategories.size} of ${CATEGORY_KEYS.length} shown`;
+      document.getElementById("landSelection").textContent = state.visibleLand.size === LAND_GROUPS.length ? "All shown" : `${state.visibleLand.size} of ${LAND_GROUPS.length} shown`;
     }
     function applyFilters() {
       updateFilterControls();
@@ -1537,6 +1685,10 @@
       if (map.getLayer("kauri-dieback")) {
         map.setLayoutProperty("kauri-dieback", "visibility", state.showKauri ? "visible" : "none");
       }
+      for (const id of ["properties-fill", "properties-line"]) {
+        if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", state.showProperties ? "visible" : "none");
+      }
+      if (map.getLayer("points-property")) applyPropertySelection();
       scheduleViewportStats();
     }
 
@@ -1589,6 +1741,9 @@
           "recorded", "#4267ac", "very_likely", "#287d65", "probable", "#7fae4e", "possible", "#d9a33a",
           "unverified", "#c27025", "possible_duplicate", "#b0a8a0", "not_assessed", "#7b8fa3", "#8c9290"];
         keys = [["#4267ac","Recorded tree"],["#287d65","Very likely"],["#7fae4e","Probable"],["#d9a33a","Possible"],["#c27025","Unverified"],["#b0a8a0","Possible duplicate"],["#7b8fa3","Not yet checked"]];
+      } else if (mode === "tenure") {
+        expression = ["match", ["coalesce", ["get", "tenure"], "unknown"], ...Object.entries(LAND_COLOURS).flat(), "#8c9290"];
+        keys = [[LAND_COLOURS.street,"Street"],[LAND_COLOURS.park,"Park & reserve"],[LAND_COLOURS.institutional,"Schools & institutions"],[LAND_COLOURS.private,"Private property"],[LAND_COLOURS.other,"Other / unknown"]];
       } else {
         expression = styleFor(activeBasemapKey).layers.find(layer => layer.id === "points").paint["circle-color"];
       }
@@ -1601,6 +1756,8 @@
         : "Colours match the sources in Explore.";
       document.getElementById("layerHint").textContent = mode === "structure"
         ? "Growth forms include model predictions. A tree’s profile distinguishes recorded identification from model inference."
+        : mode === "tenure"
+        ? "Land type is inferred from zoning and parcel records, not ownership."
         : "Tap a tree to see its dimensions, evidence and modelled services.";
     }
     document.getElementById("colourBy").addEventListener("change", applyColourMode);
@@ -1743,6 +1900,11 @@
       }
 
       renderSpeciesState();
+      // The list above is only a fallback. The release publishes every species name on the map with its
+      // count, so rarer ones (privet, Phoenix palm) can be found too.
+      fetch(vq(`${DATA_BASE}/species_options.json`)).then((r) => r.ok ? r.json() : null).then((d) => {
+        if (d && Array.isArray(d.options) && d.options.length) { SPECIES_OPTIONS = d.options; renderSpeciesOptions(); }
+      }).catch(() => {});
 
       speciesTrigger.addEventListener("click", () => {
         const nextOpen = speciesMenu.hidden;
@@ -1795,15 +1957,25 @@
         button.setAttribute("aria-pressed", state.visibleCategories.has(category) ? "true" : "false");
         applyFilters();
       });
+      const landToggles = document.getElementById("landToggles");
+      landToggles.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-land]");
+        if (!button) return;
+        const key = button.dataset.land;
+        if (state.visibleLand.has(key)) state.visibleLand.delete(key);
+        else state.visibleLand.add(key);
+        button.setAttribute("aria-pressed", String(state.visibleLand.has(key)));
+        applyFilters();
+      });
 
       document.getElementById("showLowCanopy").addEventListener("change", event => {
         state.showLowCanopy = event.target.checked; applyFilters();
       });
       document.getElementById("resetFilters").addEventListener("click", () => {
-        state.visibleCategories = new Set(CATEGORY_KEYS); state.selectedSpecies.clear();
+        state.visibleCategories = new Set(CATEGORY_KEYS); state.visibleLand = new Set(LAND_GROUPS.map(([key]) => key)); state.selectedSpecies.clear();
         state.growthFilters.clear(); state.showEarlierDetections=false;document.getElementById('showEarlierDetections').checked=false; state.showUnknown = true; showUnknown.checked = true; state.showUncertain = true; document.getElementById("showUncertain").checked = true;
         state.speciesSearch = ""; speciesSearch.value = "";
-        legendToggles.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", "true"));
+        for (const group of [legendToggles, landToggles]) group.querySelectorAll("button").forEach(button => button.setAttribute("aria-pressed", "true"));
         renderSpeciesState(); renderGrowthToggles(); applyFilters();
       });
       speciesMenu.addEventListener("keydown", event => {
@@ -1814,6 +1986,10 @@
       showCrowns.addEventListener("change", () => {
         state.showCrowns = showCrowns.checked;
         applyLayerToggles();
+      });
+      document.getElementById("showProperties").addEventListener("change", event => {
+        state.showProperties = event.target.checked;
+        applyFilters();
       });
 
       showUnknown.addEventListener("change", () => {
@@ -2058,6 +2234,18 @@
     map.on("mouseleave", "crowns-fill", () => { map.getCanvas().style.cursor = ""; });
     map.on("mouseenter", "low-candidates", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "low-candidates", () => { map.getCanvas().style.cursor = ""; });
+    // A tree or an overlay with its own popup under the pointer keeps the click; a parcel opens
+    // only from open ground.
+    const PARCEL_CLICK_YIELDS = ["points", "crowns-fill", "tree-change", "low-candidates", "missed-candidates", "near-canopy", "kauri-dieback", "canopy-fill"];
+    map.on("click", "properties-fill", (event) => {
+      if (map.queryRenderedFeatures(event.point, { layers: PARCEL_CLICK_YIELDS.filter(id => map.getLayer(id)) }).length) return;
+      const f = event.features[0];
+      if (!f?.properties?.pid) return;
+      document.getElementById("propertySearch").value = "";
+      openProperty(f.properties.pid, null, { tile: f.properties, fly: false });
+    });
+    map.on("mouseenter", "properties-fill", () => { map.getCanvas().style.cursor = "pointer"; });
+    map.on("mouseleave", "properties-fill", () => { map.getCanvas().style.cursor = ""; });
 
     map.on("load", () => {
       ALTOIdentity.init({map,base:DATA_BASE,version:TILE_VERSION,filter:buildFilter,changed:scheduleViewportStats,open:openProfile});
@@ -2166,10 +2354,11 @@
     const profileBody = document.getElementById("treeProfileBody");
     let profileHighlightId = null;
     let profileRequestId = 0;
+    let currentProperty = null, propertyRequestId = 0, propertyShape = null;
 
     function closeProfile() {
       ALTOEvidenceWorkspace.dispose();
-      profileRequestId++;
+      profileRequestId++; propertyRequestId++;
       const restoreFocus = profilePanel.contains(document.activeElement);
       document.body.dataset.profileOpen = "false";
       profilePanel.setAttribute("aria-hidden", "true");
@@ -2180,6 +2369,8 @@
       if (map.getLayer("points-highlight")) {
         map.setFilter("points-highlight", ["==", ["get", "tree_id"], "__none__"]);
       }
+      currentProperty = null; propertyShape = null; setProfileMode("tree"); applyPropertySelection();
+      clearMapPadding();
     }
     document.getElementById("treeProfileClose").addEventListener("click", closeProfile);
     document.addEventListener("keydown", (e) => {
@@ -2539,6 +2730,7 @@
     async function openProfile(props) {
       if (!props?.tree_id) return;
       ALTOEvidenceWorkspace.dispose();
+      propertyRequestId++; setProfileMode("tree");
       if (mobileLayout.matches) setSidebarCollapsed(true);
       profilePanel.hidden = false; profilePanel.inert = false;
       const requestId = ++profileRequestId;
@@ -2580,6 +2772,150 @@
         extra.querySelector('button').addEventListener('click',()=>openProfile(props));
       }
     }
+
+    // ====================================================================
+    // PROPERTY PANEL — the trees on one parcel and their estimated services.
+    // Shares the right-hand panel with the tree profile; a tree opened from a
+    // property keeps the parcel outlined and offers a way back to it.
+    // ====================================================================
+    function setProfileMode(mode) {
+      const property = mode === "property";
+      document.getElementById("treeProfileTitle").textContent = property ? "Property" : "Tree profile";
+      profilePanel.setAttribute("aria-label", property ? "Property summary" : "Tree profile");
+      document.getElementById("profileBack").hidden = property || !currentProperty;
+    }
+    // Gold rings go on every counted tree in the parcel, not just the 300 the record lists: the
+    // release counting rule, the parcel's land class (a register tree of another class stays off
+    // its figures) and the parcel shape read back from the loaded parcel tiles. Those tiles, and
+    // so the outline, start at zoom 14. Further out, a shape is only usable once every tile of
+    // the parcel has been seen; until then the listed trees are ringed as well and the panel
+    // says that the map may ring only those. Rings follow the tree filters, so a hidden tree is
+    // never ringed.
+    const PARCEL_MIN_ZOOM = 14;
+    function propertyRingNote(shape) {
+      const note = profileBody.querySelector("[data-property-rings]");
+      if (note) note.hidden = !!shape?.complete || map.getZoom() >= PARCEL_MIN_ZOOM;
+    }
+    function applyPropertySelection() {
+      const p = currentProperty, street = p?.streetIds || [];
+      for (const id of ["property-selected-casing", "property-selected"]) {
+        if (!map.getLayer(id)) continue;
+        map.setFilter(id, ["==", ["get", "pid"], p ? p.pid : "__none__"]);
+        map.setLayoutProperty(id, "visibility", p ? "visible" : "none");
+      }
+      const shape = p?.tenure && propertyShape?.pid === p.pid ? propertyShape : null;
+      propertyRingNote(shape);
+      if (!map.getLayer("points-property")) return;
+      const rings = [];
+      if (shape) rings.push(["all", ["!=", ["get", "display_role"], "earlier_detection"], ["==", ["coalesce", ["get", "tenure"], "unknown"], p.tenure], ["within", shape.geometry]]);
+      if (!shape?.complete && p?.treeIds?.length) rings.push(["in", ["get", "tree_id"], ["literal", p.treeIds]]);
+      if (street.length) rings.push(["in", ["get", "tree_id"], ["literal", street]]);
+      const visible = buildFilter();
+      map.setFilter("points-property", !rings.length ? ["==", ["get", "tree_id"], "__none__"] : visible ? ["all", visible, ["any", ...rings]] : ["any", ...rings]);
+      map.setPaintProperty("points-property", "circle-stroke-color", street.length ? ["case", ["in", ["get", "tree_id"], ["literal", street]], "#4f8fe0", "#e09a00"] : "#e09a00");
+    }
+    // The parcel's pieces in the loaded parcel tiles, read when the map is idle. At zoom 14 or more
+    // with the whole parcel on the canvas every tile it touches is loaded, so the shape is
+    // complete; a complete shape is kept until a newer complete one arrives. The ring filter
+    // changes only when the shape does.
+    function refreshPropertyShape() {
+      const p = currentProperty;
+      if (!p?.tenure || !map.getLayer("property-selected")) return;
+      const parts = []; let n = 0, sx = 0, sy = 0;
+      for (const f of map.querySourceFeatures("akl-properties", { sourceLayer: "properties", filter: ["==", ["get", "pid"], p.pid] })) {
+        const g = f.geometry;
+        for (const polygon of g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : []) {
+          parts.push(polygon);
+          for (const ring of polygon) for (const [x, y] of ring) { n++; sx += x; sy += y; }
+        }
+      }
+      const old = propertyShape?.pid === p.pid ? propertyShape : null, key = `${parts.length}:${n}:${sx.toFixed(6)}:${sy.toFixed(6)}`;
+      const b = p.bbox, v = map.getBounds();
+      const complete = parts.length > 0 && !!b && map.getZoom() >= PARCEL_MIN_ZOOM && v.getWest() <= b[0] && v.getSouth() <= b[1] && v.getEast() >= b[2] && v.getNorth() >= b[3];
+      if (!parts.length || (old?.complete && !complete) || (old?.key === key && old.complete === complete)) return propertyRingNote(old);
+      propertyShape = { pid: p.pid, key, complete, geometry: { type: "MultiPolygon", coordinates: parts } };
+      applyPropertySelection();
+    }
+    map.on("idle", refreshPropertyShape);
+    // Keep the parcel clear of the open panels when the map moves to it. The padding is passed
+    // to fitBounds and turned into an offset for easeTo; it is never left on the map, where
+    // MapLibre would add it to every later fitBounds and shift every later camera move.
+    function propertyPadding() {
+      const canvas = map.getCanvas(), width = canvas.clientWidth, height = canvas.clientHeight;
+      if (mobileLayout.matches) return { top: 120, right: 20, bottom: Math.max(20, Math.min(Math.round(height * 0.62) + 16, height - 200)), left: 20 };
+      const left = document.body.dataset.asideCollapsed === "true" ? 40 : 340;
+      // From 1101 px the zoom buttons and attribution sit beside the open panel (observatory.css),
+      // and the attribution stays open over the bottom of the map until the first drag.
+      const beside = controlsBesidePanel.matches;
+      const attrib = beside ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--attrib-clear")) || 0 : 0;
+      return { top: 48, right: Math.max(20, Math.min(beside ? 460 : 420, width - left - 200)), bottom: Math.max(48, Math.round(attrib) + 8), left };
+    }
+    function propertyOffset() {
+      const pad = propertyPadding();
+      return [(pad.left - pad.right) / 2, (pad.top - pad.bottom) / 2];
+    }
+    function clearMapPadding() {
+      const pad = map.getPadding();
+      if (pad.top || pad.right || pad.bottom || pad.left) map.setPadding({ top: 0, right: 0, bottom: 0, left: 0 });
+    }
+    async function openProperty(pid, address = null, options = {}) {
+      if (!pid) return;
+      pid = String(pid);
+      ALTOEvidenceWorkspace.dispose();
+      profileRequestId++;
+      const requestId = ++propertyRequestId, same = currentProperty?.pid === pid;
+      currentProperty = { pid, address: address || (same ? currentProperty.address : null), tile: options.tile || (same ? currentProperty.tile : null),
+        treeIds: same ? currentProperty.treeIds : [], streetIds: same ? currentProperty.streetIds : [], tenure: same ? currentProperty.tenure : null, bbox: same ? currentProperty.bbox : null };
+      if (mobileLayout.matches) setSidebarCollapsed(true);
+      setProfileMode("property");
+      profileHighlightId = null;
+      if (map.getLayer("points-highlight")) map.setFilter("points-highlight", ["==", ["get", "tree_id"], "__none__"]);
+      profilePanel.hidden = false; profilePanel.inert = false;
+      profileBody.innerHTML = `<div class="pp-loading"><div class="pp-skeleton"><span></span><span></span><span></span><span></span></div><p class="pp-note">Loading the property summary…</p></div>`;
+      profileBody.scrollTop = 0;
+      document.body.dataset.profileOpen = "true";
+      profilePanel.setAttribute("aria-hidden", "false");
+      document.getElementById("treeProfileClose").focus({preventScroll: true});
+      if (!state.showProperties) { state.showProperties = true; document.getElementById("showProperties").checked = true; applyFilters(); }
+      clearMapPadding();
+      applyPropertySelection();
+      const a = currentProperty.address;
+      if (options.fly !== false && a) map.easeTo({ center: [a.lon, a.lat], zoom: Math.max(map.getZoom(), 17), offset: propertyOffset(), duration: 600 });
+      try {
+        const { record } = await ALTOProperty.load(DATA_BASE, TILE_VERSION, pid);
+        if (requestId !== propertyRequestId) return;
+        currentProperty.treeIds = (record?.trees || []).map(t => t.tree_id);
+        currentProperty.streetIds = (record?.street_trees || []).map(t => t.tree_id);
+        currentProperty.tenure = record?.property?.tenure || null;
+        currentProperty.bbox = record?.property?.bbox || null;
+        profileBody.innerHTML = ALTOProperty.render(record, { pid, address: currentProperty.address, tile: currentProperty.tile });
+        if (record) ALTOProperty.bind(profileBody, record, { open: openProfile });
+        applyPropertySelection();
+        refreshPropertyShape();
+        const box = record?.property?.bbox;
+        if (options.fly !== false && box) {
+          // A parcel that only just misses fitting at the zoom where its outline starts is shown
+          // there, slightly cropped, rather than fitted without an outline.
+          const bounds = [[box[0], box[1]], [box[2], box[3]]], padding = propertyPadding();
+          const fit = map.cameraForBounds(bounds, { padding, maxZoom: 19 });
+          if (fit && fit.zoom < PARCEL_MIN_ZOOM && fit.zoom >= PARCEL_MIN_ZOOM - 0.5) map.easeTo({ center: [(box[0] + box[2]) / 2, (box[1] + box[3]) / 2], zoom: PARCEL_MIN_ZOOM, offset: propertyOffset(), duration: 700 });
+          else map.fitBounds(bounds, { padding, maxZoom: 19, duration: 700 });
+        }
+        else if (options.fly !== false && a) map.easeTo({ center: [a.lon, a.lat], zoom: 18.5, offset: propertyOffset(), duration: 600 });
+      } catch (error) {
+        if (requestId !== propertyRequestId) return;
+        profileBody.innerHTML = '<div class="pp-section"><p class="pp-note">The property summary could not load.</p><button type="button" class="pp-retry-details">Try again</button></div>';
+        profileBody.querySelector("button").addEventListener("click", () => openProperty(pid, currentProperty?.address, options));
+      }
+    }
+    document.getElementById("profileBack").addEventListener("click", () => {
+      if (currentProperty) openProperty(currentProperty.pid, currentProperty.address, { fly: false });
+    });
+    ALTOProperty.bindSearch({
+      input: document.getElementById("propertySearch"), list: document.getElementById("propertyOptions"),
+      status: document.getElementById("propertyStatus"), base: DATA_BASE, version: TILE_VERSION,
+      onSelect: address => openProperty(address.pid, address)
+    });
   </script>
   <dialog id="treeComparison" class="tree-comparison" aria-labelledby="comparisonTitle">
     <header><div><h2 id="comparisonTitle">Compare your trees</h2><p>Save up to four trees. Your selection stays in this browser.</p></div><button id="comparisonClose" type="button" aria-label="Close comparison">✕</button></header>
@@ -2628,6 +2964,7 @@
 
       <h3>Attribution</h3>
       <p>Developed by the Better Places Lab (Dr Timothy F. Welch), Waipapa Taumata Rau | University of Auckland. Built on Auckland Council open data, LINZ LiDAR and imagery, and i-Tree species references.</p>
+      <p>Property boundaries and the inferred land type (the Land filter, “Land (inferred)” colours and property summaries) come from LINZ NZ Primary Parcels, Auckland Council Unitary Plan zones and designations and park extents, and DOC Public Conservation Land, all CC BY 4.0, and from OpenStreetMap golf courses, island roads and addresses, © OpenStreetMap contributors, ODbL. Land type is inferred from these records, not from ownership records.</p>
     </div>
   </div>
 </body>

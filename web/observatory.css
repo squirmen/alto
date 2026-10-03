@@ -107,11 +107,30 @@ body[data-aside-collapsed="true"] .map-dock { display: grid; gap: 6px; }
 .about-modal .stat span, .about-modal .stats-scope { font-size: 12px; }
 .about-close { min-width: 44px; min-height: 44px; }
 .loading { bottom: 52px; font-size: 12px; }
-.maplibregl-ctrl-bottom-left { left: 8px; }
+.maplibregl-ctrl-bottom-left { left: 8px; bottom: var(--scale-lift, 0px); }
 .maplibregl-ctrl-bottom-right { bottom: env(safe-area-inset-bottom); }
+/* The compact attribution opens over the bottom of the map until the first drag. index.html sets
+   --attrib-clear (how far its top sits above the bottom of the screen) and --scale-lift. On wider
+   screens it wraps short of the explorer, whose foot leaves room for one line, and from 1180 px,
+   where the longest basemap credit and the land credit fit on one line, short of the scale bar.
+   With a panel open it sits left of the panel from 1101 px and wholly under it below that. */
+@media (min-width: 761px) {
+  .maplibregl-ctrl-bottom-right > .maplibregl-ctrl-attrib.maplibregl-compact-show { max-width: calc(100vw - 380px); }
+}
+@media (min-width: 1180px) {
+  .maplibregl-ctrl-bottom-right > .maplibregl-ctrl-attrib.maplibregl-compact-show { max-width: calc(100vw - 160px); }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  body[data-profile-open="true"] .maplibregl-ctrl-bottom-right > .maplibregl-ctrl-attrib.maplibregl-compact-show { max-width: 300px; }
+}
+@media (min-width: 1101px) {
+  .maplibregl-ctrl-bottom-right { transition: right 260ms cubic-bezier(0.4, 0, 0.2, 1); }
+  body[data-profile-open="true"] .maplibregl-ctrl-bottom-right { right: 390px; }
+  body[data-profile-open="true"] .maplibregl-ctrl-bottom-right > .maplibregl-ctrl-attrib.maplibregl-compact-show { max-width: calc(100vw - 770px); }
+}
 .maplibregl-ctrl-group button { width: 44px; height: 44px; }
 @media (max-width: 1100px) and (min-width: 761px) {
-  .basemap-switch { top: auto; bottom: 52px; right: 64px; }
+  .basemap-switch { top: auto; bottom: max(52px, calc(var(--attrib-clear, 0px) + 8px)); right: 64px; }
 }
 @media (max-width: 760px) {
   #explorer { top: auto; left: 8px; bottom: max(8px, env(safe-area-inset-bottom)); width: calc(100% - 16px); max-height: calc(100dvh - 80px); border-radius: 16px; }
@@ -128,7 +147,7 @@ body[data-aside-collapsed="true"] .map-dock { display: grid; gap: 6px; }
   #paneLayers .toggle-row .check { border: 0; font-size: 13px; }
   .legend-row { min-height: 44px; }
   body[data-aside-collapsed="true"] #explorer { transform: translateY(calc(100% + 24px)); }
-  .basemap-switch { top: auto; bottom: max(76px, env(safe-area-inset-bottom)); right: 64px; max-width: calc(100vw - 76px); }
+  .basemap-switch { top: auto; bottom: max(76px, env(safe-area-inset-bottom), calc(var(--attrib-clear, 0px) + 8px)); right: 64px; max-width: calc(100vw - 76px); }
   .basemap-switch button, .basemap-switch:not(:hover) button:not(.active) { min-height: 40px; font-size: 12px; padding: 8px; }
   body[data-aside-collapsed="false"] .basemap-switch { visibility: hidden; }
   .tree-profile { top: auto; bottom: 0; right: 0; width: 100%; height: 62dvh; border-radius: 18px 18px 0 0; border: 1px solid var(--line); box-shadow: 0 -8px 28px #17201a1a; }
@@ -375,3 +394,39 @@ h1.brand img { display: block; width: 174px; height: auto; max-width: 100%; }
 .ground-cta { display: inline-block; background: #466d44; color: #fff !important; border-radius: 7px; padding: 10px 12px; font-size: 12px; text-decoration: none; }
 .ground-cta:hover { background: #365d3b; }
 .model-live-note { color: #58694f; font-weight: 400 !important; align-self: center; }
+
+/* Property search, the property panel and the land filter. */
+.property-search { position: relative; margin: 0 16px 10px; flex: 0 0 auto; }
+.property-search > svg { position: absolute; left: 11px; top: 13px; color: var(--muted); pointer-events: none; }
+.property-search input { padding-left: 36px; }
+.property-options { list-style: none; margin: 6px 0 0; padding: 4px; border: 1px solid var(--line); border-radius: 8px; background: #fff; max-height: 264px; overflow-y: auto; overscroll-behavior: contain; box-shadow: 0 8px 20px #17201a14; }
+.property-option { display: flex; flex-direction: column; justify-content: center; gap: 1px; min-height: 44px; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 14px; line-height: 1.3; }
+.property-option small { font-size: 12px; color: var(--muted); }
+.property-option:hover, .property-option[aria-selected="true"] { background: #f1f5ef; }
+.property-option[aria-selected="true"] { box-shadow: inset 3px 0 0 var(--accent); }
+.property-status { margin: 6px 2px 0; font-size: 12px; line-height: 1.4; color: var(--muted); }
+.info-tip { color: var(--muted); font-size: 12px; cursor: help; }
+.dot.land-street { background: #4267ac; }
+.dot.land-park { background: #2f7d4d; }
+.dot.land-institutional { background: #b57918; }
+.dot.land-private { background: #a65e91; }
+.dot.land-other { background: #8c9290; }
+.tree-profile-head h2 { flex: 1 1 auto; }
+.profile-back { appearance: none; flex: 0 0 auto; margin-right: 10px; min-height: 36px; padding: 6px 10px; border: 1px solid #bbcdb8; border-radius: 8px; background: #f1f5ef; color: var(--accent); font: 600 12px/1 Inter, sans-serif; cursor: pointer; }
+.profile-back:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.property-summary .property-metric-wide { grid-column: 1 / -1; }
+.property-total { border-top: 1px solid #e3e8e0; margin-top: 4px; padding-top: 8px; font-weight: 700; }
+.property-trees { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.property-trees + .property-trees { margin-top: 4px; }
+.property-trees button { appearance: none; width: 100%; display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; gap: 8px; min-height: 44px; padding: 6px 8px; border: 1px solid #e3e8e0; border-radius: 8px; background: #fff; color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.property-trees button:hover { border-color: #b7cbb0; background: #f6faf4; }
+.pt-rank { font-size: 11px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.pt-name { min-width: 0; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.pt-name small { display: block; margin-top: 1px; font-size: 11px; font-weight: 400; color: var(--muted); }
+.pt-value { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pt-value small { font-size: 10px; font-weight: 500; color: var(--muted); }
+.property-more { width: 100%; margin-top: 6px; min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: #f1f5ef; color: var(--accent); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.property-caveat { margin: 0 0 8px; padding: 10px 12px; border: 1px solid #eadfc2; border-radius: 8px; background: #fbf7ec; color: #4a4636; font-size: 12px; line-height: 1.5; }
+.property-sources a { color: var(--accent); }
+@media (max-width: 760px) { .property-search { margin-bottom: 8px; } }
+.pt-value.pt-none { font-size: 11px; font-weight: 500; color: var(--muted); }
