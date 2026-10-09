@@ -1,0 +1,371 @@
+diff --git a/web/index.html b/web/index.html
+index 8258e61..6346a12 100644
+--- a/web/index.html
++++ b/web/index.html
+@@ -723,3 +723,3 @@
+   </style>
+-  <link rel="stylesheet" href="./observatory.css?v=20261002-v5d">
++  <link rel="stylesheet" href="./observatory.css?v=20261009-v5.2">
+ </head>
+@@ -813,2 +813,6 @@
+             </label>
++            <label class="check" for="showCouncilPositions" id="councilPositionsToggle" title="Where the Council or other source recorded the tree, joined to the crown ALTO found it on." hidden>
++              <input id="showCouncilPositions" type="checkbox">
++              <span>Council recorded positions</span>
++            </label>
+             <label class="check" for="showProperties" title="LINZ parcel outlines, drawn from zoom 16. Tap a parcel for the trees on it and their estimated services.">
+@@ -839,2 +843,3 @@
+           </div>
++          <p id="councilPositionsNote" class="control-note council-positions-note" hidden><span class="council-key" aria-hidden="true"><i></i><b></b></span>Where the Council or other source recorded the tree, joined to the crown ALTO found it on.</p>
+         </div>
+@@ -879,3 +884,3 @@
+   <script src="./property.js?v=20261002-v5d"></script>
+-  <script src="./tree-evidence.js?v=20260928-v5b"></script>
++  <script src="./tree-evidence.js?v=20261009-v5.2"></script>
+   <script src="./tree-future.js?v=20260928-v5b"></script>
+@@ -887,2 +892,3 @@
+   <script src="./tree-ground.js?v=20260928-v5b"></script>
++  <script src="./record-links.js?v=20261009-v5.2"></script>
+   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"
+@@ -1139,2 +1145,8 @@
+ 
++    // V5.2 crowns drawn from a source record's laser returns await confirmation, so they are drawn
++    // faintly. Earlier tiles carry neither field and draw as before.
++    function faintCrownExpr() {
++      return ["any", ["==", ["get", "crown_source"], "record_seeded_v52"], ["==", ["get", "display_style"], "faint"]];
++    }
++
+     function pointOpacityExpr() {
+@@ -1228,3 +1240,4 @@
+               ],
+-              "fill-opacity": ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.07, "possible_duplicate", 0.07, "possible", 0.16, 0.3]
++              "fill-opacity": ["case", faintCrownExpr(), 0.1,
++                ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.07, "possible_duplicate", 0.07, "possible", 0.16, 0.3]]
+             }
+@@ -1249,3 +1262,4 @@
+               "line-width": ["interpolate", ["linear"], ["zoom"], 12, 0.5, 18, 1.5],
+-              "line-opacity": ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.35, "possible_duplicate", 0.35, "possible", 0.6, 0.95]
++              "line-opacity": ["case", faintCrownExpr(), 0.6,
++                ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.35, "possible_duplicate", 0.35, "possible", 0.6, 0.95]]
+             }
+@@ -1574,2 +1588,3 @@
+       showKauri: false,
++      showCouncilPositions: false,
+       showUnknown: true,
+@@ -1690,2 +1705,3 @@
+       }
++      ALTORecordLinks.apply(map, state.showCouncilPositions);
+       if (map.getLayer("points-property")) applyPropertySelection();
+@@ -2030,2 +2046,7 @@
+       });
++
++      document.getElementById("showCouncilPositions").addEventListener("change", event => {
++        state.showCouncilPositions = event.target.checked;
++        applyFilters();
++      });
+     })();
+@@ -2139,4 +2160,4 @@
+     map.on("click", "crowns-fill", (event) => {
+-      // Don't double-fire if a point was clicked at the same spot.
+-      const points = map.queryRenderedFeatures(event.point, { layers: ["points"] });
++      // Don't double-fire if a point or a recorded position was clicked at the same spot.
++      const points = map.queryRenderedFeatures(event.point, { layers: ["points", "council-positions"].filter(id => map.getLayer(id)) });
+       if (points.length) return;
+@@ -2238,3 +2259,3 @@
+     // only from open ground.
+-    const PARCEL_CLICK_YIELDS = ["points", "crowns-fill", "tree-change", "low-candidates", "missed-candidates", "near-canopy", "kauri-dieback", "canopy-fill"];
++    const PARCEL_CLICK_YIELDS = ["points", "crowns-fill", "tree-change", "low-candidates", "missed-candidates", "near-canopy", "kauri-dieback", "canopy-fill", "council-positions"];
+     map.on("click", "properties-fill", (event) => {
+@@ -2248,2 +2269,14 @@
+     map.on("mouseleave", "properties-fill", () => { map.getCanvas().style.cursor = ""; });
++    // Council recorded positions (v5.2): off by default, and offered only when the release metadata
++    // lists the layer. A recorded position opens its tree, using the tree's map record when its
++    // tile is loaded and the full record otherwise.
++    ALTORecordLinks.init({
++      map, url: vq(`pmtiles://${DATA_BASE}/council_positions.pmtiles`),
++      before: "points", yieldTo: ["points"],
++      toggle: document.getElementById("councilPositionsToggle"), note: document.getElementById("councilPositionsNote"),
++      open: (p) => {
++        const tree = map.querySourceFeatures("akl-points", { sourceLayer: "trees", filter: ["==", ["get", "tree_id"], p.tree_id] })[0];
++        openProfile(tree ? tree.properties : { tree_id: p.tree_id, source_primary: p.source });
++      }
++    });
+ 
+@@ -2317,2 +2350,3 @@
+         .then((metadata) => {
++          ALTORecordLinks.release(metadata);
+           const release = metadata.release || {};
+@@ -2469,3 +2503,3 @@
+ 
+-    function renderProfile(props) {
++    function renderProfile(props, options = {}) {
+       const inferred = isDetection(props);
+@@ -2508,2 +2542,5 @@
+ 
++      // ---- v5.2 link between the source record and its crown (absent from earlier tiles)
++      if (options.recordLink !== false) html += ALTORecordLinks.render(ALTORecordLinks.link(props));
++
+       // ---- identification (tree_species_attributes)
+@@ -2750,3 +2787,3 @@
+         const scroll=profileBody.scrollTop;
+-        profileBody.innerHTML=ALTOEvidence.render(record)+'<div class="identity-slot"></div><details class="profile-overview"><summary>More dimensions &amp; context</summary>'+renderProfile(ALTOTreeDetails.overviewProps(record,props))+'</details>'+ALTOTreeDetails.render(schema,record);
++        profileBody.innerHTML=ALTOEvidence.render(record)+'<div class="identity-slot"></div><details class="profile-overview"><summary>More dimensions &amp; context</summary>'+renderProfile(ALTOTreeDetails.overviewProps(record,props),{recordLink:false})+'</details>'+ALTOTreeDetails.render(schema,record);
+         // Ground evidence and place context arrive a moment later; neither blocks the record.
+@@ -2755,2 +2792,3 @@
+         summary?.querySelector('.evidence-id')?.insertAdjacentHTML('afterend','<p class="evidence-place"></p>');
++        ALTORecordLinks.mount(profileBody,record,props);
+         const groundPromise=ALTOGround.load(props.tree_id).then(data=>{
+diff --git a/web/observatory.css b/web/observatory.css
+index 13e2978..3ef8715 100644
+--- a/web/observatory.css
++++ b/web/observatory.css
+@@ -432 +432,16 @@ h1.brand img { display: block; width: 174px; height: auto; max-width: 100%; }
+ .pt-value.pt-none { font-size: 11px; font-weight: 500; color: var(--muted); }
++
++/* V5.2 record-to-crown links and the Council recorded positions layer. */
++.council-positions-note { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; font-size: 12px; }
++.council-key { display: inline-flex; align-items: center; gap: 2px; flex: 0 0 auto; margin-top: 5px; }
++.council-key i { display: block; width: 9px; height: 9px; border: 1.6px solid #c46a12; border-radius: 50%; box-sizing: border-box; background: rgba(255,255,255,.3); }
++.council-key b { display: block; width: 16px; height: 0; border-top: 1.6px dashed #c46a12; }
++.record-link { border-left: 3px solid #c46a12; background: #fdf8f1; }
++.record-link[data-link-class="linked"] { border-left-color: var(--accent); background: #f4f8f2; }
++.record-link[data-link-class="drawn_from_record"] { border-left-style: dashed; }
++.record-link-evidence { margin: 0 0 6px; font-size: 14px; font-weight: 600; line-height: 1.45; }
++.record-link-note { margin: 0 0 6px; font-size: 12px; line-height: 1.5; color: #4b5a4d; }
++.record-link .pp-note { margin-top: 4px; }
++.council-position-tip .maplibregl-popup-content { min-width: 0; max-width: 260px; padding: 10px 12px; }
++.council-position-tip .popup-title { margin-bottom: 4px; font-size: 13px; }
++.council-position-tip p { margin: 4px 0 0; font-size: 12px; line-height: 1.45; }
+diff --git a/web/tree-evidence.js b/web/tree-evidence.js
+index 57a483c..30b95b9 100644
+--- a/web/tree-evidence.js
++++ b/web/tree-evidence.js
+@@ -26,3 +26,3 @@
+     const height = number(c.crown_max_chm_m) ?? number(a.height_max_m) ?? number(a.height_p95_m);
+-    const heightBasis = c.crown_source==='v5'?'V5 segmented canopy maximum, 2024 survey':c.crown_source==='v4_outside_v5'?'Earlier crown outside the v5 footprint':'Stored canopy estimate';
++    const heightBasis = c.crown_source==='v5'?'V5 segmented canopy maximum, 2024 survey':c.crown_source==='v4_outside_v5'?'Earlier crown outside the v5 footprint':c.crown_source==='record_seeded_v52'?'Crown drawn from the record, 2024 survey; awaiting confirmation':'Stored canopy estimate';
+     return {trunks,low,high,timeline,questions,height,heightBasis,canopyArea:number(c.crown_area_m2)??number(s.crown_area_m2),
+diff --git a/web/record-links.js b/web/record-links.js
+new file mode 100644
+index 0000000..51987d5
+--- /dev/null
++++ b/web/record-links.js
+@@ -0,0 +1,134 @@
++/* V5.2 record-to-crown links: where a source recorded a tree, and the crown ALTO joined it to.
++ *
++ * The Council recorded positions layer reads data/council_positions.pmtiles (layer
++ * council_positions): a point at each linked record's original source position and a line from it
++ * to the top of its crown. It is off by default and is added to the map the first time it is
++ * switched on. Its switch appears only when release-metadata.json lists the file, so a release
++ * without it looks exactly as before.
++ *
++ * Tree tiles and full records carry the link from v5.2 on: link_class (linked, probable,
++ * drawn_from_record), link_evidence (one sentence, with the distance from the crown edge),
++ * link_edge_m, and crown_source "record_seeded_v52" with display_style "faint" for crowns drawn
++ * from a record. Records and tiles without these fields render nothing here. */
++(function(root){
++  'use strict';
++  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
++  const num=v=>v===null||v===undefined||v===''?null:(Number.isFinite(Number(v))?Number(v):null);
++  const metres=v=>new Intl.NumberFormat('en-NZ',{minimumFractionDigits:1,maximumFractionDigits:1}).format(v);
++
++  const SEEDED='record_seeded_v52';
++  const SOURCE='akl-council-positions';
++  const LAYER_IDS=['council-position-lines-casing','council-position-lines','council-positions'];
++  const NOTE='Where the Council or other source recorded the tree, joined to the crown ALTO found it on.';
++  const COLOUR='#c46a12';
++  // The package's evidence sentences, so a tile that carries only the class reads the same.
++  const edgeText=d=>d===null?'':` (${metres(d)} m from the crown edge)`;
++  const CLASS={
++    linked:{title:'Linked to a LiDAR crown',short:'linked',
++      text:d=>`Linked to its LiDAR crown by position${edgeText(d)}`,
++      note:'ALTO matched this record to the crown from its recorded position, the size expected for its species and the other records nearby.'},
++    probable:{title:'Probable crown match',short:'probable match',
++      text:d=>`Probable match to this LiDAR crown${edgeText(d)}`,
++      note:'The most likely crown on the same evidence, with less certainty than a linked match.'},
++    drawn_from_record:{title:'Crown drawn from the record',short:'crown drawn from the record',
++      text:()=>'Crown drawn from the LiDAR returns at this record\'s position; awaiting confirmation',note:null}
++  };
++  const STATUS_CLASS={linked_high:'linked',linked_medium:'probable',linked_new_crown:'drawn_from_record'};
++  const SOURCE_LABEL={tree_register_points:'The Council tree register',notable_trees_overlay:'The Notable Trees overlay',
++    ruru_obskauri_tiaki_public:'The kauri survey (RŪRU)',osm_natural_tree:'OpenStreetMap'};
++
++  // The link a tree carries, from its full record when loaded and otherwise from its map tile.
++  function link(props,record){
++    const d=record?.datasets||{},r=d.record_link||{},p=props||{};
++    const raw=r.link_class||p.link_class||null,cls=CLASS[raw]?raw:null;
++    const style=r.display_style||d.crown?.display_style||p.display_style||null;
++    const seeded=(r.crown_source||d.crown?.crown_source||p.crown_source)===SEEDED||style==='faint'||cls==='drawn_from_record';
++    if(!cls&&!seeded)return null;
++    const edge=num(r.edge_distance_m??p.link_edge_m);
++    const text=r.link_evidence||r.evidence_text||p.link_evidence||(cls?CLASS[cls].text(edge):null);
++    return {cls,text,edge,seeded};
++  }
++  function render(l){
++    if(!l)return '';
++    const c=CLASS[l.cls]||CLASS.drawn_from_record;
++    let html=`<section class="pp-section record-link" data-link-class="${esc(l.cls||'drawn_from_record')}"><div class="pp-section-title">${esc(c.title)}</div>`;
++    if(l.text)html+=`<p class="record-link-evidence">${esc(l.text)}</p>`;
++    if(l.seeded)html+='<p class="record-link-note"><strong>Drawn from the record, awaiting confirmation.</strong> No v5 crown covered this tree, so ALTO drew one from the 2024 laser returns at the recorded position. The map shows it faintly until it is confirmed.</p>';
++    else if(c.note)html+=`<p class="record-link-note">${esc(c.note)}</p>`;
++    if(l.cls)html+='<p class="pp-note">The source’s own position is kept: switch on Council recorded positions in Layers to see it.</p>';
++    return html+'</section>';
++  }
++  // After the full record loads the link sits directly under the evidence summary.
++  function mount(container,record,props){
++    const html=render(link(props,record)),summary=container.querySelector('.evidence-summary');
++    if(html&&summary)summary.insertAdjacentHTML('afterend',html);
++  }
++  function tip(p){
++    const c=CLASS[STATUS_CLASS[p.status]],d=num(p.distance_m),kind=c?` (${esc(c.short)})`:'';
++    const joined=d===null?` ALTO joined it to a crown${kind}.`:` ALTO joined it to the crown whose top is ${metres(d)} m away${kind}.`;
++    return `<div class="popup-title">Recorded position</div><p>${esc(SOURCE_LABEL[p.source]||'The source')} recorded the tree here.${joined}</p>`+
++      '<p class="pp-note">Click or tap for the tree’s profile.</p>';
++  }
++  function layers(){
++    const base={source:SOURCE,'source-layer':'council_positions',minzoom:13,layout:{visibility:'none'}};
++    const lines=['==',['geometry-type'],'LineString'],width=['interpolate',['linear'],['zoom'],13,0.8,18,1.7];
++    return [
++      {...base,id:'council-position-lines-casing',type:'line',filter:lines,layout:{visibility:'none','line-cap':'round'},
++        paint:{'line-color':'#ffffff','line-width':['interpolate',['linear'],['zoom'],13,2,18,3.6],'line-opacity':0.55}},
++      {...base,id:'council-position-lines',type:'line',filter:lines,layout:{visibility:'none','line-cap':'round'},
++        paint:{'line-color':COLOUR,'line-width':width,'line-dasharray':[2,1.6],'line-opacity':0.95}},
++      {...base,id:'council-positions',type:'circle',filter:['==',['geometry-type'],'Point'],
++        paint:{'circle-radius':['interpolate',['linear'],['zoom'],13,2,16,3.5,18,5.5],'circle-color':'rgba(255,255,255,0.3)',
++          'circle-stroke-color':COLOUR,'circle-stroke-width':['interpolate',['linear'],['zoom'],13,1,18,1.8]}}
++    ];
++  }
++
++  let opts=null,popup=null;
++  // The release metadata lists the layer among its artifacts (or derived products) once a release
++  // ships it; only then does the switch appear. No request is made for a file that is not there.
++  const FILE='data/council_positions.pmtiles';
++  function shipped(metadata){
++    return !!metadata&&((metadata.artifacts||[]).some(a=>a?.path===FILE)||metadata.derived_products?.council_positions===FILE);
++  }
++  function release(metadata){if(opts&&shipped(metadata))opts.toggle.hidden=false;}
++  // opts: map, url (pmtiles:// source url), before (layer id the overlay sits under), yieldTo
++  // (layers that keep a click), open(properties), toggle, note.
++  function init(o){
++    opts=o;const map=o.map;
++    const clear=()=>popup?.remove();
++    map.on('mousemove','council-positions',e=>{
++      const f=e.features?.[0];if(!f)return;
++      map.getCanvas().style.cursor='pointer';
++      if(!root.maplibregl)return;
++      popup=popup||new root.maplibregl.Popup({closeButton:false,closeOnClick:false,offset:10,maxWidth:'260px',className:'council-position-tip'});
++      popup.setLngLat(f.geometry.coordinates).setHTML(tip(f.properties));
++      if(!popup.isOpen())popup.addTo(map);
++    });
++    map.on('mouseleave','council-positions',()=>{map.getCanvas().style.cursor='';clear();});
++    map.on('click','council-positions',e=>{
++      const f=e.features?.[0];if(!f?.properties?.tree_id)return;
++      clear();
++      // A tree marker at the same spot keeps the click.
++      const yields=(o.yieldTo||[]).filter(id=>map.getLayer(id));
++      if(yields.length&&map.queryRenderedFeatures(e.point,{layers:yields}).length)return;
++      o.open(f.properties);
++    });
++  }
++  // Adds the source and layers on first use (again after a basemap change) and sets visibility.
++  function apply(map,on){
++    if(!opts)return;
++    opts.note.hidden=!on;
++    if(on&&!map.getSource(SOURCE)){
++      try{
++        map.addSource(SOURCE,{type:'vector',url:opts.url});
++        const before=map.getLayer(opts.before)?opts.before:undefined;
++        for(const layer of layers())map.addLayer(layer,before);
++      }catch(err){return;}// the style is still loading; the next apply adds them
++    }
++    for(const id of LAYER_IDS)if(map.getLayer(id))map.setLayoutProperty(id,'visibility',on?'visible':'none');
++    if(!on&&popup)popup.remove();
++  }
++  const api={SEEDED,NOTE,FILE,LAYER_IDS,CLASS,STATUS_CLASS,link,render,mount,tip,layers,shipped,release,init,apply};
++  root.ALTORecordLinks=api;
++  if(typeof module!=='undefined'&&module.exports)module.exports=api;
++})(typeof globalThis==='undefined'?window:globalThis);
+diff --git a/pipeline/v5/test_record_links_ui.cjs b/pipeline/v5/test_record_links_ui.cjs
+new file mode 100644
+index 0000000..37bf3b6
+--- /dev/null
++++ b/pipeline/v5/test_record_links_ui.cjs
+@@ -0,0 +1,78 @@
++// Offline checks for web/record-links.js. V5.2 tiles and records carry link_class, link_evidence and
++// crown_source "record_seeded_v52"; earlier ones carry none of them, and the page must then look as
++// it did. The Council recorded positions layer is off until someone switches it on.
++const assert=require('node:assert/strict');
++const web=require('node:path').join(__dirname,'..','..','web');
++const L=require(web+'/record-links.js');
++const E=require(web+'/tree-evidence.js');
++
++// Earlier tiles and records: nothing to show.
++const v5={tree_id:'akl_tree_trp_ACCT0159885',source_primary:'tree_register_points',crown_pilot:0,crown_source:null,evidence_tier:'recorded'};
++assert.equal(L.link(v5),null);
++assert.equal(L.link({...v5,crown_source:'v5'},{datasets:{crown:{crown_source:'v5'}}}),null);
++assert.equal(L.render(null),'');
++assert.equal(L.render(L.link(v5)),'');
++
++// A probable link from the map tile, and the same link composed when only the class and distance arrive.
++const probable={...v5,crown_pilot:1,crown_source:'v5',link_class:'probable',link_evidence:'Probable match to this LiDAR crown (1.6 m from the crown edge)'};
++assert.deepEqual(L.link(probable),{cls:'probable',text:'Probable match to this LiDAR crown (1.6 m from the crown edge)',edge:null,seeded:false});
++assert.equal(L.link({...v5,link_class:'probable',link_edge_m:1.61}).text,'Probable match to this LiDAR crown (1.6 m from the crown edge)');
++assert.equal(L.link({...v5,link_class:'linked',link_edge_m:0}).text,'Linked to its LiDAR crown by position (0.0 m from the crown edge)');
++assert.equal(L.link({...v5,link_class:'linked'}).text,'Linked to its LiDAR crown by position');
++assert.equal(L.link({...v5,link_class:'something_else'}),null,'an unknown class is ignored');
++let html=L.render(L.link(probable));
++assert.ok(html.includes('Probable crown match') && html.includes('1.6 m from the crown edge') && html.includes('Council recorded positions'));
++assert.ok(!html.includes('awaiting confirmation'));
++
++// The full record wins over the tile, and its own field names are read.
++const record={tree_id:v5.tree_id,datasets:{record_link:{link_class:'linked',evidence_text:'Linked to its LiDAR crown by position (0.4 m from the crown edge)',edge_distance_m:0.4,crown_source:'v5'}}};
++assert.deepEqual(L.link(probable,record),{cls:'linked',text:'Linked to its LiDAR crown by position (0.4 m from the crown edge)',edge:0.4,seeded:false});
++
++// Record-seeded crowns: from the class, the crown source or the display style, with or without a link.
++const seeded={...v5,crown_pilot:1,crown_source:'record_seeded_v52',display_style:'faint',link_class:'drawn_from_record',
++  link_evidence:"Crown drawn from the LiDAR returns at this record's position; awaiting confirmation"};
++assert.equal(L.link(seeded).seeded,true);
++assert.equal(L.link({tree_id:'x',crown_source:'record_seeded_v52'}).seeded,true);
++assert.equal(L.link({tree_id:'x',display_style:'faint'}).seeded,true);
++assert.equal(L.link({tree_id:'x'},{datasets:{crown:{crown_source:'record_seeded_v52'}}}).seeded,true);
++html=L.render(L.link(seeded));
++assert.ok(html.includes('Crown drawn from the record') && html.includes('Drawn from the record, awaiting confirmation'));
++assert.ok(html.includes('this record&#39;s position'),'evidence text is escaped');
++assert.ok(!L.render(L.link({tree_id:'x',crown_source:'record_seeded_v52'})).includes('Council recorded positions'),'a crown without a record link has no recorded position');
++
++// The hover note on a recorded position.
++const tip=L.tip({tree_id:'akl_tree_trp_ACCT0257674',source:'tree_register_points',status:'linked_medium',distance_m:11.56,edge_distance_m:1.29});
++assert.ok(tip.includes('The Council tree register recorded the tree here') && tip.includes('11.6 m away') && tip.includes('(probable match)'));
++assert.ok(L.tip({source:'osm_natural_tree',status:'linked_new_crown'}).includes('OpenStreetMap recorded the tree here. ALTO joined it to a crown (crown drawn from the record).'));
++assert.ok(L.tip({source:'unknown',status:'other',distance_m:2}).includes('The source recorded the tree here. ALTO joined it to the crown whose top is 2.0 m away.'));
++assert.deepEqual(L.STATUS_CLASS,{linked_high:'linked',linked_medium:'probable',linked_new_crown:'drawn_from_record'});
++
++// Layers start hidden, points and lines are told apart by geometry, and the ids are the ones toggled.
++const layers=L.layers();
++assert.deepEqual(layers.map(l=>l.id),L.LAYER_IDS);
++for(const l of layers){assert.equal(l.layout.visibility,'none');assert.equal(l['source-layer'],'council_positions');assert.equal(l.minzoom,13);}
++assert.deepEqual(layers.map(l=>l.filter[2]),['LineString','LineString','Point']);
++
++// The switch appears only for a release whose metadata lists the layer.
++assert.equal(L.shipped({artifacts:[{path:'data/trees_map_points.pmtiles'},{path:'data/council_positions.pmtiles',bytes:1278032}]}),true);
++assert.equal(L.shipped({derived_products:{council_positions:'data/council_positions.pmtiles'}}),true);
++assert.equal(L.shipped({artifacts:[{path:'data/trees_map_points.pmtiles'}],derived_products:{}}),false);
++assert.equal(L.shipped(null),false);
++
++// The evidence card names a record-seeded crown as such.
++const ev=E.explain({tree_id:'x',datasets:{crown:{crown_source:'record_seeded_v52',crown_max_chm_m:5.3}}});
++assert.equal(ev.heightBasis,'Crown drawn from the record, 2024 survey; awaiting confirmation');
++assert.equal(E.explain({tree_id:'x',datasets:{crown:{crown_source:'v5'}}}).heightBasis,'V5 segmented canopy maximum, 2024 survey');
++
++// The page: the switch is hidden until the release has the layer and unchecked when it appears;
++// faint crowns use one expression on fill and outline; the profile shows the link once.
++const page=require('node:fs').readFileSync(web+'/index.html','utf8');
++assert.match(page,/<label class="check" for="showCouncilPositions" id="councilPositionsToggle" title="Where the Council or other source recorded the tree, joined to the crown ALTO found it on\." hidden>\s*<input id="showCouncilPositions" type="checkbox">/);
++assert.ok(page.includes('showCouncilPositions: false'));
++assert.equal((page.match(/\["case", faintCrownExpr\(\), /g)||[]).length,2);
++assert.ok(page.includes('src="./record-links.js?v='));
++assert.ok(page.includes('{recordLink:false}') && page.includes('ALTORecordLinks.mount(profileBody,record,props)'));
++assert.ok(page.includes('ALTORecordLinks.release(metadata)'),'the release metadata decides whether the switch is offered');
++assert.ok(!page.includes('council_positions.pmtiles`), probe'),'no request is made for the layer before it is switched on');
++assert.ok(/PARCEL_CLICK_YIELDS = \[[^\]]*"council-positions"\]/.test(page));
++console.log('Record link, recorded-position layer and seeded-crown checks passed.');

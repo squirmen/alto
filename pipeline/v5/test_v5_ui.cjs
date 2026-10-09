@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict');
-const path='/data/alto/working/alto_v5_20260922/deploy/alto_v5_upload_20260923/';
+const path=require('node:path').join(__dirname,'..','..','web')+'/';
 const details=require(path+'tree-details.js'),evidence=require(path+'tree-evidence.js'),identity=require(path+'tree-identity.js'),future=require(path+'tree-future.js'),analysis=require(path+'map-analysis.js');
 const r={tree_id:'akl_tree_lid_1097624',database_mtime_ns:'123',datasets:{record:{species_common:'Unknown',source_primary:'lidar_inferred_canopy'},identity:{current_primary_tree_id:'akl_tree_lid_1097624',source_records:5,old_overlapping_crowns:3,within_v5_footprint:1},crown:{crown_max_chm_m:12.76,crown_area_m2:191,crown_diameter_m:15.59,crown_source:'v5'},assets:{height_max_m:12.76},previous_assets:{height_p95_m:18},lidar:{chm_local_max_2m_m:30},trajectory:{present_2024:1,h_2024:15,present_2016:1,h_2016:12}}};
 assert.equal(details.overviewProps(r,{}).crown_max_chm_m,12.76);

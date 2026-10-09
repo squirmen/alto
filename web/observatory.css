@@ -430,3 +430,18 @@ h1.brand img { display: block; width: 174px; height: auto; max-width: 100%; }
 .property-sources a { color: var(--accent); }
 @media (max-width: 760px) { .property-search { margin-bottom: 8px; } }
 .pt-value.pt-none { font-size: 11px; font-weight: 500; color: var(--muted); }
+
+/* V5.2 record-to-crown links and the Council recorded positions layer. */
+.council-positions-note { display: flex; align-items: flex-start; gap: 8px; margin-top: 6px; font-size: 12px; }
+.council-key { display: inline-flex; align-items: center; gap: 2px; flex: 0 0 auto; margin-top: 5px; }
+.council-key i { display: block; width: 9px; height: 9px; border: 1.6px solid #c46a12; border-radius: 50%; box-sizing: border-box; background: rgba(255,255,255,.3); }
+.council-key b { display: block; width: 16px; height: 0; border-top: 1.6px dashed #c46a12; }
+.record-link { border-left: 3px solid #c46a12; background: #fdf8f1; }
+.record-link[data-link-class="linked"] { border-left-color: var(--accent); background: #f4f8f2; }
+.record-link[data-link-class="drawn_from_record"] { border-left-style: dashed; }
+.record-link-evidence { margin: 0 0 6px; font-size: 14px; font-weight: 600; line-height: 1.45; }
+.record-link-note { margin: 0 0 6px; font-size: 12px; line-height: 1.5; color: #4b5a4d; }
+.record-link .pp-note { margin-top: 4px; }
+.council-position-tip .maplibregl-popup-content { min-width: 0; max-width: 260px; padding: 10px 12px; }
+.council-position-tip .popup-title { margin-bottom: 4px; font-size: 13px; }
+.council-position-tip p { margin: 4px 0 0; font-size: 12px; line-height: 1.45; }

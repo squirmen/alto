@@ -339,7 +339,7 @@ def write_report(record_count: int, canonical_count: int, suppressed_count: int)
         f"- Local maxima after non-max suppression and dedup: {record_count:,}.",
         f"- Suppressed by canonical inventory dedup: {suppressed_count:,}.",
         "",
-        "These detected points carry `species_confidence = lidar_inferred_no_species` and `owner_class = LiDAR-Inferred Canopy`. The downstream crown segmentation keeps only candidates with accepted crown geometry; `cleanup_inferred_without_crowns.py` removes inferred candidates that fail the crown/mask/shape filters.",
+        "These detected points carry `species_confidence = lidar_inferred_no_species` and `owner_class = LiDAR-Inferred Canopy`. Crown segmentation and record identity are separate. `cleanup_inferred_without_crowns.py` reports unlinked detections without deleting their identities or measurements; a missing association does not establish tree absence.",
         "",
         "## Outputs",
         "",

@@ -8,17 +8,18 @@
  function sourceLink(r){if(r.source_primary!=='tree_register_points'||!r.source_tree_id)return null;return 'https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/TreeRegisterPoints/FeatureServer/0/query?'+new URLSearchParams({f:'pjson',where:"TreeID = '"+String(r.source_tree_id).replaceAll("'","''")+"'",outFields:'*',outSR:'4326'});}
  function init(opts){options=opts;const toggle=document.getElementById('groupRecords');toggle.checked=true;toggle.disabled=true;document.getElementById('recordLinksStatus').textContent='One marker per current crown. Open a tree to compare its linked source records.';}
  function update(features){return {hidden:[],groups:features.filter(f=>Number(f.properties.linked_source_records)>1),markers:features.length,records:features.length};}
- function context(record){return {method_id:'v5_actual_polygon_containment',current:record.datasets.identity||null,source_position_review:record.datasets.location_review||null,source_crosswalk:record.datasets.source_crosswalk||null,field_report:parse(record.datasets.field?.observation_json)};}
+ function context(record){return {method_id:'v5_containment_with_v51_continuity_repair',current:record.datasets.identity||null,crown_link_review:record.datasets.crown_link_review||null,source_position_review:record.datasets.location_review||null,source_crosswalk:record.datasets.source_crosswalk||null,field_report:parse(record.datasets.field?.observation_json)};}
  function render(record){
   const d=record.datasets,r=d.record||{},x=d.identity||{},s=d.source_crosswalk,f=parse(d.field?.observation_json),members=(parse(x.members_json)||[]).filter(m=>m.tree_id),sv=streetView(r),source=sourceLink(r);
   let html='<section class="pp-section identity-panel"><h3>Identity &amp; source records</h3>';
   if(d.location_review||x.evidence_tier==='location_unverified')html+='<p><strong>The Council position is unverified.</strong> This marker shows the register location. It has not been attached automatically to a nearby crown.</p>';
   if(x.current_primary_tree_id){
-   html+=`<p>${Number(x.source_records)>1?`${esc(x.source_records)} source records fall inside this crown.`:'This record is linked to a current crown.'} Separate trunks can share a canopy; the link records their spatial relationship.</p>`;
+   html+=`<p>${Number(x.source_records)>1?`${esc(x.source_records)} source records are linked to this crown.`:'This record is linked to a current crown.'} Separate trunks can share a canopy; the link records their spatial relationship.</p>`;
    if(x.current_primary_tree_id!==record.tree_id)html+=`<p><button type="button" data-identity-open="${esc(x.current_primary_tree_id)}">Open the current crown and its linked records</button></p>`;
    if(members.length)html+='<ul class="identity-members">'+members.map(m=>`<li><button type="button" data-identity-open="${esc(m.tree_id)}" ${m.tree_id===record.tree_id?'disabled':''}>${esc(m.tree_id)}</button><span>${esc(m.species_common||m.species_latin||'Species unrecorded')} · ${esc(m.source)}</span></li>`).join('')+'</ul>';
   }else if(x.within_v5_footprint===0)html+='<p>This position falls outside the v5 survey footprint. Earlier observations remain available.</p>';
-  else if(!d.location_review)html+='<p>No unique v5 crown was assigned to this record. The older measurements remain below for comparison.</p>';
+  else if(!d.location_review)html+='<p>No unique v5 crown was assigned to this record. This does not establish that the tree is absent. Its older measurements remain below for comparison.</p>';
+  if(d.crown_link_review?.status==="restore_association")html+='<p class="pp-note"><strong>Crown link restored in V5.1.</strong> The earlier and current crowns overlap strongly, and the source point lies just outside the filled boundary. The polygon itself has not been redrawn.</p>';
   if(x.old_overlapping_crowns>1||x.new_overlapping_crowns>1)html+=`<p class="pp-note">Segmentation comparison: ${esc(x.old_overlapping_crowns??0)} older crowns overlap the current crown; ${esc(x.new_overlapping_crowns??0)} new crowns overlap this record’s earlier crown. These counts describe redraws of the same survey.</p>`;
   if(s)html+=`<p class="pp-note">Council identifier updated: ${esc(s.old_objectid)} → ${esc(s.current_objectid)}. ALTO keeps ${esc(record.tree_id)} so saved links and observations still work.</p>`;
   if(f){

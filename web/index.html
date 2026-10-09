@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
         integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
         crossorigin="anonymous">
-  <script>window.AKL_DATA_BASE="./data";window.AKL_TILE_VERSION="20261002-v5d";</script>
+  <script>window.AKL_DATA_BASE="./data";window.AKL_TILE_VERSION="20261010-v5.2";</script>
   <!-- AKL_DATA_BASE: build_web_deploy.sh injects window.AKL_DATA_BASE here so a
        self-contained upload can point at its own ./data folder. Untouched for
        local dev, where tiles live two levels up in data/processed. -->
@@ -721,7 +721,7 @@
       #explorer { max-height: 46vh; border-right: 0; border-bottom: 1px solid var(--line); }
     }
   </style>
-  <link rel="stylesheet" href="./observatory.css?v=20261002-v5d">
+  <link rel="stylesheet" href="./observatory.css?v=20261010-v5.2">
 </head>
 <body data-aside-collapsed="false" data-profile-open="false">
   <div class="app" id="app">
@@ -769,7 +769,7 @@
             <button class="legend-row" type="button" data-category="park" aria-pressed="true"><span class="dot park"></span><span>Council Parks</span></button>
             <button class="legend-row" type="button" data-category="road" aria-pressed="true"><span class="dot road"></span><span>Transport</span></button>
             <button class="legend-row" type="button" data-category="inferred" aria-pressed="true"><span class="dot inferred"></span><span>Detected from LiDAR</span></button>
-            <button class="legend-row" type="button" data-category="noCrown" aria-pressed="true"><span class="dot no-crown"></span><span>No crown</span></button>
+            <button class="legend-row" type="button" data-category="noCrown" aria-pressed="true"><span class="dot no-crown"></span><span title="No crown is linked to this source record; the tree may still be present.">Crown unlinked</span></button>
             <button class="legend-row" type="button" data-category="protected" aria-pressed="true"><span class="dot protected"></span><span>Protected</span></button>
             <button class="legend-row" type="button" data-category="other" aria-pressed="true"><span class="dot other"></span><span>Other inventory</span></button>
 
@@ -811,6 +811,10 @@
               <input id="showCrowns" type="checkbox" checked>
               <span>Crowns</span>
             </label>
+            <label class="check" for="showCouncilPositions" id="councilPositionsToggle" title="Where the Council or other source recorded the tree, joined to the crown ALTO found it on." hidden>
+              <input id="showCouncilPositions" type="checkbox">
+              <span>Council recorded positions</span>
+            </label>
             <label class="check" for="showProperties" title="LINZ parcel outlines, drawn from zoom 16. Tap a parcel for the trees on it and their estimated services.">
               <input id="showProperties" type="checkbox">
               <span>Property boundaries</span>
@@ -837,6 +841,7 @@
               <span>Kauri dieback</span>
             </label>
           </div>
+          <p id="councilPositionsNote" class="control-note council-positions-note" hidden><span class="council-key" aria-hidden="true"><i></i><b></b></span>Where the Council or other source recorded the tree, joined to the crown ALTO found it on.</p>
         </div>
         <details class="candidate-layers"><summary>More vegetation &amp; earlier detections</summary>
 <label class="check"><input id="showLowBand" type="checkbox"><span>Low canopy · 2–3 m</span></label>
@@ -877,14 +882,15 @@
   </div>
   <script src="./tree-details.js?v=20261001-v5c"></script>
   <script src="./property.js?v=20261002-v5d"></script>
-  <script src="./tree-evidence.js?v=20260928-v5b"></script>
+  <script src="./tree-evidence.js?v=20261010-v5.2"></script>
   <script src="./tree-future.js?v=20260928-v5b"></script>
   <script src="./tree-architecture.js?v=20260928-v5b"></script>
   <script src="./tree-model.js?v=20260928-v5b"></script>
   <script src="./evidence-workspace.js?v=20261001-v5c"></script>
   <script src="./map-analysis.js?v=20260928-v5b"></script>
-  <script src="./tree-identity.js?v=20260928-v5b"></script>
+  <script src="./tree-identity.js?v=20261008-v5.1"></script>
   <script src="./tree-ground.js?v=20260928-v5b"></script>
+  <script src="./record-links.js?v=20261010-v5.2"></script>
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"
           integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj"
           crossorigin="anonymous"></script>
@@ -896,14 +902,14 @@
     // We can't aggregate over vector tiles in the browser efficiently, so the
     // headline stats are baked in. The viewport count is live.
     const PILOT_TOTALS = {
-      trees: 5839130,
-      crowns: 5755622,
-      protected: 3932,
-      lidarInferred: 5762318,
-      totalValueNzdY: 246085499,
-      runoffM3Y: 14813817,
-      carbonTco2e: 2393343
-    };
+      "trees": 3574825,
+      "protected": 3570,
+      "lidarInferred": 3510688,
+      "totalValueNzdY": 292178738.8889859,
+      "runoffM3Y": 21006647.627975184,
+      "carbonTco2e": 3491026.556997746,
+      "crowns": 3523024
+};
 
     let SPECIES_OPTIONS = [
       ["Unknown", 1609469],
@@ -1137,6 +1143,12 @@
       ];
     }
 
+    // V5.2 crowns drawn from a source record's laser returns await confirmation, so they are drawn
+    // faintly. Earlier tiles carry neither field and draw as before.
+    function faintCrownExpr() {
+      return ["any", ["==", ["get", "crown_source"], "record_seeded_v52"], ["==", ["get", "display_style"], "faint"]];
+    }
+
     function pointOpacityExpr() {
       return ["match", primaryCategoryExpr(),
         "noCrown", 0.95,
@@ -1226,7 +1238,8 @@
                 18, "#4f8f44",
                 24, "#2b6d3f"
               ],
-              "fill-opacity": ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.07, "possible_duplicate", 0.07, "possible", 0.16, 0.3]
+              "fill-opacity": ["case", faintCrownExpr(), 0.1,
+                ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.07, "possible_duplicate", 0.07, "possible", 0.16, 0.3]]
             }
           },
           {
@@ -1247,7 +1260,8 @@
                 24, "#2b6d3f"
               ],
               "line-width": ["interpolate", ["linear"], ["zoom"], 12, 0.5, 18, 1.5],
-              "line-opacity": ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.35, "possible_duplicate", 0.35, "possible", 0.6, 0.95]
+              "line-opacity": ["case", faintCrownExpr(), 0.6,
+                ["match", ["coalesce", ["get", "evidence_tier"], ""], "unverified", 0.35, "possible_duplicate", 0.35, "possible", 0.6, 0.95]]
             }
           },
           {
@@ -1572,6 +1586,7 @@
       showTrunk: false,
       showCanopy: false,
       showKauri: false,
+      showCouncilPositions: false,
       showUnknown: true,
       showUncertain: true,
       selectedSpecies: new Set(),
@@ -1688,6 +1703,7 @@
       for (const id of ["properties-fill", "properties-line"]) {
         if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", state.showProperties ? "visible" : "none");
       }
+      ALTORecordLinks.apply(map, state.showCouncilPositions);
       if (map.getLayer("points-property")) applyPropertySelection();
       scheduleViewportStats();
     }
@@ -2028,6 +2044,11 @@
         state.showKauri = showKauri.checked;
         applyFilters();
       });
+
+      document.getElementById("showCouncilPositions").addEventListener("change", event => {
+        state.showCouncilPositions = event.target.checked;
+        applyFilters();
+      });
     })();
 
     // ---- Popups for trees + crowns.
@@ -2137,8 +2158,8 @@
       openProfile(f.properties);
     });
     map.on("click", "crowns-fill", (event) => {
-      // Don't double-fire if a point was clicked at the same spot.
-      const points = map.queryRenderedFeatures(event.point, { layers: ["points"] });
+      // Don't double-fire if a point or a recorded position was clicked at the same spot.
+      const points = map.queryRenderedFeatures(event.point, { layers: ["points", "council-positions"].filter(id => map.getLayer(id)) });
       if (points.length) return;
       const f = event.features[0];
       if (!f) return;
@@ -2236,7 +2257,7 @@
     map.on("mouseleave", "low-candidates", () => { map.getCanvas().style.cursor = ""; });
     // A tree or an overlay with its own popup under the pointer keeps the click; a parcel opens
     // only from open ground.
-    const PARCEL_CLICK_YIELDS = ["points", "crowns-fill", "tree-change", "low-candidates", "missed-candidates", "near-canopy", "kauri-dieback", "canopy-fill"];
+    const PARCEL_CLICK_YIELDS = ["points", "crowns-fill", "tree-change", "low-candidates", "missed-candidates", "near-canopy", "kauri-dieback", "canopy-fill", "council-positions"];
     map.on("click", "properties-fill", (event) => {
       if (map.queryRenderedFeatures(event.point, { layers: PARCEL_CLICK_YIELDS.filter(id => map.getLayer(id)) }).length) return;
       const f = event.features[0];
@@ -2246,6 +2267,18 @@
     });
     map.on("mouseenter", "properties-fill", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "properties-fill", () => { map.getCanvas().style.cursor = ""; });
+    // Council recorded positions (v5.2): off by default, and offered only when the release metadata
+    // lists the layer. A recorded position opens its tree, using the tree's map record when its
+    // tile is loaded and the full record otherwise.
+    ALTORecordLinks.init({
+      map, url: vq(`pmtiles://${DATA_BASE}/council_positions.pmtiles`),
+      before: "points", yieldTo: ["points"],
+      toggle: document.getElementById("councilPositionsToggle"), note: document.getElementById("councilPositionsNote"),
+      open: (p) => {
+        const tree = map.querySourceFeatures("akl-points", { sourceLayer: "trees", filter: ["==", ["get", "tree_id"], p.tree_id] })[0];
+        openProfile(tree ? tree.properties : { tree_id: p.tree_id, source_primary: p.source });
+      }
+    });
 
     map.on("load", () => {
       ALTOIdentity.init({map,base:DATA_BASE,version:TILE_VERSION,filter:buildFilter,changed:scheduleViewportStats,open:openProfile});
@@ -2291,7 +2324,7 @@
       });
       document.getElementById("dlModel").href=vq(`${DATA_BASE}/longitudinal/model.json`);
       const ex = `${DATA_BASE}/exports`;
-      document.getElementById("dlDict").href = `${ex}/akl_trees_data_dictionary.md`;
+      document.getElementById("dlDict").href = vq(`${ex}/akl_trees_data_dictionary.md`);
       const REPO_URL = "https://github.com/squirmen/alto";
       const repo = document.getElementById("repoLink");
       if (REPO_URL) { repo.href = REPO_URL; }
@@ -2315,6 +2348,7 @@
           return response.json();
         })
         .then((metadata) => {
+          ALTORecordLinks.release(metadata);
           const release = metadata.release || {};
           const dataset = metadata.dataset || {};
           const scope = metadata.headline_scope || {};
@@ -2467,7 +2501,7 @@
       return { level, label };
     }
 
-    function renderProfile(props) {
+    function renderProfile(props, options = {}) {
       const inferred = isDetection(props);
       const speciesName = inferred
         ? speciesClassLabel(props.species_class)
@@ -2505,6 +2539,9 @@
           </div>
           <div class="pp-confidence pp-conf-${dataConfidence(props).level}">${dataConfidence(props).label}</div>
         </div>`;
+
+      // ---- v5.2 link between the source record and its crown (absent from earlier tiles)
+      if (options.recordLink !== false) html += ALTORecordLinks.render(ALTORecordLinks.link(props));
 
       // ---- identification (tree_species_attributes)
       // growth_form_confidence is the honest split: 'known' means the record
@@ -2748,11 +2785,12 @@
         const {schema,record} = await ALTOTreeDetails.load(DATA_BASE,TILE_VERSION,props.tree_id);
         if(requestId!==profileRequestId || profilePanel.hidden)return;
         const scroll=profileBody.scrollTop;
-        profileBody.innerHTML=ALTOEvidence.render(record)+'<div class="identity-slot"></div><details class="profile-overview"><summary>More dimensions &amp; context</summary>'+renderProfile(ALTOTreeDetails.overviewProps(record,props))+'</details>'+ALTOTreeDetails.render(schema,record);
+        profileBody.innerHTML=ALTOEvidence.render(record)+'<div class="identity-slot"></div><details class="profile-overview"><summary>More dimensions &amp; context</summary>'+renderProfile(ALTOTreeDetails.overviewProps(record,props),{recordLink:false})+'</details>'+ALTOTreeDetails.render(schema,record);
         // Ground evidence and place context arrive a moment later; neither blocks the record.
         const summary=profileBody.querySelector('.evidence-summary');
         summary?.insertAdjacentHTML('afterend','<div class="ground-slot"><section class="evidence-section ground-section"><h3>Seen from the ground</h3><p class="pp-note">Checking for accepted KYTE visits…</p></section></div>');
         summary?.querySelector('.evidence-id')?.insertAdjacentHTML('afterend','<p class="evidence-place"></p>');
+        ALTORecordLinks.mount(profileBody,record,props);
         const groundPromise=ALTOGround.load(props.tree_id).then(data=>{
           const slot=profileBody.querySelector('.ground-slot');if(slot&&requestId===profileRequestId)slot.innerHTML=ALTOGround.render(data,record);
           return ALTOGround.live(data,record);
@@ -2954,7 +2992,7 @@
       <h3>Methods and sources</h3>
       <p>The methods explain how ALTO finds trees, estimates their dimensions and benefits, links surveys through time, and tests its predictions. They include the assumptions, test results and gaps still to resolve. <a id="repoLink" class="about-link" href="#" target="_blank" rel="noopener">Model code and documentation</a>.</p>
 
-      <h3>V5 crown redraw</h3><p>V5 combines the 2024 laser survey with aerial NDVI to redraw the canopy. Fewer or different crowns reflect the new segmentation. Earlier detections, dimensions and field observations remain in each tree’s full record.</p><p>Unverified Council notable-tree positions stay separate from automatic crown matches. Crown boundaries can still split one tree or join several trees. <a href="./v5-methods.html">Read the v5 release notes</a>.</p><h3>Coverage and limitations</h3>
+      <h3>V5 crown redraw</h3><p>V5 combines the 2024 laser survey with aerial NDVI to redraw the canopy. Fewer or different crowns reflect the new segmentation. Earlier detections, dimensions and field observations remain in each tree’s full record.</p><p>Unverified Council notable-tree positions stay separate from automatic crown matches. Crown boundaries can still split one tree or join several trees. <a href="./v52-methods.html">Read the v5.2 release notes</a>.</p><h3>Coverage and limitations</h3>
       <p>Trees found only in the 2024 laser survey are labelled by how strong the evidence is: very likely, probably or possibly a tree. A possible tree may be a hedge or a large shrub. The “Possible &amp; unverified trees” switch in Layers hides them.</p>
       <p>The current map covers metropolitan Auckland. Earlier canopy records depend on historic survey coverage and successful matching. Records outside the v5 footprint retain earlier measurements. Unmatched records remain available for review. Trunk diameter and roots are estimated; field measurements would improve both. Species names come from source inventories, while the classifier estimates four broad tree types.</p>
 

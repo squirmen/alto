@@ -24,7 +24,7 @@
     if(!d.record?.species_latin || /unknown/i.test(d.record.species_latin))questions.push({kind:'Identification',text:'Photograph the leaves, bark and whole tree to refine its identification.'});
     if(flag(t.implausible))questions.push({kind:'History',text:'The matching model flagged an unusual trajectory. Compare the same location in each survey before interpreting height change as growth or removal.'});
     const height = number(c.crown_max_chm_m) ?? number(a.height_max_m) ?? number(a.height_p95_m);
-    const heightBasis = c.crown_source==='v5'?'V5 segmented canopy maximum, 2024 survey':c.crown_source==='v4_outside_v5'?'Earlier crown outside the v5 footprint':'Stored canopy estimate';
+    const heightBasis = c.crown_source==='v5'?'V5 segmented canopy maximum, 2024 survey':c.crown_source==='v4_outside_v5'?'Earlier crown outside the v5 footprint':c.crown_source==='record_seeded_v52'?'Crown drawn from the record, 2024 survey; awaiting confirmation':'Stored canopy estimate';
     return {trunks,low,high,timeline,questions,height,heightBasis,canopyArea:number(c.crown_area_m2)??number(s.crown_area_m2),
       annualValue:number(s.total_value_nzd_y),valueLow:number(s.total_value_nzd_y_low),valueHigh:number(s.total_value_nzd_y_high),
       runoff:number(s.avoided_runoff_m3_y),carbonStored:number(s.stored_co2e_tonnes_est),sequestration:number(s.annual_sequestration_tco2e_y_est),pm25:number(s.pm25_removed_kg_y)};
