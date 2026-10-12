@@ -9,13 +9,13 @@
   function update(){const b=document.getElementById('compareSavedTrees');if(b)b.textContent=`Compare saved trees (${ids.length})`;}
   function init(options){
     config=options;dialog=document.getElementById('treeComparison');
-    document.getElementById('compareSavedTrees').addEventListener('click',show);
-    document.getElementById('comparisonClose').addEventListener('click',()=>dialog.close());
-    dialog.addEventListener('close',()=>returnFocus?.focus({preventScroll:true}));
+    document.getElementById('compareSavedTrees')?.addEventListener('click',show);
+    document.getElementById('comparisonClose')?.addEventListener('click',()=>dialog.close());
+    dialog?.addEventListener('close',()=>returnFocus?.focus({preventScroll:true}));
     update();
-    const id=new URL(window.location.href).searchParams.get('tree');
+    const id=options.readLink===false?null:new URL(window.location.href).searchParams.get('tree');
     if(id&&id.length<=200)config.ready.then(async()=>{
-      try{const {record}=await config.load(id);const r=record.datasets.record||{};if(Number.isFinite(Number(r.lon))&&Number.isFinite(Number(r.lat))&&r.lon!=null&&r.lat!=null)config.locate([Number(r.lon),Number(r.lat)]);config.open({tree_id:id,...r});}
+      try{const {record}=await config.load(id);const r=record.datasets.record||{};if(Number.isFinite(Number(r.lon))&&Number.isFinite(Number(r.lat))&&r.lon!=null&&r.lat!=null)config.locate([Number(r.lon),Number(r.lat)]);config.open({...r,tree_id:record.tree_id||id});}
       catch{const status=document.getElementById('treeLinkStatus');status.hidden=false;status.textContent='The linked tree could not load. Check the link or try reloading the map.';}
     });
   }
@@ -57,5 +57,13 @@
       catch{status.replaceChildren();const label=document.createElement('label');label.textContent='Copy this tree link: ';const input=document.createElement('input');input.readOnly=true;input.value=url.href;label.append(input);status.append(label);input.focus({preventScroll:true});input.select();}
     });
   }
-  root.ALTOEvidenceWorkspace={init,bind,dispose};
+  // Save or unsave a tree for comparison from anywhere (the map panel, the tree page).
+  function has(id){return ids.includes(id);}
+  function toggle(id){
+    if(ids.includes(id)){ids=ids.filter(x=>x!==id);persist();update();return {saved:false,message:'Removed from comparison.'};}
+    if(ids.length>=MAX)return {saved:false,message:'Four trees are saved. Open Area › Compare saved trees and remove one to make room.'};
+    ids.push(id);const stored=persist();update();
+    return {saved:true,message:stored?'Saved for comparison on this browser. Compare from the Area tab.':'Saved for this session; browser storage is unavailable.'};
+  }
+  root.ALTOEvidenceWorkspace={init,bind,dispose,has,toggle,show:()=>show()};
 })(window);

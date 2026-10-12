@@ -1,0 +1,603 @@
+/* Tool v0.2.0: the map's left panel groups, the slim tree panel, the bottom sheet, the map legend and
+   the Area dashboard. Loaded after observatory.css and alto-ui.css. */
+
+/* ---- left panel and map legend: see "Left panel, concept A" at the end of this file ---- */
+
+/* ---- the slim tree panel ---- */
+.tree-profile { width: 400px; background: var(--color-surface); }
+.tree-profile-head { padding: 10px 14px; gap: 10px; }
+.tree-profile-head h2 { font-size: 11px; letter-spacing: .09em; }
+.sheet-handle { display: none; }
+.tp { padding: 0 0 24px; font-family: var(--font-sans); color: var(--color-text); }
+.tp-id { padding: 18px 18px 14px; background: linear-gradient(180deg, var(--color-surface-tint), var(--color-surface)); }
+.tp-kicker { margin: 0 0 6px; font: 700 10.5px/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent); }
+.tp-name { margin: 0; font: 760 26px/1.12 var(--font-sans); letter-spacing: -.015em; overflow-wrap: anywhere; }
+.tp-latin { margin: 4px 0 0; font-size: 14px; font-style: italic; color: var(--color-text-muted); }
+.tp-model { margin: 8px 0 0; font-size: 12.5px; line-height: 1.45; color: var(--color-text-muted); display: flex; gap: 6px; align-items: baseline; }
+.tp-gf { margin: 10px 0 0; padding: 8px 10px; border-radius: 10px; background: var(--color-bg); font-size: 13.5px; font-weight: 600; }
+.tp-gf span { display: block; font: 700 10px/1.3 var(--font-sans); letter-spacing: .07em; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 2px; }
+.tp-badges { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.tp-actions { padding: 0 18px 6px; display: grid; gap: 8px; }
+.tp-open { min-height: 48px; font-size: 15px; justify-content: space-between; }
+.tp-open span { flex: 1; text-align: left; }
+.tp-actions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.tp-status { margin: 0; font-size: 12px; color: var(--color-text-accent); min-height: 0; }
+.tp-status:empty { display: none; }
+.tp-status input { width: 100%; margin-top: 4px; }
+.tp-card { margin: 10px 14px 0; padding: 14px; border: 1px solid var(--color-border-subtle); border-radius: 14px; background: var(--color-surface); }
+.tp-card h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font: 700 11px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-accent); }
+.tp-figure { margin: 0 0 6px; font-size: 14px; color: var(--color-text-secondary); }
+.tp-figure b { font: 760 22px/1.1 var(--font-sans); color: var(--color-text); letter-spacing: -.01em; }
+.tp-figure small { display: block; margin-top: 3px; font-size: 11.5px; color: var(--color-text-muted); }
+.tp-figure-sm b { font-size: 16px; }
+.tp-size-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.tp-size-grid figure { margin: 0; padding: 8px; border-radius: 12px; background: var(--color-bg); min-width: 0; }
+.tp-size-grid figcaption { display: grid; margin-top: 2px; }
+.tp-size-grid figcaption span { font: 600 11.5px/1.3 var(--font-sans); color: var(--color-text-muted); display: flex; gap: 6px; align-items: center; }
+.tp-size-grid figcaption b { font: 750 17px/1.25 var(--font-sans); font-variant-numeric: tabular-nums; }
+.tp-size-grid figcaption small { font-size: 11.5px; color: var(--color-text-muted); }
+.tp-hero { margin: 0; font: 780 30px/1.05 var(--font-sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.tp-hero span { font-size: 15px; font-weight: 600; color: var(--color-text-muted); letter-spacing: 0; }
+.tp-range { margin: 4px 0 12px; font-size: 12.5px; color: var(--color-text-muted); }
+.tp-note { margin: 8px 0 0; font-size: 12px; line-height: 1.5; color: var(--color-text-muted); }
+.tp-sources ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.tp-sources li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--color-border-subtle); font-size: 13.5px; }
+.tp-sources li:last-child { border-bottom: 0; }
+.tp-sources li b { font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-weight: 600; }
+.tp-more { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 12px 14px 0; padding: 12px 14px; border-radius: 12px; background: var(--color-surface-tint); color: var(--color-text-accent); font: 600 13px/1.4 var(--font-sans); text-decoration: none; }
+.tp-more:hover { background: var(--color-surface-tint-hover); }
+.tp-foot { display: flex; justify-content: space-between; gap: 10px; margin: 14px 18px 0; font-size: 11px; color: var(--color-text-muted); }
+.tp-foot code { font-size: 11px; overflow-wrap: anywhere; }
+.tp-error { margin: 8px 18px 0; padding: 10px 12px; border-radius: 10px; background: var(--color-warning-bg); color: var(--color-warning); font-size: 13px; }
+.tp-error p { margin: 0 0 8px; }
+.tp-skeleton { padding: 18px; }
+.tree-profile-body { scroll-behavior: smooth; }
+.property-area-link { margin-top: 12px; width: 100%; }
+
+/* Panel slides in; content fades as it refreshes. */
+.tree-profile { transition: transform 260ms var(--ease-standard), height 260ms var(--ease-standard); }
+.tp { animation: tp-in 220ms var(--ease-standard); }
+@keyframes tp-in { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .tp { animation: none; } }
+
+/* ---- Area tab ---- */
+.area { display: grid; gap: 12px; }
+.area-head h2, .area-head h3 { margin: 2px 0 0; font: 760 19px/1.2 var(--font-sans); letter-spacing: -.01em; }
+.area-kicker { margin: 0; font: 700 10.5px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent); }
+.area-sub { margin: 4px 0 0; font-size: 12px; color: var(--color-text-muted); }
+.area-sample { display: flex; gap: 8px; align-items: flex-start; margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--color-warning-bg); color: var(--color-warning); font-size: 12px; line-height: 1.45; }
+.area-sample .ico { flex: 0 0 auto; margin-top: 1px; }
+.area-card { padding: 12px; border: 1px solid var(--color-border-subtle); border-radius: 12px; }
+.area-card h3, .area-card h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font: 700 10.5px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-accent); }
+.area-species { margin: 0; padding: 0; list-style: none; counter-reset: sp; display: grid; gap: 2px; font-size: 13px; }
+.area-species li { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--color-border-subtle); }
+.area-species li:last-child { border-bottom: 0; }
+.area-species b { font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-weight: 600; }
+.area-note { margin: 8px 0 0; font-size: 12px; color: var(--color-text-muted); line-height: 1.45; }
+.area-quality { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.area-quality li { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; }
+.area-quality i { width: 10px; height: 10px; border-radius: 50%; }
+.area-quality b { font-variant-numeric: tabular-nums; }
+.area-empty { display: grid; justify-items: center; gap: 6px; padding: 24px 8px; text-align: center; color: var(--color-text-muted); font-size: 13px; }
+.area-actions { display: grid; gap: 8px; }
+.area .kpis { grid-template-columns: 1fr 1fr; }
+.area .kpi strong { font-size: 17px; }
+
+/* ---- About ---- */
+.about-lockup img { display: block; width: 220px; height: auto; margin: 2px 0 14px; }
+.about-versions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px !important; font-size: 13px !important; }
+.version-pill { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; background: var(--color-surface-tint); border: 1px solid var(--color-surface-tint-hover); color: var(--color-text-accent); font: 650 12px/1.2 var(--font-sans); }
+.about-versions a { color: var(--color-accent); font-weight: 600; margin-left: 4px; }
+.about-cite { padding: 10px 12px; border-radius: 10px; background: var(--color-bg); font-size: 13px !important; }
+
+/* ---- phones: the tree panel is a bottom sheet ---- */
+@media (max-width: 760px) {
+  .tree-profile { width: 100%; height: 48dvh; top: auto; bottom: 0; border-radius: 18px 18px 0 0; box-shadow: 0 -10px 30px rgb(23 32 26 / 16%); }
+  .tree-profile[data-sheet="full"] { height: calc(100dvh - 56px); }
+  .sheet-handle { display: grid; place-items: center; width: 100%; height: 22px; padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; flex: 0 0 auto; }
+  .sheet-handle span { width: 42px; height: 5px; border-radius: 3px; background: #c8cfc6; }
+  .tree-profile-head { padding: 0 12px 6px; border-bottom: 0; }
+  .tp-id { padding: 4px 16px 12px; background: var(--color-surface); }
+  .tp-name { font-size: 23px; }
+  .tp-card { margin: 8px 10px 0; padding: 12px; }
+  .tp-actions { padding: 0 14px 4px; }
+}
+[data-quality="unlinked"] .dot { background: var(--color-surface) !important; border: 2px solid var(--viz-conf-none); }
+.tp-actions-row .btn { padding: 7px 6px; gap: 6px; white-space: nowrap; font-size: 12.5px; }
+.area .kpi { display: grid; grid-template-columns: 1fr; gap: 2px; padding: 10px; }
+.area .kpi-label { display: flex; align-items: center; gap: 6px; color: var(--color-text-muted); }
+.area .kpi-label .ico { color: var(--color-accent); flex: 0 0 auto; }
+.area .kpi strong { font-size: 18px; white-space: nowrap; }
+/* The page-level header rule (index.html) must not reach headers inside panels. */
+.tp-id, .area-head { display: block; border-bottom: 0; }
+.area-head { padding: 0; }
+@media (max-width: 760px) {
+  .tree-profile-head { position: absolute; top: 4px; right: 6px; z-index: 3; padding: 0; background: transparent; border: 0; }
+  .tree-profile-head h2 { display: none; }
+  .tree-profile-close { width: 40px; height: 40px; border-radius: 12px; background: var(--color-bg); border-color: transparent; }
+  .profile-back { margin-right: 6px; }
+  .tp-id { padding-right: 56px; }
+  .tree-profile-body { padding-top: 0; }
+}
+.about-modal a { color: var(--color-accent); }
+
+/* ---- v0.2 review: the panel as a data sheet ---- */
+.tp-sec { margin: 0 18px; padding: 14px 0 12px; border-top: 1px solid var(--color-border); }
+.tp-sec h4 { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 10px; font: 700 11px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-secondary); }
+.tp-sec h4 a { font: 600 12px/1 var(--font-sans); letter-spacing: 0; text-transform: none; color: var(--color-accent); }
+.tp-actions { padding-bottom: 14px; }
+.tp-visual { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.tp-visual.has-profile { grid-template-columns: minmax(0, 1fr) 96px; align-items: stretch; }
+.tp-profile { margin: 0; padding: 0; }
+.tp-profile .viz { height: 100%; }
+.tp-caption { margin: 6px 0 8px; font-size: 11.5px; line-height: 1.45; color: var(--color-text-muted); }
+.tp-caption a { color: var(--color-accent); font-weight: 600; }
+.tp-def, .tp-src { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--color-text-secondary); }
+.tp-src { color: var(--color-text-muted); font-size: 11.5px; }
+.tp-irr { margin: 0 0 8px; font-size: 13px; line-height: 1.45; }
+.sv-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.sv { padding: 8px; border: 1px solid var(--color-border-subtle); border-radius: 8px; min-width: 0; }
+.sv h5 { margin: 0 0 4px; font: 700 12px/1.2 var(--font-sans); font-variant-numeric: tabular-nums; }
+.sv .viz-outline { display: block; width: 100%; max-width: 96px; margin: 2px 0 4px; }
+.sv-vals { margin: 0; display: grid; gap: 2px; }
+.sv-vals div { display: flex; justify-content: space-between; gap: 6px; font-size: 12px; }
+.sv-vals dt { color: var(--color-text-muted); } .sv-vals dd { margin: 0; font-weight: 650; font-variant-numeric: tabular-nums; }
+.sv-none { margin: 0; font-size: 12px; line-height: 1.4; color: var(--color-text-muted); }
+.sv-absent, .sv-outside, .sv-none-status { background: transparent; }
+.tp-foot { margin: 12px 18px 0; padding-top: 10px; border-top: 1px solid var(--color-border); }
+
+/* ---- v0.2 review: Area tab ---- */
+.area-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; font-size: 13px; }
+.area-crumbs button { appearance: none; border: 0; background: none; padding: 5px 6px; border-radius: 6px; font: 600 13px/1.2 var(--font-sans); color: var(--color-accent); cursor: pointer; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.area-crumbs button + button::before { content: "›"; margin-right: 8px; color: var(--color-text-muted); font-weight: 400; }
+.area-crumbs button[aria-pressed="true"] { color: var(--color-text); background: var(--color-bg); }
+.area-tools { display: flex; gap: 6px; }
+.area-tools .btn[aria-pressed="true"] { background: var(--color-text); color: #fff; }
+.area-highlight { margin: 0; padding: 7px 10px; border-radius: 8px; border: 1.5px solid #0a6fd6; color: #0a4f99; font-size: 12.5px; }
+.ar { margin: 0; display: grid; }
+.ar-row { display: grid; grid-template-columns: minmax(96px, 40%) 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--color-border-subtle); font-size: 13px; }
+.ar-row:first-child { border-top: 0; }
+.ar-row dt { color: var(--color-text-muted); }
+.ar-row dd { margin: 0; font-weight: 650; font-variant-numeric: tabular-nums; }
+.ar-row dd small { display: block; font-weight: 400; font-size: 11.5px; color: var(--color-text-muted); }
+.ar-go { display: block; padding: 2px 0 0; font-size: 12px; }
+.ar-sub { margin: 4px 0 0; font: 700 11px/1.2 var(--font-sans); letter-spacing: .07em; text-transform: uppercase; color: var(--color-text-secondary); }
+[data-highlight] { cursor: pointer; border-radius: 6px; }
+/* Rows that ring trees on the map are buttons inside their list items, so lists stay lists (from concept B). */
+.comp-legend li:has(> button), .area-quality li:has(> button), .area-species li:has(> button) { display: block; padding: 0; }
+.comp-legend li > button, .area-quality li > button, .area-species li > button { appearance: none; width: 100%; min-height: 28px; margin: 0; padding: 2px 4px; border: 0; border-radius: 6px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.comp-legend li > button { display: grid; grid-template-columns: 10px 1fr auto 44px; align-items: center; gap: 8px; }
+.area-quality li > button { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; }
+.area-species li > button { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.comp-legend li > button:hover, .area-species li > button:hover, .area-quality li > button:hover { background: var(--color-bg); }
+.viz-cols .v-hit { cursor: pointer; } .viz-cols .v-hit:hover .v-col { opacity: 1; fill: var(--color-text-accent); }
+.area-quality i { flex: 0 0 auto; box-sizing: border-box; }
+.pick-banner { position: absolute; top: 64px; left: 50%; transform: translateX(-50%); z-index: 8; margin: 0; padding: 8px 14px; border-radius: 999px; background: var(--color-text); color: #fff; font: 600 13px/1.2 var(--font-sans); box-shadow: var(--shadow-1); }
+@media (max-width: 760px) { .pick-banner { top: auto; bottom: 90px; } }
+@media (max-width: 760px) {
+  .tree-profile[data-sheet="full"] { height: calc(100dvh - 10px); }
+  body[data-sheet="full"][data-profile-open="true"] .map-dock { display: none; }
+}
+
+/* ==================================================================================================
+   Left panel, concept A: calm by default.
+   On open: search, the live summary, the active filters and layers as chips, one "Colour by"
+   control and three drawers (Filters, Layers, Area). Tokens: alto-ui.css (--sp-*, --fs-*, --lh-*,
+   --ctl-*, --panel-*). Every row sits on the 4-px grid; text starts at 16 px from the panel edge
+   (group rows) or 32 px (option rows, after an 8-px inset and a 16-px marker column).
+   ================================================================================================== */
+#explorer.lp {
+  left: max(var(--panel-inset), env(safe-area-inset-left)); top: max(var(--panel-inset), env(safe-area-inset-top));
+  /* Room under the panel for the legend's header (44 px), its 8 px gap and the scale bar. */
+  width: var(--panel-explorer-w); max-height: calc(100% - var(--panel-inset) * 2 - 96px);
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--color-surface); /* opaque: map labels never show through the panel */
+  border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-1);
+  font-family: var(--font-sans); color: var(--color-text);
+}
+#explorer.lp :is(button, a, input, select, summary):focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+#explorer.lp :is(.legend-row, .lp-group-toggle, .species-option, .lp-drawers button, .lp-chip button):focus-visible { outline-offset: -2px; }
+.lp-handle { display: none; }
+
+/* Header: wordmark, region, About, hide. 48 px. */
+#explorer.lp .lp-head { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border: 0; flex: none; }
+#explorer.lp .lp-head .title-block { display: flex; align-items: center; gap: var(--space-2); flex: 1 1 auto; min-width: 0; padding: 0; }
+#explorer.lp h1.brand { margin: 0; padding: 0; line-height: 0; flex: none; }
+#explorer.lp h1.brand img { display: block; width: auto; height: 26px; max-width: none; }
+#explorer.lp .release-row { display: block; margin: 0; min-width: 0; }
+#explorer.lp .release-row .subhead { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin: 0; font: 600 var(--fs-sm)/var(--lh-sm) var(--font-sans); color: var(--color-text-muted); }
+#explorer.lp .lp-about { display: inline-flex; align-items: center; gap: 6px; flex: none; height: var(--control-sm); min-height: 0; margin: 0; padding: 0 var(--space-2); border: 0; border-radius: var(--radius-sm); background: none; color: var(--color-text-accent); font: 600 var(--fs-sm)/1 var(--font-sans); text-decoration: none; cursor: pointer; }
+#explorer.lp #collapseAside { position: static; display: grid; place-items: center; flex: none; width: var(--control-sm); height: var(--control-sm); min-height: 0; padding: 0; border: 0; border-radius: var(--radius-sm); background: none; color: var(--color-text-muted); cursor: pointer; }
+#explorer.lp .lp-about:hover, #explorer.lp #collapseAside:hover { background: var(--color-surface-tint); color: var(--color-text-accent); }
+
+/* Search: 40 px. */
+#explorer.lp .property-search { position: relative; margin: 0 var(--space-4) var(--space-3); flex: none; }
+#explorer.lp .property-search > svg { position: absolute; left: 12px; top: 11px; color: var(--color-text-muted); pointer-events: none; }
+#explorer.lp .property-search input { width: 100%; height: var(--control-md); min-height: 0; padding: 0 var(--space-3) 0 38px; border: 1px solid var(--color-border-input); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); font: 400 var(--fs-md)/var(--lh-md) var(--font-sans); }
+#explorer.lp .property-search input::placeholder { color: var(--color-text-muted); opacity: 1; }
+/* Search suggestions (command-search.js): in the panel under the box, grouped; the active option is tinted. */
+#explorer.lp .cmd-list { margin-top: var(--space-2); max-height: 420px; overflow-y: auto; overscroll-behavior: contain; padding: var(--space-1);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-1); }
+.cmd-group + .cmd-group { margin-top: var(--space-1); padding-top: var(--space-1); border-top: 1px solid var(--color-border-subtle); }
+.cmd-group-label { padding: var(--space-2) var(--space-2) var(--space-1); font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-muted); }
+.cmd-opt { display: grid; gap: 1px; align-content: center; min-height: var(--control-md); padding: 6px var(--space-2); border-radius: var(--radius-sm); cursor: pointer; }
+.cmd-opt:hover { background: var(--color-bg); }
+.cmd-opt[aria-selected="true"] { background: var(--color-surface-tint); box-shadow: inset 3px 0 0 var(--color-accent); }
+.cmd-opt-label { font: 400 var(--fs-md)/1.3 var(--font-sans); color: var(--color-text); overflow-wrap: anywhere; }
+.cmd-opt-label mark { background: none; color: inherit; font-weight: 700; }
+.cmd-opt-meta { font: var(--text-caption); color: var(--color-text-muted); }
+.cmd-opt.is-current .cmd-opt-label { color: var(--color-text-secondary); }
+.cmd-note { margin: var(--space-1) var(--space-2) var(--space-2); font: var(--text-caption); color: var(--color-text-muted); }
+#explorer.lp .property-status { margin: var(--space-2) 2px 0; font: var(--text-caption); color: var(--color-text-accent); }
+@media (pointer: coarse) { .cmd-opt { min-height: 48px; } }
+#explorer.lp .property-search input:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgb(74 111 70 / 16%); outline: none; }
+
+/* Summary: the three live numbers, the sample note and the chips that qualify them. */
+.lp-summary { padding: 0 var(--space-4) var(--space-3); border-bottom: 1px solid var(--color-border-subtle); flex: none; }
+#explorer.lp .view-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); margin: 0; padding: 0; border: 0; }
+#explorer.lp .view-summary > div + div { padding-left: 0; border-left: 0; }
+#explorer.lp .view-summary strong { display: block; font: 700 var(--fs-xl)/var(--lh-xl) var(--font-sans); letter-spacing: -.01em; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--color-text); }
+#explorer.lp .view-summary strong span { display: inline; font: inherit; color: inherit; margin: 0; }
+#explorer.lp .view-summary strong small { margin-left: 2px; font: 500 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); letter-spacing: 0; }
+#explorer.lp .view-summary > div > span { display: block; margin: 0; font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-muted); }
+#explorer.lp .summary-scope { margin: var(--space-1) 0 0; padding: 0; font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-muted); }
+.lp-chips { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); }
+.lp-chips > li { display: flex; min-width: 0; max-width: 100%; }
+.lp-chips-empty { min-height: 28px; align-items: center; font: 600 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-secondary); }
+.lp-chip { display: inline-flex; align-items: stretch; height: 28px; border: 1px solid var(--alto-green-200); border-radius: 999px; background: var(--color-surface-tint); color: var(--color-text-accent); overflow: hidden; }
+.lp-chip[data-kind="layer"] { border-color: var(--color-border); background: var(--color-surface); color: var(--color-text-secondary); }
+.lp-chip[data-kind="highlight"] { border-color: #0a6fd6; background: #eef5fd; color: #0a4f99; }
+.lp-chip button { appearance: none; margin: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.lp-chip .lp-chip-label { min-width: 0; padding: 0 2px 0 10px; font: 600 var(--fs-xs)/26px var(--font-sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lp-chip .lp-chip-x { display: grid; place-items: center; flex: none; width: 26px; }
+.lp-chip button:hover { background: rgb(23 32 26 / 6%); }
+.lp-chip-more { appearance: none; height: 28px; padding: 0 10px; border: 1px dashed var(--color-border); border-radius: 999px; background: none; color: var(--color-text-secondary); font: 600 var(--fs-xs)/1 var(--font-sans); cursor: pointer; }
+.lp-chips .lp-chip-clear { height: 28px; padding: 0 var(--space-2); font-size: var(--fs-xs); }
+
+/* The one control on open: Colour by. 64 px with its padding. */
+.lp-colour { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); flex: none; }
+#explorer.lp .lp-colour label { display: block; margin: 0; font: 600 var(--fs-sm)/var(--lh-sm) var(--font-sans); color: var(--color-text); text-transform: none; letter-spacing: 0; }
+#explorer.lp .lp-colour select { width: 100%; height: var(--control-md); min-height: 0; padding: 0 36px 0 var(--space-3); border: 1px solid var(--color-border-input); border-radius: var(--radius-sm); color: var(--color-text); font: 600 var(--fs-md)/var(--lh-md) var(--font-sans); cursor: pointer;
+  appearance: none; -webkit-appearance: none; background: var(--color-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b655f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center / 16px 16px; }
+#explorer.lp .lp-colour select:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgb(74 111 70 / 16%); }
+.lp-legend { display: none; }
+
+/* Drawer buttons: disclosure buttons, one drawer open at a time; a second press closes it. */
+.lp-drawers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0 var(--space-2); border-top: 1px solid var(--color-border-subtle); flex: none; background: var(--color-surface); }
+.lp-drawers button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: var(--control-md); padding: 0 var(--space-1); border: 0; border-bottom: 2px solid transparent; background: none; color: var(--color-text-secondary); font: 600 var(--fs-md)/1 var(--font-sans); cursor: pointer; transition: color 140ms var(--ease-standard), border-color 140ms var(--ease-standard); }
+.lp-drawers button:hover { color: var(--color-text-accent); }
+.lp-drawers button[aria-expanded="true"] { color: var(--color-text-accent); border-bottom-color: var(--color-accent); }
+.lp-chev { flex: none; color: var(--color-text-muted); transition: transform 160ms var(--ease-standard); }
+[aria-expanded="true"] > .lp-chev { transform: rotate(180deg); }
+#explorer.lp .filter-count { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--color-accent); color: #fff; font: 700 11px/1 var(--font-sans); }
+#explorer.lp .filter-count[hidden] { display: none; }
+#explorer.lp[data-open-drawer=""] .lp-drawers { border-bottom: 0; }
+#explorer.lp:not([data-open-drawer=""]) .lp-drawers { border-bottom: 1px solid var(--color-border-subtle); }
+
+/* Drawer content. */
+.lp-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.lp-pane { padding: 0 var(--space-4) var(--space-4); }
+.lp-pane-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: var(--control-md); }
+.lp-pane-bar p { margin: 0; font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-muted); }
+.lp-text-btn { appearance: none; flex: none; height: var(--control-sm); margin: 0; padding: 0 var(--space-2); border: 0; border-radius: var(--radius-sm); background: none; color: var(--color-text-accent); font: 600 var(--fs-sm)/1 var(--font-sans); cursor: pointer; white-space: nowrap; }
+.lp-text-btn:hover { background: var(--color-surface-tint); }
+.lp-text-btn:disabled { color: var(--color-text-muted); background: none; cursor: default; opacity: .7; }
+.lp-text-btn[aria-pressed="true"] { background: var(--color-text); color: #fff; }
+
+/* Groups: a 40-px row that names the group and states its value; options fold below it. */
+.lp-group { margin: 0; padding: 0; min-width: 0; border: 0; border-top: 1px solid var(--color-border-subtle); }
+.lp-group[hidden] { display: none; }
+.lp-group-toggle { display: grid; grid-template-columns: auto minmax(0, 1fr) 16px; align-items: center; gap: var(--space-2); width: 100%; min-height: var(--control-md); margin: 0; padding: 0; border: 0; background: none; color: var(--color-text); text-align: left; cursor: pointer; }
+.lp-group-toggle:hover .lp-group-name { color: var(--color-text-accent); }
+.lp-group-name, .lp-group-title { font: 600 var(--fs-md)/var(--lh-md) var(--font-sans); color: var(--color-text); }
+.lp-group-value { justify-self: end; min-width: 0; font: 400 var(--fs-sm)/var(--lh-sm) var(--font-sans); color: var(--color-text-muted); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: none; letter-spacing: 0; }
+.lp-group-value[data-active="true"] { color: var(--color-text-accent); font-weight: 600; }
+.lp-group-body { padding: 0 0 var(--space-3); }
+.lp-inline { padding: var(--space-2) 0 var(--space-3); }
+.lp-inline > .lp-group-title, .lp-inline > legend.lp-group-title { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); float: none; width: 100%; min-height: var(--control-sm); margin: 0; padding: 0; }
+.lp-eyebrow { margin: var(--space-2) 0 var(--space-1); padding: 0 var(--space-2); font: 700 var(--fs-2xs)/var(--lh-2xs) var(--font-sans); letter-spacing: .07em; text-transform: uppercase; color: var(--color-text-muted); }
+.lp-note { margin: 0 0 var(--space-2); font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-muted); }
+.lp-planned { margin: var(--space-2) 0 0; padding: 0 var(--space-2); }
+#explorer.lp .lp-inline .lp-note { margin: var(--space-1) 0 0; padding: 0 var(--space-2); }
+
+/* Option rows: 8-px inset, 16-px marker column, label, live count. 32 px (44 px on touch). */
+.lp-rows, #explorer.lp .source-groups { display: grid; gap: 0; }
+#explorer.lp .legend-row { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; gap: var(--space-2); width: 100%; min-height: var(--control-sm); margin: 0; padding: 0 var(--space-2); border: 0; border-radius: 6px; background: none; color: var(--color-text); font: 400 var(--fs-sm)/var(--lh-sm) var(--font-sans); text-align: left; text-decoration: none; opacity: 1; cursor: pointer; transition: background 120ms var(--ease-standard); }
+#explorer.lp .legend-row:hover { background: var(--color-surface-tint); }
+#explorer.lp .legend-row .dot { justify-self: center; width: 10px; height: 10px; border: 0; border-radius: 50%; }
+#explorer.lp .legend-row .chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: inherit; font-size: inherit; }
+#explorer.lp .legend-row .chip-count { font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+#explorer.lp .legend-row[aria-pressed="false"] { color: var(--color-text-muted); }
+#explorer.lp .legend-row[aria-pressed="false"] .dot { background: transparent !important; box-shadow: inset 0 0 0 1.5px #8a938d; }
+#explorer.lp [data-quality="unlinked"] .dot { background: var(--color-surface) !important; box-shadow: inset 0 0 0 2px var(--viz-conf-none); }
+#explorer.lp [data-quality="unlinked"][aria-pressed="false"] .dot { box-shadow: inset 0 0 0 1.5px #8a938d; }
+#explorer.lp .legend-row .dot-ring { width: 12px; height: 12px; background: transparent !important; border: 0 !important; box-shadow: inset 0 0 0 2.5px var(--color-protected); }
+#explorer.lp #statusToggles .legend-row { color: var(--color-text); }
+#explorer.lp #statusToggles .legend-row[aria-pressed="true"] { background: rgb(176 46 111 / 9%); font-weight: 600; }
+#explorer.lp #statusToggles .legend-row[aria-pressed="true"] .dot-ring { background: rgb(176 46 111 / 30%) !important; }
+
+/* Switch rows (checkboxes): the box takes the marker column, so labels align with option rows. */
+#explorer.lp .lp-check, #explorer.lp .toggle-list .check { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: center; gap: var(--space-2); min-height: var(--control-sm); margin: 0; padding: var(--space-1) var(--space-2); border: 0; border-radius: 6px; color: var(--color-text); font: 400 var(--fs-sm)/var(--lh-sm) var(--font-sans); text-transform: none; letter-spacing: 0; cursor: pointer; }
+#explorer.lp .toggle-list { display: grid; gap: 0; }
+#explorer.lp .toggle-list .check { align-items: start; font-size: var(--fs-md); line-height: var(--lh-md); }
+#explorer.lp .toggle-list .check + .check { border-top: 0; }
+#explorer.lp .lp-check:hover, #explorer.lp .toggle-list .check:hover { background: var(--color-surface-tint); }
+#explorer.lp :is(.lp-check, .toggle-list .check) input { width: 16px; height: 16px; min-height: 0; margin: 2px 0 0; accent-color: var(--color-accent); }
+#explorer.lp .lp-check input { margin: 0; }
+#explorer.lp .toggle-list .check small { display: block; margin: 0; font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-muted); }
+#explorer.lp .control-note { margin: var(--space-1) 0 0; padding: 0 var(--space-2); font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-muted); }
+#explorer.lp #qualityPositions { margin: var(--space-1) 0 0; }
+
+/* Species: search and list open with the group; selected names lead the list. */
+#explorer.lp .species-picker input[type="search"] { width: 100%; height: var(--control-md); min-height: 0; margin: 0 0 var(--space-2); padding: 0 var(--space-3); border: 1px solid var(--color-border-input); border-radius: var(--radius-sm); background: var(--color-surface); font: 400 var(--fs-md)/var(--lh-md) var(--font-sans); }
+#explorer.lp .species-options { max-height: 224px; overflow-y: auto; overscroll-behavior: contain; display: grid; gap: 0; margin: 0 0 var(--space-1); padding: var(--space-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+#explorer.lp .species-option { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: var(--control-sm); padding: 0 var(--space-2); border: 0; border-radius: 6px; background: none; color: var(--color-text); font: 400 var(--fs-sm)/var(--lh-sm) var(--font-sans); text-align: left; cursor: pointer; }
+#explorer.lp .species-option:hover { background: var(--color-surface-tint); }
+#explorer.lp .species-option.active { background: var(--color-surface-tint-hover); color: var(--color-text-accent); font-weight: 600; }
+#explorer.lp .species-option .count { font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+
+/* Basemap segmented control inside Layers. */
+#explorer.lp .segmented { margin: var(--space-1) 0 0; }
+#explorer.lp .segmented button { min-height: var(--control-sm); font-size: var(--fs-sm); }
+
+/* Area drawer: places, property pick, then the dashboard. */
+.lp-area-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-1) var(--space-2); padding: var(--space-2) 0; }
+#explorer.lp .area-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0; min-width: 0; font-size: var(--fs-sm); }
+#explorer.lp .area-crumbs button { height: var(--control-sm); padding: 0 6px; font: 600 var(--fs-sm)/1 var(--font-sans); max-width: 140px; }
+#explorer.lp .area-crumbs button + button::before { margin-right: 6px; }
+#explorer.lp .area { gap: var(--space-3); }
+#explorer.lp .area-actions { margin-top: var(--space-3); }
+#explorer.lp .area-actions .action-button { min-height: var(--control-md); border-radius: var(--radius-sm); font: 600 var(--fs-sm)/1.2 var(--font-sans); text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+#explorer.lp .area-highlight { margin: 0 0 var(--space-2); }
+
+/* Status line and footer. */
+#explorer.lp .status { flex: none; min-height: 0; padding: var(--space-2) var(--space-4); border-top: 1px solid var(--color-border-subtle); font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-muted); }
+#explorer.lp .status:empty { display: none; }
+#explorer.lp .panel-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex: none; min-height: var(--control-md); padding: 0 var(--space-3) 0 var(--space-4); border-top: 1px solid var(--color-border-subtle); }
+.lab-link { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--bpl-navy); font: 650 var(--fs-xs)/1 var(--font-sans); text-decoration: none; white-space: nowrap; }
+.lab-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.version-chip { appearance: none; min-width: 0; height: 24px; padding: 0 var(--space-2); border: 1px solid var(--color-border-subtle); border-radius: 999px; background: var(--color-bg); color: var(--color-text-secondary); font: 600 var(--fs-2xs)/1 var(--font-sans); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.version-chip:hover { color: var(--color-text-accent); border-color: var(--alto-green-200); }
+
+/* Touch: 44-px rows, 40-px chips and buttons. */
+@media (pointer: coarse) {
+  #explorer.lp .legend-row, #explorer.lp .species-option, #explorer.lp .lp-check, #explorer.lp .toggle-list .check, .lp-group-toggle { min-height: var(--target-touch); }
+  .lp-drawers button { height: var(--target-touch); }
+  .lp-chip, .lp-chip-more, .lp-chips .lp-chip-clear, .lp-chips-empty { height: 40px; min-height: 40px; }
+  .lp-chip .lp-chip-label { padding-left: 14px; line-height: 38px; }
+  .lp-chip .lp-chip-x { width: 40px; }
+  #explorer.lp .lp-about, #explorer.lp #collapseAside, .lp-text-btn, #explorer.lp .area-crumbs button { height: 40px; min-width: 40px; }
+  #explorer.lp .segmented button { min-height: 40px; }
+}
+
+/* Short screens: the whole panel scrolls and the drawer buttons stay in reach. */
+@media (max-height: 700px) and (min-width: 761px) {
+  #explorer.lp { overflow-y: auto; overscroll-behavior: contain; }
+  #explorer.lp .lp-body { flex: none; overflow: visible; }
+  #explorer.lp .lp-drawers { position: sticky; top: 0; z-index: 2; }
+  #explorer.lp .panel-foot { position: sticky; bottom: 0; background: var(--color-surface); }
+}
+
+/* Legend: docked under the left panel on desktop (placeLegend() in index.html sets its left edge, width,
+   top and height from the panel), never over the scale bar, the zoom, the basemap switch or the attribution.
+   On phones the same sections sit in the bottom sheet under "Colour by" (#colourLegend). */
+.map-legend { position: absolute; z-index: var(--z-panel); left: var(--panel-inset); top: var(--panel-inset); width: var(--panel-explorer-w);
+  display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box;
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
+  font-family: var(--font-sans); color: var(--color-text); }
+.ml-head { flex: none; margin: 0; padding: 0; font: inherit; }
+.ml-head button { appearance: none; display: flex; align-items: center; gap: var(--space-2); width: 100%; min-height: var(--target-touch); margin: 0;
+  padding: 0 var(--space-3) 0 var(--space-4); border: 0; border-radius: var(--radius-lg); background: none; color: var(--color-text);
+  font: 600 var(--fs-md)/1.2 var(--font-sans); text-align: left; cursor: pointer; }
+.ml-head button:hover { background: var(--color-bg); }
+.ml-head button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.ml-mode { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; color: var(--color-text-muted); font-weight: 400; font-size: var(--fs-sm); }
+.ml-head .lp-chev { flex: none; color: var(--color-text-muted); transition: transform var(--dur-base) var(--ease-standard); }
+.ml-head button[aria-expanded="true"] .lp-chev { transform: rotate(180deg); }
+.ml-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--space-4) var(--space-3); border-top: 1px solid var(--color-border-subtle); }
+.ml-section { padding-top: var(--space-3); }
+.ml-section + .ml-section { margin-top: var(--space-3); border-top: 1px solid var(--color-border-subtle); }
+.ml-title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-2); font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-muted); }
+.ml-kind { font: 400 var(--fs-xs)/1 var(--font-sans); letter-spacing: 0; text-transform: none; }
+.ml-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); }
+.ml-rows li { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-2); min-height: 20px; font: var(--text-label); color: var(--color-text-secondary); }
+.ml-label small { display: block; font: var(--text-caption); color: var(--color-text-muted); }
+.ml-count { font: 400 var(--fs-xs)/1.3 var(--font-sans); font-variant-numeric: tabular-nums; color: var(--color-text-muted); }
+.ml-note { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-muted); }
+/* Swatches: the shape of the mark on the map. */
+.sw { display: inline-block; justify-self: center; flex: none; box-sizing: border-box; }
+.sw-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgb(23 32 26 / 35%); }
+.sw-ring { width: 12px; height: 12px; border-radius: 50%; border: 2.5px solid var(--sw); }
+.sw-hollow { width: 11px; height: 11px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--sw); }
+.sw-dashed-ring { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); outline: 1.5px dashed var(--neutral-700); outline-offset: 2px; }
+.sw-line { width: 16px; height: 0; border-top: 2px solid var(--sw); }
+.sw-dashed-line { width: 16px; height: 0; border-top: 2px dashed var(--sw); }
+.sw-fill { width: 16px; height: 11px; border-radius: 3px; background: color-mix(in srgb, var(--sw) 55%, #fff); box-shadow: inset 0 0 0 1px var(--sw); }
+.sw-triangle { width: 12px; height: 11px; background: var(--sw); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.sw-diamond { width: 9px; height: 9px; background: var(--sw); transform: rotate(45deg); }
+.sw-crown, .sw-crown-dashed { width: 16px; height: 12px; border-radius: 48% 52% 45% 55% / 55% 50% 50% 45%; background: color-mix(in srgb, var(--color-text-muted) 22%, #fff); border: 1.5px solid var(--color-text-secondary); }
+.sw-crown-dashed { border-style: dashed; }
+.sw-outline, .sw-dashed-outline { width: 16px; height: 11px; border-radius: 2px; background: color-mix(in srgb, var(--sw) 10%, #fff); border: 2px solid var(--sw); }
+.sw-dashed-outline { background: none; border-style: dashed; border-width: 1.5px; }
+/* The Estimate badge (design system 2.6): transparent, dashed outline, muted text. */
+.badge-estimate { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border: 1px dashed var(--color-estimate-border, #8a938d); border-radius: 999px;
+  color: var(--color-estimate, #5b655f); font: 600 var(--fs-2xs)/1 var(--font-sans); letter-spacing: 0; text-transform: none; white-space: nowrap; vertical-align: 1px; }
+
+/* Collapsed panel: the dock and its numbers are opaque too. */
+.floating-stats, body[data-aside-collapsed="true"] .floating-stats { background: var(--color-surface); }
+.map-dock { width: var(--panel-explorer-w); }
+
+/* ---- phones: the panel is a bottom sheet (peek, half, full) ---- */
+@media (max-width: 760px) {
+  #explorer.lp, body[data-aside-collapsed="true"] #explorer.lp {
+    position: fixed; top: auto; left: 0; right: 0; bottom: 0; width: 100%; height: calc(100dvh - 48px); max-height: none;
+    border-width: 1px 0 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -8px 28px rgb(23 32 26 / 14%);
+    transform: translateY(var(--sheet-offset, calc(100% - 168px))); visibility: visible; opacity: 1; pointer-events: auto;
+    transition: transform 260ms var(--ease-standard), visibility 0s linear 0s; z-index: 30;
+  }
+  #explorer.lp.is-dragging { transition: none; }
+  body[data-profile-open="true"] #explorer.lp { transform: translateY(100%); visibility: hidden; transition: transform 260ms var(--ease-standard), visibility 0s linear 260ms; }
+  .lp-handle { display: grid; place-items: center; flex: none; width: 100%; height: 24px; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; }
+  .lp-handle span { width: 40px; height: 4px; border-radius: 2px; background: #b9c1b7; }
+  #explorer.lp .lp-head { display: none; }
+  #explorer.lp .property-search { margin: 0 var(--space-4) var(--space-2); }
+  #explorer.lp .property-search input { height: var(--target-touch); font-size: 16px; }
+  #explorer.lp .property-search > svg { top: 13px; }
+  #explorer.lp .view-summary strong { font-size: 18px; line-height: var(--lh-lg); }
+  .lp-colour { padding-top: var(--space-2); }
+  #explorer.lp .lp-colour select { height: var(--target-touch); font-size: 16px; }
+  .lp-legend { display: block; padding: 0 var(--space-4) var(--space-3); }
+  .lp-legend .ml-section { padding-top: var(--space-2); }
+  .lp-legend .ml-section + .ml-section { margin-top: var(--space-2); }
+  .lp-legend .ml-rows { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
+  .lp-legend .ml-rows li { display: inline-flex; gap: var(--space-1-5); min-height: 24px; }
+  .lp-legend .ml-label small, .lp-legend .ml-count { display: none; }
+  #explorer.lp .species-picker input[type="search"] { height: var(--target-touch); font-size: 16px; }
+  #explorer.lp .panel-foot { padding-bottom: env(safe-area-inset-bottom); }
+  /* The brand and About stay on the map; the sheet holds the numbers. */
+  .map-dock, body[data-aside-collapsed="true"] .map-dock { display: grid; width: auto; }
+  .map-dock .floating-stats, .reveal-aside .dock-action, .reveal-aside .filter-count { display: none !important; }
+  .reveal-aside, body[data-aside-collapsed="true"] .reveal-aside { width: auto; height: 40px; padding: 0 var(--space-3); }
+  .dock-heading { grid-template-columns: auto 40px; }
+  .about-dock { min-height: 40px; width: 40px; }
+  body[data-profile-open="true"][data-sheet="full"] .map-dock { display: none; }
+  /* Map controls and the colour key sit above the visible part of the sheet. */
+  .maplibregl-ctrl-bottom-right { bottom: calc(var(--sheet-clear, 0px) + env(safe-area-inset-bottom)); transition: bottom 260ms var(--ease-standard); }
+  .maplibregl-ctrl-bottom-left { bottom: calc(var(--sheet-clear, 0px) + var(--scale-lift, 0px)); transition: bottom 260ms var(--ease-standard); }
+  .pick-banner { bottom: calc(var(--sheet-clear, 0px) + 16px); }
+}
+
+/* Segmented control (Basemap in Layers): 40 px with its 4-px track. */
+.segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: var(--space-1); border: 1px solid var(--color-border-subtle); border-radius: 10px; background: var(--color-bg); }
+.segmented button { appearance: none; min-height: var(--control-sm); padding: 0 var(--space-2); border: 0; border-radius: 7px; background: transparent; color: var(--color-text-secondary); font: 600 var(--fs-sm)/1 var(--font-sans); cursor: pointer; transition: background 140ms var(--ease-standard), color 140ms var(--ease-standard); }
+.segmented button:hover { color: var(--color-text); }
+.segmented button.active, .segmented button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text-accent); box-shadow: 0 1px 3px rgb(23 32 26 / 14%); }
+/* Fieldset legends lay out like any heading row. */
+#explorer.lp fieldset.lp-inline > legend { float: left; width: 100%; }
+#explorer.lp fieldset.lp-inline > legend + * { clear: both; }
+/* Status keeps its magenta ring as the key for protected trees, on or off. */
+#explorer.lp #statusToggles .legend-row .dot-ring { box-shadow: inset 0 0 0 2.5px var(--color-protected) !important; }
+/* Area: the page-level header rules must not pad the dashboard heading; crumbs align with the text edge. */
+#explorer.lp .area-head { display: block; padding: 0; border: 0; }
+#explorer.lp .area-crumbs { margin-left: -6px; }
+
+/* Phones, map chrome around the sheet: brand and About top left with the colour key under them,
+   the basemap top right (the active one, opening to the others), the scale and zoom above the sheet.
+   A full sheet gives its room to the open drawer. */
+@media (max-width: 760px) {
+  #explorer.lp[data-sheet="full"]:not([data-open-drawer=""]) :is(.lp-colour, .lp-legend) { display: none; }
+  /* The legend lives in the sheet on phones. */
+  .map-legend { display: none !important; }
+  body .basemap-switch, body[data-aside-collapsed] .basemap-switch { top: max(12px, env(safe-area-inset-top)); right: 12px; bottom: auto; max-width: none; visibility: visible; display: flex; flex-direction: column; align-items: stretch; gap: 2px; padding: var(--space-1); border-radius: 10px; }
+  body .basemap-switch:not(.is-open) button:not(.active) { display: none; }
+  body .basemap-switch button, body .basemap-switch:not(:hover) button:not(.active) { min-height: 32px; padding: 0 var(--space-3); font-size: var(--fs-sm); text-align: left; }
+  body .basemap-switch button.active { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  body .basemap-switch button.active::after { content: ""; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+  body .basemap-switch.is-open button.active::after { transform: translateY(2px) rotate(-135deg); }
+}
+/* Breadcrumb: the current place is plain bold text; the others are links. */
+#explorer.lp .area-crumbs button[aria-pressed="true"] { background: none; color: var(--color-text); font-weight: 700; }
+#explorer.lp .area-crumbs button + button::before { color: var(--color-text-muted); font-weight: 400; }
+/* The ringed selection is stated once, as a chip above the panel's drawers. */
+#explorer.lp #areaHighlight { display: none !important; }
+
+/* ==================================================================================================
+   Design system pass (ALTO design system v1.0): panel elevation, focus, map controls, inputs, rows,
+   the Area dashboard and About. Later in the cascade than the rules above on purpose.
+   ================================================================================================== */
+/* Floating panels: opaque, 16 px radius, elevation 2 (2.13). */
+@media (min-width: 761px) {
+  #explorer.lp { border-radius: var(--radius-lg); box-shadow: var(--shadow-2); }
+  .map-dock .reveal-aside, .map-dock .floating-stats { border-radius: var(--radius-lg); }
+}
+/* Focus: one ring everywhere (section 9). */
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible, .cmd-opt:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+#explorer.lp .property-search input:focus { border-color: var(--color-accent); box-shadow: none; outline: none; }
+#explorer.lp .property-search input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+/* The status line sits at the top of the panel (2.18). */
+#explorer.lp .status { flex: none; margin: 0; padding: 0 var(--space-4) var(--space-2); border: 0; font: var(--text-caption); color: var(--color-text-muted); }
+/* Checkboxes 18 px with the accent fill (2.20); option rows 36 px (2.5). */
+#explorer.lp input[type="checkbox"] { width: 18px; height: 18px; margin: 0; accent-color: var(--color-accent); }
+#explorer.lp .legend-row { min-height: 36px; }
+.lp-chip, .lp-chip-more, .lp-chips .lp-chip-clear { min-height: var(--control-sm); }
+/* The credit and the version (2.24): 24 px targets, the BPL navy at 600. */
+#explorer.lp .lab-link { min-height: var(--target-min); color: var(--bpl-navy); font-weight: 600; }
+.version-chip { display: inline-flex; align-items: center; gap: var(--space-1); }
+.badge-preview { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--color-info-bg); color: var(--color-info); font: 600 var(--fs-2xs)/1 var(--font-sans); }
+
+/* Map controls (2.12): zoom stacked top right, 40 px; the basemap segmented control beside it; scale bottom
+   left; attribution bottom right. Zoom, basemap and attribution move left of the tree panel when it opens. */
+.maplibregl-ctrl-group { overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-sm) !important; background: var(--color-surface); box-shadow: var(--shadow-1) !important; }
+.maplibregl-ctrl-group button { width: var(--control-md); height: var(--control-md); }
+@media (pointer: coarse) { .maplibregl-ctrl-group button { width: var(--target-touch); height: var(--target-touch); } }
+.maplibregl-ctrl-scale, .maplibregl-ctrl-attrib { font-family: var(--font-sans); }
+.maplibregl-ctrl-scale { font-size: var(--fs-2xs); }
+body .basemap-switch { z-index: var(--z-map-ui); gap: 2px; padding: 2px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-sunken); box-shadow: var(--shadow-1); font: 600 var(--fs-sm)/1 var(--font-sans); }
+body .basemap-switch button, body .basemap-switch:not(:hover) button:not(.active) { min-height: var(--control-sm); padding: 0 var(--space-3); border-radius: 6px; background: transparent; color: var(--color-text-secondary); font: inherit; }
+body .basemap-switch button:hover { background: var(--color-surface-tint-hover); color: var(--color-text); }
+body .basemap-switch button.active { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-1); }
+@media (min-width: 761px) {
+  body { --tree-w: 0px; }
+  body[data-profile-open="true"] { --tree-w: 400px; }
+  .maplibregl-ctrl-top-right { top: var(--panel-inset); right: calc(var(--panel-inset) + var(--tree-w)); transition: right var(--dur-slow) var(--ease-standard); }
+  .maplibregl-ctrl-top-right .maplibregl-ctrl { margin: 0; }
+  .maplibregl-ctrl-bottom-right, body[data-profile-open="true"] .maplibregl-ctrl-bottom-right { right: var(--tree-w); }
+  body .basemap-switch, body[data-aside-collapsed] .basemap-switch { top: var(--panel-inset); bottom: auto; left: auto; right: calc(var(--panel-inset) + var(--control-md) + var(--space-2) + var(--tree-w)); max-width: none; visibility: visible; transition: right var(--dur-slow) var(--ease-standard); }
+  /* The basemap exists once: on the map on desktop, in Layers on phones. */
+  #explorer.lp [data-group="basemap"] { display: none; }
+}
+/* With the tree panel open there is less map: the switch shows its active basemap and opens on hover or focus;
+   below 980 px it steps aside until the panel closes. */
+@media (min-width: 761px) and (max-width: 1279px) {
+  body[data-profile-open="true"] .basemap-switch:not(:hover):not(:focus-within) button:not(.active) { display: none; }
+}
+@media (min-width: 761px) and (max-width: 979px) {
+  body[data-profile-open="true"] .basemap-switch { visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) { .maplibregl-ctrl-top-right, body .basemap-switch { transition: none; } }
+@media (max-width: 760px) {
+  body .basemap-switch, body[data-aside-collapsed] .basemap-switch { display: none !important; }
+}
+
+/* Area (3.4): eyebrows, a 20 px title, captions at 12 px, 24 px targets. */
+#explorer.lp .area-kicker, #explorer.lp .area-card h3, #explorer.lp .area-card h4 { font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-accent); }
+#explorer.lp .area-head h2, #explorer.lp .area-head h3 { font: 700 var(--fs-xl)/1.2 var(--font-sans); letter-spacing: var(--ls-tight); }
+#explorer.lp .ar-row dd { font-weight: 600; font-variant-numeric: tabular-nums; }
+#explorer.lp .ar-row dd small { font: var(--text-caption); }
+#explorer.lp .ar-go { min-height: var(--target-min); padding: 2px 0; }
+#explorer.lp .area-highlight { font-size: var(--fs-sm); }
+#explorer.lp .area-card h3 .badge-estimate, #explorer.lp .ml-title .badge-estimate { text-transform: none; letter-spacing: 0; }
+/* About: version pills and the close button. */
+.about-versions .version-pill { font-weight: 600; }
+.about-close { font-size: var(--fs-lg); }
+/* The attribution never runs under the docked legend; the footer wraps the version under the credit. */
+@media (min-width: 761px) {
+  body:is([data-profile-open="true"], [data-profile-open="false"]) .maplibregl-ctrl-bottom-right > .maplibregl-ctrl-attrib.maplibregl-compact-show { box-sizing: border-box; max-width: calc(100vw - var(--tree-w) - var(--panel-explorer-w) - var(--panel-inset) * 2 - 24px); }
+}
+#explorer.lp .panel-foot { flex-wrap: wrap; row-gap: var(--space-1); padding-top: var(--space-1); padding-bottom: var(--space-1); }
+.version-chip { max-width: 100%; height: auto; min-height: var(--target-min); white-space: normal; text-overflow: clip; text-align: left; line-height: 1.3; }
+/* Filter rows: a long source name wraps instead of being cut short. */
+#explorer.lp .legend-row { height: auto; padding-top: var(--space-1-5); padding-bottom: var(--space-1-5); }
+#explorer.lp .legend-row .chip-label { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; line-height: 1.3; }
+/* Legend rows that show or hide their category (filter rows, design system 2.5): off = muted label, hollow swatch. */
+.ml-rows .ml-row { appearance: none; display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-2); width: calc(100% + var(--space-2) * 2);
+  min-height: var(--target-min); margin: 0 calc(var(--space-2) * -1); padding: 2px var(--space-2); border: 0; border-radius: var(--radius-sm); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ml-rows .ml-row:hover { background: var(--color-bg); }
+.ml-rows .ml-row:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.ml-rows .ml-row[aria-pressed="false"] .ml-label { color: var(--color-text-muted); }
+.ml-rows .ml-row[aria-pressed="false"] .sw { background: var(--color-surface); box-shadow: inset 0 0 0 1.5px var(--color-border-input); }
+.lp-legend .ml-rows .ml-row { display: inline-flex; width: auto; margin: 0; gap: var(--space-1-5); min-height: var(--target-touch); }
+.ml-rows li:has(> .ml-row) { display: block; }
+
+/* Legend rows grow with their text in every browser (12 Oct 2026). Safari does not always size a <button> laid out as
+   a grid to wrapped content, so a third line ("…outlined in the tree's colour") ran into the next row. Rows are now
+   top-aligned flex rows with auto height; the swatch sits on the first line. */
+.ml-rows li, .ml-rows .ml-row { height: auto; align-items: flex-start; }
+.ml-rows li:not(:has(> .ml-row)), .ml-rows .ml-row { display: flex; gap: var(--space-2); }
+.ml-rows .ml-row { box-sizing: border-box; }
+.ml-rows .sw { flex: none; margin-top: 3px; }
+.ml-rows .ml-label { flex: 1 1 auto; min-width: 0; display: block; white-space: normal; overflow-wrap: anywhere; line-height: 1.3; }
+.ml-rows .ml-label small { display: block; white-space: normal; line-height: 1.3; }
+.ml-rows .ml-count { flex: none; margin-left: auto; }
+.lp-legend .ml-rows li:not(:has(> .ml-row)), .lp-legend .ml-rows .ml-row { display: inline-flex; align-items: center; }
+.lp-legend .ml-rows .sw { margin-top: 0; }

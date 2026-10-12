@@ -5,32 +5,32 @@
     "status": "research_only_not_independently_validated",
     "public_claims_enabled": false,
     "software_version": "0.1.0",
-    "dataset_version": "metro-2026.10.10-pointcloud-v5.2",
-    "dataset_last_updated_utc": "2026-10-09T11:23:16.613147+00:00",
-    "metadata_generated_utc": "2026-10-09T11:23:16.613299+00:00",
-    "source_revision": "V5.2 record-to-crown links; method, precision and counts in data/record-links-v52.json",
+    "dataset_version": "metro-2026.10.12-pointcloud-v6",
+    "dataset_last_updated_utc": "2026-10-11T21:30:30.220087+00:00",
+    "metadata_generated_utc": "2026-10-11T21:30:30.220110+00:00",
+    "source_revision": "V6 growth form and smoothed crown outlines; rules, counts and service changes in data/growth-form-v6.json",
     "source_dirty": null
   },
   "dataset": {
     "extent_id": "auckland_metro",
     "new_pointcloud_tree_records": 399290,
     "evidence_tiers": {
-      "location_unverified": 647,
+      "location_unverified": 646,
       "possible": 59050,
       "probable": 914878,
-      "shared_crown_candidate": 2038092,
+      "shared_crown_candidate": 2038093,
       "unmatched": 846296,
       "very_likely": 2379457
     },
     "current_v5_service_records": 3352851,
     "tree_records": 6238420,
-    "current_map_markers": 3574825,
+    "current_map_markers": 3574824,
     "crown_records": 3523024,
     "pointcloud_v5_tree_crowns": 3352851,
     "near_canopy_candidates": 1499603,
     "display_roles": {
       "current_crown": 3353399,
-      "source_record": 34321,
+      "source_record": 34320,
       "earlier_detection": 625517,
       "outside_v5_coverage": 187105
     },
@@ -50,7 +50,24 @@
       "features": 534,
       "counted": 457,
       "low_canopy_not_counted": 77
-    }
+    },
+    "growth_form_v6": {
+      "scored_crowns": 3352099,
+      "display_keys": {
+        "evergreen_high": 1491608,
+        "evergreen_medium": 839983,
+        "not_determined": 580548,
+        "conifer": 144883,
+        "broadleaf": 136708,
+        "tree_fern": 71947,
+        "deciduous_likely": 39048,
+        "palm_c1": 19600,
+        "deciduous_high": 16913,
+        "palm_or_cabbage_tree": 10861
+      },
+      "mode": "full"
+    },
+    "current_service_records_reweighted_v6": 2918424
   },
   "headline_scope": {
     "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag and await confirmation; 77 drawn crowns 2–3 m tall are low canopy and not counted."
@@ -178,6 +195,18 @@
         "restored_associations_v51": 4661,
         "record_links_v52": 3088
       }
+    },
+    {
+      "component": "growth_form_v6",
+      "implementations": [
+        {
+          "id": "growth_form_v6_A2_C1or_A2robust",
+          "pick": "A2+or+robust"
+        }
+      ],
+      "counts": {
+        "scored_crowns": 3352099
+      }
     }
   ],
   "artifacts": [
@@ -187,24 +216,24 @@
       "last_modified_utc": "2026-09-23T03:41:23.737510+00:00"
     },
     {
-      "path": "data/trees_map_points.pmtiles",
-      "bytes": 1514669429,
-      "last_modified_utc": "2026-10-09T11:23:17.760713+00:00"
-    },
-    {
-      "path": "data/tree_crowns_pilot.pmtiles",
-      "bytes": 1909452121,
-      "last_modified_utc": "2026-10-09T11:23:17.760743+00:00"
-    },
-    {
-      "path": "data/properties.pmtiles",
-      "bytes": 233796320,
-      "last_modified_utc": "2026-10-09T11:23:17.760754+00:00"
-    },
-    {
       "path": "data/council_positions.pmtiles",
       "bytes": 1276632,
       "last_modified_utc": "2026-10-09T11:23:17.760762+00:00"
+    },
+    {
+      "path": "data/trees_map_points.pmtiles",
+      "bytes": 1557759680,
+      "last_modified_utc": "2026-10-11T21:30:30.220183+00:00"
+    },
+    {
+      "path": "data/tree_crowns_pilot.pmtiles",
+      "bytes": 1921221031,
+      "last_modified_utc": "2026-10-11T21:30:30.220201+00:00"
+    },
+    {
+      "path": "data/properties.pmtiles",
+      "bytes": 233734612,
+      "last_modified_utc": "2026-10-11T21:30:30.220215+00:00"
     }
   ],
   "provenance": {
@@ -215,11 +244,11 @@
     "web_crs": "EPSG:4326"
   },
   "assembly": {
-    "assembled_utc": "2026-10-09T11:23:17.722414+00:00",
-    "tile_version": "20261010-v5.2",
-    "database_mtime_ns": "1791543593040210150",
-    "mode": "verified_v52_record_link_rebuild",
-    "note": "Package links verified against the V5.1 release; SQL-regenerated linked records, hash-verified unchanged profiles and geometry; rebuilt map, property summaries, totals and KYTE nearby choices."
+    "assembled_utc": "2026-10-11T21:30:30.220117+00:00",
+    "tile_version": "20261012-v6",
+    "database_mtime_ns": "1791750846774552655",
+    "mode": "verified_v6_growth_form_build",
+    "note": "V5.2 streams, profiles and summaries with growth form, reweighted services and smoothed outlines; hash-verified unchanged files."
   },
   "derived_products": {
     "longitudinal_model": "data/longitudinal/model.json",
@@ -228,7 +257,9 @@
     "crown_association_audit": "data/crown-link-repair-v51.json",
     "property_summaries": "data/property_details/schema.json",
     "record_links": "data/record-links-v52.json",
-    "council_positions": "data/council_positions.pmtiles"
+    "council_positions": "data/council_positions.pmtiles",
+    "growth_form": "data/growth-form-v6.json",
+    "corrections_applied": "data/corrections-applied.json"
   },
   "previous_release": {
     "release": {
@@ -236,10 +267,10 @@
       "status": "research_only_not_independently_validated",
       "public_claims_enabled": false,
       "software_version": "0.1.0",
-      "dataset_version": "metro-2026.10.08-pointcloud-v5.1",
-      "dataset_last_updated_utc": "2026-10-08T19:05:31.395962+00:00",
-      "metadata_generated_utc": "2026-10-08T19:05:31.396116+00:00",
-      "source_revision": "V5.1 audited crown-continuity repair; method and policy in data/crown-link-repair-v51.json",
+      "dataset_version": "metro-2026.10.10-pointcloud-v5.2",
+      "dataset_last_updated_utc": "2026-10-09T11:23:16.613147+00:00",
+      "metadata_generated_utc": "2026-10-09T11:23:16.613299+00:00",
+      "source_revision": "V5.2 record-to-crown links; method, precision and counts in data/record-links-v52.json",
       "source_dirty": null
     },
     "dataset": {
@@ -247,21 +278,21 @@
       "new_pointcloud_tree_records": 399290,
       "evidence_tiers": {
         "location_unverified": 647,
-        "possible": 58516,
+        "possible": 59050,
         "probable": 914878,
-        "shared_crown_candidate": 2035538,
-        "unmatched": 849384,
+        "shared_crown_candidate": 2038092,
+        "unmatched": 846296,
         "very_likely": 2379457
       },
       "current_v5_service_records": 3352851,
       "tree_records": 6238420,
-      "current_map_markers": 3577365,
-      "crown_records": 3522567,
+      "current_map_markers": 3574825,
+      "crown_records": 3523024,
       "pointcloud_v5_tree_crowns": 3352851,
       "near_canopy_candidates": 1499603,
       "display_roles": {
-        "current_crown": 3352851,
-        "source_record": 37409,
+        "current_crown": 3353399,
+        "source_record": 34321,
         "earlier_detection": 625517,
         "outside_v5_coverage": 187105
       },
@@ -273,10 +304,18 @@
         "expected": 3149,
         "completed": 3149,
         "empty_tiles": 41
+      },
+      "crown_features": 3523101,
+      "current_service_records": 3540503,
+      "record_links_v52": 3088,
+      "record_seeded_crowns_v52": {
+        "features": 534,
+        "counted": 457,
+        "low_canopy_not_counted": 77
       }
     },
     "headline_scope": {
-      "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy."
+      "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag and await confirmation; 77 drawn crowns 2–3 m tall are low canopy and not counted."
     },
     "artifacts": [
       {
@@ -286,33 +325,40 @@
       },
       {
         "path": "data/trees_map_points.pmtiles",
-        "bytes": 1514269824,
-        "last_modified_utc": "2026-10-08T19:06:18.549695+00:00"
+        "bytes": 1514669429,
+        "last_modified_utc": "2026-10-09T11:23:17.760713+00:00"
       },
       {
         "path": "data/tree_crowns_pilot.pmtiles",
-        "bytes": 1908880293,
-        "last_modified_utc": "2026-10-08T19:06:18.549738+00:00"
+        "bytes": 1909452121,
+        "last_modified_utc": "2026-10-09T11:23:17.760743+00:00"
       },
       {
         "path": "data/properties.pmtiles",
-        "bytes": 233797554,
-        "last_modified_utc": "2026-10-08T19:06:18.549752+00:00"
+        "bytes": 233796320,
+        "last_modified_utc": "2026-10-09T11:23:17.760754+00:00"
+      },
+      {
+        "path": "data/council_positions.pmtiles",
+        "bytes": 1276632,
+        "last_modified_utc": "2026-10-09T11:23:17.760762+00:00"
       }
     ],
     "assembly": {
-      "assembled_utc": "2026-10-08T19:06:11.620997+00:00",
-      "tile_version": "20261008-v5.1",
-      "database_mtime_ns": "1791451209228810812",
-      "mode": "verified_v51_association_rebuild",
-      "note": "SQL-regenerated changed records, hash-verified unchanged profiles and geometry; rebuilt map, property summaries, totals and KYTE nearby choices."
+      "assembled_utc": "2026-10-09T11:23:17.722414+00:00",
+      "tile_version": "20261010-v5.2",
+      "database_mtime_ns": "1791543593040210150",
+      "mode": "verified_v52_record_link_rebuild",
+      "note": "Package links verified against the V5.1 release; SQL-regenerated linked records, hash-verified unchanged profiles and geometry; rebuilt map, property summaries, totals and KYTE nearby choices."
     },
     "derived_products": {
       "longitudinal_model": "data/longitudinal/model.json",
       "record_identity": "data/tree_details/schema.json",
       "kyte_nearby": "kyte/data/nearby/manifest.json",
       "crown_association_audit": "data/crown-link-repair-v51.json",
-      "property_summaries": "data/property_details/schema.json"
+      "property_summaries": "data/property_details/schema.json",
+      "record_links": "data/record-links-v52.json",
+      "council_positions": "data/council_positions.pmtiles"
     }
   },
   "v5_changes": [
@@ -364,5 +410,30 @@
     "4 drawn-crown links were excluded because their crown enclosed an existing V5 crown; those records are unchanged.",
     "V5 polygon geometry, including known holes and clipped boundaries, is unchanged. Record-seeded crowns are proposals until confirmed.",
     "A link does not certify that every record on a shared crown describes the same organism."
-  ]
+  ],
+  "v6_changes": [
+    "Growth form for 3,352,099 crowns: 2,771,551 shown, 580,548 not yet determined. Every shown growth form is a model estimate; recorded species stay the species shown.",
+    "Crowns are drawn with smoothed outlines of the same V5 cells (area preserved); V5.2 record-seeded crowns smoothed the same way.",
+    "Service estimates changed for 2,918,424 representatives (PHASE2_DECISION 13.9): reweighted by the growth-form probabilities where a call is shown (2,749,679), the flagged evergreen default where it is not (168,745, previously the legacy image-model class). Recorded species keep their estimates.",
+    "Display rules: r15 with the V2 palm guard (1,028 crowns), palm-type medium calls outside the isthmus shown as \"possibly\" (0), deciduous worded by flight date (late June from day 166).",
+    "Retained every V5.2 record, link, marker, source position, history, review decision, accepted KYTE visit, V5 growth-form field and service row (in the database)."
+  ],
+  "v6_limits": [
+    "Growth form is a coarse class, not a species. Shown calls were about 94% right on the 600-crown blind test outside the isthmus (design-weighted); conifer and palm-type cells rest on small samples.",
+    "Tree fern uses the V5 palm leaf area and trunk curve until a tree-fern value is chosen.",
+    "Crowns drawn from a record in V5.2, crowns outside the V5 survey and records without a crown have no growth-form estimate.",
+    "Outlines smooth the V5 cells; V5 crown boundaries and sizes are otherwise unchanged (crowns over 60 m² remain about 20% smaller than human outlines)."
+  ],
+  "corrections": {
+    "ledger_sha256": "da2d1f46c3d77fd568f0a5ea7fe976d57e6caefe4474e6db41f621cab29392ac",
+    "receipt": "data/corrections-applied.json",
+    "counts": {
+      "applied": 1,
+      "pending": 12,
+      "recorded_in_release": 18,
+      "awaiting_review": 5,
+      "already_in_release": 318
+    },
+    "note": "Reviewer corrections from config/corrections/corrections.jsonl applied after the build (corrections_v6.py)."
+  }
 }

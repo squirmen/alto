@@ -1,0 +1,253 @@
+/* ALTO tree experience ("Instrument dashboard", concept B, chosen 12 Oct 2026): the map's tree panel and the shared
+   instrument components. Built on the ALTO design system (tokens.css v1.0.0, loaded first): semantic colours, the
+   9-size type scale with four weights, the 4-px spacing grid, 40/44-px targets, the Estimate badge, the
+   provenance popover and the data-visualisation tokens. Scoped to .ti-scope so the left panel is untouched.
+   Marks on imagery are told apart by shape (outline, ring, dashed ring) and named in a key, never by colour alone. */
+.ti-scope { position: relative; font-family: var(--font-sans); color: var(--color-text); }
+
+/* ---------- design-system atoms used here ---------- */
+.ti-scope .badge { display: inline-flex; align-items: center; gap: var(--space-1); height: 22px; min-height: 0; padding: 0 var(--space-2); border: 0; border-radius: var(--radius-pill); font: 600 var(--fs-xs)/1 var(--font-sans); white-space: nowrap; }
+.ti-scope .badge .ico { width: 12px; height: 12px; }
+.ti-scope .badge-protected { background: var(--color-protected-fill); color: #fff; }
+.ti-scope .badge-muted { background: var(--color-surface-sunken); color: var(--color-text-secondary); }
+.ti-scope .badge-warning { background: var(--color-warning-bg); color: var(--color-warning); border: 1px solid var(--color-warning-border); }
+.ti-scope a.badge-link { color: var(--color-text-secondary); text-decoration: underline; text-decoration-color: var(--color-border-strong); text-underline-offset: 3px; min-height: 22px; }
+.ti-scope a.badge-link:hover { color: var(--color-text); background: var(--color-surface-tint); }
+.ti-scope a.badge-link:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.ti-scope .badge-estimate, .badge-estimate { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border: 1px dashed var(--color-estimate-border); border-radius: var(--radius-pill); background: transparent; color: var(--color-estimate); font: 500 var(--fs-xs)/1 var(--font-sans); white-space: nowrap; vertical-align: 2px; }
+.ti-scope .btn { min-height: var(--control-md); padding: 0 var(--space-3); gap: var(--space-2); border-radius: var(--radius-sm); border: 1px solid var(--color-border-input); background: var(--color-surface); color: var(--color-text); box-shadow: none; font: 600 var(--fs-md)/1.2 var(--font-sans); transition: background var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard); }
+.ti-scope .btn:hover { background: var(--color-surface-tint); border-color: var(--color-border-input); }
+.ti-scope .btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.ti-scope .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); box-shadow: none; }
+.ti-scope .btn-primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+.ti-scope .btn-quiet { background: transparent; border-color: transparent; color: var(--color-text-link); }
+.ti-scope .btn-quiet:hover { background: var(--color-surface-tint); }
+.ti-scope .tag { height: 18px; padding: 0 6px; border-radius: var(--radius-xs); background: var(--color-surface-sunken); color: var(--color-text-secondary); font: 600 var(--fs-xs)/1 var(--font-sans); letter-spacing: 0; text-transform: none; vertical-align: 1px; }
+.ti-scope code { font: 400 var(--fs-xs)/1.45 var(--font-mono); overflow-wrap: anywhere; }
+.ti-h, .ti-eyebrow { margin: 0; font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-muted); }
+.ti-skel { display: block; height: 12px; border-radius: var(--radius-xs); background: var(--color-surface-sunken); }
+.ti-skel-lg { height: 24px; width: 70%; margin: var(--space-1) 0; }
+.ti-status { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-def, .ti-missing, .ti-foot { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-cap { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-cap b { font-weight: 600; color: var(--color-text-secondary); }
+.ti-cap a, .ti-def a, .ti-foot a, .ti-prov a, .ti-matrix a, .ti-note a, .ti-list a, .ti-table a, .ti-kv a { color: var(--color-text-link); font-weight: 600; text-underline-offset: 2px; }
+.ti-ctx { margin: var(--space-3) 0 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); background: var(--color-surface-sunken); font: var(--text-label); color: var(--color-text-secondary); }
+.ti-ctx:empty { display: none; }
+.ti-kind { font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-secondary); }
+.ti-v { all: unset; cursor: pointer; border-radius: var(--radius-xs); text-decoration: underline dotted var(--color-border-input); text-underline-offset: 3px; }
+.ti-v:hover { text-decoration-color: var(--color-text-muted); }
+.ti-v:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.ti-v[aria-expanded="true"] { background: var(--color-surface-sunken); }
+
+/* ---------- key measurements: a band of stats ---------- */
+.ti-band { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin: 0; padding: 0; list-style: none; background: var(--color-border-subtle); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
+.ti-m { min-width: 0; background: var(--color-surface); transition: opacity var(--dur-base) var(--ease-standard); }
+.ti-m.is-dim { opacity: .45; }
+.ti-m-skel { display: grid; gap: var(--space-1); padding: var(--space-3); }
+.ti-m-b { all: unset; box-sizing: border-box; display: grid; align-content: start; gap: var(--space-1); width: 100%; height: 100%; min-height: 104px; padding: var(--space-2) var(--space-3) var(--space-3); cursor: pointer; color: var(--color-text); }
+.ti-m-b:hover { background: var(--color-surface-tint); }
+.ti-m-b:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.ti-m-b[aria-expanded="true"] { background: var(--color-surface-tint); box-shadow: inset 0 -2px 0 var(--color-accent); }
+.ti-m-l { font: var(--text-label); color: var(--color-text-secondary); }
+.ti-m-cur, .ti-m-alt { display: grid; gap: var(--space-1); }
+.ti-m-v { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 var(--space-1); }
+.ti-m-v b { font: var(--text-value-lg); font-variant-numeric: var(--numeric-data); letter-spacing: var(--ls-tight); }
+.ti-m-v small { font: 400 var(--fs-sm)/1.3 var(--font-sans); color: var(--color-text-muted); }
+.ti-m-v small.is-tight { margin-left: calc(-1 * var(--space-1)); }
+.ti-m-v .badge-estimate { margin-left: var(--space-1); }
+.ti-m-v.is-text b { font: 700 var(--fs-lg)/1.3 var(--font-sans); letter-spacing: 0; }
+.ti-m-v.is-none b { color: var(--color-text-muted); }
+.ti-m-p { font: var(--text-caption); color: var(--color-text-muted); }
+.ti-m-ctx { display: block; margin-top: var(--space-1); padding-top: var(--space-1); border-top: 1px solid var(--color-border-subtle); font: var(--text-caption); color: var(--color-text-muted); }
+.ti-m-ctx b { font-weight: 600; color: var(--color-text); }
+
+/* range bar: hairline track, range band, central value. Measured: solid sequential hue. Estimate: hatched, dashed. */
+.ti-rb, .ti-cb { position: relative; display: block; height: 12px; margin: 2px 0; }
+.ti-rb-t { position: absolute; left: 0; right: 0; top: 5px; height: 2px; border-radius: 1px; background: var(--viz-grid); }
+.ti-rb-r { position: absolute; top: 2px; height: 8px; box-sizing: border-box; border-radius: 2px; background: var(--viz-seq-200); border: 1px solid var(--viz-seq-600); }
+.ti-rb[data-kind="model"] .ti-rb-r, .ti-rb[data-kind="rule"] .ti-rb-r { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--color-estimate-border) 3px 4px); border: 1px dashed var(--color-estimate); }
+.ti-rb-v { position: absolute; top: 0; width: 3px; height: 12px; margin-left: -1.5px; border-radius: 1px; background: var(--viz-seq-700); box-shadow: 0 0 0 1.5px var(--color-surface); }
+.ti-rb[data-kind="model"] .ti-rb-v, .ti-rb[data-kind="rule"] .ti-rb-v, .ti-cb .ti-rb-v { background: var(--color-estimate); }
+.ti-rb[data-kind="recorded"] .ti-rb-v { background: var(--viz-cat-2); }
+.ti-cb-s { position: absolute; top: 3px; height: 6px; background: var(--color-surface-sunken); box-shadow: inset -2px 0 0 var(--color-surface); }
+.ti-cb-s:first-child { border-radius: 3px 0 0 3px; }
+.ti-cb-s:last-of-type { border-radius: 0 3px 3px 0; }
+.ti-cb-s.is-cur { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--color-estimate-border) 3px 4px); outline: 1px dashed var(--color-estimate); outline-offset: -1px; }
+.ti-cb-eq .ti-cb-s.is-cur { background: var(--color-estimate); outline: 0; }
+
+/* ---------- provenance popover ---------- */
+.ti-pop { position: absolute; z-index: var(--z-popover); width: 340px; max-width: calc(100% - 16px); padding: var(--space-3) var(--space-4) var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-2); }
+.ti-pop.is-sheet { position: fixed; left: var(--space-2); right: var(--space-2); bottom: var(--space-2); top: auto; width: auto; max-width: none; max-height: 70dvh; overflow-y: auto; }
+.ti-pop-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
+.ti-pop-head h3 { margin: var(--space-1) 0 0; font: var(--text-h3); color: var(--color-text); }
+.ti-pop-value { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-1) 0 var(--space-3); font: var(--text-value-lg); font-variant-numeric: var(--numeric-data); }
+.ti-x { all: unset; display: grid; place-items: center; flex: 0 0 auto; width: var(--control-md); height: var(--control-md); margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) 0 0; border-radius: var(--radius-sm); font: 400 20px/1 var(--font-sans); color: var(--color-text-muted); cursor: pointer; }
+.ti-x:hover { background: var(--color-surface-sunken); color: var(--color-text); }
+.ti-x:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.ti-prov { display: grid; gap: var(--space-2); margin: 0; }
+.ti-prov div { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: var(--space-3); }
+.ti-prov dt { font: var(--text-label); color: var(--color-text-muted); }
+.ti-prov dd { margin: 0; font: var(--text-label); color: var(--color-text); overflow-wrap: anywhere; }
+.ti-prov dd small { display: block; margin-top: 2px; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-copy { all: unset; display: inline-flex; align-items: center; min-height: var(--target-min); padding: 0 var(--space-1-5); border-radius: var(--radius-xs); font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-link); cursor: pointer; }
+.ti-copy:hover { background: var(--color-surface-tint); }
+.ti-copy:focus-visible { outline: 2px solid var(--color-focus); }
+
+/* ---------- survey years: the segmented control, and the linked figures ---------- */
+.ti-years { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 2px; border-radius: var(--radius-sm); background: var(--color-surface-sunken); }
+.ti-yb { all: unset; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: var(--space-1-5); min-height: var(--control-sm); padding: 0 var(--space-2); border-radius: calc(var(--radius-sm) - 2px); color: var(--color-text-secondary); cursor: pointer; white-space: nowrap; }
+.ti-yb b { font: 600 var(--fs-sm)/1 var(--font-sans); font-variant-numeric: var(--numeric-data); }
+.ti-yb span { font: 400 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); }
+.ti-yb:hover, .ti-yb.is-preview { background: color-mix(in srgb, var(--color-surface) 60%, transparent); }
+.ti-yb:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.ti-yb[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-1); }
+.ti-yb[aria-pressed="true"] span { color: var(--color-text-secondary); }
+.ti-fig { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-sans); }
+.ti-fig .ti-ax { stroke: var(--viz-axis); stroke-width: 1; fill: none; }
+.ti-fig .ti-grid { stroke: var(--viz-grid); stroke-width: 1; fill: none; }
+.ti-fig .ti-tk { font-size: 11px; fill: var(--viz-label); font-variant-numeric: tabular-nums; }
+.ti-fig .ti-strong { fill: var(--viz-value); font-weight: 600; }
+.ti-fig .ti-pf { fill: var(--viz-crown); }
+.ti-fig .ti-base path { stroke: var(--viz-bark); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.ti-fig .ti-hit { fill: transparent; }
+.ti-fig .ti-yr { cursor: pointer; }
+.ti-hfig .ti-yr path { stroke: var(--viz-reference); stroke-width: 1; opacity: .7; }
+.ti-hfig .ti-yr text { font-size: 11px; fill: var(--viz-label); font-variant-numeric: tabular-nums; }
+.ti-hfig .ti-yr.is-sel path { stroke: var(--color-selection); stroke-width: 2; opacity: 1; }
+.ti-hfig .ti-yr.is-sel text { fill: var(--viz-value); font-weight: 700; }
+.ti-hfig.ti-lbl-sel .ti-yr:not(.is-sel) text { display: none; }
+.ti-sfig .ti-yr circle { fill: var(--viz-seq-600); stroke: var(--color-surface); stroke-width: 2; }
+.ti-sfig .ti-yr.is-none circle { fill: var(--color-surface); stroke: var(--viz-label); stroke-width: 1.5; stroke-dasharray: 2 2; }
+.ti-sfig .ti-val { font-size: 12px; fill: var(--viz-value); font-variant-numeric: tabular-nums; }
+.ti-sfig .ti-yr.is-none .ti-val { fill: var(--viz-label); }
+.ti-sfig .ti-yr.is-sel circle { r: 7; fill: var(--color-selection); }
+.ti-sfig .ti-yr.is-none.is-sel circle { fill: var(--color-surface); stroke: var(--color-selection); stroke-dasharray: none; }
+.ti-sfig .ti-yr.is-sel .ti-val { font-weight: 700; }
+.ti-sfig.ti-lbl-sel .ti-yr:not(.is-sel) .ti-val { display: none; }
+.ti-sfig .ti-wh { stroke: var(--viz-seq-600); stroke-width: 1.5; fill: none; }
+.ti-sfig .ti-scen-band { fill: var(--color-surface-sunken); stroke: var(--color-estimate-border); stroke-dasharray: 3 2; }
+.ti-sfig .ti-scen-line { fill: none; stroke: var(--color-estimate); stroke-width: 1.5; stroke-dasharray: 4 3; }
+/* aerial chip: the 2024 outline dims when an earlier survey is selected; the matched point appears */
+.ti-chip { margin: 0; }
+.ti-chip .chip-frame { border-radius: var(--radius-sm); }
+.ti-chip .chip-outline { transition: opacity var(--dur-base) var(--ease-standard); }
+[data-year]:not([data-year="2024"]) .ti-chip .chip-outline { opacity: .6; }
+.ti-chip .chip-recorded { fill: none; stroke: var(--viz-overlay-position); stroke-width: 2.5; filter: drop-shadow(0 0 1px rgb(0 0 0 / 70%)); }
+.ti-chip .chip-mark { display: none; }
+.ti-chip .chip-mark.is-sel { display: inline; }
+.ti-chip .chip-mark circle { fill: none; stroke: var(--viz-overlay-alt); stroke-width: 2.5; stroke-dasharray: 4 3; filter: drop-shadow(0 0 1px rgb(0 0 0 / 80%)); }
+.ti-chip .chip-mark text { font: 700 12px/1 var(--font-sans); fill: #fff; paint-order: stroke; stroke: var(--viz-overlay-halo); stroke-width: 3px; }
+
+/* ---------- if it were lost ---------- */
+.ti-rgfig { max-width: 560px; }
+.ti-rgfig .ti-rg-bar { fill: var(--color-surface-sunken); stroke: var(--color-estimate); stroke-dasharray: 3 2; }
+.ti-rows { display: grid; gap: var(--space-3); margin: var(--space-2) 0 0; }
+.ti-row { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: var(--space-3); align-items: start; }
+.ti-row dt { font: var(--text-label); color: var(--color-text-muted); }
+.ti-row dd { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px var(--space-2); }
+.ti-row dd b { font: var(--text-value); font-variant-numeric: var(--numeric-data); color: var(--color-text); }
+.ti-row dd small { flex-basis: 100%; font: var(--text-caption); color: var(--color-text-muted); }
+
+/* ---------- comparisons ---------- */
+.ti-dist { max-width: 320px; }
+.ti-dist .ti-q1 { fill: var(--color-surface-sunken); }
+.ti-dist .ti-q2 { fill: var(--color-border-strong); }
+.ti-dist .ti-q3 { stroke: var(--viz-reference); stroke-width: 1.5; }
+.ti-dist .ti-dot { fill: var(--viz-label); opacity: .45; }
+.ti-dist .ti-me path { stroke: var(--color-selection); stroke-width: 2; }
+.ti-dist .ti-me circle { fill: var(--color-selection); stroke: var(--color-selection-halo); stroke-width: 2; }
+
+/* ---------- measurements by source ---------- */
+.ti-scroll { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.ti-scroll:focus-visible { outline: 2px solid var(--color-focus); }
+.ti-matrix { width: 100%; border-collapse: collapse; font: var(--text-label); font-variant-numeric: var(--numeric-data); }
+.ti-matrix th, .ti-matrix td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-subtle); text-align: left; vertical-align: top; }
+.ti-matrix thead th { font: 600 var(--fs-xs)/1.45 var(--font-sans); color: var(--color-text-secondary); background: var(--color-surface-sunken); border-bottom-color: var(--color-border-strong); vertical-align: bottom; }
+.ti-matrix thead th span { display: block; color: var(--color-text); }
+.ti-matrix thead th small { display: block; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-matrix thead th[data-year] { cursor: pointer; }
+.ti-matrix tbody th { position: sticky; left: 0; font: 600 var(--fs-sm)/1.3 var(--font-sans); color: var(--color-text); background: var(--color-surface); white-space: nowrap; }
+.ti-matrix td.num { text-align: right; white-space: nowrap; }
+.ti-matrix td small { display: block; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-matrix .ti-na { color: var(--color-text-muted); }
+.ti-matrix .ti-note { font: var(--text-caption); color: var(--color-text-muted); }
+.ti-matrix tr:last-child > * { border-bottom: 0; }
+.ti-matrix .is-sel { background: var(--color-surface-tint); }
+.ti-matrix thead th.is-sel { box-shadow: inset 0 3px 0 var(--color-selection); }
+
+/* ---------- the map's tree panel ---------- */
+@media (min-width: 761px) {
+  /* floating panel (design system 2.13, 3.1): opaque, 12 px from the viewport edges, radius and shadow, its own
+     scroll area under a fixed header; zoom, basemap and attribution step left of it (map.css reads --tree-w). */
+  body .tree-profile { top: var(--panel-inset); right: var(--panel-inset); bottom: var(--panel-inset); width: 400px; height: auto; max-height: calc(100dvh - 2 * var(--panel-inset)); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); overflow: hidden; }
+  body:not([data-profile-open="true"]) .tree-profile { transform: translateX(calc(100% + 2 * var(--panel-inset))); }
+  body[data-profile-open="true"] { --tree-w: calc(400px + var(--panel-inset)); }
+  body .tree-profile .tree-profile-head { border-bottom: 1px solid var(--color-border-subtle); }
+}
+.ti-scope.tp { padding: 0 0 var(--space-6); font-family: var(--font-sans); }
+.ti-scope.tp .tp-id { padding: var(--space-4) var(--space-4) var(--space-3); background: var(--color-surface); }
+.ti-scope.tp .tp-kicker { margin: 0 0 var(--space-1); font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-accent); }
+.ti-scope.tp .tp-name { margin: 0; font: var(--text-title-panel); letter-spacing: var(--ls-tight); color: var(--color-text); }
+.ti-scope.tp .tp-latin { margin: var(--space-1) 0 0; font: italic 400 var(--fs-md)/1.45 var(--font-sans); color: var(--color-text-secondary); }
+.ti-scope.tp .tp-model { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-scope.tp .tp-gf { margin: var(--space-2) 0 0; padding: 0; background: none; font: var(--text-label); color: var(--color-text-secondary); }
+.ti-scope.tp .tp-badges { display: flex; flex-wrap: wrap; gap: var(--space-1-5); margin: var(--space-3) 0 0; padding: 0; list-style: none; }
+.ti-scope.tp .tp-actions { display: grid; gap: var(--space-2); padding: 0 var(--space-4) var(--space-4); }
+.ti-scope.tp .tp-open { justify-content: space-between; min-height: var(--control-lg); font-size: var(--fs-lg); }
+.ti-scope.tp .tp-actions-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.ti-scope.tp .tp-actions-row .btn { flex: 1 1 auto; justify-content: center; padding: 0 var(--space-2); font-size: var(--fs-sm); white-space: nowrap; }
+.ti-scope.tp .tp-prot { margin: var(--space-2) 0 0; }
+.ti-scope.tp .tp-status { font: var(--text-caption); color: var(--color-text-accent); }
+.ti-scope.tp .tp-foot { display: grid; gap: var(--space-1); margin: var(--space-6) var(--space-4) 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-scope.tp .tp-foot code { font: var(--text-mono); overflow-wrap: normal; word-break: keep-all; }
+.ti-sec { padding: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
+.ti-sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin: 0 0 var(--space-3); }
+.ti-sec-head span { font: var(--text-caption); color: var(--color-text-muted); }
+.ti-linked { display: grid; grid-template-columns: minmax(0, 1fr) 92px; gap: var(--space-2); align-items: stretch; margin-top: var(--space-3); }
+.ti-linked.no-height { grid-template-columns: 1fr; }
+.ti-linked .ti-hfig { height: 100%; max-height: 230px; }
+.ti-know { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+.ti-know a { display: flex; align-items: center; min-height: var(--control-md); padding: var(--space-1-5) var(--space-3); border-radius: var(--radius-sm); border: 1px solid var(--color-border-input); color: var(--color-text); font: 600 var(--fs-sm)/1.3 var(--font-sans); text-decoration: none; }
+.ti-know a:hover { background: var(--color-surface-tint); }
+.ti-know a:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.ti-say { margin: var(--space-2) 0 0; font: var(--text-label); color: var(--color-text-secondary); }
+.ti-say:empty { display: none; }
+/* protection under the name (concept A) */
+.ti-prot { margin: var(--space-2) 0 0; font: var(--text-label); color: var(--color-text-secondary); }
+.ti-prot b { font-weight: 600; color: var(--color-text); }
+.ti-prot[data-protection="protected"] b { color: var(--color-protected); }
+/* the figure's key: each mark drawn as it appears, named in words */
+.ti-key { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin: var(--space-2) 0 0; padding: 0; list-style: none; font: var(--text-caption); color: var(--color-text-secondary); }
+.ti-key li { display: inline-flex; align-items: center; gap: var(--space-1-5); }
+.ti-sw { position: relative; display: inline-block; flex: none; width: 16px; height: 16px; border-radius: 3px; background: var(--neutral-700); }
+.ti-sw::after { content: ""; position: absolute; box-sizing: border-box; }
+.ti-sw-outline::after { inset: 3px; border: 2px solid var(--viz-overlay-focus); border-radius: 2px; }
+.ti-sw-ring::after { inset: 3px; border: 2px solid var(--viz-overlay-position); border-radius: 50%; }
+.ti-sw-dashed-ring::after { inset: 2px; border: 2px dashed var(--viz-overlay-alt); border-radius: 50%; }
+.ti-sw-line { background: none; }
+.ti-sw-line::after { left: 1px; right: 1px; top: 7px; height: 2px; background: var(--viz-reference); }
+.ti-sw-bar { background: none; }
+.ti-sw-bar::after { left: 1px; width: 10px; top: 5px; height: 6px; background: var(--viz-crown); border-radius: 1px; }
+.ti-sw-dot { background: none; }
+.ti-sw-dot::after { inset: 3px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px var(--neutral-0); }
+/* numbered links into the tree page (concept C) */
+.ti-pagelinks { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; counter-reset: none; }
+.ti-pagelinks a { display: grid; grid-template-columns: 24px minmax(0, auto) minmax(0, 1fr); align-items: baseline; gap: 0 var(--space-2); min-height: var(--target-min); padding: var(--space-1-5) var(--space-1); border-radius: var(--radius-sm); color: var(--color-text); text-decoration: none; }
+.ti-pagelinks a:hover { background: var(--color-surface-tint); }
+.ti-pagelinks a:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.ti-pl-n { font: 600 var(--fs-sm)/1.4 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); text-align: right; }
+.ti-pl-t { font: 600 var(--fs-sm)/1.4 var(--font-sans); color: var(--color-text-link); white-space: nowrap; }
+.ti-pl-d { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--text-caption); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); }
+@media (pointer: coarse) { .ti-yb, .ti-know a, .ti-scope .btn { min-height: var(--target-touch); } }
+@media (max-width: 759px) {
+  .tp .ti-band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tp .ti-band .ti-m-b { min-height: 96px; }
+  .ti-sec { padding: var(--space-3) var(--space-4); }
+}
+
+/* the selected survey year on a map (tree panel and tree page) */
+.tp-map-year { display: flex; align-items: center; gap: var(--space-1-5); pointer-events: none; }
+.tp-map-year i { width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 3px solid var(--viz-overlay-alt); box-shadow: 0 0 0 1.5px var(--viz-overlay-halo); }
+.tp-map-year span { padding: 2px var(--space-2); border-radius: var(--radius-pill); background: var(--color-surface-inverse); color: var(--color-text-inverse); font: 600 var(--fs-xs)/1.45 var(--font-sans); white-space: nowrap; }
+.tp-map-year.is-none i { border-style: dashed; }

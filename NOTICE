@@ -11,6 +11,8 @@ International (CC BY-NC 4.0); see docs/LICENSE.md.
 
 Third-party material keeps its own licence:
 - web/vendor/three/: three.js, MIT License (web/vendor/three/LICENSE).
+- web/fonts/: the Inter typeface (The Inter Project Authors), Latin subsets served as the family
+  "ALTO Inter", SIL Open Font License 1.1 (web/fonts/Inter-LICENSE-OFL.txt).
 - pipeline/base/config/notable_tree_identity_registry.json: features from Auckland Council's
   Notable Trees Overlay, Auckland Council open data, CC BY 4.0.
 - Data the pipeline downloads or produces from Auckland Council, Auckland Transport and

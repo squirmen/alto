@@ -20,7 +20,10 @@
   const SOURCE='akl-council-positions';
   const LAYER_IDS=['council-position-lines-casing','council-position-lines','council-positions'];
   const NOTE='Where the Council or other source recorded the tree, joined to the crown ALTO found it on.';
-  const COLOUR='#c46a12';
+  // The design system's slot 7 orange (palette.js, Council recorded positions): a hollow ring and a dashed line,
+  // marks no tree marker uses.
+  const P=root.ALTOPalette||(typeof require==='function'?require('./palette.js'):null);
+  const COLOUR=P.colour('positions','position');
   // The package's evidence sentences, so a tile that carries only the class reads the same.
   const edgeText=d=>d===null?'':` (${metres(d)} m from the crown edge)`;
   const CLASS={
@@ -74,7 +77,7 @@
     const lines=['==',['geometry-type'],'LineString'],width=['interpolate',['linear'],['zoom'],13,0.8,18,1.7];
     return [
       {...base,id:'council-position-lines-casing',type:'line',filter:lines,layout:{visibility:'none','line-cap':'round'},
-        paint:{'line-color':'#ffffff','line-width':['interpolate',['linear'],['zoom'],13,2,18,3.6],'line-opacity':0.55}},
+        paint:{'line-color':P.token('--neutral-0'),'line-width':['interpolate',['linear'],['zoom'],13,2,18,3.6],'line-opacity':0.55}},
       {...base,id:'council-position-lines',type:'line',filter:lines,layout:{visibility:'none','line-cap':'round'},
         paint:{'line-color':COLOUR,'line-width':width,'line-dasharray':[2,1.6],'line-opacity':0.95}},
       {...base,id:'council-positions',type:'circle',filter:['==',['geometry-type'],'Point'],

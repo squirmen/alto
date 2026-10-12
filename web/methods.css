@@ -1,0 +1,320 @@
+/* ALTO methods pages: one template for every methods and release-notes page (v5-methods.html,
+   v51-methods.html, v52-methods.html, and v6-methods.html when it ships).
+   Load after fonts.css (Inter as "ALTO Inter") and tokens.css. Every colour, size and space comes from
+   the design tokens (ALTO design system 1.0, DESIGN_SYSTEM.md §2.23, §2.24, §3.7, §3.8); the print
+   rules use the print ramp of §3.8.
+
+   Page anatomy (see v52-methods.html for every part in use):
+     .app-bar          ALTO mark linking to the map, the context ("Methods"), one secondary action
+     .doc-head         eyebrow, h1, release block (dl.release), lede
+     .toc              contents; a sticky column at 1100 px and wider, part of the page stack below that
+     .doc-body         sections (h2, optional h3) with stable ids, figures (.figure), tables (.data-table),
+                       footnote references (sup.fn) and the notes and sources section (#sources)
+     .site-footer      the Better Places Lab credit, once
+   The page sets --print-running on <html>: the running title printed at the foot of every page. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: var(--text-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+[tabindex="-1"]:focus { outline: none; }  /* skip-link target (main), not a control */
+a { color: var(--color-text-link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--color-accent-active); text-decoration-thickness: 2px; }
+code { font: var(--text-mono); overflow-wrap: anywhere; }
+img, svg { display: block; }
+[id] { scroll-margin-top: calc(var(--app-bar-h) + var(--space-4)); }
+
+.skip-link {
+  position: absolute; left: var(--space-2); top: calc(-1 * var(--space-16)); z-index: var(--z-skip-link);
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+  background: var(--color-surface); color: var(--color-text-link); font: var(--text-body-ui);
+}
+.skip-link:focus { top: var(--space-2); box-shadow: var(--shadow-2); }
+
+/* ---------- Layout ----------
+   One column below 1100 px; contents beside the page from 1100 px. The app bar and footer use the same
+   columns, so the mark lines up with the contents and the actions with the page's right edge. */
+.doc, .app-bar-inner, .site-footer-inner {
+  --card-pad: var(--space-10);
+  --toc-w: 13.75rem;
+  --page-col: minmax(0, calc(var(--prose-max) + 2 * var(--card-pad)));
+  display: grid;
+  grid-template-columns: var(--page-col);
+  justify-content: center;
+  column-gap: var(--space-10);
+  font: var(--text-body);
+}
+.doc { padding: var(--space-6) var(--space-4) var(--space-10); }
+.doc-head { grid-column: 1; grid-row: 1; }
+.toc { grid-column: 1; grid-row: 2; }
+.doc-body { grid-column: 1; grid-row: 3; }
+
+/* The page itself: one surface, drawn as head + contents + body stacked without gaps. */
+.doc-head, .toc, .doc-body { background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-8) var(--card-pad); }
+.doc-head { border-bottom: 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding-top: var(--space-10); padding-bottom: var(--space-6); }
+.toc { border-top: 1px solid var(--color-border-subtle); border-bottom: 0; padding-top: var(--space-5); padding-bottom: var(--space-5); }
+.doc-body { border-top: 1px solid var(--color-border-subtle); border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding-bottom: var(--space-10); }
+
+@media (min-width: 1100px) {
+  .doc, .app-bar-inner, .site-footer-inner { grid-template-columns: var(--toc-w) var(--page-col); }
+  .doc-head { grid-column: 2; grid-row: 1; }
+  .doc-body { grid-column: 2; grid-row: 2; }
+  .toc {
+    grid-column: 1; grid-row: 1 / span 2; align-self: start;
+    position: sticky; top: calc(var(--app-bar-h) + var(--space-6));
+    background: none; border: 0; padding: var(--space-2) 0 0;
+  }
+}
+@media (max-width: 759px) {
+  .doc, .app-bar-inner, .site-footer-inner { --card-pad: var(--space-6); }
+}
+@media (max-width: 599px) {
+  .doc, .app-bar-inner, .site-footer-inner { --card-pad: var(--space-4); }
+  .doc { padding: 0 0 var(--space-8); }
+  .doc-head, .toc, .doc-body { border-left: 0; border-right: 0; border-radius: 0; }
+  .doc-head { border-top: 0; padding-top: var(--space-6); }
+}
+
+/* ---------- App bar (design system §2.24) ---------- */
+.app-bar {
+  position: sticky; top: 0; z-index: var(--z-panel);
+  background: var(--color-app-bar-bg); color: var(--color-app-bar-fg);
+  border-bottom: 1px solid var(--color-border);
+}
+.app-bar-inner { padding: 0 var(--space-4); }
+.app-bar-row { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--space-3); min-height: var(--app-bar-h); }
+.app-bar-mark { display: inline-flex; align-items: center; min-height: var(--target-touch); border-radius: var(--radius-xs); }
+.app-bar-mark img { height: 28px; width: auto; }
+.app-bar-context { font: var(--text-label); color: var(--color-text-muted); padding-left: var(--space-3); border-left: 1px solid var(--color-border); }
+.app-bar-actions { margin-left: auto; display: flex; gap: var(--space-2); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: var(--control-sm); padding: 0 var(--space-3);
+  border-radius: var(--radius-sm); border: 1px solid var(--color-border-input);
+  background: var(--color-surface); color: var(--color-text);
+  font: var(--fw-semibold) var(--fs-sm)/1 var(--font-sans); text-decoration: none; white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-standard);
+}
+.btn:hover { background: var(--color-surface-tint); color: var(--color-text); }
+.btn svg { width: var(--icon-sm); height: var(--icon-sm); flex: none; }
+@media (max-width: 759px) { .btn { min-height: var(--target-touch); } }
+
+/* ---------- Page head: eyebrow, title, release block, lede ---------- */
+.eyebrow { font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-accent); margin: 0 0 var(--space-2); }
+.doc h1 { font: var(--text-h1); letter-spacing: var(--ls-tight); margin: 0; text-wrap: balance; }
+@media (max-width: 599px) { .doc h1 { font-size: var(--fs-2xl); } }
+
+/* Release block: what this page describes, as data. */
+.release {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: var(--space-3) var(--space-6);
+  margin: var(--space-5) 0 var(--space-6); padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);
+}
+.release > div { min-width: 0; }
+.release dt { font: var(--text-caption); color: var(--color-text-muted); }
+.release dd { margin: 2px 0 0; font: var(--text-value); font-variant-numeric: var(--numeric-data); }
+.release dd a { font-weight: var(--fw-semibold); }
+.release .release-id { grid-column: 1 / -1; }
+.release .release-id dd { font-weight: var(--fw-regular); color: var(--color-text-secondary); }
+.lede { margin: 0; }
+
+/* ---------- Contents ---------- */
+.toc-title { font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-muted); margin: 0 0 var(--space-2); }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); column-gap: var(--space-6); }
+.toc a {
+  display: flex; align-items: center; min-height: var(--target-touch); padding: var(--space-1) 0;
+  color: var(--color-text-link); font: var(--text-body-ui); text-decoration: none; border-bottom: 1px solid var(--color-border-subtle);
+}
+.toc a:hover { color: var(--color-accent-active); text-decoration: underline; }
+@media (min-width: 1100px) {
+  .toc ol { display: block; border-left: 2px solid var(--color-border-subtle); }
+  .toc a {
+    min-height: var(--target-min); margin-left: -2px; padding: var(--space-1-5) var(--space-3);
+    border-bottom: 0; border-left: 2px solid transparent; color: var(--color-text-muted); font: var(--text-label);
+  }
+  .toc a:hover { color: var(--color-text); border-left-color: var(--color-border-strong); text-decoration: none; }
+}
+
+/* ---------- Reading text ---------- */
+.doc-body > section + section { margin-top: var(--space-10); }
+.doc-body h2 { font: var(--text-h2); margin: 0 0 var(--space-3); text-wrap: balance; }
+.doc-body h3 { font: var(--text-h3); margin: var(--space-6) 0 var(--space-2); }
+.doc-body p, .doc-body ul, .doc-body ol { margin: 0 0 var(--space-4); max-width: var(--prose-max); }
+.doc-body p, .doc-body li { text-wrap: pretty; }
+.doc-body ul, .doc-body ol { padding-left: var(--space-6); }
+.doc-body li + li { margin-top: var(--space-2); }
+.doc-body li::marker { color: var(--color-text-muted); }
+.doc-body > section > :last-child { margin-bottom: 0; }
+dfn { font-style: normal; font-weight: var(--fw-semibold); }
+.ui-label { font-weight: var(--fw-semibold); }
+.num { font-variant-numeric: var(--numeric-data); }
+.nw { white-space: nowrap; }  /* keeps a range and its unit on one line */
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* Footnote references (provenance notes, design system §5) */
+sup.fn { font-size: var(--fs-xs); line-height: 0; vertical-align: super; margin-left: 1px; }
+sup.fn a { text-decoration: none; font-weight: var(--fw-semibold); padding: 0 2px; }
+sup.fn a:hover { text-decoration: underline; }
+
+/* ---------- Figures (design system §2.23) and tables (§2.9) ----------
+   Caption template: what it shows · source, release · method. Figures and tables share the caption style:
+   label ("Figure 1.", "Table 1.") in text colour, the rest muted. */
+.figure { margin: var(--space-6) 0; }
+.figure figcaption, .data-table caption, .table-note {
+  font: var(--text-caption); color: var(--color-text-muted); max-width: var(--prose-max); text-wrap: pretty;
+}
+.figure figcaption { margin-top: var(--space-3); }
+.caption-label { font-weight: var(--fw-semibold); color: var(--color-text); }
+
+.table-wrap { overflow-x: auto; margin: var(--space-6) 0 var(--space-2); }
+.table-wrap:focus-visible { outline-offset: 4px; }
+.data-table { width: 100%; border-collapse: collapse; font: var(--text-body-ui); color: var(--color-text-secondary); }
+.data-table caption { caption-side: top; text-align: left; padding-bottom: var(--space-2); }
+.data-table thead th {
+  font: var(--fw-semibold) var(--fs-xs)/var(--lh-snug) var(--font-sans); color: var(--color-text-muted);
+  text-align: left; vertical-align: bottom; padding: var(--space-2); border-bottom: 1px solid var(--color-border-strong);
+}
+.data-table td, .data-table tbody th { padding: var(--space-2); border-bottom: 1px solid var(--color-border-subtle); vertical-align: top; }
+.data-table tbody th { font: var(--text-body-ui); color: var(--color-text); text-align: left; }
+.data-table th:first-child, .data-table td:first-child { padding-left: 0; }
+.data-table .num { text-align: right; white-space: nowrap; }
+.table-note { margin: 0 0 var(--space-4); }
+@media (max-width: 599px) {
+  .data-table tbody th { position: sticky; left: 0; background: var(--color-surface); }
+}
+
+/* Dot plot with intervals: rows of categories, marks positioned on a shared numeric scale.
+   On .dotplot: --lo and --hi (the scale), --rows (number of rows). On a mark: --v (value);
+   on an interval: --a and --b. Data colours come from the categorical slots, in order. */
+.dotplot {
+  --label-w: 12.5rem; --row-h: 3.25rem;
+  --series-1: var(--viz-cat-1); --series-2: var(--viz-cat-2);
+  font: var(--text-label); color: var(--color-text-secondary);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.doc-body .dotplot-legend { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-6); list-style: none; margin: 0 0 var(--space-3); padding: 0; max-width: none; font: var(--text-caption); color: var(--color-text-secondary); }
+.doc-body .dotplot-legend li { display: inline-flex; align-items: center; gap: var(--space-2); margin: 0; }
+.dotplot-plot {
+  display: grid; grid-template-columns: var(--label-w) minmax(0, 1fr);
+  grid-template-rows: repeat(var(--rows), var(--row-h)) auto auto; column-gap: var(--space-4);
+  padding-right: var(--space-3);
+}
+.dotplot-lines { grid-column: 2; grid-row: 1 / span var(--rows); position: relative; border-bottom: 1px solid var(--viz-axis); }
+.dotplot-lines span { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -0.5px; background: var(--viz-grid); }
+.dotplot-label { grid-column: 1; align-self: center; color: var(--color-text); line-height: var(--lh-snug); }
+.dotplot-track { grid-column: 2; position: relative; }
+.dotplot-ticks { grid-column: 2; position: relative; height: var(--space-6); font: var(--text-caption); color: var(--viz-label); font-variant-numeric: var(--numeric-data); }
+.dotplot-ticks span { position: absolute; top: var(--space-1); transform: translateX(-50%); }
+.dotplot-title { grid-column: 2; font: var(--text-caption); color: var(--color-text-muted); margin: var(--space-1) 0 0; }
+.dotplot-lines span, .dotplot-ticks span, .dp, .dp-tag { left: calc((var(--v) - var(--lo)) / (var(--hi) - var(--lo)) * 100%); }
+/* Two lines per row: series 1 above, series 2 below. */
+.line-1 { top: 32%; }
+.line-2 { top: 70%; }
+/* A mark: a 24 px hit area holding the visible shape, ringed in the surface colour (2 px). */
+.dp { position: absolute; width: var(--target-min); height: var(--target-min); margin: calc(var(--target-min) / -2) 0 0 calc(var(--target-min) / -2); }
+.dp::before, .key::before { content: ""; position: absolute; box-shadow: 0 0 0 2px var(--color-surface); }
+.dp-s1::before, .key-s1::before { width: 9px; height: 9px; left: calc(50% - 4.5px); top: calc(50% - 4.5px); background: var(--series-1); transform: rotate(45deg); }
+.dp-s2::before, .key-s2::before { width: 10px; height: 10px; left: calc(50% - 5px); top: calc(50% - 5px); background: var(--series-2); border-radius: var(--radius-round); }
+/* An interval: a 2 px line with end caps, in the colour of its series. */
+.dp-ci {
+  position: absolute; height: 2px; margin-top: -1px; background: var(--series-2);
+  left: calc((var(--a) - var(--lo)) / (var(--hi) - var(--lo)) * 100%);
+  width: calc((var(--b) - var(--a)) / (var(--hi) - var(--lo)) * 100%);
+}
+.dp-ci::before, .dp-ci::after { content: ""; position: absolute; top: -4px; width: 2px; height: 10px; background: var(--series-2); }
+.dp-ci::before { left: -1px; }
+.dp-ci::after { right: -1px; }
+/* Legend keys repeat the marks: a diamond for series 1, a dot on its interval for series 2. */
+.key { position: relative; width: 24px; height: 12px; flex: none; }
+.key-s2 { background: linear-gradient(var(--series-2), var(--series-2)) center / 100% 2px no-repeat; }
+.key-s2::after { content: ""; position: absolute; left: 0; top: 1px; width: 2px; height: 10px; background: var(--series-2); box-shadow: 22px 0 0 var(--series-2); }
+/* Direct labels on the first row, and a note where a series has no value. Text wears text colours. */
+.dp-tag { position: absolute; transform: translate(calc(-100% - var(--space-3)), -50%); padding: 0 var(--space-1); background: var(--color-surface); font: var(--text-caption); color: var(--color-text-secondary); white-space: nowrap; }
+.dp-na { position: absolute; left: 0; transform: translateY(-50%); font: var(--text-caption); color: var(--color-text-muted); white-space: nowrap; }
+@media (max-width: 599px) {
+  .dotplot { --label-w: 7.5rem; --row-h: 3.75rem; }
+  .dp-tag { display: none; }
+}
+
+/* ---------- Notes and sources (provenance) ---------- */
+.notes { font: var(--text-body-ui); color: var(--color-text-secondary); }
+.notes li { padding-left: var(--space-1); }
+.notes li:target { background: var(--color-surface-tint); border-radius: var(--radius-xs); }
+.note-back { margin-left: var(--space-1); text-decoration: none; }
+.sources h3 { font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-muted); margin: var(--space-6) 0 0; }
+.doc-body .link-list { list-style: none; padding: 0; margin: 0 0 var(--space-2); max-width: none; font: var(--text-body-ui); }
+.doc-body .link-list li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-1) var(--space-4); margin: 0; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle); }
+.link-list a { font-weight: var(--fw-semibold); }
+.link-list .meta { font: var(--text-caption); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); }
+.link-list .meta code { font: var(--text-mono); }
+.link-list a[aria-current="page"] { color: var(--color-text); text-decoration: none; }
+
+/* ---------- Footer credit (design system §2.24, §8.2): once per page ---------- */
+.site-footer-inner { padding: 0 var(--space-4) var(--space-10); }
+.site-footer-body { grid-column: 1; padding: var(--space-4) var(--card-pad) 0; font: var(--text-caption); color: var(--color-text-muted); }
+@media (min-width: 1100px) { .site-footer-body { grid-column: 2; } }
+@media (max-width: 599px) { .site-footer-inner { padding: 0 0 var(--space-8); } }
+.site-footer-body p { margin: 0; }
+.site-footer-body .credit { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); }
+.site-footer-body p + p { margin-top: var(--space-1); }
+.footer-name strong { color: var(--color-text); font-weight: var(--fw-bold); }
+.site-footer a { display: inline-flex; align-items: center; min-height: var(--target-min); }
+.credit a.bpl { gap: var(--space-1-5); color: var(--bpl-navy); font-weight: var(--fw-semibold); text-decoration: none; }
+.credit a.bpl:hover { text-decoration: underline; }
+.credit .bpl svg { width: 14px; height: 14px; flex: none; }
+
+/* ---------- Print: A4 (design system §3.8) ---------- */
+@page {
+  size: A4;
+  margin: 15mm 15mm 18mm;
+  @bottom-left { content: var(--print-running, "ALTO methods"); font: 400 8pt/1.3 var(--font-sans); color: var(--neutral-600); vertical-align: top; padding-top: 4mm; }
+  @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 400 8pt/1.3 var(--font-sans); color: var(--neutral-600); vertical-align: top; padding-top: 4mm; }
+}
+@media print {
+  html, body { background: var(--neutral-0); }
+  body { font: 400 10.5pt/14pt var(--font-sans); color: var(--neutral-900); }
+  .skip-link, .app-bar-actions, .toc, .note-back { display: none; }
+  .app-bar { position: static; border-bottom: 0.5pt solid var(--neutral-200); }
+  .app-bar-inner, .doc, .site-footer-inner { display: block; padding: 0; }
+  .app-bar-row { min-height: 0; padding: 0 0 3mm; gap: 4mm; }
+  .app-bar-mark { min-height: 0; }
+  .app-bar-mark img { height: 12mm; }
+  .app-bar-context { font: 400 9pt/1.3 var(--font-sans); color: var(--neutral-600); border-left-color: var(--neutral-200); }
+  .doc-head, .doc-body { background: none; border: 0; border-radius: 0; padding: 0; }
+  .doc-head { padding-top: 7mm; }
+  .doc-body { padding-top: 4mm; }
+  .eyebrow { font-size: 8pt; color: var(--alto-green-700); }
+  .doc h1 { font: 700 25pt/1.15 var(--font-sans); color: var(--alto-green-700); }
+  .release { margin: 4mm 0 5mm; padding: 2.5mm 0; border-color: var(--neutral-200); gap: 2mm 6mm; grid-template-columns: repeat(4, auto); justify-content: start; break-inside: avoid; }
+  .release dt { font-size: 8pt; color: var(--neutral-600); }
+  .release dd { font-size: 9.5pt; }
+  .doc-body > section + section { margin-top: 7mm; }
+  .doc-body h2 { font: 700 16pt/1.25 var(--font-sans); color: var(--alto-green-700); break-after: avoid; page-break-after: avoid; }
+  .doc-body h3 { font: 700 11.5pt/1.3 var(--font-sans); color: var(--neutral-900); break-after: avoid; page-break-after: avoid; }
+  .doc-body p, .doc-body ul, .doc-body ol { max-width: none; margin-bottom: 3mm; orphans: 3; widows: 3; }
+  .doc-body li + li { margin-top: 1.5mm; }
+  a { color: inherit; text-decoration-color: var(--neutral-300); }
+  sup.fn a { color: var(--alto-green-700); }
+  .figure, .table-wrap, .notes li, .link-list li, .site-footer { break-inside: avoid; page-break-inside: avoid; }
+  .table-wrap { overflow: visible; }
+  .figure figcaption, .data-table caption, .table-note { font-size: 8pt; line-height: 1.35; color: var(--neutral-600); max-width: none; }
+  .data-table { font-size: 9pt; }
+  .data-table thead th { font-size: 8pt; border-bottom-color: var(--neutral-300); }
+  .data-table td, .data-table tbody th { border-bottom-color: var(--neutral-200); padding-top: 1.5mm; padding-bottom: 1.5mm; }
+  .dotplot { --row-h: 11mm; font-size: 8.5pt; }
+  .notes { font-size: 9pt; }
+  .notes a[href^="http"]::after { content: " " attr(href); font: 400 8pt/1.3 var(--font-mono); color: var(--neutral-600); word-break: break-all; }
+  .sources h3 { font-size: 8pt; margin-top: 5mm; }
+  .doc-body .link-list { font-size: 9pt; }
+  .site-footer-body { padding: 4mm 0 0; margin-top: 8mm; border-top: 0.5pt solid var(--neutral-200); font-size: 8pt; color: var(--neutral-600); }
+  .site-footer a { min-height: 0; }
+  .credit a.bpl::after { content: " · betterplaces.blogs.auckland.ac.nz"; font-weight: var(--fw-regular); color: var(--neutral-600); }
+}

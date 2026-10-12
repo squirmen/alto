@@ -7,14 +7,24 @@ ALTO brings Auckland Council and Auckland Transport tree registers, the notable 
 kauri observations and OpenStreetMap together with the 2024 LINZ aerial laser survey. Every
 vegetation crown at least 3 m tall is detected from the point cloud, drawn as a polygon with the
 help of aerial NDVI, linked to the register and other source records that describe it, and graded
-by how strong the evidence is. Each tree carries its height and crown, canopy history from the 2013 and 2016
-surveys where a match exists, estimates of trunk size, roots and environmental benefits, and the
-assumptions behind every estimate.
+by how strong the evidence is. Each tree carries its height and crown, a model estimate of its growth
+form, canopy history from the 2013 and 2016 surveys where a match exists, estimates of trunk size, roots
+and environmental benefits, and the assumptions behind every estimate.
 
-- **Map:** https://alto.tfwelch.com
-- **Release notes:** [v5.2](https://alto.tfwelch.com/v52-methods.html) (record-to-crown links),
+- **Map:** https://alto.tfwelch.com · every tree also has its own page (`tree.html?id=<tree id>`)
+  with its source records, key measurements and where each comes from, history, benefits, photos and
+  citation.
+- **Versions:** the interface (tool) and the data release are versioned separately and shown together;
+  the site now runs data release v6 with tool 0.2.1 ("Data v6 · Tool v0.2.1"). See
+  [`VERSIONING.md`](VERSIONING.md) and [`CHANGELOG.md`](CHANGELOG.md).
+- **Release notes:** [v6](https://alto.tfwelch.com/v6-methods.html) (growth form and smoothed crown
+  outlines), [v5.2](https://alto.tfwelch.com/v52-methods.html) (record-to-crown links),
   [v5.1](https://alto.tfwelch.com/v51-methods.html) (crown continuity repair),
   [v5](https://alto.tfwelch.com/v5-methods.html) (crown redraw)
+- **Growth form:** the 2024 survey's crowns carry a model estimate of their growth form (evergreen or
+  deciduous broadleaf, conifer, palm or cabbage tree, tree fern) or "Growth form not yet determined";
+  colour the map by it or filter on it. A recorded species always stays the species shown. See
+  [`docs/v6/growth-form.md`](docs/v6/growth-form.md).
 - **Data:** explore any tree on the map; field definitions are in
   [`docs/data-dictionary.md`](docs/data-dictionary.md). Bulk data is available to research
   partners on request.
@@ -28,22 +38,25 @@ assumptions behind every estimate.
 
 This is a research beta. The release is reproducible and openly documented, but it has not been
 independently validated. Read [`docs/v5/release-review.md`](docs/v5/release-review.md),
-[`docs/v52/linking.md`](docs/v52/linking.md) and
+[`docs/v52/linking.md`](docs/v52/linking.md), [`docs/v6/growth-form.md`](docs/v6/growth-form.md) and
 [`docs/methods/beta_known_limitations.md`](docs/methods/beta_known_limitations.md) before using
 any estimate for a decision.
 
 ## The current release
 
-v5.2 (`20261010-v5.2`, 10 October 2026). It keeps v5's crowns and adds two association releases on
-top: v5.1 restored 4,661 record-to-crown links that v5's containment rule had dropped, and v5.2 joined
-3,088 of the records still unlinked to the crowns they stand on.
+Data release v6 (`20261012-v6`, 12 October 2026), shown with tool 0.2.1. It keeps v5's crowns and the
+v5.1 and v5.2 links, and adds a model estimate of growth form for 3,352,099 v5 crowns, smooth crown
+outlines drawn around the same cells, and benefit estimates that use the growth form. Before it, v5.1 restored
+4,661 record-to-crown links that v5's containment rule had dropped, and v5.2 joined 3,088 of the records
+still unlinked to the crowns they stand on.
 
 | | |
 |---|---|
 | Tree records | 6,238,420 |
-| Trees on the map | 3,574,825 |
+| Trees on the map | 3,574,824 |
 | Current crowns from the 2024 survey (≥ 3 m) | 3,352,851, plus 457 drawn from a record in v5.2 |
 | Crowns counted, including earlier crowns outside the 2024 survey footprint | 3,523,024 |
+| Crowns with a model growth form (v6) | 2,771,551 of 3,352,099 scored; 580,548 not yet determined |
 | Records joined to a crown in v5.2 | 3,088: 1,043 linked, 1,456 probable, 589 on 534 crowns drawn from the record |
 | Associations restored in v5.1 | 4,661 across 4,362 crowns |
 | Protected or notable trees on the map | 3,570 |
@@ -52,7 +65,16 @@ top: v5.1 restored 4,661 record-to-crown links that v5's containment rule had dr
 
 Records outnumber trees because earlier detections, register entries and duplicates are all
 kept and linked rather than merged. Nothing provided by a source is deleted; uncertain trees are
-labelled instead.
+labelled instead. v6 has one tree fewer on the map than v5.2 because a reviewed correction moved a
+Council notable-tree record onto the crown its schedule entry describes.
+
+v6 growth form, from a fresh blind test outside the central isthmus and a blind visual audit before
+release: 81% of test crowns get a growth form and 94% of those are right; 0.899 of the calls the map
+would show were right in the audit (0.921 after the two weakest cells were withheld). Every call is a
+model estimate, never an identified species. Using the growth form moves the release totals by about
++NZ$3.19 million a year in estimated benefits (+1.1%), −114,500 t CO₂e of stored carbon (−3.3%) and
+−483,700 m³ a year of avoided runoff (−2.3%), mostly because crowns now called conifer were valued as
+evergreen broadleaf trees before.
 
 v5.2 link precision, from a hold-out on displaced records and a blind visual audit of real ones:
 linked 0.989 and 47 of 48; probable 0.936 and 33 of 37; crowns drawn from the record 31 of 37 (audit
@@ -74,10 +96,20 @@ pipeline/
           verification and deployment.
   v51/    Crown continuity repair: audit, repair, verification and the v5.1 release tools.
   v52/    Record-to-crown linking (linker/) and the v5.2 release tools.
-web/      The live map interface: MapLibre and PMTiles map, tree profiles, 3D tree forms,
-          ground evidence from KYTE, the Council recorded positions layer and the release notes pages.
-docs/     Methods, validation notes, the v5 release review, segmentation notes, the v5.1 repair and
-          v5.2 linking write-ups, and the data dictionary.
+  v6/     The growth-form interface test. The v6 scoring, outline and release code is not in this
+          repository yet; docs/v6/growth-form.md describes the method.
+  tool/   The interface build for the site (build_web_beta.py), the tree page's per-release
+          comparison and history tables, LiDAR point crops (not read by the public pages) and the
+          interface tests.
+web/      The interface (tool) source: the MapLibre and PMTiles map with its tree panel, search, legend
+          and Area dashboard, the tree page (tree.html), growth form, ground evidence from KYTE, the
+          Council recorded positions layer and the release notes pages. Version in web/version.js. The
+          3D tree-form modules (tree-architecture.js, tree-webgl.mjs, vendor/three) are kept but not
+          loaded by the 0.2 pages.
+docs/     Methods, validation notes, the v5 release review, segmentation notes, the v5.1 repair,
+          v5.2 linking and v6 growth-form write-ups, the tree record schema (docs/tool) and the data
+          dictionary.
+CHANGELOG.md, VERSIONING.md   Tool and data release history, and how each is versioned.
 ```
 
 ## How a release is built
@@ -116,8 +148,25 @@ docs/     Methods, validation notes, the v5 release review, segmentation notes, 
    positions layer, `build_v52.py` merges the package into the v5.1 release after re-checking every link against it,
    and `verify_v52.py`, `publish_v52.py` and `smoke_v52.py` check, publish and test it. See
    [`docs/v52/linking.md`](docs/v52/linking.md).
+8. **v6 growth form and smoothed outlines.** A gradient-boosted classifier scores the v5 crowns from their
+   LiDAR structure, its setting and image embeddings of the 2024 aerial imagery, with a separate palm
+   detector; display rules show a growth form only where calls of that kind tested right often enough, and
+   a blind audit before release withheld two more cells. Crowns are redrawn as area-preserving smooth
+   outlines of the same cells, and the benefit estimates are weighted by the growth-form probabilities. A
+   corrections stage then applies reviewed decisions from a ledger and publishes a receipt. The code for
+   this step is not in this repository yet; see [`docs/v6/growth-form.md`](docs/v6/growth-form.md).
 
 `pipeline/v51` and `pipeline/v52` each have a README with the order of their steps and the inputs they expect.
+
+The interface is versioned and released on its own (see [`VERSIONING.md`](VERSIONING.md)).
+`pipeline/tool/build_web_beta.py --out <folder> --public --site-root . --channel release --version 0.2.1`
+(with `--derived <folder>` for each data release's tables) turns `web/` into the copy served at the site
+root: it stamps script URLs with the tool version, reads the data release's cache stamp at run time, adds
+`tool-build.json`, `changelog.html` and `versioning.html`, and leaves the data release's own files
+(`release-metadata.json`, `v6-methods.html`) to the data release. Without `--public` it builds a
+self-contained copy for a sub-path such as `/beta/`. `build_tree_context.py` and
+`build_tree_history.py` build the tree page's per-release comparison and history tables
+([`docs/tool/tree-record.md`](docs/tool/tree-record.md)).
 
 Per-tree records are split into 65,536 hashed buckets (`reshard_tree_details.py`) so a profile
 loads about 60 KB rather than a whole region.
@@ -150,10 +199,15 @@ from the environment:
 cd pipeline/v5 && python -m unittest test_near_canopy_v5 test_upload_v5 test_v5_geometry_and_inputs
 cd pipeline/v5 && node test_v5_ui.cjs && node test_property_ui.cjs && node test_record_links_ui.cjs
 cd pipeline/v51 && python -m unittest test_crown_link_repair
+cd pipeline/tool && for t in test_*.cjs; do node "$t"; done
+cd pipeline/v6 && node test_growth_form_ui.cjs
 cd pipeline/base && python -m pytest tests
 ```
 
-The v5 and v5.1 tests and the interface tests pass. In the base suite, two failures are known and
+The v5 and v5.1 tests and the interface tests pass, with one known exception: the growth-form test
+still expects one legend row per filter group, but the 0.2 legend shows "Not determined or not
+estimated" as a single row. The tool tests cover the tree record, the tree panel and page, search, and
+the map's colours under simulated colour-vision deficiencies. In the base suite, two failures are known and
 open: the deploy gate notes that the base web build does not ship the v5 near-canopy tiles, and one
 tile-attestation edge case does not yet reject a pre-existing stale tile. `test_growth_form_abstention.py` can abort inside a
 native library on some builds of the scientific stack.
@@ -190,16 +244,17 @@ commercial.
   them for noncommercial purposes with credit.
 - **Commercial use**, including paid services, consulting deliverables or products built on ALTO's
   code, needs a separate licence from the University of Auckland. Contact Tim Welch.
-- **Third-party material** keeps its own terms: three.js (MIT), and Auckland Council, Auckland
-  Transport, LINZ (CC BY 4.0) and OpenStreetMap (ODbL) data. See [`NOTICE`](NOTICE).
+- **Third-party material** keeps its own terms: three.js (MIT), the Inter typeface (SIL Open Font
+  License 1.1), and Auckland Council, Auckland Transport, LINZ (CC BY 4.0) and OpenStreetMap (ODbL)
+  data. See [`NOTICE`](NOTICE).
 
 When you use ALTO, cite it as below.
 
 ## Citing ALTO
 
 Use the citation in [`CITATION.cff`](CITATION.cff), or "Welch, T. F. (2026). ALTO: Aotearoa
-Long-term Tree Observatory, Auckland release v5.2. Better Places Lab, University of Auckland.
-https://alto.tfwelch.com".
+Long-term Tree Observatory, Auckland release v6, tool 0.2.1. Better Places Lab, University of Auckland.
+https://alto.tfwelch.com". Each tree page gives a citation for that tree with the data and tool versions.
 
 ## Contact
 

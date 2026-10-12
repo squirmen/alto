@@ -35,7 +35,7 @@ const html=P.render({property,trees:[{tree_id:'t1',total_value_nzd_y:56.5,height
 assert.ok(html.includes('1/110 Bayswater Avenue'));
 assert.ok(html.includes('$62/yr') && html.includes('$25 to $100'));
 assert.ok(html.includes('not counted above') && html.includes('3.1 m outside'));
-assert.ok(html.includes('not a valuation') && html.includes('not ownership'));
+assert.ok(html.includes('no property valuation') && html.includes('ownership records not used'));
 assert.ok(html.includes('LINZ') && html.includes('ODbL') && html.includes('Department of Conservation') && html.includes('golf courses'));
 assert.ok(!html.includes('data-property-rings'),'a full tree list needs no ring note');
 const many=P.render({property:{...property,n_trees:418,trees_truncated:1},trees:Array.from({length:300},(_,i)=>({tree_id:'t'+i,total_value_nzd_y:1}))},{pid:'1'});

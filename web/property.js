@@ -128,7 +128,7 @@
     return `<ol class="property-trees">${head}</ol>`+(rest?`<ol class="property-trees" hidden>${rest}</ol><button type="button" class="property-more" data-property-more>Show all ${nf(rows.length)}</button>`:'');
   }
   const SOURCES='<p class="pp-note property-sources">Parcels: <a href="https://data.linz.govt.nz/layer/50823" target="_blank" rel="noopener noreferrer">LINZ NZ Primary Parcels</a>, CC BY 4.0. Zones, designations and park extents: Auckland Council, CC BY 4.0. Conservation land: Department of Conservation, CC BY 4.0. Addresses, golf courses and island roads © OpenStreetMap contributors, ODbL.</p>';
-  const CAVEAT='<p class="property-caveat"><strong>Estimates, not a valuation.</strong> Trees and their services come from aerial surveys and models. Land type is inferred from zoning and parcel records, not ownership.</p>';
+  const CAVEAT='<p class="property-caveat"><strong>Model estimates from aerial surveys; no property valuation.</strong> Land type: inferred from zoning and parcel records; ownership records not used.</p>';
 
   function render(record,{pid,address=null,tile=null}={}){
     const p=record?.property,trees=record?.trees||[],street=record?.street_trees||[];
@@ -164,7 +164,7 @@
         ${p.trees_truncated?`<p class="pp-note">Listing the ${nf(trees.length)} highest-value of ${nf(p.n_trees)} trees; the totals above include them all.</p><p class="pp-note" data-property-rings>At this zoom the map may ring only these ${nf(trees.length)}. Zoom in until the parcel outline appears to ring all ${nf(p.n_trees)}.</p>`:''}
         ${p.n_earlier_not_counted?`<p class="pp-note">${nf(p.n_earlier_not_counted)} earlier ${p.n_earlier_not_counted===1?'detection is':'detections are'} not counted (see Layers › Earlier unmatched detections).</p>`:''}
       </div>`;
-    }else html+=`<div class="pp-section"><p class="pp-note">No counted tree stands on this parcel.${p.canopy_m2>0?' The canopy above comes from trees rooted next door or on the street.':''}</p></div>`;
+    }else html+=`<div class="pp-section"><p class="pp-note">No counted trees on this parcel.${p.canopy_m2>0?' Canopy from neighbouring or street trees.':''}</p></div>`;
     if(street.length){
       html+=`<div class="pp-section"><div class="pp-section-title">Street trees just outside · not counted above</div>${list(street,true,5)}
         <p class="pp-note">${nf(p.n_street_nearby)} street ${p.n_street_nearby===1?'tree stands':'trees stand'} within 10 m of the boundary, worth about ${money(p.street_nearby_value_nzd_y)} a year to the street.</p></div>`;

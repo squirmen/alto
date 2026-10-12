@@ -1,1 +1,132 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ALTO · V5 release notes</title><style>body{font:17px/1.65 system-ui,sans-serif;color:#23372b;background:#f2f5ef;margin:0}main{max-width:780px;margin:32px auto;padding:28px;background:white;border-radius:18px}img{width:180px;max-width:70%}a{color:#3e693c}h1{line-height:1.2}h2{font-size:1.25em;margin-top:1.8em}li{margin:.5em 0}@media(max-width:600px){main{margin:0;border-radius:0;padding:22px}}</style><main><a href="./"><img src="./alto-logo.png" alt="ALTO"><p>← Return to the Auckland map</p></a><h1>Auckland canopy redraw · V5</h1><p>3,352,851 tree-height crowns and 1,499,603 lower-vegetation candidates across all 3,149 completed survey tiles.</p><h2>What changed</h2><p>V5 combines the 2024 laser survey with aerial NDVI to redraw the canopy. One map marker represents each current crown. Source inventories and earlier detections remain separate records, linked through their positions and overlapping crown boundaries.</p><p>The new tree layer uses a 3 m height threshold. You can also explore 2–3 m canopy, vegetation below 2 m, and crowns at least 5 m wide. Those lower layers do not contribute to tree service totals.</p><h2>Keep the history</h2><p>Every earlier ALTO ID remains available. Older dimensions, foliage profiles, neighbourhood statistics, service scenarios and survey histories are kept in the full record. V4 and v5 redraw the same survey, so a change in the number of crowns does not establish a tree loss, new planting or biological growth.</p><p>Areas outside the v5 footprint keep their earlier canopy records. Inside the footprint, earlier detections without a unique new crown can be switched on separately.</p><h2>Tree identity and notable locations</h2><p>Records are linked using the actual crown boundary. This is spatial evidence: one crown may contain several trunks or trees. Unverified Council notable-tree points stay at their source locations and are excluded from automatic crown matching.</p><p>ALTO retains its stable IDs when Council identifiers change. The source crosswalk records the old and current identifiers. The Devonport Primary plaque report is attached to the observer-selected tree, with the schedule association still marked for confirmation.</p><h2>Dimensions and estimates</h2><p>Current profiles and 3D illustrations use the new crown dimensions. Existing service equations are recalculated once per crown representative. Their assumptions, including uncalibrated trunk and carbon coefficients, remain visible. Earlier estimates are available alongside them.</p><p>Root extents remain scenarios. The current estimates use crown and estimated trunk size, with known paving where available. Neighbouring crowns are no longer treated as measured boundaries between root systems. Effective root extent remains unknown where paving inputs are missing.</p><p>Forecasts start at the current canopy height and reuse the earlier fitted model. Its original benchmark is retained; transfer to the v5 redraw has not yet been validated. Nearby-history weighting awaits refreshed spatial matching. Older observed changes are kept separate from the new starting height.</p><h2>What still needs checking</h2><p>The small reference benchmark found fewer splits with v5, but does not establish region-wide detection precision. Large spreading and multi-stem trees can still be split or partly trimmed. A photographed Kermadec pōhutukawa remains a recorded example to investigate.</p><p>Summed crown area includes overlaps. It should not be read as land-cover percentage or compared directly with a Council canopy-cover percentage. The board-level cover and historical-change overlays retain their earlier methods and dates.</p><p>Three self-intersecting polygons were repaired and four recorded areas were aligned with their saved outlines. These small corrections are logged in the build; the original segmentation files remain intact.</p><h2>Contribute a measurement</h2><p><a href="./kyte/">Open KYTE</a> to record photos and observations. A trunk circumference, a clear whole-tree photograph and a confirmed species can help test the estimates. Saved visits keep their original tree IDs.</p></main></html>
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · Release 5 · Redrawing Auckland’s canopy"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods: redrawing Auckland’s canopy (release 5) · ALTO</title>
+<meta name="description" content="How ALTO release 5 redrew Auckland’s tree crowns from the 2024 LiDAR survey and aerial NDVI: what changed, earlier records, tree identity, estimates and what still needs checking.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.0">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.0">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.0">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./alto-logo.png" alt="ALTO map" width="3934" height="1170"></a>
+      <span class="app-bar-context">Methods</span>
+      <nav class="app-bar-actions" aria-label="Page actions">
+        <a class="btn" href="./"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Map</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">Methods and release notes</p>
+    <h1>Redrawing Auckland’s canopy</h1>
+    <dl class="release">
+      <div><dt>Release</dt><dd>5</dd></div>
+      <div><dt>Published</dt><dd><time datetime="2026-09-23">23 Sep 2026</time></dd></div>
+      <div><dt>Previous release</dt><dd>4 · 18 Sep 2026</dd></div>
+      <div><dt>Next release</dt><dd><a href="./v51-methods.html">5.1 · 8 Oct 2026</a></dd></div>
+      <div class="release-id"><dt>Dataset ID</dt><dd><code>metro-2026.09.23-pointcloud-v5</code></dd></div>
+    </dl>
+    <p class="lede">Release 5 contains 3,352,851 crowns of tree height and 1,499,603 lower-vegetation candidates, across all 3,149 completed tiles of the 2024 LiDAR survey (an airborne laser survey).</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#crown-outline">What changed</a></li>
+      <li><a href="#earlier-records">Earlier records</a></li>
+      <li><a href="#record-links">Tree identity and protected-tree positions</a></li>
+      <li><a href="#estimates">Dimensions and estimates</a></li>
+      <li><a href="#limits">What still needs checking</a></li>
+      <li><a href="#ground-visits">Ground visits and contributions</a></li>
+      <li><a href="#sources">Notes and sources</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="crown-outline">
+      <h2>What changed</h2>
+      <p>Release 5 combines the 2024 LiDAR survey with aerial NDVI (normalised difference vegetation index) to redraw the canopy.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup> Each current crown is shown as one tree on the map. Source records and earlier detections remain separate records, linked through their positions and overlapping crown boundaries.</p>
+      <p>The new tree layer uses a 3&nbsp;m height threshold. Separate layers show canopy <span class="nw">2–3&nbsp;m</span> tall, vegetation below 2&nbsp;m, and crowns at least 5&nbsp;m wide. Those lower layers do not contribute to benefit totals.</p>
+    </section>
+
+    <section id="earlier-records">
+      <h2>Earlier records</h2>
+      <p>Every earlier tree ID remains available. Older dimensions, foliage profiles, neighbourhood statistics, benefit scenarios and survey histories are kept in the full record. Releases 4 and 5 redraw the same survey, so a change in the number of crowns does not establish tree loss, new planting or biological growth.</p>
+      <p>Areas outside the release 5 coverage keep their earlier crown records. Inside the coverage, earlier detections without a unique new crown can be switched on separately.</p>
+    </section>
+
+    <section id="record-links">
+      <h2>Tree identity and protected-tree positions</h2>
+      <p>Records are linked using the actual crown boundary. This is spatial evidence: one crown may contain several trunks or trees. Unverified Notable Trees schedule positions stay at their source locations and are excluded from automatic crown matching.</p>
+      <p>ALTO retains its stable tree IDs when Council record IDs change. The source crosswalk records the old and current record IDs. The Devonport Primary plaque report is attached to the tree the observer selected; its link to the Notable Trees schedule is still marked for confirmation.</p>
+    </section>
+
+    <section id="estimates">
+      <h2>Dimensions and estimates</h2>
+      <h3 id="benefits">Dimensions and benefits</h3>
+      <p>Tree panels and 3D illustrations use the new crown dimensions. Existing benefit equations are recalculated once per crown representative. Their assumptions, including uncalibrated trunk and carbon coefficients, remain visible. Earlier estimates are available alongside them.</p>
+      <h3 id="trunk-diameter">Trunk diameter</h3>
+      <p>Trunk diameter (DBH) is the diameter at 1.3 m above the uphill ground. No trunk in this release was measured: it holds two model estimates for each crown, one from crown size and height and one from the benefit equations. The tree panel and tree page show their median as the central estimate, marked Estimate, with the two models as its range. A trunk measured at a reviewed KYTE ground visit replaces both.</p>
+      <h3 id="roots">Root scenarios</h3>
+      <p>Root extents remain scenarios. The current estimates use crown and estimated trunk size, with known paving where available. Neighbouring crowns are no longer treated as measured boundaries between root systems. Effective root extent remains unknown where paving inputs are missing.</p>
+      <p>The root protection radius is 12 times the trunk diameter, with the area capped at 707 m² (a 15 m radius). The tree panel and tree page draw it from the central trunk estimate, with the range the two trunk models give. It is a planning scenario, not a measured root extent.</p>
+      <h3 id="forecasts">Forecasts</h3>
+      <p>Forecasts start at the current height and reuse the earlier fitted model. Its original benchmark is retained; its transfer to the release 5 redraw has not yet been validated. Nearby-history weighting awaits refreshed spatial matching. Older observed changes are kept separate from the new starting height.</p>
+    </section>
+
+    <section id="limits">
+      <h2>What still needs checking</h2>
+      <p>The small reference benchmark found fewer splits with release 5. It does not establish region-wide detection precision.<sup class="fn"><a href="#note-1" id="ref-1b" aria-label="Note 1">1</a></sup> Large spreading and multi-stem trees can still be split or partly trimmed. A photographed Kermadec <span lang="mi">pōhutukawa</span> remains a recorded example to investigate.</p>
+      <p>Summed crown area includes overlaps. It should not be read as a land-cover percentage or compared directly with a Council canopy cover percentage. The local board canopy cover and historical-change overlays retain their earlier methods and dates.</p>
+      <p>Three self-intersecting polygons were repaired and four recorded areas were aligned with their saved outlines. These small corrections are logged; the original segmentation files remain intact.<sup class="fn"><a href="#note-2" id="ref-2" aria-label="Note 2">2</a></sup></p>
+    </section>
+
+    <section id="ground-visits">
+      <h2>Ground visits and contributions</h2>
+      <p>Ground visits are recorded in <a href="./kyte/">KYTE</a>: photos, notes and measurements made at the tree. A trunk circumference, a clear photograph of the whole tree and a confirmed species can help test the estimates. Saved visits keep their original tree IDs.</p>
+    </section>
+
+    <section id="sources" class="sources">
+      <h2>Notes and sources</h2>
+      <ol class="notes">
+        <li id="note-1">The segmentation method and its benchmark: <a href="https://github.com/squirmen/alto/blob/main/docs/v5/segmentation.md">Crown segmentation for ALTO</a>, ALTO code repository. <a class="note-back" href="#ref-1" aria-label="Back to note 1 in the text">↑</a></li>
+        <li id="note-2">Release checks, corrections and the notes reconciled before release: <a href="https://github.com/squirmen/alto/blob/main/docs/v5/release-review.md">Release 5 review</a>, ALTO code repository. <a class="note-back" href="#ref-2" aria-label="Back to note 2 in the text">↑</a></li>
+      </ol>
+      <h3>Files</h3>
+      <ul class="link-list">
+        <li><a href="./data/tree_details/schema.json">Full-record schema</a><span class="meta"><code>data/tree_details/schema.json</code></span></li>
+        <li><a href="./release-metadata.json">Release metadata</a><span class="meta"><code>release-metadata.json</code> · current release</span></li>
+      </ul>
+      <h3>Releases</h3>
+      <ul class="link-list">
+        <li><a href="./v52-methods.html">Linking records to crowns</a><span class="meta">Release 5.2 · 10 Oct 2026</span></li>
+        <li><a href="./v51-methods.html">Restoring links between records and crowns</a><span class="meta">Release 5.1 · 8 Oct 2026</span></li>
+        <li><a href="./v5-methods.html" aria-current="page">Redrawing Auckland’s canopy</a><span class="meta">Release 5 · 23 Sep 2026</span></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span>, University of Auckland</span><span>Release 5 · 23 Sep 2026</span></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -65,13 +65,27 @@ assert.equal(ev.heightBasis,'Crown drawn from the record, 2024 survey; awaiting 
 assert.equal(E.explain({tree_id:'x',datasets:{crown:{crown_source:'v5'}}}).heightBasis,'V5 segmented canopy maximum, 2024 survey');
 
 // The page: the switch is hidden until the release has the layer and unchecked when it appears;
-// faint crowns use one expression on fill and outline; the profile shows the link once.
+// faint crowns use one expression on the fill and on the outlines (solid for the others, dashed for drawn crowns);
+// the panel shows the link once.
 const page=require('node:fs').readFileSync(web+'/index.html','utf8');
 assert.match(page,/<label class="check" for="showCouncilPositions" id="councilPositionsToggle" title="Where the Council or other source recorded the tree, joined to the crown ALTO found it on\." hidden>\s*<input id="showCouncilPositions" type="checkbox">/);
 assert.ok(page.includes('showCouncilPositions: false'));
-assert.equal((page.match(/\["case", faintCrownExpr\(\), /g)||[]).length,2);
+assert.equal((page.match(/\["case", faintCrownExpr\(\), /g)||[]).length,1);
+assert.ok(page.includes('filter: ["!", faintCrownExpr()]')&&page.includes('filter: faintCrownExpr()'),'the outlines split on the same expression');
 assert.ok(page.includes('src="./record-links.js?v='));
-assert.ok(page.includes('{recordLink:false}') && page.includes('ALTORecordLinks.mount(profileBody,record,props)'));
+// Tool v0.2: the map panel shows a weaker link once, as a badge, from the tree record (tree-record.js, which
+// reads ALTORecordLinks.link through the summary), first from the map tile; the tree page gives every record its
+// link in full.
+globalThis.window=globalThis;
+require(web+'/sources.js');require(web+'/growth-form.js');require(web+'/version.js');require(web+'/tree-id.js');
+const T=require(web+'/tree-summary.js'),P=require(web+'/tree-panel.js');require(web+'/alto-viz.js');
+const TR=require(web+'/tree-record.js');require(web+'/tree-instrument.js');
+const probableTile={tree_id:'akl_tree_not_815',source_primary:'notable_trees_overlay',crown_pilot:1,link_class:'probable',link_evidence:'Probable match to this LiDAR crown (0.2 m from the crown edge)',is_protected_notable:1};
+const quick=T.from(probableTile,null);
+assert.equal(quick.link.cls,'probable');
+assert.equal((P.render(TR.fromTile(probableTile,{siteRoot:'.'}),{treeUrl:'tree.html?id=x'}).match(/Probable link/g)||[]).length,1);
+assert.ok(page.includes('ALTOTreeRecord.fromTile(props, env)')&&page.includes('ALTOTreeRecord.load(props.tree_id, env, { members: 0 })'));
+assert.ok(/r\.link\?\.text\?esc\(r\.link\.text/.test(require('node:fs').readFileSync(web+'/tree-page.js','utf8')),'the tree page shows each record\'s link');
 assert.ok(page.includes('ALTORecordLinks.release(metadata)'),'the release metadata decides whether the switch is offered');
 assert.ok(!page.includes('council_positions.pmtiles`), probe'),'no request is made for the layer before it is switched on');
 assert.ok(/PARCEL_CLICK_YIELDS = \[[^\]]*"council-positions"\]/.test(page));

@@ -1,1 +1,110 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ALTO · V5.1 crown associations</title><style>body{font:17px/1.65 system-ui,sans-serif;color:#23372b;background:#f2f5ef;margin:0}main{max-width:780px;margin:32px auto;padding:28px;background:white;border-radius:18px}a{color:#3e693c}h1{line-height:1.2}h2{font-size:1.25em}li{margin:.5em 0}</style><main><a href="./">← Auckland map</a><h1>V5.1 · Restoring crown associations</h1><p>8 October 2026. This release reconnects existing records to existing crowns. It does not redraw the canopy or establish new tree growth.</p><h2>What changed</h2><p>We restored 4,661 associations across 4,362 crowns: 3,518 Auckland Transport records, 470 Council Parks records and 673 earlier LiDAR records. Original IDs, source coordinates and survey histories remain intact. Former generated representatives are retained as linked records.</p><p>V5 required the source point to fall inside the filled polygon. Small positional offsets and holes could therefore leave a longstanding tree record unlinked while a new detection represented its crown. V5.1 also considers strong continuity between its earlier and current crown, a small edge distance, compatible height and the absence of competing crowns or conflicting recorded taxa.</p><h2>What a link means</h2><p>A restored association is spatial evidence, not proof that all records within a shared canopy describe one organism. Ambiguous cases remain for review: 28,735 audited candidates were not automatically attached. “Crown unlinked” does not mean a tree is missing or dead.</p><h2>Consistent records and estimates</h2><p>Map markers, profiles, property summaries, totals and KYTE nearby suggestions use the repaired snapshot. A current crown contributes one set of modelled service estimates. Those scenarios use the same V5 equations and retain their existing uncertainty. The two previously accepted KYTE visits remain available.</p><h2>Polygon work comes next</h2><p>The polygon geometry is unchanged, including known holes and clipped edges. The next geometry candidate will use native-resolution LINZ imagery, the LiDAR returns and researcher-drawn reference crowns. It must distinguish erroneous gaps from real gaps, and crown shape from source-record identity. Existing V6 growth-form research does not itself redraw crowns.</p><p><a href="./data/crown-link-repair-v51.json">Association policy and repair counts</a> · <a href="./data/tree_details/schema.json">Full-record schema</a> · <a href="./release-metadata.json">Release metadata</a> · <a href="./v5-methods.html">Original V5 methods</a></p></main></html>
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · Release 5.1 · Restoring links between records and crowns"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods: restoring links between records and crowns (release 5.1) · ALTO</title>
+<meta name="description" content="How ALTO release 5.1 restored links between existing records and existing crowns from the 2024 LiDAR survey: what changed, the rule, what a link means and what stays unchanged.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.0">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.0">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.0">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./alto-logo.png" alt="ALTO map" width="3934" height="1170"></a>
+      <span class="app-bar-context">Methods</span>
+      <nav class="app-bar-actions" aria-label="Page actions">
+        <a class="btn" href="./"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Map</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">Methods and release notes</p>
+    <h1>Restoring links between records and crowns</h1>
+    <dl class="release">
+      <div><dt>Release</dt><dd>5.1</dd></div>
+      <div><dt>Published</dt><dd><time datetime="2026-10-08">8 Oct 2026</time></dd></div>
+      <div><dt>Previous release</dt><dd><a href="./v5-methods.html">5 · 23 Sep 2026</a></dd></div>
+      <div><dt>Next release</dt><dd><a href="./v52-methods.html">5.2 · 10 Oct 2026</a></dd></div>
+      <div class="release-id"><dt>Dataset ID</dt><dd><code>metro-2026.10.08-pointcloud-v5.1</code></dd></div>
+    </dl>
+    <p class="lede">This release reconnects existing records to existing crowns. It does not redraw the canopy or establish new tree growth.</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#what-changed">What changed</a></li>
+      <li><a href="#link-meaning">What a link means</a></li>
+      <li><a href="#estimates">Consistent records and estimates</a></li>
+      <li><a href="#crown-geometry">Crown geometry</a></li>
+      <li><a href="#sources">Notes and sources</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="what-changed">
+      <h2>What changed</h2>
+      <p>This release restores 4,661 record-to-crown links across 4,362 crowns: 3,518 Auckland Transport and 470 Parks records from the Council tree register, and 673 records of LiDAR-detected trees from earlier releases.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup> Original record IDs, source coordinates and survey histories remain intact. Former generated representatives are retained as linked records.</p>
+      <h3 id="record-links">How links were restored</h3>
+      <p>Release 5 required a record’s source position to fall inside the filled crown polygon. Small positional offsets and holes could therefore leave a longstanding tree record without a crown while a new detection represented its crown. Release 5.1 also considers strong continuity between the record’s earlier and current crown, a small edge distance, compatible height, and the absence of competing crowns or conflicting recorded taxa.<sup class="fn"><a href="#note-2" id="ref-2" aria-label="Note 2">2</a></sup></p>
+    </section>
+
+    <section id="link-meaning">
+      <h2>What a link means</h2>
+      <p>A restored link is spatial evidence. It does not prove that all records within a shared canopy describe one organism. Ambiguous cases remain for review: 28,735 audited candidates were not automatically attached. “No crown linked” does not mean a tree is missing or dead.</p>
+    </section>
+
+    <section id="estimates">
+      <h2>Consistent records and estimates</h2>
+      <p>The map, tree panels, property summaries, totals and KYTE nearby suggestions use the repaired snapshot. Each current crown contributes one set of benefit estimates. Those scenarios use the same release 5 equations and keep their existing uncertainty. The two KYTE ground visits accepted before this release remain available.</p>
+    </section>
+
+    <section id="crown-geometry">
+      <h2>Crown geometry</h2>
+      <p>The polygon geometry is unchanged, including known holes and clipped edges. The next geometry candidate will use native-resolution LINZ imagery, the LiDAR returns and researcher-drawn reference crowns. It must distinguish erroneous gaps from real gaps, and crown shape from source-record identity. Existing growth-form research for release 6 does not itself redraw crowns.</p>
+    </section>
+
+    <section id="sources" class="sources">
+      <h2>Notes and sources</h2>
+      <ol class="notes">
+        <li id="note-1">Link policy, repair counts and abstentions by reason: <a href="./data/crown-link-repair-v51.json">link policy and repair counts</a>. <a class="note-back" href="#ref-1" aria-label="Back to note 1 in the text">↑</a></li>
+        <li id="note-2">The repair rule, its audit, verification and worked examples: <a href="https://github.com/squirmen/alto/blob/main/docs/v51/crown-continuity.md">Crown continuity repair</a>, ALTO code repository. <a class="note-back" href="#ref-2" aria-label="Back to note 2 in the text">↑</a></li>
+      </ol>
+      <h3>Files</h3>
+      <ul class="link-list">
+        <li><a href="./data/crown-link-repair-v51.json">Link policy and repair counts</a><span class="meta"><code>data/crown-link-repair-v51.json</code></span></li>
+        <li><a href="./data/tree_details/schema.json">Full-record schema</a><span class="meta"><code>data/tree_details/schema.json</code></span></li>
+        <li><a href="./release-metadata.json">Release metadata</a><span class="meta"><code>release-metadata.json</code> · current release</span></li>
+      </ul>
+      <h3>Releases</h3>
+      <ul class="link-list">
+        <li><a href="./v52-methods.html">Linking records to crowns</a><span class="meta">Release 5.2 · 10 Oct 2026</span></li>
+        <li><a href="./v51-methods.html" aria-current="page">Restoring links between records and crowns</a><span class="meta">Release 5.1 · 8 Oct 2026</span></li>
+        <li><a href="./v5-methods.html">Redrawing Auckland’s canopy</a><span class="meta">Release 5 · 23 Sep 2026</span></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span>, University of Auckland</span><span>Release 5.1 · 8 Oct 2026</span></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

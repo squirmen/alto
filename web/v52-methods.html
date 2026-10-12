@@ -1,1 +1,203 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ALTO · V5.2 record-to-crown links</title><style>body{font:17px/1.65 system-ui,sans-serif;color:#23372b;background:#f2f5ef;margin:0}main{max-width:780px;margin:32px auto;padding:28px;background:white;border-radius:18px}a{color:#3e693c}h1{line-height:1.2}h2{font-size:1.25em}li{margin:.5em 0}table{border-collapse:collapse;width:100%;font-size:15px;margin:.6em 0}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #dfe6da;vertical-align:top}th{font-weight:600}.n{text-align:right;white-space:nowrap}@media (max-width:600px){main{margin:0;border-radius:0;padding:20px 16px}table{font-size:13px}}</style><main><a href="./">← Auckland map</a><h1>V5.2 · Joining records to their crowns</h1><p>10 October 2026. This release joins Council, OpenStreetMap, notable-tree and kauri-survey records that V5.1 left unlinked to the crowns they stand on. Where no V5 crown covered a recorded tree, it draws one from the 2024 laser returns at the record’s position. V5 crown boundaries are not redrawn, and no record, source position or survey history is removed.</p><h2>What changed</h2><p>3,088 of the 37,409 records V5.1 left unlinked are now joined to a crown: 1,043 <em>linked</em> and 1,456 <em>probable</em> matches to existing V5 crowns, and 589 on 534 crowns <em>drawn from the record</em>.</p><ul><li>1,655 records joined 1,456 crowns whose map marker was a LiDAR detection. One record per crown now represents it, drawn where the crown’s marker was; the detection stays in the crown’s list of records.</li><li>844 records joined 664 crowns that already had a source record as their marker. They are listed in that tree’s profile and do not get a second marker. The one exception: a protected or notable tree never loses its marker. On 1 crown a protected record now represents the crown in place of an ordinary record, which stays in the crown’s list; 14 protected records whose crown is already represented by another protected tree keep their own marker where their source recorded them, and the crown’s estimates are still counted once.</li><li>457 crowns drawn from a record are 3 m or taller. They are drawn faintly, counted in the totals and service estimates with a flag, and await confirmation. The other 77 are 2–3 m tall and follow the existing low-canopy rule: shown, but not counted.</li></ul><p>As a result the map shows 2,540 fewer separate markers (3,574,825 in all), 457 more counted crowns, and the annual value estimate rises by NZ$47,218 (record-seeded crowns NZ$15,926; crowns now represented by a source record, recalculated for its recorded taxon, NZ$31,291). The count of protected trees on the map is 3,570 as in V5.1.</p><p>Four further crowns drawn from a record were left out because each enclosed a small existing V5 crown; their records stay unlinked, unchanged on the map, and in review.</p><h2>How records were joined</h2><p>For each unlinked record, nearby crowns were scored on the distance from the record to the crown’s edge, weighed with an error model learned by comparing the crowns around unlinked records with those around decoy points nearby; on whether the crown’s height and area suit the recorded taxon; on conflicts with other records’ taxa on the same crown; and on how many records a crown of that size usually carries. Neighbouring records were assigned together, so a small crown cannot take several records when one has its own. A record was linked only when its crown was clearly better than every alternative, including no crown at all. Shifting whole digitised rows of records was tested and is not used.</p><p>Where tree-height laser returns stand at a record and no V5 crown covers them, a crown was drawn with V5’s own recipe, including the unclassified returns of palms V5 could not see where the imagery is green.</p><h2>How precise the links are</h2><table><tr><th>Class</th><th class="n">Hold-out</th><th class="n">Blind audit</th><th class="n">95% interval</th></tr><tr><td>Linked</td><td class="n">0.989</td><td class="n">47 of 48</td><td class="n">0.89–1.00</td></tr><tr><td>Probable</td><td class="n">0.936</td><td class="n">33 of 37</td><td class="n">0.75–0.96</td></tr><tr><td>Linked and probable</td><td class="n">0.965</td><td class="n">80 of 85</td><td class="n">0.87–0.97</td></tr><tr><td>Drawn from the record</td><td class="n">—</td><td class="n">31 of 37</td><td class="n">0.69–0.92</td></tr></table><p>The hold-out hides 31,119 trusted links, moves each record as far from its crown as unlinked records of its source typically are, adds copies whose crown is deleted, and finds them again (0.919 for linked and probable when every unlinked record without a crown is assumed crown-missing). The audit is a blind visual judgement of fresh records under the final rules, from 2024 imagery, near-infrared and laser heights. Cards that could not be decided are left out; counting them as wrong gives floors of 0.76, 0.51 and 0.69. The hold-out cannot measure drawn crowns, so their figure comes from the audit alone.</p><h2>Council recorded positions</h2><p>The <em>Council recorded positions</em> switch in Layers (off by default) shows, for every joined record, where its source recorded the tree and a dashed line to the top of the crown it was joined to. The record’s own position is unchanged in its full record; the map marker sits on the crown.</p><h2>What went to review</h2><p>20,704 records went to the researcher workbench and appear on the map as before: 14,760 with competing crowns to choose between, 4,783 with nothing of tree height within 3 m, 1,021 on tree-height returns no crown could be drawn on, and 140 whose position cannot be matched (for example on a roof). The workbench also asks for confirmation of every crown drawn from a record.</p><h2>What stays unlinked</h2><p>13,613 records lie where there are no V5 crowns and no 2024 point cloud: 12,925 kauri observations in the Waitākere Ranges and other forest, 687 notable trees and one OpenStreetMap tree. Their full records say so. “Crown unlinked” does not mean a tree is absent.</p><h2>What a link means</h2><p>A link is spatial evidence that a record describes the tree on that crown. It does not prove that every record on a shared canopy is the same organism, and a drawn crown is a proposal until it is confirmed.</p><p><a href="./data/record-links-v52.json">Link counts, precision and total changes</a> · <a href="./data/tree_details/schema.json">Full-record schema</a> · <a href="./release-metadata.json">Release metadata</a> · <a href="./v51-methods.html">V5.1 crown associations</a> · <a href="./v5-methods.html">Original V5 methods</a></p></main></html>
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · Release 5.2 · Linking records to crowns"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods: linking records to crowns (release 5.2) · ALTO</title>
+<meta name="description" content="How ALTO release 5.2 linked tree records that release 5.1 left without a crown to crowns from the 2024 LiDAR survey: what changed, the method, link precision, review and limits.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.0">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.0">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.0">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./alto-logo.png" alt="ALTO map" width="3934" height="1170"></a>
+      <span class="app-bar-context">Methods</span>
+      <nav class="app-bar-actions" aria-label="Page actions">
+        <a class="btn" href="./"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Map</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">Methods and release notes</p>
+    <h1>Linking records to crowns</h1>
+    <dl class="release">
+      <div><dt>Release</dt><dd>5.2</dd></div>
+      <div><dt>Published</dt><dd><time datetime="2026-10-10">10 Oct 2026</time></dd></div>
+      <div><dt>Previous release</dt><dd><a href="./v51-methods.html">5.1 · 8 Oct 2026</a></dd></div>
+      <div class="release-id"><dt>Dataset ID</dt><dd><code>metro-2026.10.10-pointcloud-v5.2</code></dd></div>
+    </dl>
+    <p class="lede">This release links records that release 5.1 left without a crown to the crowns they stand on: records from the Council tree register, OpenStreetMap, the Notable Trees schedule and the RŪRU kauri survey. Where no release 5 crown covered a recorded tree, it draws one from the returns of the 2024 LiDAR survey (an airborne laser survey) at the record’s position. Release 5 crown boundaries are not redrawn, and no record, source position or survey history is removed.</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#what-changed">What changed</a></li>
+      <li><a href="#record-links">How records were linked</a></li>
+      <li><a href="#link-precision">Link precision</a></li>
+      <li><a href="#recorded-positions">Council recorded positions</a></li>
+      <li><a href="#review">Records sent for review</a></li>
+      <li><a href="#without-crown">Records that stay without a crown</a></li>
+      <li><a href="#link-meaning">What a link means</a></li>
+      <li><a href="#sources">Notes and sources</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="what-changed">
+      <h2>What changed</h2>
+      <p>3,088 of the 37,409 records that release 5.1 left without a crown are now linked to one: 1,043 <dfn>linked</dfn> and 1,456 <dfn>probable links</dfn> to existing release 5 crowns, and 589 records on 534 <dfn>crowns drawn from the record</dfn>.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup></p>
+      <ul>
+        <li>1,655 records joined 1,456 crowns that were LiDAR-detected trees. One record per crown now represents the tree, drawn where the crown’s marker was; the detection stays in the tree’s list of records.</li>
+        <li>844 records joined 664 crowns that a source record already represented. They are listed among that tree’s records and do not get a second marker. The exception is a protected tree (Notable Trees schedule), which never loses its marker: on 1 crown a protected record now represents the crown in place of an ordinary record, which stays in the tree’s list of records; 14 protected records whose crown is already represented by another protected tree keep their own marker where their source recorded them, and the crown’s estimates are still counted once.</li>
+        <li>457 crowns drawn from a record are 3&nbsp;m or taller. They are drawn faintly, counted with a flag in the totals and benefit estimates, and await confirmation. The other 77 are <span class="nw">2–3&nbsp;m</span> tall and follow the existing low-canopy rule: they are shown and not counted.</li>
+      </ul>
+      <p>As a result the map shows 2,540 fewer separate trees (3,574,825 in all) and 457 more counted crowns. Estimated annual benefits rise by NZ$47,218: NZ$15,926 from crowns drawn from a record, and NZ$31,291 from crowns now represented by a source record, recalculated for its recorded taxon. The map shows 3,570 protected trees, as in release 5.1.</p>
+      <p>Four further crowns drawn from a record were left out because each enclosed a small existing release 5 crown; their records stay without a crown, unchanged on the map, and in review.</p>
+    </section>
+
+    <section id="record-links">
+      <h2>How records were linked</h2>
+      <p>For each record without a crown, nearby crowns were scored on:</p>
+      <ul>
+        <li>the distance from the record to the crown’s edge, weighed with an error model learned by comparing the crowns around unlinked records with those around decoy points nearby;</li>
+        <li>whether the crown’s height and area suit the recorded taxon;</li>
+        <li>conflicts with other records’ taxa on the same crown;</li>
+        <li>how many records a crown of that size usually carries.</li>
+      </ul>
+      <p>Neighbouring records were assigned together, so a small crown cannot take several records when one has its own. A record was linked only when its crown was clearly better than every alternative, including no crown at all. Shifting whole digitised rows of records was tested and is not used.<sup class="fn"><a href="#note-2" id="ref-2" aria-label="Note 2">2</a></sup></p>
+      <h3 id="drawn-crowns">Crowns drawn from a record</h3>
+      <p>Where LiDAR returns of tree height stand at a record and no release 5 crown covers them, a crown was drawn with the release 5 recipe, including the unclassified returns of palms that release 5 could not see, where the imagery is green.</p>
+    </section>
+
+    <section id="link-precision">
+      <h2>Link precision</h2>
+      <figure class="figure" id="figure-1">
+        <div class="dotplot" style="--lo: 0.5; --hi: 1; --rows: 4" role="img" aria-label="Link precision by class, on a scale from 0.5 to 1. Linked: hold-out test 0.989; blind audit 47 of 48 correct, 95% interval 0.89 to 1.00. Probable link: hold-out test 0.936; blind audit 33 of 37, 95% interval 0.75 to 0.96. Linked and probable: hold-out test 0.965; blind audit 80 of 85, 95% interval 0.87 to 0.97. Crown drawn from the record: not measurable by the hold-out test; blind audit 31 of 37, 95% interval 0.69 to 0.92.">
+          <ul class="dotplot-legend">
+            <li><span class="key key-s1"></span>Hold-out test</li>
+            <li><span class="key key-s2"></span>Blind audit, with its 95% interval</li>
+          </ul>
+          <div class="dotplot-plot">
+            <div class="dotplot-lines"><span style="--v: .5"></span><span style="--v: .6"></span><span style="--v: .7"></span><span style="--v: .8"></span><span style="--v: .9"></span><span style="--v: 1"></span></div>
+
+            <div class="dotplot-label" style="grid-row: 1">Linked</div>
+            <div class="dotplot-track" style="grid-row: 1">
+              <span class="dp-tag line-1" style="--v: .989">Hold-out</span>
+              <span class="dp dp-s1 line-1" style="--v: .989" title="Linked · hold-out test: 0.989"></span>
+              <span class="dp-tag line-2" style="--v: .89">Blind audit</span>
+              <span class="dp-ci line-2" style="--a: .89; --b: 1" title="Linked · blind audit, 95% interval: 0.89–1.00"></span>
+              <span class="dp dp-s2 line-2" style="--v: .979" title="Linked · blind audit: 47 of 48 correct (0.979); 95% interval 0.89–1.00"></span>
+            </div>
+
+            <div class="dotplot-label" style="grid-row: 2">Probable link</div>
+            <div class="dotplot-track" style="grid-row: 2">
+              <span class="dp dp-s1 line-1" style="--v: .936" title="Probable link · hold-out test: 0.936"></span>
+              <span class="dp-ci line-2" style="--a: .75; --b: .96" title="Probable link · blind audit, 95% interval: 0.75–0.96"></span>
+              <span class="dp dp-s2 line-2" style="--v: .892" title="Probable link · blind audit: 33 of 37 correct (0.892); 95% interval 0.75–0.96"></span>
+            </div>
+
+            <div class="dotplot-label" style="grid-row: 3">Linked and probable</div>
+            <div class="dotplot-track" style="grid-row: 3">
+              <span class="dp dp-s1 line-1" style="--v: .965" title="Linked and probable · hold-out test: 0.965"></span>
+              <span class="dp-ci line-2" style="--a: .87; --b: .97" title="Linked and probable · blind audit, 95% interval: 0.87–0.97"></span>
+              <span class="dp dp-s2 line-2" style="--v: .941" title="Linked and probable · blind audit: 80 of 85 correct (0.941); 95% interval 0.87–0.97"></span>
+            </div>
+
+            <div class="dotplot-label" style="grid-row: 4">Crown drawn from the record</div>
+            <div class="dotplot-track" style="grid-row: 4">
+              <span class="dp-na line-1">Hold-out test: not measurable</span>
+              <span class="dp-ci line-2" style="--a: .69; --b: .92" title="Crown drawn from the record · blind audit, 95% interval: 0.69–0.92"></span>
+              <span class="dp dp-s2 line-2" style="--v: .838" title="Crown drawn from the record · blind audit: 31 of 37 correct (0.838); 95% interval 0.69–0.92"></span>
+            </div>
+
+            <div class="dotplot-ticks" style="grid-row: 5"><span style="--v: .5">0.5</span><span style="--v: .6">0.6</span><span style="--v: .7">0.7</span><span style="--v: .8">0.8</span><span style="--v: .9">0.9</span><span style="--v: 1">1.0</span></div>
+            <p class="dotplot-title" style="grid-row: 6">Precision (share of links correct)</p>
+          </div>
+        </div>
+        <figcaption><span class="caption-label">Figure 1.</span> Link precision by class from the hold-out test (diamonds) and the blind audit (dots, with lines for the 95% interval). The hold-out test cannot measure crowns drawn from a record. Release 5.2, 10 Oct 2026; the numbers are in Table 1 and in <a href="./data/record-links-v52.json">link counts, precision and total changes</a>.</figcaption>
+      </figure>
+
+      <div class="table-wrap" role="region" aria-labelledby="table-1-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-1-caption"><span class="caption-label">Table 1.</span> Link precision by class: hold-out test and blind audit.</caption>
+          <thead>
+            <tr><th scope="col">Class</th><th scope="col" class="num">Hold-out test</th><th scope="col" class="num">Blind audit</th><th scope="col" class="num">95% interval</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Linked</th><td class="num">0.989</td><td class="num">47 of 48</td><td class="num">0.89–1.00</td></tr>
+            <tr><th scope="row">Probable link</th><td class="num">0.936</td><td class="num">33 of 37</td><td class="num">0.75–0.96</td></tr>
+            <tr><th scope="row">Linked and probable</th><td class="num">0.965</td><td class="num">80 of 85</td><td class="num">0.87–0.97</td></tr>
+            <tr><th scope="row">Crown drawn from the record</th><td class="num"><span aria-hidden="true">–</span><span class="vh">not measurable</span></td><td class="num">31 of 37</td><td class="num">0.69–0.92</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">The 95% interval is for the blind audit. –: not measurable by the hold-out test.</p>
+
+      <p>The hold-out test hides 31,119 trusted links, moves each record as far from its crown as unlinked records of its source typically are, adds copies whose crown is deleted, and finds them again (0.919 for linked and probable when every unlinked record without a crown is assumed crown-missing). The blind audit is a visual judgement of fresh records under the final rules, from 2024 imagery, near-infrared and LiDAR heights. Records that could not be decided are left out; counting them as wrong gives floors of 0.76, 0.51 and 0.69. The hold-out test cannot measure drawn crowns, so their figure comes from the audit alone.</p>
+    </section>
+
+    <section id="recorded-positions">
+      <h2>Council recorded positions</h2>
+      <p>The <span class="ui-label">Council recorded positions</span> switch in the Layers tab (off by default) shows, for every joined record, where its source recorded the tree and a dashed line to the top of the crown it was joined to. The record’s own position is unchanged in its full record; its marker on the map sits on the crown.</p>
+    </section>
+
+    <section id="review">
+      <h2>Records sent for review</h2>
+      <p>20,704 records went to the researcher workbench and appear on the map as before: 14,760 with competing crowns to choose between, 4,783 with nothing of tree height within 3&nbsp;m, 1,021 on tree-height returns no crown could be drawn on, and 140 whose position cannot be matched (for example on a roof). The workbench also asks for confirmation of every crown drawn from a record.</p>
+    </section>
+
+    <section id="without-crown">
+      <h2>Records that stay without a crown</h2>
+      <p>13,613 records lie where there are no release 5 crowns and no 2024 point cloud: 12,925 RŪRU kauri survey records in the <span lang="mi">Waitākere</span> Ranges and other forest, 687 Notable Trees schedule records and one OpenStreetMap record. Their full records say so. “No crown linked” does not mean a tree is absent.</p>
+    </section>
+
+    <section id="link-meaning">
+      <h2>What a link means</h2>
+      <p>A link is spatial evidence that a record describes the tree on that crown. It does not prove that every record on a shared canopy is the same organism, and a drawn crown is a proposal until it is confirmed.</p>
+    </section>
+
+    <section id="sources" class="sources">
+      <h2>Notes and sources</h2>
+      <ol class="notes">
+        <li id="note-1">Counts by class, source and cause, the precision figures and the review queue: <a href="./data/record-links-v52.json">link counts, precision and total changes</a>. <a class="note-back" href="#ref-1" aria-label="Back to note 1 in the text">↑</a></li>
+        <li id="note-2">The full method, its evaluation, worked examples and limitations: <a href="https://github.com/squirmen/alto/blob/main/docs/v52/linking.md">Record-to-crown linking</a>, ALTO code repository. <a class="note-back" href="#ref-2" aria-label="Back to note 2 in the text">↑</a></li>
+      </ol>
+      <h3>Files</h3>
+      <ul class="link-list">
+        <li><a href="./data/record-links-v52.json">Link counts, precision and total changes</a><span class="meta"><code>data/record-links-v52.json</code></span></li>
+        <li><a href="./data/tree_details/schema.json">Full-record schema</a><span class="meta"><code>data/tree_details/schema.json</code></span></li>
+        <li><a href="./release-metadata.json">Release metadata</a><span class="meta"><code>release-metadata.json</code> · current release</span></li>
+      </ul>
+      <h3>Releases</h3>
+      <ul class="link-list">
+        <li><a href="./v52-methods.html" aria-current="page">Linking records to crowns</a><span class="meta">Release 5.2 · 10 Oct 2026</span></li>
+        <li><a href="./v51-methods.html">Restoring links between records and crowns</a><span class="meta">Release 5.1 · 8 Oct 2026</span></li>
+        <li><a href="./v5-methods.html">Redrawing Auckland’s canopy</a><span class="meta">Release 5 · 23 Sep 2026</span></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span>, University of Auckland</span><span>Release 5.2 · 10 Oct 2026</span></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

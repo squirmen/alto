@@ -1,0 +1,11 @@
+/* ALTO typeface: Inter 4.1 (SIL Open Font License 1.1, fonts/Inter-LICENSE-OFL.txt), self-hosted as the family
+   "ALTO Inter" so every browser uses these files instead of whatever "Inter" happens to be installed (design
+   system 1.4). Latin subsets of the variable fonts (fontTools pyftsubset, 12 Oct 2026): Basic Latin, Latin-1,
+   Latin Extended-A (te reo Māori macrons), punctuation, super- and subscripts (CO₂, m²), arrows, minus and
+   comparison signs; opsz and wght axes; tnum, case, ss01, ss02, cv05 and zero kept. A character outside
+   unicode-range (Greek π on the tree page, for one) comes from the next font in --font-sans. Text shows at
+   once in the fallback and swaps when the file arrives; every page preloads the upright file. */
+@font-face { font-family: "ALTO Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("fonts/InterVariable-latin.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00AC, U+00AE-0148, U+014A-017F, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-200B, U+2010-2027, U+202F-2055, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20AC, U+2122, U+2190-2199, U+21A9-21AA, U+21B0-21B1, U+21B3-21B5, U+21BA-21BB, U+21D0, U+21D2, U+21D4, U+21DE-21DF, U+21E4-21E5, U+21E7, U+21EA, U+2212, U+2248, U+2260, U+2264-2265, U+25B2-25B3, U+25B6-25B7, U+25BA-25BC, U+2713; }
+@font-face { font-family: "ALTO Inter"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("fonts/InterVariable-Italic-latin.woff2") format("woff2");
+  unicode-range: U+0020-007E, U+00A0-00AC, U+00AE-0148, U+014A-017F, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-200B, U+2010-2027, U+202F-2055, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20AC, U+2122, U+2190-2199, U+21A9-21AA, U+21B0-21B1, U+21B3-21B5, U+21BA-21BB, U+21D0, U+21D2, U+21D4, U+21DE-21DF, U+21E4-21E5, U+21E7, U+21EA, U+2212, U+2248, U+2260, U+2264-2265, U+25B2-25B3, U+25B6-25B7, U+25BA-25BC, U+2713; }

@@ -1,14 +1,14 @@
-# ALTO V5.2 full-record data dictionary
+# ALTO V6 full-record data dictionary
 
-Release: 20261010-v5.2.
+Release: 20261012-v6.
 
 Each tree profile exposes the datasets below. The schema gives their exact ordered fields. Blank means unavailable, not zero. All source IDs and original coordinates are retained.
 
-**Current crown area** is the segmented horizontal footprint in square metres. **Crown spread** is a width in metres and is not the same measurement. The area-derived equivalent diameter is a circular approximation, not a measured crown spread.
+**Growth form** (`growth_form`) is a model estimate for the crown, never an identified species. `wording` is what the map shows; `display` is show, possibly or withhold.
 
-Only current representative records carry current service estimates. Shared-crown aliases may repeat crown measurements: do not sum areas over every source record. Earlier datasets retain their previous spatial and methodological basis.
+**Crown outline** (`outline`): the map polygon is a smoothed outline of the same V5 cells; `crown_area_m2` everywhere stays the V5 cell area.
 
-V5.2 record-to-crown links are in `record_link`; `source_lon`/`source_lat` are the source position, unchanged, and `crown_source` `record_seeded_v52` marks a crown drawn from the record awaiting confirmation. Records outside survey coverage carry `record_link_status`.
+Only current representative records carry current service estimates. Shared-crown aliases may repeat crown measurements: do not sum areas over every source record.
 
 ## Original tree record
 
@@ -33,6 +33,14 @@ V5 crown boundaries and maximum height from the 2024 survey; crown_source record
 `crown` → `tree_current_crown_v5`
 
 Fields: `crown_area_m2`, `crown_diameter_m`, `crown_max_chm_m`, `mean_veg_height_m`, `method_id`, `crown_source`, `current_primary_tree_id`, `gap_filled_fraction`, `ndvi_mean`, `evidence_tier`, `evidence_reasons`.
+
+## Crown outline (v6)
+
+The map draws this crown with the smoothed v6 outline: an area-preserving smoothing of the same v5 crown cells (crown_v53 "B"). Crown area, height and every estimate keep the v5 cell area (cell_area_m2); outline_area_m2 is the area of the smoothed polygon.
+
+`outline` → `tree_crown_outline_v6`
+
+Fields: `seg_key`, `crown_source`, `outline_method`, `outline_area_m2`, `cell_area_m2`, `method_id`.
 
 ## Current laser-return evidence
 
@@ -60,11 +68,11 @@ Fields: `dbh_cm`, `trunk_circumference_cm`, `crown_radius_m`, `foraging_radius_m
 
 ## Current ecosystem-service scenarios
 
-Existing sensitivity equations updated with current crown dimensions, once per representative crown. Several trees may share a crown. Monetary coefficients and height-based biomass remain uncalibrated.
+Existing sensitivity equations updated with current crown dimensions, once per representative crown. Several trees may share a crown. Monetary coefficients and height-based biomass remain uncalibrated. V6: where the growth-form model gives a call, LAI and the height-to-DBH curve are weighted by its calibrated probabilities and the other class parameters follow the call; a crown whose growth form is not yet determined keeps the flagged evergreen default. Records whose estimate did not change keep their V5.2 values (blank v6 fields).
 
-`services` → `tree_current_services_v5`
+`services` → `tree_current_services_v6`
 
-Fields: `species_class`, `species_class_source`, `species_class_confidence_ml`, `species_allometry_source`, `paved_fraction_source`, `crown_area_m2`, `crown_max_chm_m`, `in_flood_prone_area`, `paved_fraction_used`, `interception_fraction_used`, `runoff_coefficient_used`, `intercepted_rainfall_m3_y`, `avoided_runoff_m3_y`, `stormwater_value_nzd_y`, `dbh_cm_est`, `agb_kg_est`, `bgb_kg_est`, `carbon_kg_est`, `stored_co2e_tonnes_est`, `annual_sequestration_tco2e_y_est`, `carbon_value_nzd_stored`, `carbon_value_nzd_y`, `cooling_value_nzd_y_temp`, `cooling_value_nzd_y_paved`, `cooling_value_nzd_y`, `lai_used`, `pm25_removed_kg_y`, `air_quality_value_nzd_y`, `total_value_nzd_y`, `total_value_nzd_y_low`, `total_value_nzd_y_high`, `uncertainty_factor`, `valuation_confidence`, `method_id`, `assumptions_json`, `created_at_utc`.
+Fields: `species_class`, `species_class_source`, `species_class_confidence_ml`, `species_allometry_source`, `paved_fraction_source`, `crown_area_m2`, `crown_max_chm_m`, `in_flood_prone_area`, `paved_fraction_used`, `interception_fraction_used`, `runoff_coefficient_used`, `intercepted_rainfall_m3_y`, `avoided_runoff_m3_y`, `stormwater_value_nzd_y`, `dbh_cm_est`, `agb_kg_est`, `bgb_kg_est`, `carbon_kg_est`, `stored_co2e_tonnes_est`, `annual_sequestration_tco2e_y_est`, `carbon_value_nzd_stored`, `carbon_value_nzd_y`, `cooling_value_nzd_y_temp`, `cooling_value_nzd_y_paved`, `cooling_value_nzd_y`, `lai_used`, `pm25_removed_kg_y`, `air_quality_value_nzd_y`, `total_value_nzd_y`, `total_value_nzd_y_low`, `total_value_nzd_y_high`, `uncertainty_factor`, `valuation_confidence`, `method_id`, `assumptions_json`, `created_at_utc`, `growth_form_basis`, `growth_form_default`, `growth_form_weights_json`, `v52_species_class`, `v52_species_class_source`, `v52_total_value_nzd_y`, `v52_avoided_runoff_m3_y`, `v52_stored_co2e_tonnes_est`.
 
 ## Field observations
 
@@ -116,11 +124,19 @@ Fields: `trajectory_id`, `lon`, `lat`, `x_2193`, `y_2193`, `present_2013`, `pres
 
 ## Species references and growth form
 
-Recorded identifications, reference matches and model guesses retain separate provenance.
+Recorded identifications, reference matches and model guesses retain separate provenance. The v6 growth-form model estimate is a separate dataset (growth_form).
 
 `species` → `tree_species_attributes`
 
 Fields: `growth_form`, `growth_form_source`, `growth_form_confidence`, `model_confidence`, `mature_height_m`, `lidar_height_m`, `height_plausibility`.
+
+## Growth form (model, v6)
+
+Growth form estimated for the crown from the 2024 LiDAR and aerial imagery (phase-2b model A2, C1 palm detector, A2_robust on April and October flights). A model estimate, never an identified species; a recorded species stays the tree's species. display_key and wording follow the v6 display rules; display_r15 is the rule before the v6 palm guard and the outside-isthmus palm-type decision. Probabilities are calibrated four-class model outputs, rounded to 4 decimals.
+
+`growth_form` → `tree_growth_form_v6`
+
+Fields: `seg_key`, `display_key`, `wording`, `display`, `display_reason`, `call`, `band`, `palm_subcall`, `model_id`, `model_call`, `model_band`, `c1_override`, `p_palm_det`, `guard_v2`, `p_evergreen_broadleaf`, `p_deciduous_broadleaf`, `p_conifer`, `p_palm`, `p_palm_like`, `p_tree_fern`, `isthmus`, `leaf_on`, `lidar_flight_date`, `late_june_flight`, `display_r15`, `display_reason_r15`, `structure_call`, `merged_call`, `method_id`.
 
 ## Earlier growth-form guesses
 
