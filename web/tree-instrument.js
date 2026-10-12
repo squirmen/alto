@@ -44,7 +44,8 @@
   }
   const areaText=v=>{const n=num(v);return n===null?'–':`${n<10?nf(n,1):nf(Math.round(n))} m²`;};
   // A growth-form class as a title: the class alone; the Estimate badge says it is a model output.
-  const cleanForm=t=>String(t||'').replace(/^(Probably|Likely)\s+/i,'').replace(/\s*\(model\)$/,'').replace(/^./,c=>c.toUpperCase());
+  // A model's growth-form wording without "(model)": the Estimate badge says it ("(model, high confidence)" -> "(high confidence)").
+  const cleanForm=t=>String(t||'').replace(/^(Probably|Likely)\s+/i,'').replace(/\s*\(model\)$/,'').replace(/\(model,\s*/,'(').replace(/^./,c=>c.toUpperCase());
   // [value, unit] for a quantity: numbers by the rule above, classes and names as stored.
   function fmt(q){
     if(!q)return ['–',''];
@@ -222,7 +223,8 @@
       <p class="ti-pop-value"><b>${esc(text(q))}</b> ${kind}</p>
       <dl class="ti-prov">${isEstimate(q)?row('Range',esc(unc||'No range stored for this value')):unc?row('Uncertainty',esc(unc)):''}${row('Source',esc(p.source))}${row('Observed',observed?esc(observed):null)}${row('Retrieved',retrieved?esc(retrieved):null)}
         ${row('Method',method)}${row('Model',model)}${row('Stored as',stored)}${row('Release',esc(versionLine(rec)))}
-        ${row('Tree ID',`<code>${esc(rec.id)}</code> <button type="button" class="ti-copy" data-copy="${esc(rec.id)}">Copy</button>`)}${row('Note',p.note?esc(p.note):null)}</dl>`;
+        ${rec.number?row('Tree number',`<code>${esc(rec.number)}</code> <button type="button" class="ti-copy" data-copy="${esc(rec.number)}">Copy</button>`)+row('Record ID',`<code>${esc(rec.id)}</code>`)
+          :row('Tree ID',`<code>${esc(rec.id)}</code> <button type="button" class="ti-copy" data-copy="${esc(rec.id)}">Copy</button>`)}${row('Note',p.note?esc(p.note):null)}</dl>`;
   }
 
   // ---------- survey years ----------
@@ -410,7 +412,7 @@
   }
 
   // ---------- the tree page's sections, for its navigation and the panel's links into it (concept C) ----------
-  const SECTIONS=[['metrics','Key measurements','Measurements'],['structure','Crown by survey','Crown by survey'],['compare','Among similar trees','Similar trees'],['lost','If it were lost','If it were lost'],
+  const SECTIONS=[['metrics','Key measurements','Measurements'],['structure','Crown by survey','Crown by survey'],['imagery','Aerial imagery through time','Imagery'],['compare','Among similar trees','Similar trees'],['lost','If it were lost','If it were lost'],
     ['roots','Root space','Root space'],['sources','Measurements by source','By source'],['records','Records and identifiers','Records'],['species','Species and growth form','Species'],
     ['benefits','Benefits each year','Benefits'],['mapped','How this tree was mapped','How it was mapped'],['history','Releases and reviews','Releases'],['place','Place and property','Place'],
     ['know','Ground visits and contributions','Ground visits'],['data','Data, versions and citation','Data and citation']];
@@ -422,6 +424,7 @@
     return {
       metrics:[m.height?text(m.height):null,m.crownArea?text(m.crownArea):null,m.trunkDiameter?`trunk ${text(m.trunkDiameter)}${isEstimate(m.trunkDiameter)?' (estimate)':''}`:null].filter(Boolean).join(' · ')||'None for this record',
       structure:matched.length>1?`Height in ${matched.join(', ')}`:matched.length?`${matched[0]} survey only`:'No survey height',
+      imagery:'The crown in each aerial survey since 2010',
       compare:ctx&&k?`${ctx.lines[k].text} ${ctx.lines[k].where}`:c?.status==='pending'?'Street, local board and Auckland':c?.status==='ready'?'No group for this tree':'Comparison tables not yet published',
       lost:m.replacementYears?`About ${text(m.replacementYears)} to regrow (estimate)`:'None for this record',
       roots:m.rootProtection?`Radius ${text(m.rootProtection)} (estimate)`:'None for this record',
@@ -506,9 +509,56 @@
     return {set:y=>{current=String(y);apply(current,false);},get:()=>Number(current),close,isOpen:()=>!pop.hidden};
   }
 
+  // ---------- tree IDs ----------
+  // From data release 6.1 the tree number is the tree's ID (Copy, permalink) and the record ID follows on one quieter
+  // line; before 6.1 the record ID is the tree ID. Items of the tree page's ID line (dl.ti-idline).
+  function idLine(rec){
+    if(!rec.number)return `<div><dt>Tree ID</dt><dd><code>${esc(rec.id)}</code><button type="button" class="ti-copy" id="copyId" aria-label="Copy the tree ID">Copy</button></dd></div>`;
+    return `<div><dt>Tree number</dt><dd><code class="ti-tn">${esc(rec.number)}</code><button type="button" class="ti-copy" id="copyId" aria-label="Copy the tree number">Copy</button><small><a class="ti-permalink" href="${esc(rec.permalink)}">${esc(rec.permalink)}</a></small></dd>
+          <dt class="ti-sub">Record ID</dt> <dd class="ti-sub"><code>${esc(rec.id)}</code></dd></div>`;
+  }
+
+  // ---------- a page about an ID that names no current tree ----------
+  // r: ALTOTreeId.resolve() of the ID asked for (retired, merged, split, unknown or invalid); typed: the text as given;
+  // fix: the one correction of a mistyped number, if any; receipt: the corrections-applied items its reason names.
+  // The title states the status and the reason; the trees that took its place are links, with an empty
+  // span[data-succ="<number>"] for each tree's name once its record loads. -> {title, primary, mapHref, html}
+  const dayText=t=>String(t||'').replace(/\b(\d{4})-(\d{2})-(\d{2})\b/g,(m,y,mo,d)=>new Date(`${y}-${mo}-${d}T12:00:00Z`).toLocaleDateString('en-NZ',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}));
+  const releaseWords=t=>String(t||'').replace(/^V(\d+(?:\.\d+)?)\b/,'Release $1').replace(/\bv(\d+(?:\.\d+)?)\b/g,'release $1');   // as on the methods pages
+  function statusView(r,{typed='',fix=null,receipt=[],icon=null}={}){
+    const Id=root.ALTOTreeId,d=Id.describe(r),t=String(typed||r.input||'').trim(),rows=[];
+    const kv=(k,v,sub)=>rows.push(`<div class="ti-kv"><dt>${esc(k)}</dt><dd>${v}${sub?`<small>${sub}</small>`:''}</dd></div>`);
+    const link=n=>`<a href="${esc(Id.url(n))}"><code>${esc(n)}</code></a>`,succ=n=>`${link(n)} <span class="ti-succ-what" data-succ="${esc(n)}"></span>`;
+    let title=d.heading,lead='',primary=null,eyebrow=Id.label(r.kind);
+    if(r.status==='invalid'){
+      const shaped=Id.isNumberShaped(t);eyebrow=shaped?'Tree number':'Tree ID';
+      if(shaped&&fix){title='Check character doesn’t match';lead=`Did you mean ${link(fix)}?`;primary=fix;}
+      kv('Typed',`<code>${esc(t)}</code>`,shaped?null:'Tree numbers, record IDs and crown keys are accepted');
+      if(shaped)kv('Format','<code>T</code> + 6 characters + 1 check character','Example <code>TMCTT6X4</code>; characters 0–9 and A–Z without I, L, O and U');
+    }else{
+      kv(Id.label(r.kind),`<code>${esc(r.key||t)}</code>`);
+      kv('Status',esc({retired:r.successor?'Retired':'Retired; no successor',merged:'Merged',split:`Split into ${nf(r.successors.length)} trees`,unknown:'Not in this release'}[r.status]||r.status));
+      if(r.note&&r.status!=='unknown')kv('Reason',esc(releaseWords(r.note)),(receipt||[]).map(x=>`${receipt.length>1?`${esc(x.id)}, `:''}${x.decided_on?`${esc(dayText(x.decided_on))}: `:''}${esc(releaseWords(x.summary||x.reason||''))}`).join('<br>'));
+      else if(r.note)kv('Note',esc(r.note));
+      if(r.status==='merged'&&r.number){kv('Surviving tree',succ(r.number));primary=r.number;}
+      if(r.status==='split'){kv('Parts',`<ol class="ti-succ">${r.successors.map(n=>`<li>${succ(n)}</li>`).join('')}</ol>`,'Largest share first');primary=r.successors[0]||null;}
+      if(r.status==='retired'&&r.successor){kv('Successor',succ(r.successor));primary=r.successor;}
+      if(r.position)kv('Last position',`${r.position.lat.toFixed(6)}, ${r.position.lon.toFixed(6)}`,'Latitude, longitude (WGS 84)');
+      if(r.last_release)kv('Last release',esc(dayText(r.last_release)));
+      if(r.source_id)kv('Source ID',`<code>${esc(r.source_id)}</code>`);
+    }
+    // A tombstone's map link opens the map at its last position, with the reason.
+    const tomb=r.status==='retired'&&!r.successor&&!!r.position,mapHref=tomb?Id.url(r.key,{page:'map'}):'./',ic=n=>icon?icon(n,16):'';
+    const html=`<div class="ti-id-main ti-status-page" data-status="${esc(r.status)}"><p class="ti-eyebrow ti-kicker">${esc(eyebrow)}</p><h1>${esc(title)}</h1>${lead?`<p class="ti-lead">${lead}</p>`:''}
+        <dl class="ti-kvs ti-status-kvs">${rows.join('')}</dl></div>
+      <div class="ti-id-actions">${primary?`<a class="btn btn-primary" href="${esc(Id.url(primary))}"><span>Open tree ${esc(primary)}</span>${ic('arrow')}</a>`:''}
+        <a class="btn${primary?'':' btn-primary'}" href="${esc(mapHref)}">${ic('map')}<span>${tomb?'See the place on the map':'Open the map'}</span></a></div>`;
+    return {title,primary,mapHref,html};
+  }
+
   const api={KINDS,LABELS,SECTIONS,estimateBadge,fmt,fmtValue,fmtRange,text,line,sourceName,rangeBar,stageBar,classBar,stageShare,eyebrow,title,protectionLine,badges,versionLine,metric,strip,missing,
     provenance,years,surveySentence,heightFigure,surveyChart,crownFigure,figureKey,imageryText,regrowthLine,lost,rootRows,METRICS,distStrip,contextLines,contextSentence,boardName,
-    matrix,cellQuantity,teasers,pageLinks,setYear,bind,quantity,nice,ticks,money,sig2,areaText,hybrid,esc};
+    matrix,cellQuantity,teasers,pageLinks,setYear,bind,quantity,nice,ticks,money,sig2,areaText,hybrid,esc,idLine,statusView};
   root.ALTOInstrument=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

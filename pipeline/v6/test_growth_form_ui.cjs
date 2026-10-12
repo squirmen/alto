@@ -63,7 +63,8 @@ assert.deepEqual(keys.sort(),Object.keys(G.WORDING).sort());
 assert.equal(ge[ge.length-1],'none');
 const ce=G.colour();
 assert.equal(ce.length,2+2*(G.GROUPS.length-1)+1);
-assert.equal(G.legend().length,G.GROUPS.length);
+// The design-system legend shows "not determined" and "not estimated" as one row (one colour), so it has one row fewer than the groups.
+assert.equal(G.legend().length,G.GROUPS.length-1);
 html=G.toggles(new Set(['evergreen']));
 assert.equal((html.match(/data-growth-form=/g)||[]).length,G.GROUPS.length);
 assert.ok(html.includes('data-growth-form="evergreen" aria-pressed="true"')&&html.includes('data-growth-form="conifer" aria-pressed="false"'));

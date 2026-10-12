@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · Release 6.1 · Permanent tree numbers"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods: permanent tree numbers (release 6.1) · ALTO</title>
+<meta name="description" content="ALTO release 6.1: a permanent number for every tree on the map, its format and check character, the alias table that resolves every earlier tree ID and crown key, the reviewer corrections applied, and the limits.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.2">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.2">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.2">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./alto-logo.png" alt="ALTO map" width="3934" height="1170"></a>
+      <span class="app-bar-context">Methods</span>
+      <nav class="app-bar-actions" aria-label="Page actions">
+        <a class="btn" href="./"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Map</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">Methods and release notes</p>
+    <h1>Permanent tree numbers</h1>
+    <dl class="release">
+      <div><dt>Release</dt><dd>6.1</dd></div>
+      <div><dt>Published</dt><dd><time datetime="2026-10-13">13 Oct 2026</time></dd></div>
+      <div><dt>Previous release</dt><dd><a href="./v6-methods.html">6 · 12 Oct 2026</a></dd></div>
+      <div class="release-id"><dt>Dataset ID</dt><dd><code>metro-2026.10.13-pointcloud-v6.1</code></dd></div>
+    </dl>
+    <p class="lede">This release gives every tree on the map a permanent number, publishes a table that resolves every tree ID and crown key ALTO has published, and applies the corrections ledger in full. Crowns, measurements and estimates are those of release 6 except on the trees a correction changed.</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#what-changed">What changed</a></li>
+      <li><a href="#numbers">Tree numbers</a></li>
+      <li><a href="#format">Format and check character</a></li>
+      <li><a href="#old-ids">Older IDs</a></li>
+      <li><a href="#corrections">Corrections applied</a></li>
+      <li><a href="#unchanged">What stays the same</a></li>
+      <li><a href="#limits">Limits</a></li>
+      <li><a href="#sources">Notes and sources</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="what-changed">
+      <h2>What changed</h2>
+      <ul>
+        <li>4,200,336 map trees have a permanent tree number, such as <code>TMCTT6X4</code>. Each tree’s permanent link is <code>https://alto.tfwelch.com/tree/</code> followed by its number.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup></li>
+        <li>An alias table of 19,376,165 keys resolves every tree number, record ID and crown key published since June 2026 to the tree that carries it now, or to the reason it carries none.<sup class="fn"><a href="#note-2" id="ref-2" aria-label="Note 2">2</a></sup></li>
+        <li>The corrections ledger is applied in full: 14 corrections change the map and the tree records, 17 are recorded with their trees, 318 were already true and 5 await review; none is pending.<sup class="fn"><a href="#note-3" id="ref-3" aria-label="Note 3">3</a></sup></li>
+        <li>The map shows 3,574,821 trees (3 fewer than release 6) and counts 3,523,021 crowns (3 fewer); 3,570 trees are protected, as in release 6.</li>
+      </ul>
+    </section>
+
+    <section id="numbers">
+      <h2>Tree numbers</h2>
+      <p>A number belongs to a tree as the map draws it: one number for each map marker after the corrections. A crown’s number covers its marker, its outline and every record on the crown.</p>
+      <div class="table-wrap" role="region" aria-labelledby="table-1-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-1-caption"><span class="caption-label">Table 1.</span> Tree numbers issued in release 6.1, by what the map draws.</caption>
+          <thead>
+            <tr><th scope="col">Map tree</th><th scope="col">Carries the number</th><th scope="col" class="num">Numbers</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Crown</th><td>The crown outline, its marker and every record on the crown</td><td class="num">3,523,098</td></tr>
+            <tr><th scope="row">Earlier LiDAR detection</th><td>A release 4 detection that no current crown covers</td><td class="num">625,515</td></tr>
+            <tr><th scope="row">Record with its own marker</th><td>A record with a marker and no crown of its own: Council, OpenStreetMap and notable-tree records without a crown or outside the survey, and 14 protected records on a shared crown</td><td class="num">51,723</td></tr>
+            <tr><th scope="row">All map trees</th><td></td><td class="num">4,200,336</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Of the 6,238,420 records, 4,200,336 are a tree’s marker, 2,038,080 sit on another record’s crown and carry that tree’s number, and 4 were merged into another tree by a reviewer and carry the surviving tree’s number. Each full record lists its tree’s number, its role (marker, member or merged) and the release that issued the number.</p>
+      <p>Numbers are drawn at random from about 1.07 billion possible numbers and checked against every number issued before; a number is never reused and encodes nothing about the tree. The record ID (<code>akl_tree_…</code>) stays the key of each full record.</p>
+      <p>Later releases carry numbers over. A crown that continues keeps its number: at least half of it lies in one new crown and no other new crown holds a fifth. When several numbered trees become one, the number with outside references, corrections or a source record survives (otherwise the largest overlap) and the others are marked merged. A split keeps the number on the part holding the representative record and lists every part. A tree with no successor is retired with a reason and its last position. A change of representative alone never changes a number.<sup class="fn"><a href="#note-4" id="ref-4" aria-label="Note 4">4</a></sup></p>
+    </section>
+
+    <section id="format">
+      <h2>Format and check character</h2>
+      <p>A tree number is <code>T</code> followed by 6 characters and 1 check character, from the 32 characters 0–9 and A–Z without I, L, O and U (Crockford’s base 32). The check character is a Luhn mod 32 checksum of the 6 characters after <code>T</code>.</p>
+      <ul>
+        <li>Input: any case, with spaces or a hyphen (<code>tmct-t6x4</code>); I and L read as 1, O as 0.</li>
+        <li>Every single mistyped character fails the check; so do 99.8% of swapped neighbouring characters.</li>
+        <li>A number that fails its check is refused. The map’s search and the tree page offer a correction when exactly one number one keystroke away exists in the release.</li>
+      </ul>
+    </section>
+
+    <section id="old-ids">
+      <h2>Older IDs</h2>
+      <p>The alias table resolves each key to a tree number and the record that shows the tree. The tree page (<code>/tree/</code>, <code>tree.html?id=</code>) and the map (<code>?tree=</code>, the search box) read it for every ID. An ID of a current tree opens that tree with one line naming its number. A retired, merged or split ID opens a page stating its status and reason, with links to the trees that took its place.</p>
+      <div class="table-wrap" role="region" aria-labelledby="table-2-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-2-caption"><span class="caption-label">Table 2.</span> Keys in the alias table, by kind.</caption>
+          <thead>
+            <tr><th scope="col">Key</th><th scope="col">Resolves to</th><th scope="col" class="num">Keys</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Tree numbers</th><td>The tree</td><td class="num">4,200,336</td></tr>
+            <tr><th scope="row">Record IDs, releases 4 to 6</th><td>The tree the record is on: its marker 4,200,336; on its crown 2,038,080; merged 4</td><td class="num">6,238,420</td></tr>
+            <tr><th scope="row">LiDAR detections removed before the 9 Sep 2026 release</th><td>Retired, with the reason and the last position; no successor</td><td class="num">7,405</td></tr>
+            <tr><th scope="row">Crown keys, release 5 on</th><td>The tree; 1 crown merged into another (C00017)</td><td class="num">3,352,852</td></tr>
+            <tr><th scope="row">Crown keys of crowns drawn from a record, release 5.2</th><td>The tree; 3 retired after a reviewer moved their record (successor: the record’s tree)</td><td class="num">534</td></tr>
+            <tr><th scope="row">Release 4 crown keys</th><td>Continues as one crown 4,336,452; split 189,399; drawn outside the release 5 survey 103; not continued 1,050,664 (retired; successor: the tree its representative record is on now)</td><td class="num">5,576,618</td></tr>
+            <tr><th scope="row">All keys</th><td></td><td class="num">19,376,165</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap" role="region" aria-labelledby="table-3-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-3-caption"><span class="caption-label">Table 3.</span> Keys by status.</caption>
+          <thead>
+            <tr><th scope="col">Status</th><th scope="col">Meaning</th><th scope="col" class="num">Keys</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Current</th><td>The tree, its marker record or its crown</td><td class="num">16,090,609</td></tr>
+            <tr><th scope="row">Member</th><td>A record on the tree’s crown without a marker of its own</td><td class="num">2,038,080</td></tr>
+            <tr><th scope="row">Retired</th><td>No tree carries it now; a successor where one replaced it, the last position where none did</td><td class="num">1,058,072</td></tr>
+            <tr><th scope="row">Split</th><td>Divided between current trees, largest share first</td><td class="num">189,399</td></tr>
+            <tr><th scope="row">Merged</th><td>Joined to another tree by a reviewer correction</td><td class="num">5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Every record ID and crown key of every earlier release resolves through the table, from the 23 June 2026 snapshot to release 6.<sup class="fn"><a href="#note-5" id="ref-5" aria-label="Note 5">5</a></sup></p>
+    </section>
+
+    <section id="corrections">
+      <h2>Corrections applied</h2>
+      <p>Each decision in the ledger is planned against release 6 and applied to the affected records and crowns; the receipt lists every outcome.<sup class="fn"><a href="#note-3" id="ref-3b" aria-label="Note 3">3</a></sup></p>
+      <div class="table-wrap" role="region" aria-labelledby="table-4-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-4-caption"><span class="caption-label">Table 4.</span> Outcomes of the 354 corrections in the ledger (356 ledger events).</caption>
+          <thead>
+            <tr><th scope="col">Outcome</th><th scope="col">Meaning</th><th scope="col" class="num">Corrections</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Applied</th><td>The map and the tree record show the correction</td><td class="num">14</td></tr>
+            <tr><th scope="row">Recorded in the release</th><td>Published with the tree; map and values unchanged</td><td class="num">17</td></tr>
+            <tr><th scope="row">Already in the release</th><td>The release already reflected it</td><td class="num">318</td></tr>
+            <tr><th scope="row">Pending</th><td>Not yet applied; the reason is given</td><td class="num">0</td></tr>
+            <tr><th scope="row">Awaiting review</th><td>Proposed or tentative; not applied and not attached to any tree</td><td class="num">5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>Notable tree on its plaque crown (C00001): applied as in release 6, now in the release database as well.</li>
+        <li>KYTE visit (C00002): the 18 September visit filed under the notable record is shown on the tree it photographed, by the basketball court.</li>
+        <li>Merged trees: the Kermadec pōhutukawa’s two earlier-detection markers join its surviving crown (C00004); the two crowns of the AR/0334 <i>Angophora</i> are one tree, 520.25 m² and 26.61 m tall (C00017).</li>
+        <li>Reviewer outlines (C00038, C00040, C00067, C00151, C00172): five crowns drawn from a record take the reviewer’s outline as polygon and area (3.46 to 98.01 m²).</li>
+        <li>Records moved to reviewed crowns (C00201, C00239, C00320); two take the crown’s marker, and the crowns drawn from them in release 5.2 are retired.</li>
+        <li>A Council record linked to a low crown (2.8 m) of the near-canopy layer, now drawn as its tree crown with the marker at the crown top; the crown drawn from the record in release 5.2 is retired (C00307).</li>
+        <li>A reviewer’s species for one tree (C00005).</li>
+      </ul>
+    </section>
+
+    <section id="unchanged">
+      <h2>What stays the same</h2>
+      <p>Every release 6 record, link, marker, source position, survey history, estimate and growth-form field is kept in the release database; record IDs do not change. Outside the corrected trees, the map tiles equal release 6’s apart from the number on each point and crown.</p>
+    </section>
+
+    <section id="limits">
+      <h2>Limits</h2>
+      <ul>
+        <li>A number names a tree as mapped in this release. When a later release redraws crowns, a number can be retired, merged or split under the carry-over rules; its page then says which.</li>
+        <li>Reviewer outlines change the crown area; the height stays the release 5.2 measurement of the crown drawn from the record.</li>
+        <li>The near-canopy layer still draws the low-canopy polygon under the crown promoted for C00307.</li>
+        <li>KYTE takes record IDs only, so its links from ALTO carry the record ID; KYTE still files the C00002 visit under the notable record.</li>
+        <li>Outside the alias table: near-canopy (low and sub-canopy) polygon keys other than the promoted one, KYTE’s own visit IDs, 772 link-review candidate crowns and 400 notable-tree IDs reserved but never published.</li>
+        <li>Five corrections await review and are not applied.</li>
+        <li>Benefit and trunk estimates are not independently validated; they remain sensitivity scenarios.</li>
+      </ul>
+    </section>
+
+    <section id="sources" class="sources">
+      <h2>Notes and sources</h2>
+      <ol class="notes">
+        <li id="note-1">Format, rules and counts: <a href="./data/tree-numbers-v61.json">tree numbers, release 6.1</a>. Map features carry the number as <code>tn</code>; full records carry it in the <code>tree_number</code> dataset. <a class="note-back" href="#ref-1" aria-label="Back to note 1 in the text">↑</a></li>
+        <li id="note-2">Alias table: 65,536 files hashed like the full records (FNV-1a of the key, mod 65,536), described by <a href="./data/tree_ids/schema.json">its schema</a>. A row gives the key’s tree number, the record that shows the tree, its status, any successors, a reason and, for a retired key, the last position. <a class="note-back" href="#ref-2" aria-label="Back to note 2 in the text">↑</a></li>
+        <li id="note-3">The receipt lists every decision with its subject, outcome and reason: <a href="./data/corrections-applied.json">corrections applied in this release</a>; ledger format <code>alto-corrections/1</code>, ledger SHA-256 <code>da2d1f46c3d77fd568f0a5ea7fe976d57e6caefe4474e6db41f621cab29392ac</code>. <a class="note-back" href="#ref-3" aria-label="Back to note 3 in the text">↑</a></li>
+        <li id="note-4">The assignment of numbers is frozen for this release; a rebuild reuses it and stops if the map markers differ. The carry-over rules are unit-tested. <a class="note-back" href="#ref-4" aria-label="Back to note 4 in the text">↑</a></li>
+        <li id="note-5">Checked before publication against the record IDs and crown keys of the 23 June 2026 snapshot, the 9 September release and releases 4, 5, 5.1, 5.2 and 6; of 287,556 references to tree IDs found by the tree-ID audit, 286,192 resolve; the 1,364 others were never published as trees (953 link-review candidate and near-canopy crown keys, 400 reserved notable-tree IDs, 11 test fixtures). <a class="note-back" href="#ref-5" aria-label="Back to note 5 in the text">↑</a></li>
+      </ol>
+      <h3>Files</h3>
+      <ul class="link-list">
+        <li><a href="./data/tree-numbers-v61.json">Tree numbers: format, rules and counts</a><span class="meta"><code>data/tree-numbers-v61.json</code></span></li>
+        <li><a href="./data/tree_ids/schema.json">Alias table schema</a><span class="meta"><code>data/tree_ids/schema.json</code></span></li>
+        <li><a href="./data/corrections-applied.json">Corrections applied in this release</a><span class="meta"><code>data/corrections-applied.json</code></span></li>
+        <li><a href="./data/tree_details/schema.json">Full-record schema</a><span class="meta"><code>data/tree_details/schema.json</code></span></li>
+        <li><a href="./release-metadata.json">Release metadata</a><span class="meta"><code>release-metadata.json</code> · current release</span></li>
+      </ul>
+      <h3>Releases</h3>
+      <ul class="link-list">
+        <li><a href="./v61-methods.html" aria-current="page">Permanent tree numbers</a><span class="meta">Release 6.1 · 13 Oct 2026</span></li>
+        <li><a href="./v6-methods.html">Growth form and smoothed crown outlines</a><span class="meta">Release 6 · 12 Oct 2026</span></li>
+        <li><a href="./v52-methods.html">Linking records to crowns</a><span class="meta">Release 5.2 · 10 Oct 2026</span></li>
+        <li><a href="./v51-methods.html">Restoring links between records and crowns</a><span class="meta">Release 5.1 · 8 Oct 2026</span></li>
+        <li><a href="./v5-methods.html">Redrawing Auckland’s canopy</a><span class="meta">Release 5 · 23 Sep 2026</span></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span>, University of Auckland</span><span>Release 6.1 · 13 Oct 2026</span></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

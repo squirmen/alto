@@ -27,8 +27,16 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 WEB = REPO / 'web'
 # Files the live site already serves from its root, or that describe a data release.
-SKIP = {'release-metadata.json', 'v5-methods.html', 'v51-methods.html', 'v52-methods.html', 'v6-methods.html', 'htaccess.example'}
+SKIP = {'release-metadata.json', 'v5-methods.html', 'v51-methods.html', 'v52-methods.html', 'v6-methods.html', 'v61-methods.html', 'htaccess.example'}
 PAGES = ('index.html', 'tree.html')
+METHODS_PAGES = ('v5-methods.html', 'v51-methods.html', 'v52-methods.html', 'v6-methods.html', 'v61-methods.html')
+# Every page's own scripts and styles carry the build's stamp (?v=tool-<version>), whatever stamp the source
+# page had, so a browser never pairs a new page with a cached script or style from an earlier build.
+LOCAL_ASSET = re.compile(r'(["\'](?:\./)?[\w./-]+\.(?:js|mjs|css))\?v=[^"\'&#]*')
+
+
+def stamp_assets(html, stamp):
+    return LOCAL_ASSET.sub(lambda m: f'{m.group(1)}?v={stamp}', html)
 
 
 def git(*args):
@@ -66,7 +74,7 @@ def changelog_html(md, version):
             + '\n'.join(out) + '</body></html>\n')
 
 
-def write_upload_notes(out, version, commit, files, total, root, derived=()):
+def write_upload_notes(out, version, commit, files, total, root, derived=(), public=False):
     """UPLOAD.md beside the folder: what to upload where, what it needs from the site, how to check and undo."""
     top = sorted({p.relative_to(out).parts[0] for p in files} | {'MANIFEST.sha256'})
     rows = '\n'.join(f'| `{name}` | {"folder" if (out / name).is_dir() else "file"} |' for name in top)
@@ -76,12 +84,17 @@ def write_upload_notes(out, version, commit, files, total, root, derived=()):
                            + (f' (left out: {", ".join(d["left_out"])}, which the public pages do not read)' if d.get('left_out') else '') for d in derived)
         derived_text = ('- Derived files travel inside the build, one folder per data release; the tree page uses only the\n'
                         '  folder named by the live release\'s `dataset_version`:\n' + listed + '\n')
-    text = f"""# Upload: ALTO tool {version}
-
-Upload the folder `{out.name}/` as it is to the site root, so it is served at `/{out.name}/` beside the
+    base = '' if public else f'{out.name}/'
+    where = (f"""This is a public build for the site root: copy the contents of `{out.name}/` over the site root
+(pages, scripts, styles, fonts, the methods pages, `derived/` and `tool-build.json`). It holds no
+`data/`, `kyte/`, `release-metadata.json` (the data release's) or `.htaccess`; those stay as they are.
+""" if public else f"""Upload the folder `{out.name}/` as it is to the site root, so it is served at `/{out.name}/` beside the
 live map (for example `https://<site>/{out.name}/`). Nothing outside `{out.name}/` changes: the live
 `index.html`, `data/`, `kyte/` and `.htaccess` are untouched.
+""")
+    text = f"""# Upload: ALTO tool {version}
 
+{where}
 - Build: tool {version}, commit `{commit}` ({len(files) + 1} files, {total / 1e6:.1f} MB).
 - Checksums: `{out.name}/MANIFEST.sha256` (`shasum -a 256 -c MANIFEST.sha256` inside the folder).
 
@@ -91,30 +104,38 @@ live map (for example `https://<site>/{out.name}/`). Nothing outside `{out.name}
 
 ## What it uses from the live site (same origin, read only)
 
-- `{root}/release-metadata.json`: the data release (v5.2 now, v6 next). The cache stamp for every data
+- `{root}/release-metadata.json`: the data release (v6 now, v6.1 next). The cache stamp for every data
   request is read from its `assembly.tile_version`, so the build follows the live data release
   without a rebuild, and growth form appears only when the metadata lists it.
 - `{root}/data/…` (tiles, tree and property records), `{root}/kyte/…` (photos, KYTE links),
-  `{root}/v52-methods.html` / `{root}/v6-methods.html` (release notes).
+  `{root}/v6-methods.html` / `{root}/v61-methods.html` (release notes); from data release 6.1, the tree-number
+  alias table `{root}/data/tree_ids/` (without it the pages keep record IDs as the tree IDs).
+- `{root}/data/tree_change_v1.pmtiles`: Change since 2013 v1, a new file name (upload it before this build goes
+  live; the screened `tree_change.pmtiles` stays for rollback).
 - The site root `.htaccess` applies to `{out.name}/` too: `.mjs` as JavaScript, Range requests,
   the CSP (scripts from self and unpkg.com; tiles from arcgisonline.com and openstreetmap.org).
-- Its own `release-metadata.json` describes this tool build only (`tool_version`); the pages do not
+- The tree page's aerial imagery reads LINZ's open imagery archive from the browser: the CSP's
+  `connect-src` must also allow `https://nz-imagery.s3.ap-southeast-2.amazonaws.com` (see
+  `web/htaccess.example`). Until it does, that section says the site does not yet allow it; nothing
+  else is affected.
+- Its own `{'tool-build.json' if public else 'release-metadata.json'}` describes this tool build only (`tool_version`); the pages do not
   read it.
 {derived_text}
 ## After uploading, check
 
-1. `/{out.name}/`: the map loads; About and the panel footer read "Data v5.2 · Tool v{version}" (v6
-   once that release is live); the header shows a Beta pill and a link back to the current map.
-2. Tap a tree: the panel shows size pictures and "Open tree page".
-3. `/{out.name}/tree.html?id=akl_tree_trp_ACCT0245027`: the tree page loads with its mini map;
+1. `/{base}`: the map loads; About and the panel footer name the live data release and Tool v{version}{'' if public else '; the header shows a Beta pill and a link back to the current map'}.
+2. Tap a tree: the panel shows size pictures and "Open tree page"; with data release 6.1, its tree number,
+   Copy and permalink, and the address ends `?tree=<number>`.
+3. `/{base}tree.html?id=akl_tree_trp_ACCT0245027`: the tree page loads with its mini map;
    "Among similar trees" shows street, local board and Auckland rows when the live release has a
-   derived folder in this build (otherwise it says the tables are not published for this release).
-4. `/{out.name}/?property=6563788`: a property opens; the Area tab summarises it.
-5. Browser console: no errors; the pages carry `noindex`.
+   derived folder in this build (otherwise it says the tables are not published for this release);
+   "Aerial imagery through time" shows the crown in each LINZ survey once the CSP allows the archive.
+4. `/{base}?property=6563788`: a property opens; the Area tab summarises it.
+5. Browser console: no errors; the pages {'do not carry' if public else 'carry'} `noindex`.{chr(10)+'6. `/v6-methods.html` and `/v61-methods.html`: the release 6 and 6.1 methods pages on the methods template.' if public else ''}
 
 ## Undo
 
-Delete the `{out.name}/` folder. Nothing else was changed.
+{'Restore the previous tool files at the site root from the copy taken before this upload (the data release, `kyte/` and `.htaccess` were not touched).' if public else f'Delete the `{out.name}/` folder. Nothing else was changed.'}
 """
     (out.parent / 'UPLOAD.md').write_text(text)
 
@@ -151,7 +172,9 @@ def main():
     stamp = f'tool-{version}'
     root = a.site_root.rstrip('/')
 
-    skip = {'release-metadata.json', 'v6-methods.html', 'htaccess.example'} if a.public else SKIP
+    # The public build ships the tool's restyled methods pages (release 5 to 6), replacing the copies a data
+    # bundle carried (the v6 bundle's v6-methods.html predates the 12 Oct audit and the methods template).
+    skip = {'release-metadata.json', 'htaccess.example'} if a.public else SKIP
     for src in sorted(WEB.iterdir()):
         if src.name in skip or src.name.startswith('.'):
             continue
@@ -188,10 +211,15 @@ def main():
         if not a.public:
             html = html.replace('<meta name="viewport" content="width=device-width, initial-scale=1">',
                                 '<meta name="viewport" content="width=device-width, initial-scale=1">\n  <meta name="robots" content="noindex, nofollow">', 1)
-        html = html.replace('?v=V6_VERSION', f'?v={stamp}').replace('?v=tool-' + base_version + '"', f'?v={stamp}"')
+        html = stamp_assets(html.replace('?v=V6_VERSION', f'?v={stamp}'), stamp)
         if not a.public:
             html = re.sub(r'<title>(.*?)</title>', lambda m: f'<title>{m.group(1)} (beta)</title>', html, count=1)
         p.write_text(html)
+    if a.public:
+        for name in METHODS_PAGES:
+            p = out / name
+            if p.exists():
+                p.write_text(stamp_assets(p.read_text(), stamp))
     (out / 'changelog.html').write_text(changelog_html((REPO / 'CHANGELOG.md').read_text(), version).replace('href="VERSIONING.md"', 'href="versioning.html"'))
     (out / 'versioning.html').write_text(changelog_html((REPO / 'VERSIONING.md').read_text(), version).replace('<title>ALTO changelog</title>', '<title>ALTO versioning</title>'))
     vjs = out / 'version.js'
@@ -208,7 +236,8 @@ def main():
         'data': {'description': 'This build has no data of its own. It reads the live site data release.',
                  'metadata': f'{root}/release-metadata.json', 'base': f'{root}/data', 'kyte': f'{root}/kyte',
                  'tile_version': 'read at run time from the live metadata (assembly.tile_version)',
-                 'tested_with': ['v5.2 (metro-2026.10.10-pointcloud-v5.2)', 'v6 development build (metro-2026.10.11-pointcloud-v6-dev)'],
+                 'tested_with': ['v5.2 (metro-2026.10.10-pointcloud-v5.2)', 'v6 (metro-2026.10.12-pointcloud-v6)',
+                                 'v6.1 (metro-2026.10.13-pointcloud-v6.1)'],
                  'derived': derived or None},
         'see': ['CHANGELOG.md', 'VERSIONING.md']
     }
@@ -221,7 +250,7 @@ def main():
         lines.append(f'{h}  {p.relative_to(out).as_posix()}')
     (out / 'MANIFEST.sha256').write_text('\n'.join(lines) + '\n')
     total = sum(p.stat().st_size for p in files)
-    write_upload_notes(out, version, commit, files, total, root, derived)
+    write_upload_notes(out, version, commit, files, total, root, derived, public=a.public)
     print(json.dumps({'out': str(out), 'version': version, 'files': len(files) + 1, 'bytes': total, 'commit': commit}, indent=1))
 
 

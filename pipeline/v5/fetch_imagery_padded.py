@@ -21,7 +21,7 @@ from PIL import Image
 from pyproj import Transformer
 
 import os
-# Benchmark kit: hand-labelled crowns and imagery used to calibrate segmentation (not distributed).
+# Benchmark kit: human-labelled crowns and imagery used to calibrate segmentation (not distributed).
 KIT = Path(os.environ.get("ALTO_BENCH_KIT", "/data/alto/bench_kit"))
 OUT = Path("/data/alto/working/bench_imagery_pad")
 PAD = 20.0          # must match build_base.PAD

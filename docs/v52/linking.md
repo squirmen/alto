@@ -366,7 +366,7 @@ does not mean a tree is absent.
 reads `LINK_DB` (opened read-only), `LINK_CROWNS` (the crown tiles) and writes under `LINK_ROOT`.
 Everything that depends on crowns is recomputed: candidates, the cover mask the seeded crowns avoid, the
 error model, run shifts, the simulation, weights and confidence. On a redrawn crown set, a fresh audit
-round has to be drawn, rendered and judged by eye before `report.py`; the audit is the measurement the
+round has to be drawn, rendered and judged before `report.py`; the audit is the measurement the
 simulation cannot replace. Rows matched against different crown sets should not be merged.
 [`pipeline/v52/README.md`](../../pipeline/v52/README.md) gives the order of the release build.
 

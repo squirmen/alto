@@ -5,10 +5,10 @@
     "status": "research_only_not_independently_validated",
     "public_claims_enabled": false,
     "software_version": "0.1.0",
-    "dataset_version": "metro-2026.10.12-pointcloud-v6",
-    "dataset_last_updated_utc": "2026-10-11T21:30:30.220087+00:00",
-    "metadata_generated_utc": "2026-10-11T21:30:30.220110+00:00",
-    "source_revision": "V6 growth form and smoothed crown outlines; rules, counts and service changes in data/growth-form-v6.json",
+    "dataset_version": "metro-2026.10.13-pointcloud-v6.1",
+    "dataset_last_updated_utc": "2026-10-12T13:00:54.701130+00:00",
+    "metadata_generated_utc": "2026-10-12T13:00:54.701137+00:00",
+    "source_revision": "v6.1: permanent tree numbers and the corrections ledger applied in full; data/tree-numbers-v61.json, data/corrections-applied.json",
     "source_dirty": null
   },
   "dataset": {
@@ -24,14 +24,14 @@
     },
     "current_v5_service_records": 3352851,
     "tree_records": 6238420,
-    "current_map_markers": 3574824,
-    "crown_records": 3523024,
+    "current_map_markers": 3574821,
+    "crown_records": 3523021,
     "pointcloud_v5_tree_crowns": 3352851,
     "near_canopy_candidates": 1499603,
     "display_roles": {
-      "current_crown": 3353399,
+      "current_crown": 3353396,
       "source_record": 34320,
-      "earlier_detection": 625517,
+      "earlier_detection": 625515,
       "outside_v5_coverage": 187105
     },
     "near_canopy_classes": {
@@ -43,7 +43,7 @@
       "completed": 3149,
       "empty_tiles": 41
     },
-    "crown_features": 3523101,
+    "crown_features": 3523098,
     "current_service_records": 3540503,
     "record_links_v52": 3088,
     "record_seeded_crowns_v52": {
@@ -67,7 +67,17 @@
       },
       "mode": "full"
     },
-    "current_service_records_reweighted_v6": 2918424
+    "current_service_records_reweighted_v6": 2918424,
+    "headline_totals": {
+      "trees": 3574821,
+      "protected": 3570,
+      "lidarInferred": 3510684,
+      "totalValueNzdY": 295364727.4299859,
+      "runoffM3Y": 20522968.673977666,
+      "carbonTco2e": 3376489.9339971733,
+      "crowns": 3523021
+    },
+    "tree_numbers": 4200336
   },
   "headline_scope": {
     "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag and await confirmation; 77 drawn crowns 2–3 m tall are low canopy and not counted."
@@ -216,24 +226,24 @@
       "last_modified_utc": "2026-09-23T03:41:23.737510+00:00"
     },
     {
-      "path": "data/council_positions.pmtiles",
-      "bytes": 1276632,
-      "last_modified_utc": "2026-10-09T11:23:17.760762+00:00"
-    },
-    {
       "path": "data/trees_map_points.pmtiles",
-      "bytes": 1557759680,
-      "last_modified_utc": "2026-10-11T21:30:30.220183+00:00"
+      "bytes": 1705004463,
+      "last_modified_utc": "2026-10-12T13:00:54.701166+00:00"
     },
     {
       "path": "data/tree_crowns_pilot.pmtiles",
-      "bytes": 1921221031,
-      "last_modified_utc": "2026-10-11T21:30:30.220201+00:00"
+      "bytes": 2046151883,
+      "last_modified_utc": "2026-10-12T13:00:54.701188+00:00"
     },
     {
       "path": "data/properties.pmtiles",
-      "bytes": 233734612,
-      "last_modified_utc": "2026-10-11T21:30:30.220215+00:00"
+      "bytes": 233734636,
+      "last_modified_utc": "2026-10-12T13:00:54.701851+00:00"
+    },
+    {
+      "path": "data/council_positions.pmtiles",
+      "bytes": 1277767,
+      "last_modified_utc": "2026-10-12T13:00:54.701880+00:00"
     }
   ],
   "provenance": {
@@ -244,11 +254,11 @@
     "web_crs": "EPSG:4326"
   },
   "assembly": {
-    "assembled_utc": "2026-10-11T21:30:30.220117+00:00",
-    "tile_version": "20261012-v6",
-    "database_mtime_ns": "1791750846774552655",
-    "mode": "verified_v6_growth_form_build",
-    "note": "V5.2 streams, profiles and summaries with growth form, reweighted services and smoothed outlines; hash-verified unchanged files."
+    "assembled_utc": "2026-10-12T13:00:54.701142+00:00",
+    "tile_version": "20261013-v6.1",
+    "database_mtime_ns": "1791806695743022549",
+    "mode": "verified_v61_build",
+    "note": "v6 streams, records and summaries with tree numbers and the corrections ledger applied by a rebuild of the affected trees."
   },
   "derived_products": {
     "longitudinal_model": "data/longitudinal/model.json",
@@ -259,7 +269,9 @@
     "record_links": "data/record-links-v52.json",
     "council_positions": "data/council_positions.pmtiles",
     "growth_form": "data/growth-form-v6.json",
-    "corrections_applied": "data/corrections-applied.json"
+    "corrections_applied": "data/corrections-applied.json",
+    "tree_ids": "data/tree_ids/schema.json",
+    "tree_numbers": "data/tree-numbers-v61.json"
   },
   "previous_release": {
     "release": {
@@ -267,32 +279,32 @@
       "status": "research_only_not_independently_validated",
       "public_claims_enabled": false,
       "software_version": "0.1.0",
-      "dataset_version": "metro-2026.10.10-pointcloud-v5.2",
-      "dataset_last_updated_utc": "2026-10-09T11:23:16.613147+00:00",
-      "metadata_generated_utc": "2026-10-09T11:23:16.613299+00:00",
-      "source_revision": "V5.2 record-to-crown links; method, precision and counts in data/record-links-v52.json",
+      "dataset_version": "metro-2026.10.12-pointcloud-v6",
+      "dataset_last_updated_utc": "2026-10-11T21:30:30.220087+00:00",
+      "metadata_generated_utc": "2026-10-11T21:30:30.220110+00:00",
+      "source_revision": "V6 growth form and smoothed crown outlines; rules, counts and service changes in data/growth-form-v6.json",
       "source_dirty": null
     },
     "dataset": {
       "extent_id": "auckland_metro",
       "new_pointcloud_tree_records": 399290,
       "evidence_tiers": {
-        "location_unverified": 647,
+        "location_unverified": 646,
         "possible": 59050,
         "probable": 914878,
-        "shared_crown_candidate": 2038092,
+        "shared_crown_candidate": 2038093,
         "unmatched": 846296,
         "very_likely": 2379457
       },
       "current_v5_service_records": 3352851,
       "tree_records": 6238420,
-      "current_map_markers": 3574825,
+      "current_map_markers": 3574824,
       "crown_records": 3523024,
       "pointcloud_v5_tree_crowns": 3352851,
       "near_canopy_candidates": 1499603,
       "display_roles": {
         "current_crown": 3353399,
-        "source_record": 34321,
+        "source_record": 34320,
         "earlier_detection": 625517,
         "outside_v5_coverage": 187105
       },
@@ -312,7 +324,24 @@
         "features": 534,
         "counted": 457,
         "low_canopy_not_counted": 77
-      }
+      },
+      "growth_form_v6": {
+        "scored_crowns": 3352099,
+        "display_keys": {
+          "evergreen_high": 1491608,
+          "evergreen_medium": 839983,
+          "not_determined": 580548,
+          "conifer": 144883,
+          "broadleaf": 136708,
+          "tree_fern": 71947,
+          "deciduous_likely": 39048,
+          "palm_c1": 19600,
+          "deciduous_high": 16913,
+          "palm_or_cabbage_tree": 10861
+        },
+        "mode": "full"
+      },
+      "current_service_records_reweighted_v6": 2918424
     },
     "headline_scope": {
       "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag and await confirmation; 77 drawn crowns 2–3 m tall are low canopy and not counted."
@@ -324,32 +353,32 @@
         "last_modified_utc": "2026-09-23T03:41:23.737510+00:00"
       },
       {
-        "path": "data/trees_map_points.pmtiles",
-        "bytes": 1514669429,
-        "last_modified_utc": "2026-10-09T11:23:17.760713+00:00"
-      },
-      {
-        "path": "data/tree_crowns_pilot.pmtiles",
-        "bytes": 1909452121,
-        "last_modified_utc": "2026-10-09T11:23:17.760743+00:00"
-      },
-      {
-        "path": "data/properties.pmtiles",
-        "bytes": 233796320,
-        "last_modified_utc": "2026-10-09T11:23:17.760754+00:00"
-      },
-      {
         "path": "data/council_positions.pmtiles",
         "bytes": 1276632,
         "last_modified_utc": "2026-10-09T11:23:17.760762+00:00"
+      },
+      {
+        "path": "data/trees_map_points.pmtiles",
+        "bytes": 1557759680,
+        "last_modified_utc": "2026-10-11T21:30:30.220183+00:00"
+      },
+      {
+        "path": "data/tree_crowns_pilot.pmtiles",
+        "bytes": 1921221031,
+        "last_modified_utc": "2026-10-11T21:30:30.220201+00:00"
+      },
+      {
+        "path": "data/properties.pmtiles",
+        "bytes": 233734612,
+        "last_modified_utc": "2026-10-11T21:30:30.220215+00:00"
       }
     ],
     "assembly": {
-      "assembled_utc": "2026-10-09T11:23:17.722414+00:00",
-      "tile_version": "20261010-v5.2",
-      "database_mtime_ns": "1791543593040210150",
-      "mode": "verified_v52_record_link_rebuild",
-      "note": "Package links verified against the V5.1 release; SQL-regenerated linked records, hash-verified unchanged profiles and geometry; rebuilt map, property summaries, totals and KYTE nearby choices."
+      "assembled_utc": "2026-10-11T21:30:30.220117+00:00",
+      "tile_version": "20261012-v6",
+      "database_mtime_ns": "1791750846774552655",
+      "mode": "verified_v6_growth_form_build",
+      "note": "V5.2 streams, profiles and summaries with growth form, reweighted services and smoothed outlines; hash-verified unchanged files."
     },
     "derived_products": {
       "longitudinal_model": "data/longitudinal/model.json",
@@ -358,7 +387,9 @@
       "crown_association_audit": "data/crown-link-repair-v51.json",
       "property_summaries": "data/property_details/schema.json",
       "record_links": "data/record-links-v52.json",
-      "council_positions": "data/council_positions.pmtiles"
+      "council_positions": "data/council_positions.pmtiles",
+      "growth_form": "data/growth-form-v6.json",
+      "corrections_applied": "data/corrections-applied.json"
     }
   },
   "v5_changes": [
@@ -428,12 +459,20 @@
     "ledger_sha256": "da2d1f46c3d77fd568f0a5ea7fe976d57e6caefe4474e6db41f621cab29392ac",
     "receipt": "data/corrections-applied.json",
     "counts": {
-      "applied": 1,
-      "pending": 12,
-      "recorded_in_release": 18,
+      "applied": 14,
+      "recorded_in_release": 17,
       "awaiting_review": 5,
       "already_in_release": 318
     },
-    "note": "Reviewer corrections from config/corrections/corrections.jsonl applied after the build (corrections_v6.py)."
-  }
+    "note": "Every accepted correction in config/corrections/corrections.jsonl applied by the v6.1 rebuild (build_v61.py, corrections_v61.py)."
+  },
+  "v61_changes": [
+    "Permanent tree numbers for all 4,200,336 map trees (T + 6 Crockford base-32 characters + a check character), in the map features (tn), the full records (tree_number) and an alias table of 19,376,165 keys (data/tree_ids) that resolves every record ID, v4 and v5 crown key ever published, and tombstones for the 7,405 LiDAR detections removed before the 9 Sep 2026 release. Links: https://alto.tfwelch.com/tree/<number>.",
+    "Corrections ledger applied in full: 14 applied (record moves, crown merges, reviewer outlines, a near-canopy crown linked to its record, a reviewer species, a KYTE visit moved to the tree it photographed), 17 recorded on the tree record, 318 already true, 5 awaiting review.",
+    "Retained every v6 record, link, marker, source position, history, estimate and growth-form field in the database."
+  ],
+  "v61_limits": [
+    "Reviewer outlines change the crown area; the height stays the v5.2 measurement of the crown drawn from the record.",
+    "The near-canopy layer still draws the low-canopy polygon that v6.1 links to a register tree (the tree crown is drawn over it)."
+  ]
 }

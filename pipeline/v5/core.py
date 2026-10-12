@@ -28,7 +28,7 @@ from skimage.feature import peak_local_max
 from skimage.segmentation import watershed
 
 import os
-# Benchmark kit: hand-labelled crowns and imagery used to calibrate segmentation (not distributed).
+# Benchmark kit: human-labelled crowns and imagery used to calibrate segmentation (not distributed).
 KIT = Path(os.environ.get("ALTO_BENCH_KIT", "/data/alto/bench_kit"))
 LAB = Path("/data/alto/working/seg_lab")
 TOL_M = 2.0

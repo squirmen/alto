@@ -9,6 +9,9 @@ needs a separate licence: contact Tim Welch, t.welch@auckland.ac.nz.
 The documents in docs/ are licensed under Creative Commons Attribution-NonCommercial 4.0
 International (CC BY-NC 4.0); see docs/LICENSE.md.
 
+The Better Places Lab name and logo (web/brand/) are not covered by either licence and may not be
+reused without permission.
+
 Third-party material keeps its own licence:
 - web/vendor/three/: three.js, MIT License (web/vendor/three/LICENSE).
 - web/fonts/: the Inter typeface (The Inter Project Authors), Latin subsets served as the family

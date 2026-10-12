@@ -3,10 +3,12 @@
  * and concept C's numbered section links (a sticky strip on phones) and plain sentences.
  * A survey year chosen in the bar highlights in the key measurements, every figure, the measurements by source and
  * the map; every value opens its provenance in one tap. Sections, numbered as in the tree panel's links: key
- * measurements · crown by survey · among similar trees · if it were lost · root space · measurements by source ·
+ * measurements · crown by survey · aerial imagery through time · among similar trees · if it were lost · root space ·
+ * measurements by source ·
  * records and identifiers · species and growth form · benefits · how this tree was mapped · releases and reviews ·
  * place and property · ground visits and contributions · data, versions and citation.
- * Reads alto.tree-record/1 (tree-record.js); markup from tree-instrument.js; ALTO design system. */
+ * Reads alto.tree-record/1 (tree-record.js); markup from tree-instrument.js; aerial imagery from tree-imagery.js (LINZ);
+ * ALTO design system. */
 (function(){
   'use strict';
   const V=window.ALTOViz,I=window.ALTOInstrument,R=window.ALTOTreeRecord,PAL=window.ALTOPalette;
@@ -17,7 +19,7 @@
   const f1=v=>nf(v,1);
   // Map colours come from the design-system tokens (palette.js), never literals.
   const tok=name=>PAL?PAL.map(name):null;
-  let rec=null,env=null,mini=null,linker=null,yearMarker=null,geometry=null;
+  let rec=null,env=null,mini=null,linker=null,yearMarker=null,geometry=null,imageryTL=null;
   const NEAR=40; // metres: the nearby trees listed from the map tiles around the recorded position
 
   const KEYS=['height','crownArea','crownDiameter','trunkDiameter','rootProtection','lifeStage','benefits','carbonStored','replacementYears','irreplaceability'];
@@ -39,9 +41,12 @@
     if(/LiDAR returns at the recorded position/.test(s))return 'Drawn from the LiDAR returns at the recorded position';
     return s.replace(/\s*\(v\d+(\.\d+)?\)/g,'');
   }
+  // Source names in the glossary's words (no release numbers in labels).
+  const plainSource=n=>String(n||'').replace(/\s*\(v\d+(?:\.\d+)? crown detection\)/,' (crown detection)');
+  const plainBasis=t=>String(t||'').replace(/\bv\d+(?:\.\d+)? growth[- ]form model weighted\b/i,'Weighted by the growth-form estimate').replace(/\bv(\d+(?:\.\d+)?)\b/g,'release $1');
   const releaseName=r=>({v4:'4',v5:'5','v5.1':'5.1','v5.2':'5.2',v6:'6'})[r.release]||String(r.release||'').replace(/^v/,'');
   function treeTitle(t){
-    if(t.nameKind==='model')return `${esc(String(t.title).replace(/^(Probably|Likely)\s+/,'').replace(/\s*\(model\)$/,'').replace(/^./,c=>c.toUpperCase()))} ${I.estimateBadge}`;
+    if(t.nameKind==='model')return `${esc(String(t.title).replace(/^(Probably|Likely)\s+/,'').replace(/\s*\(model\)$/,'').replace(/\(model,\s*/,'(').replace(/^./,c=>c.toUpperCase()))} ${I.estimateBadge}`;
     return esc(t.title==='Tree detected from LiDAR'?'LiDAR-detected tree':t.title);
   }
 
@@ -69,7 +74,7 @@
     const saved=window.ALTOEvidenceWorkspace?.has(rec.id);
     return `<div class="ti-id-main"><p class="ti-eyebrow ti-kicker">${esc(I.eyebrow(id))}</p><h1>${esc(t.text)}</h1>${t.latin?`<p class="ti-latin">${esc(t.latin)}</p>`:''}${t.note?`<p class="ti-note">${esc(t.note)}</p>`:''}
         ${gf?`<p class="ti-note">Growth form: ${esc(gf.label)} ${I.estimateBadge}</p>`:''}${prot}${I.badges(rec,{icon,recordsHref:'#m-records'})}
-        <dl class="ti-idline"><div><dt>Tree ID</dt><dd><code>${esc(rec.id)}</code><button type="button" class="ti-copy" id="copyId" aria-label="Copy the tree ID">Copy</button></dd></div>
+        <dl class="ti-idline">${I.idLine(rec)}
           <div><dt>Local board</dt><dd id="heroBoard">…</dd></div><div><dt>Release</dt><dd>${esc(rec.release.public?.text||I.versionLine(rec))}${rec.release.public?.preview?' <span class="badge badge-muted">Preview</span>':''}${rec.release.statusText?`<small>${esc(rec.release.statusText)}</small>`:''}<small><a href="#m-history">Releases and reviews</a></small></dd></div></dl></div>
       <div class="ti-id-actions"><a class="btn btn-primary" id="openMap" href="${esc(rec.mapUrl||'./')}">${icon('map',16)}<span>See it on the map</span></a>
         <button type="button" class="btn" id="saveCompare" aria-pressed="${saved?'true':'false'}">${icon('bookmark',16)}<span>${saved?'Saved to compare':'Save to compare'}</span></button>
@@ -77,10 +82,45 @@
         <a class="btn btn-quiet" href="#m-know">Know this tree?</a></div>`;
   }
   // The sticky bar: the survey year and the numbered section links (a scrolling strip of chips on phones, concept C).
+  // On wider screens the strip shows the chips that fit whole and a "More" menu with the rest (never a clipped chip).
   function bar(){
     return `<div class="ti-bar-in"><span class="ti-bar-name" aria-hidden="true">${esc(I.title(rec.identity).text)}</span>${I.years(rec)}
-      <ol class="ti-bar-nav">${MODS.map(([id,,short],i)=>`<li><a href="#m-${id}" data-nav="${id}"><span class="ti-nav-n" aria-hidden="true">${i+1}</span>${esc(short)}</a></li>`).join('')}</ol>
+      <div class="ti-bar-navs"><ol class="ti-bar-nav">${MODS.map(([id,,short],i)=>`<li><a href="#m-${id}" data-nav="${id}"><span class="ti-nav-n" aria-hidden="true">${i+1}</span>${esc(short)}</a></li>`).join('')}</ol>
+        <div class="ti-nav-more" hidden><button type="button" class="ti-nav-more-btn" aria-expanded="false" aria-controls="navMore">More<span class="ti-nav-more-n"></span></button>
+          <ol class="ti-nav-menu" id="navMore" hidden>${MODS.map(([id,ttl],i)=>`<li><a href="#m-${id}" data-nav="${id}"><span class="ti-nav-n" aria-hidden="true">${i+1}</span>${esc(ttl)}</a></li>`).join('')}</ol></div></div>
       <p class="ti-bar-quick"><a href="#m-records">Records</a><a href="#m-history">Releases</a></p></div>`;
+  }
+  function fitNav(){
+    const nav=$('.ti-bar-nav'),more=$('.ti-nav-more');if(!nav||!more)return;
+    const chips=[...nav.children],menu=[...more.querySelectorAll('.ti-nav-menu > li')];
+    chips.forEach(li=>{li.hidden=false;});
+    if(matchMedia('(max-width: 759px)').matches){more.hidden=true;return;}
+    more.hidden=false;
+    const gap=parseFloat(getComputedStyle(nav).columnGap)||0,room=nav.parentElement.clientWidth-more.offsetWidth-8;
+    let used=0,cut=chips.length;
+    for(let i=0;i<chips.length;i++){used+=chips[i].offsetWidth+(i?gap:0);if(used>room){cut=i;break;}}
+    if(cut===chips.length){more.hidden=true;return;}
+    chips.forEach((li,i)=>{li.hidden=i>=cut;});menu.forEach((li,i)=>{li.hidden=i<cut;});
+    more.querySelector('.ti-nav-more-n').textContent=` (${chips.length-cut})`;
+    markMore();
+  }
+  // The More button shows when the section in view is one of its items.
+  function markMore(){
+    const b=$('.ti-nav-more-btn');if(!b)return;
+    const cur=[...document.querySelectorAll('.ti-nav-menu > li:not([hidden]) a[aria-current]')][0];
+    b.classList.toggle('is-current',!!cur);
+    b.setAttribute('aria-label',cur?`More sections (now: ${cur.textContent.replace(/^\d+/,'').trim()})`:'More sections');
+  }
+  function navMenu(){
+    const b=$('.ti-nav-more-btn'),m=$('#navMore');if(!b||!m)return;
+    const close=()=>{m.hidden=true;b.setAttribute('aria-expanded','false');};
+    b.addEventListener('click',e=>{e.stopPropagation();const open=m.hidden;m.hidden=!open;b.setAttribute('aria-expanded',String(open));if(open)m.querySelector('li:not([hidden]) a')?.focus();});
+    m.addEventListener('click',e=>{if(e.target.closest('a'))close();});
+    document.addEventListener('click',e=>{if(!m.hidden&&!e.target.closest('.ti-nav-more'))close();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!m.hidden){close();b.focus();}});
+    const bar=$('#bar');if(bar&&typeof ResizeObserver!=='undefined')new ResizeObserver(()=>fitNav()).observe(bar);
+    fitNav();
+    document.fonts?.ready?.then(fitNav);
   }
 
   // ---------- crown by survey (linked figures) ----------
@@ -109,16 +149,30 @@
       </div>`,'ti-mod-wide');
   }
 
+  // ---------- aerial imagery through time (LINZ's aerial surveys, read in the browser by tree-imagery.js) ----------
+  function imageryMod(){
+    return mod('imagery','Aerial surveys of Auckland, 2010–2025',
+      `<p class="ti-say">The crown in each aerial survey of Auckland that covers this tree, oldest first. The yellow line is the 2024 crown outline from the LiDAR survey, drawn on every photograph for comparison; where the tree has no outline, a ring marks its position.</p>
+      <div id="imageryBody" class="ti-ix-body"></div>
+      <p class="ti-cap">The photographs are orthophotos: a tall crown leans away from the camera, so it can sit a metre or more off its outline, differently in each survey. Each is read at about 15–30 cm per pixel (a coarser survey at its own pixel size, and only where no sharper survey of the same years covers the tree) to keep the page fast. Dates are each survey’s flying period as LINZ records it; LINZ does not date each photograph.</p>`,'ti-mod-wide');
+  }
+  function startImagery(){
+    const el=$('#imageryBody'),pos=rec.identity.position,X=window.ALTOImagery;if(!el)return;
+    if(!pos||!X){el.innerHTML=none(pos?'the aerial imagery reader did not load':'no position');return;}
+    imageryTL=X.timeline(el,{lon:pos.lon,lat:pos.lat,area:num(rec.measures?.crownArea?.value)??num(rec.summary?.size?.area),geometry:()=>geometry,
+      colours:{focus:tok('--viz-overlay-focus'),halo:tok('--viz-overlay-halo')},onDone:sm=>{document.body.dataset.imagery=JSON.stringify({ready:sm.ready.length,none:sm.none.length,superseded:sm.superseded.length,error:sm.error.length,blocked:sm.blocked});}});
+  }
+
   // ---------- among similar trees (the release's comparison tables; a fixed n for every tree) ----------
   function compareBody(){
     const c=rec.context||{},cls=rec.benefits?.classUsed;
     const head=cls?`<p class="ti-lede">Within its tree class, <b>${esc(cls.label.toLowerCase())}</b> (the class of its benefit estimates). Crown area and benefits on log scales.</p>`:'';
     if(c.status==='ready'){
-      const mets=['height','crownArea','benefits'];
+      const mets=['height','crownArea','benefits'],small=c.scopes.find(sc=>sc.scope==='street'&&sc.status==='small'),rows=c.scopes.filter(sc=>sc!==small);
       return head+`<div class="ti-cmp" role="table" aria-label="Among similar trees"><div class="ti-cmp-row ti-cmp-head" role="row"><span role="columnheader">Group</span>${mets.map(m=>`<span role="columnheader">${esc(I.METRICS[m].label)}${m==='benefits'?` ${I.estimateBadge}`:''}</span>`).join('')}</div>`+
-        c.scopes.map(sc=>`<div class="ti-cmp-row" role="row"><span role="rowheader"><b>${esc(sc.scope==='street'?'Street':sc.scope==='board'?'Local board':'Auckland')}</b>${sc.name&&sc.scope!=='auckland'?`<small>${esc(sc.scope==='board'?I.boardName(sc.name):sc.name)}</small>`:''}<small>${sc.status==='ready'?`n = ${nf(sc.n)}`:esc(sc.definition||'No group for this tree')}</small></span>${mets.map(m=>{const e=sc.metrics?.[m];
+        rows.map(sc=>`<div class="ti-cmp-row" role="row"><span role="rowheader"><b>${esc(sc.scope==='street'?'Street':sc.scope==='board'?'Local board':'Auckland')}</b>${sc.name&&sc.scope!=='auckland'?`<small>${esc(sc.scope==='board'?I.boardName(sc.name):sc.name)}</small>`:''}<small>${sc.status==='ready'?`n = ${nf(sc.n)}`:esc(sc.definition||'No group for this tree')}</small></span>${mets.map(m=>{const e=sc.metrics?.[m];
           return `<span role="cell">${e?`<b>${esc(e.text)}</b>${I.distStrip(m,{value:e.value,dist:e.distribution,text:e.text,n:sc.n})}`:'<span class="ti-na">–</span>'}</span>`;}).join('')}</div>`).join('')+'</div>'+
-        `<p class="ti-cap">Strips: the middle half of the group (dark band), 5–95% (light band) and the median (tick); dots are each tree in a small group; the ring with a line is this tree. ${esc(c.population||'')}${c.generated?` Comparison tables of ${esc(c.generated.text)}.`:''} Shares are rounded down. Street: trees whose nearest address point is on the same street.</p>`;
+        `<p class="ti-cap">Strips: the middle half of the group (dark band), 5–95% (light band) and the median (tick); dots are each tree in a small group; the ring with a line is this tree. ${c.population?esc(String(c.population).replace(/\.?\s*$/,'.')):''}${c.generated?` Comparison tables of ${esc(c.generated.text)}.`:''} Shares are rounded down. Street: trees whose nearest address point is on the same street, compared when at least ${nf(R.MIN_STREET_N||10)} trees of the class share it${small?` (${esc(small.name||'this street')} has ${nf(small.n)}, so it is left out)`:''}.</p>`;
     }
     if(c.status==='pending')return head+pending('Loading comparison tables…');
     if(c.status==='no_class')return head+none('no tree class for comparison (no crown estimate)');
@@ -139,11 +193,13 @@
   }
   function records(){
     const rs=rec.records||[];
-    const rows=rs.map(r=>`<tr${r.self?' class="is-self"':''}><th scope="row">${esc(r.source?.name||'')}${r.self?' <span class="tag">This record</span>':''}<small>${esc(r.source?.kind||'')}</small></th>
-      <td>${r.href?link(r.href,r.sourceId||r.treeId):`<code>${esc(r.sourceId||r.treeId||'')}</code>`}${!r.self&&r.treeId?`<small><a href="${esc(window.ALTOTreeId.url(r.treeId))}">Tree page</a></small>`:''}</td>
+    const rows=rs.map(r=>`<tr${r.self?' class="is-self"':''}><th scope="row">${esc(plainSource(r.source?.name))}${r.self?' <span class="tag">This record</span>':''}<small>${esc(r.source?.kind||'')}</small></th>
+      <td>${r.href?link(r.href,r.sourceId||r.treeId):`<code>${esc(r.sourceId||r.treeId||'')}</code>`}${!r.self&&r.treeId&&(!rec.number||(r.number&&r.number!==rec.number))?`<small><a href="${esc(window.ALTOTreeId.url(r.number||r.treeId))}">Tree page</a></small>`:''}</td>
       <td>${esc(r.role?r.role.charAt(0).toUpperCase()+r.role.slice(1):'')}${r.owner?.class?`<small>${esc(r.owner.class)}</small>`:''}</td><td>${r.species?.common||r.species?.latin?`${esc(r.species.common||'')}${r.species.latin?` <i>${esc(I.hybrid(r.species.latin))}</i>`:''}`:'<span class="ti-na">None recorded</span>'}</td>
       <td>${r.snapshot?.text?esc(r.snapshot.text):'–'}</td><td>${r.link?.text?esc(r.link.text.replace(/the v5 crown/,'the crown')):'–'}${num(r.link?.edgeDistance)!==null?`<small>${f1(r.link.edgeDistance)} m from the crown edge</small>`:''}</td></tr>`).join('');
-    const more=rec.moreRecords?`<p class="ti-cap">${nf(rec.moreRecords)} more record${rec.moreRecords===1?'':'s'} on this crown; each has its own tree page.</p>`:'';
+    // From release 6.1 a record on the crown carries this tree's number (its link opens this page) unless it keeps a
+    // marker and a number of its own.
+    const more=rec.moreRecords?`<p class="ti-cap">${nf(rec.moreRecords)} more record${rec.moreRecords===1?'':'s'} on this crown${rec.number?'':'; each has its own tree page'}.</p>`:'';
     const ids=(rec.identifiers||[]).map(x=>`<li><span>${esc(x.kind.replace(/\s*\(v\d+\)/,''))}${x.self?' · this record':''}</span><code>${x.href?link(x.href,x.code):esc(x.code)}</code>${x.note?`<small>${esc(x.note)}</small>`:''}</li>`).join('');
     const b=rec.identity.badges.find(x=>x.key==='records');
     return mod('records',b?esc(b.label):'',`<div class="ti-scroll"><table class="ti-table"><thead><tr><th scope="col">Source</th><th scope="col">Record ID</th><th scope="col">Role</th><th scope="col">Species as supplied</th><th scope="col">Retrieved</th><th scope="col">Link to the crown</th></tr></thead><tbody>${rows}</tbody></table></div>${more}
@@ -172,8 +228,8 @@
     const note=String(b.note||'').replace(/^i-Tree style equations with stated unit values; sensitivity scenarios\.\s*/,'');
     return mod('benefits',I.estimateBadge,`<p class="ti-big"><button type="button" class="ti-v" data-q="benefits" aria-haspopup="dialog">${esc(I.text(q))}</button>${I.fmtRange(q)?`<small>Range ${esc(I.fmtRange(q))}</small>`:''}</p>${I.rangeBar(q)}
       <table class="ti-table"><thead><tr><th scope="col">Service</th><th scope="col">Quantity</th><th scope="col" class="num">Value</th></tr></thead><tbody>${rows}</tbody></table>
-      <dl class="ti-kvs">${kv('Tree class used',b.classUsed?esc(b.classUsed.label):null,b.classUsed?.source?esc(b.classUsed.source):'')}${kv('Leaf area index',num(b.lai)!==null?nf(b.lai,1):null)}${b.biomass?kv('Biomass',`${nf(I.sig2(b.biomass.aboveKg))} kg above ground, ${nf(I.sig2(b.biomass.belowKg))} kg below`):''}${kv('Method',`i-Tree style equations with stated unit values ${link(b.method?.href)}`)}</dl>
-      ${note?`<p class="ti-cap">${esc(note)}</p>`:''}${b.assumptions&&Object.keys(b.assumptions).length?`<details class="ti-details"><summary>Assumptions</summary><dl class="ti-kvs">${Object.entries(b.assumptions).map(([k,v])=>kv(k.replace(/_/g,' ').replace(/^./,c=>c.toUpperCase()),esc(typeof v==='object'?JSON.stringify(v):v))).join('')}</dl></details>`:''}`);
+      <dl class="ti-kvs">${kv('Tree class used',b.classUsed?esc(b.classUsed.label):null,b.classUsed?.source?esc(plainBasis(b.classUsed.source)):'')}${kv('Leaf area index',num(b.lai)!==null?nf(b.lai,1):null)}${b.biomass?kv('Biomass',`${nf(I.sig2(b.biomass.aboveKg))} kg above ground, ${nf(I.sig2(b.biomass.belowKg))} kg below`):''}${kv('Method',`i-Tree style equations with stated unit values ${link(b.method?.href)}`)}</dl>
+      ${note?`<p class="ti-cap">${esc(note)}</p>`:''}${b.assumptions&&Object.keys(b.assumptions).length?`<details class="ti-details"><summary>Assumptions</summary><dl class="ti-kvs">${Object.entries(b.assumptions).map(([k,v])=>kv(k.replace(/_/g,' ').replace(/^./,c=>c.toUpperCase()),esc(plainBasis(String(typeof v==='object'?JSON.stringify(v):v).replace(/\bv\d+(?:\.\d+)? crown\b/g,'crown'))))).join('')}</dl></details>`:''}`);
   }
   // ---------- how this tree was mapped ----------
   function mapped(){
@@ -199,7 +255,7 @@
       <td>${esc(plainMethod(r.crown?.method?.text||''))||'–'}</td><td>${(r.events||[]).map(e=>esc(String(e.text||e.kind).replace(/(\d+\.\d+) → (\d+\.\d+) m²/,(m,a,b)=>`${Math.round(a)} → ${Math.round(b)} m²`).replace(/\bv(\d+(?:\.\d+)?)\b/g,'release $1'))).join('; ')||'–'}</td></tr>`).join('');
     const lin=H.lineageStatus==='ready'?'':`<p class="ti-cap">From this record's own fields.${H.lineageStatus==='not_published'||!H.lineageStatus?' The release-by-release lineage file is not yet published.':''}</p>`;
     const C=rec.corrections||{},items=C.items||[];
-    const corr=items.length?`<ul class="ti-list">${items.map(x=>`<li><b>${esc(x.kind?x.kind.charAt(0).toUpperCase()+x.kind.slice(1):'Review')}</b>${x.date?.text?` · ${esc(x.date.text)}`:''}${x.summary?`: ${esc(x.summary)}`:''}${x.outcome?` <span class="tag">${esc(OUTCOME[x.outcome]||x.outcome)}</span>`:x.status?` <span class="tag">${esc(x.status)}</span>`:''}${x.by?`<small>${esc(x.by)}${x.id?` · <code>${esc(x.id)}</code>`:''}</small>`:''}</li>`).join('')}</ul>`:none('no reviews or corrections');
+    const corr=items.length?`<ul class="ti-list">${items.map(x=>`<li><b>${esc(x.kind?String(x.kind).replace(/_/g,' ').replace(/^./,c=>c.toUpperCase()):'Review')}</b>${x.date?.text?` · ${esc(x.date.text)}`:''}${x.summary?`: ${esc(x.summary)}`:''}${x.outcome?` <span class="tag">${esc(OUTCOME[x.outcome]||x.outcome)}</span>`:x.status?` <span class="tag">${esc(x.status)}</span>`:''}${x.by?`<small>${esc(x.by)}${x.id?` · <code>${esc(x.id)}</code>`:''}</small>`:''}${(x.basedOn||[]).map(o=>`<small class="ti-based">Based on the ${esc(String(o.kind||'observation').replace(/_/g,' '))}${o.date?.text?` of ${esc(o.date.text)}`:''}${o.ref?` (<code>${esc(o.ref)}</code>)`:''}</small>`).join('')}</li>`).join('')}</ul>`:none('no reviews or corrections');
     const receipt=C.receiptStatus==='not_published'?notPublished('for this release: the list of applied corrections.'):C.receiptStatus==='release_mismatch'?notPublished('for this release: the corrections list on the site belongs to another release.'):C.receiptStatus==='ready'?`<p class="ti-cap">Checked against this release's list of applied corrections${C.receipt?.generated?.text?` (${esc(C.receipt.generated.text)})`:''}.</p>`:'';
     return `<div class="ti-scroll"><table class="ti-table"><thead><tr><th scope="col">Release</th><th scope="col" class="num">Height</th><th scope="col" class="num">Crown area</th><th scope="col">Crown outline</th><th scope="col">Change</th></tr></thead><tbody>${rows}</tbody></table></div>${lin}
       <h3 class="ti-h3">Reviews and corrections</h3>${C.status==='pending'?pending('Loading reviews…'):corr+receipt}`;
@@ -224,6 +280,7 @@
   function data(){
     const r=rec.release||{};
     return mod('data','',`<dl class="ti-kvs">${kv('Cite as',`<span id="citeInline">${esc(rec.citation||'')}</span> <button type="button" class="ti-copy" id="copyCiteInline">Copy citation</button>`)}
+      ${rec.number?kv('Tree number',`<code>${esc(rec.number)}</code>`,`Record ID <code>${esc(rec.id)}</code>`)+kv('Permalink',`<a class="ti-permalink" href="${esc(rec.permalink)}">${esc(rec.permalink)}</a>`):''}
       ${kv('Release',esc(r.public?.text||I.versionLine(rec)),[esc(r.statusText||''),r.data?`Release number ${esc(String(r.data).replace(/^v/,''))}${r.dev?' (preview)':''}`:null,r.datasetVersion?`Dataset <code>${esc(r.datasetVersion)}</code>`:null].filter(Boolean).join(' · '))}${kv('Record retrieved',r.snapshot?esc(r.snapshot.text):null)}
       ${kv('Methods',`${link(r.methodsHref,'Release methods')}${r.repository?` · ${link(r.repository,'Public repository')}`:''}`)}</dl>
       <div id="notesSlot">${notes()}</div>
@@ -244,6 +301,7 @@
     $('#mods').innerHTML=[
       metricsMod(),
       structure(),
+      imageryMod(),
       `<div class="ti-row2">${mod('compare','',`<div id="compareBody">${compareBody()}</div>`)}${mod('lost',I.estimateBadge,lostBody())}</div>`,
       mod('roots',`${I.estimateBadge} A planning scenario from the trunk estimate`,I.rootRows(rec),'ti-mod-wide'),
       sources(),
@@ -254,16 +312,18 @@
     linker=I.bind(document.body,rec,{onYear:(y)=>mapYear(y),popId:'pgPop'});
     bind();
     navSpy();
+    navMenu();
+    startImagery();
     const top=$('.tpg-top'),setTop=()=>document.documentElement.style.setProperty('--ti-top',`${top?.offsetHeight||56}px`);
     setTop();addEventListener('resize',setTop);
     printHeader();
   }
-  // Print (concept A): an A4 record with the tree ID and the release in the running header, the address and
+  // Print (concept A): an A4 record with the tree number (or ID) and the release in the running header, the permalink and
   // "Page n of N" in the footer; notes printed, map and buttons left out.
   function printHeader(){
     const q=s=>String(s||'').replace(/["\\\n]/g,'');
     const st=document.createElement('style');
-    st.textContent=`@page{@top-left{content:"ALTO tree record · ${q(rec.id)}";}@top-right{content:"${q(I.versionLine(rec))}";}@bottom-left{content:"${q(rec.url||location.href)}";}@bottom-right{content:"Page " counter(page) " of " counter(pages);}}`;
+    st.textContent=`@page{@top-left{content:"ALTO tree record · ${q(rec.number||rec.id)}";}@top-right{content:"${q(I.versionLine(rec))}";}@bottom-left{content:"${q(rec.permalink||rec.url||location.href)}";}@bottom-right{content:"Page " counter(page) " of " counter(pages);}}`;
     document.head.append(st);
     addEventListener('beforeprint',()=>{const d=$('#notesBox');if(d){d.dataset.wasOpen=d.open?'1':'';d.open=true;}});
     addEventListener('afterprint',()=>{const d=$('#notesBox');if(d&&!d.dataset.wasOpen)d.open=false;});
@@ -272,17 +332,18 @@
     const old=button?.textContent;
     (navigator.clipboard?.writeText(text)||Promise.reject()).then(()=>{if(button){button.textContent=done;setTimeout(()=>{button.textContent=old;},1600);}}).catch(()=>window.prompt('Copy:',text));
   }
-  function showAlert(t){const a=$('#pageAlert');a.hidden=false;a.textContent=t;clearTimeout(showAlert.t);showAlert.t=setTimeout(()=>{a.hidden=true;},4000);}
+  function showAlert(t,{keep=false}={}){const a=$('#pageAlert');a.hidden=false;a.textContent=t;clearTimeout(showAlert.t);if(!keep)showAlert.t=setTimeout(()=>{a.hidden=true;},4000);}
   function bind(){
-    $('#copyId')?.addEventListener('click',e=>copy(rec.id,e.currentTarget));
+    $('#copyId')?.addEventListener('click',e=>copy(rec.number||rec.id,e.currentTarget));
     $('#copyCiteInline')?.addEventListener('click',e=>copy(rec.citation,e.currentTarget));
     $('#citeText').textContent=rec.citation||'';
+    if(rec.number)$('#citeNote').textContent='Cite the tree number and its permalink with the data and tool versions: values change between data releases; the number and the link keep working through them.';
     $('#citeTree').disabled=false;$('#citeTree').addEventListener('click',()=>$('#citeDialog').showModal());
     $('#copyCite').addEventListener('click',e=>copy(rec.citation,e.currentTarget));
-    $('#shareTree').disabled=false;$('#shareTree').addEventListener('click',async e=>{const url=rec.url||location.href;try{if(navigator.share){await navigator.share({title:document.title,url});return;}}catch{return;}copy(url,e.currentTarget.querySelector('span')||e.currentTarget,'Link copied');});
+    $('#shareTree').disabled=false;$('#shareTree').addEventListener('click',async e=>{const url=rec.permalink||rec.url||location.href;try{if(navigator.share){await navigator.share({title:document.title,url});return;}}catch{return;}copy(url,e.currentTarget.querySelector('span')||e.currentTarget,'Link copied');});
     $('#saveCompare')?.addEventListener('click',e=>{const r=window.ALTOEvidenceWorkspace.toggle(rec.id);e.currentTarget.setAttribute('aria-pressed',String(r.saved));e.currentTarget.querySelector('span').textContent=r.saved?'Saved to compare':'Save to compare';showAlert(r.message);});
     $('#backToMap').href=rec.mapUrl||'./';
-    $('#allFields')?.addEventListener('toggle',e=>{const b=$('#allFieldsBody');if(e.target.open&&!b.childElementCount&&rec._ctx?.record)b.innerHTML=window.ALTOTreeDetails.render(rec._ctx.schema,rec._ctx.record);});
+    $('#allFields')?.addEventListener('toggle',e=>{const b=$('#allFieldsBody');if(e.target.open&&!b.childElementCount&&rec._ctx?.record)b.innerHTML=window.ALTOTreeDetails.render(rec._ctx.schema,rec._ctx.record).replace(/\b[Vv]5 crown\b/g,'crown');});
     $('#downloadJson')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(R.toJSON(rec),null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`alto_${rec.id}.json`;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);});
     document.querySelectorAll('[data-mm]').forEach(b=>b.addEventListener('click',()=>{b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true'));miniLayers();}));
   }
@@ -290,7 +351,7 @@
   function navSpy(){
     const links=[...document.querySelectorAll('[data-nav]')];
     const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){const id=e.target.id.slice(2);links.forEach(a=>a.toggleAttribute('aria-current',a.dataset.nav===id));
-      const cur=links.find(a=>a.dataset.nav===id),nav=cur?.closest('.ti-bar-nav');if(cur&&nav&&nav.scrollWidth>nav.clientWidth)nav.scrollTo({left:cur.offsetLeft-nav.clientWidth/2+cur.offsetWidth/2,behavior:'smooth'});}},{rootMargin:'-30% 0px -60% 0px'});
+      const cur=links.find(a=>a.dataset.nav===id&&a.closest('.ti-bar-nav')),nav=cur?.closest('.ti-bar-nav');if(cur&&nav&&nav.scrollWidth>nav.clientWidth)nav.scrollTo({left:cur.offsetLeft-nav.clientWidth/2+cur.offsetWidth/2,behavior:'smooth'});markMore();}},{rootMargin:'-30% 0px -60% 0px'});
     document.querySelectorAll('.ti-mod').forEach(s=>io.observe(s));
   }
   const keepYear=()=>I.setYear(document.body,linker?.get()||2024);
@@ -371,7 +432,7 @@
     mini.on('load',()=>{mini.resize();el.querySelector('.maplibregl-ctrl-attrib')?.classList.remove('maplibregl-compact-show');
       if(ships){try{mini.addSource('akl-council-positions',{type:'vector',url:v(`pmtiles://${DATA_BASE}/council_positions.pmtiles`)});for(const l of window.ALTORecordLinks.layers())mini.addLayer({...l,layout:{...(l.layout||{}),visibility:'visible'}},'pts');const k=$('#mapKeyLinks');if(k)k.hidden=false;}catch{}}
       miniLayers();});
-    mini.on('click','pts',e=>{const id=e.features?.[0]?.properties?.tree_id;if(id&&id!==rec.id&&id!==rep)location.href=window.ALTOTreeId.url(id);});
+    mini.on('click','pts',e=>{const p=e.features?.[0]?.properties||{},id=p.tree_id;if(id&&id!==rec.id&&id!==rep)location.href=window.ALTOTreeId.url(p.tn||id);});
     mini.on('mouseenter','pts',()=>mini.getCanvas().style.cursor='pointer');mini.on('mouseleave','pts',()=>mini.getCanvas().style.cursor='');
     let once=false;mini.on('idle',()=>{if(once)return;once=true;afterMap().finally(()=>done('map'));});
   }
@@ -381,7 +442,8 @@
     const pos=[rec.identity.position.lon,rec.identity.position.lat],rep=rec.identity.crownRepresentative||rec.id;
     const parts=mini.querySourceFeatures('crowns',{sourceLayer:'crowns',filter:['==',['get','tree_id'],rep]});
     if(parts.length){const polys=parts.flatMap(f=>f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates);geometry=polys.length===1?{type:'Polygon',coordinates:polys[0]}:{type:'MultiPolygon',coordinates:polys};
-      const slot=$('#chipSlot');if(slot){slot.innerHTML=I.crownFigure(rec,geometry,{width:420,height:300});const k=$('#chipKey');if(k)k.innerHTML=I.figureKey(rec,{geometry:true});keepYear();onPart('imagery');}}
+      const slot=$('#chipSlot');if(slot){slot.innerHTML=I.crownFigure(rec,geometry,{width:420,height:300});const k=$('#chipKey');if(k)k.innerHTML=I.figureKey(rec,{geometry:true});keepYear();onPart('imagery');}
+      imageryTL?.redraw();}
     // Every tree is on the point tiles at this zoom: the trees within NEAR metres, and the land type.
     const feats=mini.querySourceFeatures('pts',{sourceLayer:'trees'});
     const tileProps=feats.find(f=>f.properties.tree_id===rep||f.properties.tree_id===rec.id)?.properties||null;
@@ -404,7 +466,36 @@
   function fail(title,text){
     $('#hero').innerHTML=`<div class="ti-id-main"><p class="ti-eyebrow">ALTO tree page</p><h1>${esc(title)}</h1><p class="ti-note">${esc(text)}</p><p><a class="btn btn-primary" href="./">${icon('map',16)}<span>Open the map</span></a></p></div>`;
     $('#hero').removeAttribute('aria-busy');document.title=`${title} · ALTO`;document.body.dataset.ready='true';
+    footRelease();
   }
+  // The footer names the release and the tool on a page without a tree, too.
+  function footRelease(){const V=window.ALTOVersion;if(V)$('#footVersion').textContent=V.publicLabel(env?.metadata||null).text;}
+
+  // ---------- an ID that names no current tree ----------
+  // Retired (a tombstone, or replaced by another tree), merged, split, unknown or mistyped: markup from
+  // tree-instrument.js (statusView); here the correction of a mistyped number, the corrections the reason names and
+  // the name of each tree that took its place (title and height, from its record).
+  async function receiptItems(reason){
+    const ids=String(reason||'').match(/C\d{5}/g),path=env.metadata?.derived_products?.corrections_applied;
+    if(!ids||!path)return [];
+    try{const j=await fetch(`${SITE_ROOT}/${String(path).replace(/^\.?\//,'')}?v=${encodeURIComponent(VERSION)}`).then(r=>r.ok?r.json():null);
+      const list=j?.corrections||[];return ids.map(id=>list.find(x=>x.id===id)).filter(Boolean);}catch{return [];}
+  }
+  async function statusPage(raw,r){
+    const Id=window.ALTOTreeId,typed=String(raw??'').trim();
+    const fix=r.status==='invalid'&&Id.isNumberShaped(typed)?await Id.suggestNumber(typed,{base:DATA_BASE,version:VERSION,metadata:env.metadata}).catch(()=>null):null;
+    const receipt=['retired','merged','split'].includes(r.status)?await receiptItems(r.reason):[];
+    const v=I.statusView(r,{typed,fix,receipt,icon});
+    $('#hero').innerHTML=v.html;
+    $('#hero').removeAttribute('aria-busy');document.title=`${v.title} · ALTO`;document.body.dataset.ready='true';
+    for(const b of ['#shareTree','#citeTree'])$(b).hidden=true;
+    footRelease();
+    await Promise.all([...document.querySelectorAll('[data-succ]')].slice(0,8).map(async el=>{
+      try{const x=await R.load(el.dataset.succ,env,{members:0});const h=x.measures?.height;
+        el.innerHTML=[treeTitle(x.identity),h?esc(I.text(h)):null].filter(Boolean).join(' · ');}catch{el.textContent='';}
+    }));
+  }
+
   async function main(){
     const params=new URL(location.href).searchParams,raw=params.get('id')||params.get('tree');
     const metadata=await fetch(`${SITE_ROOT}/release-metadata.json`,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
@@ -412,14 +503,17 @@
     env={dataBase:DATA_BASE,siteRoot:SITE_ROOT,metadata,version:VERSION};
     if(window.ALTO_CHANNEL==='beta'){document.body.dataset.channel='beta';$('.tpg-brand')?.insertAdjacentHTML('afterend','<span class="beta-pill">Beta</span>');}
     if(!raw)return fail('No tree ID','Open a tree from the map, or add ?id= and a tree ID to this address.');
-    try{rec=await R.load(raw,env);}
+    const Id=window.ALTOTreeId,resolved=await Id.resolve(raw,{base:DATA_BASE,version:VERSION,metadata});
+    if(!resolved.tree_id||['retired','merged','split'].includes(resolved.status))return statusPage(raw,resolved);
+    try{rec=await R.load(raw,env,{resolved});}
     catch(err){return fail(err.code==='invalid'?'Not a tree ID':'Tree not found',err.message||'');}
     window.ALTOTreeRecordCurrent=rec;
-    const q=rec.request;
-    if(q&&(window.ALTOTreeId.normalise(raw)!==q.canonical||q.status!=='current')){
-      history.replaceState(null,'',window.ALTOTreeId.url(q.canonical)+(location.hash||''));
-      if(q.status!=='current')showAlert(`ID ${raw}: ${q.status}; now ${q.canonical}.${q.note?' '+q.note:''}`);
-    }
+    // The address names the tree by its number (release 6.1 on); an older ID gets one line saying which tree it is.
+    const q=rec.request,typed=String(raw).trim();
+    if(rec.number?typed!==rec.number:q&&(Id.normalise(raw)!==q.canonical||q.status!=='current'))history.replaceState(null,'',Id.url(rec.number||q.canonical)+(location.hash||''));
+    const said=Id.describe(resolved)?.note;
+    if(said)showAlert(said,{keep:true});
+    if(rec.permalink){const l=document.createElement('link');l.rel='canonical';l.href=rec.permalink;document.head.append(l);}
     const t=I.title(rec.identity);
     document.title=`${t.text}${t.latin?` (${t.latin})`:''} · ALTO`;
     $('#footVersion').textContent=I.versionLine(rec);

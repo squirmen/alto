@@ -14,9 +14,13 @@
     dialog?.addEventListener('close',()=>returnFocus?.focus({preventScroll:true}));
     update();
     const id=options.readLink===false?null:new URL(window.location.href).searchParams.get('tree');
+    // The linked tree opens with how the link's ID resolved (the panel says which tree an older ID is); an ID that
+    // names no current tree says why, at its last position when it has one.
     if(id&&id.length<=200)config.ready.then(async()=>{
-      try{const {record}=await config.load(id);const r=record.datasets.record||{};if(Number.isFinite(Number(r.lon))&&Number.isFinite(Number(r.lat))&&r.lon!=null&&r.lat!=null)config.locate([Number(r.lon),Number(r.lat)]);config.open({...r,tree_id:record.tree_id||id});}
-      catch{const status=document.getElementById('treeLinkStatus');status.hidden=false;status.textContent='The linked tree could not load. Check the link or try reloading the map.';}
+      try{const {record,resolved}=await config.load(id);const r=record.datasets.record||{};if(Number.isFinite(Number(r.lon))&&Number.isFinite(Number(r.lat))&&r.lon!=null&&r.lat!=null)config.locate([Number(r.lon),Number(r.lat)]);config.open({...r,tree_id:record.tree_id||id,tn:record.datasets.tree_number?.number},{resolved});}
+      catch(err){const status=document.getElementById('treeLinkStatus'),p=err?.resolved?.position;status.hidden=false;
+        if(p)config.locate([p.lon,p.lat]);
+        status.textContent=err?.resolved?.status==='retired'?err.message:'The linked tree could not load. Check the link or try reloading the map.';}
     });
   }
   async function show(){

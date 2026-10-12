@@ -57,7 +57,7 @@ for(const id of Object.keys(F.trees)){
     assert.equal(cell.includes('badge-estimate'),q.kind==='model',`${id} ${k}: Estimate badge for kind ${q.kind}`);
     const pop=I.provenance(q,rec);
     assert.ok(/<dt>Source<\/dt>/.test(pop)&&/<dt>Release<\/dt>/.test(pop)&&pop.includes(rec.id),`${id} ${k}: provenance popover`);
-    assert.ok(pop.includes('Release 11 Oct 2026 · Tool 0.2.1 · Preview'),`${id} ${k}: release named by its date`);
+    assert.ok(pop.includes('Release 11 Oct 2026 · Tool 0.2.4 · Preview'),`${id} ${k}: release named by its date`);
   }
   // The year control has one button per survey and a selected 2024.
   const years=I.years(rec);
@@ -128,5 +128,5 @@ assert.ok(/@media screen and \(max-width: 759px\)[\s\S]*\.ti-bar-nav a \{[^}]*mi
 assert.ok(!/@media \(max-width/.test(css),'narrow layouts are for screens; print keeps the wide layout');
 // The citation names the release by its date, with its number for exactness; no development-build wording.
 const cite=require(web+'version.js').citation({treeId:DET,metadata:META});
-assert.ok(cite.includes('Release 11 Oct 2026 (release 6, preview), tool 0.2.1')&&!/development build|Data v6/.test(cite),cite);
+assert.ok(cite.includes('Release 11 Oct 2026 (release 6, preview), tool 0.2.4')&&!/development build|Data v6/.test(cite),cite);
 console.log('tree-instrument checks passed (panel, components, page wiring and the must-fixes)');

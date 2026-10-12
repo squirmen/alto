@@ -200,6 +200,17 @@
 .ti-scope.tp .tp-prot { margin: var(--space-2) 0 0; }
 .ti-scope.tp .tp-status { font: var(--text-caption); color: var(--color-text-accent); }
 .ti-scope.tp .tp-foot { display: grid; gap: var(--space-1); margin: var(--space-6) var(--space-4) 0; font: var(--text-caption); color: var(--color-text-muted); }
+/* Tree number (data release 6.1 on) and record ID, under the badges. */
+.ti-scope.tp .tp-ids { margin: var(--space-3) 0 0; padding-top: var(--space-3); border-top: 1px solid var(--color-border-subtle); }
+.ti-scope.tp .tp-ids dt { font: var(--text-eyebrow); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--color-text-muted); }
+.ti-scope.tp .tp-ids dd { margin: var(--space-1) 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-2); min-width: 0; font: var(--text-label); color: var(--color-text); }
+.ti-scope.tp .tp-ids code { font: var(--text-mono); }
+.ti-scope.tp .tp-tn { font-size: var(--fs-md); font-weight: 600; letter-spacing: 0.04em; }
+.ti-scope.tp .tp-permalink { flex-basis: 100%; font: var(--text-caption); font-weight: 600; color: var(--color-text-link); overflow-wrap: anywhere; }
+.ti-scope.tp .tp-ids dt.tp-sub { display: inline-block; margin-top: var(--space-1-5); font: var(--text-caption); letter-spacing: normal; text-transform: none; }
+.ti-scope.tp .tp-ids dd.tp-sub { display: inline; margin: 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-scope.tp .tp-ids dd.tp-sub code { font-size: var(--fs-xs); color: var(--color-text-secondary); overflow-wrap: anywhere; }
+.ti-scope.tp .tp-idnote { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-secondary); }
 .ti-scope.tp .tp-foot code { font: var(--text-mono); overflow-wrap: normal; word-break: keep-all; }
 .ti-sec { padding: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
 .ti-sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin: 0 0 var(--space-3); }

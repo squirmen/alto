@@ -754,7 +754,7 @@
         <label for="colourBy">Colour by</label>
         <select id="colourBy">
           <option value="source">Source</option><option value="structure">Growth form (estimate)</option><option value="height">Height</option>
-          <option value="change">Change since 2013 (experimental)</option><option value="quality">Link status</option><option value="evidence">Detection evidence</option><option value="tenure">Land type (inferred)</option>
+          <option value="change">Change since 2013</option><option value="quality">Link status</option><option value="evidence">Detection evidence</option><option value="tenure">Land type (inferred)</option>
         </select>
       </div>
       <div id="colourLegend" class="lp-legend" role="group" aria-label="Colour key"></div>
@@ -1292,8 +1292,8 @@
     const dataMetadataReady = fetch(dataMetadataUrl, { cache: "no-store", credentials: "same-origin" }).then(r => r.ok ? r.json() : null).catch(() => null)
       .then(m => { if (AUTO_VERSION) TILE_VERSION = m?.assembly?.tile_version || m?.release?.dataset_version || `session-${Date.now()}`; return m; });
     const vq = (u) => `${u}?v=${TILE_VERSION}`;
-    // Revision of tree_change.pmtiles (artefact screen, 12 Oct 2026); bump it whenever that file is replaced.
-    const CHANGE_TILES_REV = "screen-20261012";
+    // Revision of the change tiles (v1, 13 Oct 2026: tree_change_v1.pmtiles); bump it whenever that file is replaced.
+    const CHANGE_TILES_REV = "v1-20261013";
     // PMTiles requests made before the stamp is known wait for it.
     maplibregl.addProtocol("pmtiles", async (params, abort) => {
       if (params.url.includes("v=__auto__")) { await dataMetadataReady; params = { ...params, url: params.url.replace("v=__auto__", `v=${encodeURIComponent(TILE_VERSION)}`) }; }
@@ -1436,9 +1436,10 @@
           "akl-crowns": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_crowns_pilot.pmtiles`), attribution: LAND_CREDIT },
           "akl-properties": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/properties.pmtiles`), attribution: LAND_CREDIT },
           "akl-low-canopy": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/low_canopy_candidates.pmtiles`) },
-          // The change tiles carry their own revision on top of the release stamp: the artefact screen replaced
-          // tree_change.pmtiles in place, so its URL changes and no browser reuses cached byte ranges of the old file.
-          "akl-change": { type: "vector", url: `${vq(`pmtiles://${DATA_BASE}/tree_change.pmtiles`)}&rev=${CHANGE_TILES_REV}` },
+          // The change tiles have a file name of their own for v1 (tree_change.pmtiles, the screened file, stays on
+          // the host for rollback; it is served as immutable, so a file swapped under its URL could mix old and new byte
+          // ranges in a browser) and a revision on top of the release stamp.
+          "akl-change": { type: "vector", url: `${vq(`pmtiles://${DATA_BASE}/tree_change_v1.pmtiles`)}&rev=${CHANGE_TILES_REV}` },
           "akl-rootshape": { type: "vector", url: vq(`pmtiles://${DATA_BASE}/tree_root_shapes.pmtiles`) },
           "akl-canopy": { type: "geojson", data: {type: "FeatureCollection", features: []} },
           "akl-kauri": { type: "geojson", data: {type: "FeatureCollection", features: []} }
@@ -1636,9 +1637,8 @@
             source: "akl-change",
             "source-layer": "tree_change",
             minzoom: 11,
-            // Only the changes the legend names; matched points with no change ("persistent") are not drawn,
-            // nor points the artefact screen flagged (artefact = 1: buildings, ports, water, industrial yards,
-            // construction sites, no vegetation in the photos, canopy at both dates). Tiles without the field draw as before.
+            // Only the changes the legend names. The v1 file (13 Oct 2026) holds only confirmed changes and has no
+            // artefact field; the artefact clause still hides the points the 12 Oct screen flagged if the older file is served.
             filter: ["all", ["in", ["get", "fate"], ["literal", PAL.rows("change").map(r => r.key)]], ["!=", ["get", "artefact"], 1]],
             layout: { visibility: "none" },
             paint: {
@@ -2867,18 +2867,22 @@
     map.on("mouseenter", "kauri-dieback", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "kauri-dieback", () => { map.getCanvas().style.cursor = ""; });
 
+    // A removal says what the 2024 survey shows where the crown stood (v1 cover_2024): open ground, or no tree
+    // canopy and a house, extension or carport over the spot.
     function changePopupHtml(p) {
       if (p.fate === "removed_to_open") {
         const priorH = (p.h_2016 != null ? p.h_2016 : p.h_2013);
         const seen = (p.h_2013 != null && p.h_2016 != null) ? "2013 & 2016"
           : (p.h_2016 != null ? "2016" : "2013");
+        const cover = p.cover_2024 === "built" ? "No tree canopy; built over" : p.cover_2024 === "open" ? "Open ground" : null;
         return `
           <div class="popup-title">Tree removed · by 2024</div>
           <div class="popup-row"><span>Confidence</span><span>${safe(p.confidence)}</span></div>
           <div class="popup-row"><span>Height when present</span><span>${fmt(priorH, 1, " m")}</span></div>
           <div class="popup-row"><span>Seen in</span><span>${seen}</span></div>
+          ${cover ? `<div class="popup-row"><span>2024 survey</span><span>${cover}</span></div>` : ""}
           ${p.species ? `<div class="popup-row"><span>Likely species</span><span>${safe(p.species)}</span></div>` : ""}
-          <div class="popup-note">An earlier survey detected a canopy here; the 2024 survey shows bare ground. Compare dated aerial photos to check what changed. The displayed basemap may come from another year.</div>`;
+          <div class="popup-note">An earlier survey detected a canopy here${cover ? "" : "; the 2024 survey shows open ground"}. Compare dated aerial photos to check what changed. The displayed basemap may come from another year.</div>`;
       }
       const since = p.fate === "established_since_2016" ? "2016" : "2013";
       return `
@@ -3063,6 +3067,7 @@
     function closeProfile() {
       ALTOEvidenceWorkspace.dispose();
       profileRequestId++; propertyRequestId++;
+      setUrlTree(null); panelNote = null;
       const restoreFocus = profilePanel.contains(document.activeElement);
       document.body.dataset.profileOpen = "false";
       profilePanel.setAttribute("aria-hidden", "true");
@@ -3124,10 +3129,15 @@
       document.querySelector("#explorer .release-row .subhead").innerHTML = `Auckland · <span class="beta-pill">Beta</span> <a class="beta-back" href="${SITE_ROOT}/">Current map</a>`;
     }
     // Every tree link goes through the ID resolver, so permanent IDs and aliases can slot in later.
+    // An ID that names no current tree opens the tree that took its place (merged, the largest part of a split, a
+    // successor); a tombstone has none, and its error carries the resolution (the last position, the reason).
     async function loadTree(rawId) {
-      const resolved = await ALTOTreeId.resolve(rawId, { base: DATA_BASE, version: TILE_VERSION, metadata: await releaseReady });
-      if (!resolved.tree_id) throw new Error(resolved.note || "Unknown tree ID");
-      const loaded = await ALTOTreeDetails.load(DATA_BASE, TILE_VERSION, resolved.tree_id);
+      const options = { base: DATA_BASE, version: TILE_VERSION, metadata: await releaseReady };
+      const resolved = await ALTOTreeId.resolve(rawId, options);
+      let detail = resolved.tree_id;
+      if (resolved.status === "retired" && resolved.successor) detail = (await ALTOTreeId.resolve(resolved.successor, options)).tree_id || detail;
+      if (!detail) throw Object.assign(new Error(ALTOTreeId.describe(resolved)?.note || resolved.note || "Unknown tree ID"), { resolved });
+      const loaded = await ALTOTreeDetails.load(DATA_BASE, TILE_VERSION, detail);
       return { ...loaded, resolved };
     }
     window.addEventListener('DOMContentLoaded', () => ALTOEvidenceWorkspace.init({
@@ -3149,10 +3159,19 @@
     // from the full record. Its crown outline comes from the loaded crown tiles, under the marker of the record
     // that represents the crown on the map.
     const recordEnv = () => ({ dataBase: DATA_BASE, siteRoot: SITE_ROOT, metadata: releaseMetadata, version: TILE_VERSION });
-    let panelGeometry = null, panelClick = null;
+    let panelGeometry = null, panelClick = null, panelNote = null;
     function panelHtml(rec) {
       panelGeometry = crownGeometry(rec.id) || crownGeometry(rec.identity?.crownRepresentative);
-      return ALTOTreePanel.render(rec, { treeUrl: ALTOTreeId.url(rec.id, { page: "tree" }), saved: ALTOEvidenceWorkspace.has(rec.id), kyteBase: `${SITE_ROOT}/kyte`, geometry: panelGeometry });
+      return ALTOTreePanel.render(rec, { treeUrl: ALTOTreeId.url(rec.number || rec.id, { page: "tree" }), saved: ALTOEvidenceWorkspace.has(rec.id), kyteBase: `${SITE_ROOT}/kyte`, geometry: panelGeometry, note: panelNote });
+    }
+    // From data release 6.1 the address names the open tree by its number (?tree=T…); before it, the address is left
+    // as it was. Closing the panel takes the number off again.
+    let urlTree = null;
+    function setUrlTree(number) {
+      const u = new URL(window.location.href);
+      if (number) { if (u.searchParams.get("tree") === number) { urlTree = number; return; } u.searchParams.set("tree", number); urlTree = number; }
+      else { if (!urlTree || u.searchParams.get("tree") !== urlTree) { urlTree = null; return; } u.searchParams.delete("tree"); urlTree = null; }
+      history.replaceState(history.state, "", u.pathname + u.search + u.hash);
     }
     // The capture date of the aerial tiles under the tree, from the imagery provider's metadata.
     function fillImageryCaption(rec) {
@@ -3187,11 +3206,16 @@
     }
     function bindPanel(rec) {
       const status = profileBody.querySelector(".tp-status");
+      profileBody.querySelector('[data-panel-action="copy-number"]')?.addEventListener("click", async event => {
+        const button = event.currentTarget;
+        try { await navigator.clipboard.writeText(rec.number); button.textContent = "Copied"; setTimeout(() => { button.textContent = "Copy"; }, 1600); }
+        catch { status.innerHTML = `<label>Copy this tree number <input readonly value="${escapeHtml(rec.number)}"></label>`; status.querySelector("input")?.select(); }
+      });
       profileBody.querySelector('[data-panel-action="share"]')?.addEventListener("click", async () => {
-        const url = ALTOTreeId.url(rec.id, { page: "tree" });
+        const url = rec.permalink || ALTOTreeId.url(rec.id, { page: "tree" });
         try {
           if (navigator.share && mobileLayout.matches) { await navigator.share({ title: rec.identity.title, text: `${rec.identity.title} on ALTO`, url }); return; }
-          await navigator.clipboard.writeText(url); status.textContent = "Link to the tree page copied.";
+          await navigator.clipboard.writeText(url); status.textContent = rec.permalink ? "Permanent link copied." : "Link to the tree page copied.";
         } catch { status.innerHTML = `<label>Copy this link <input readonly value="${escapeHtml(url)}"></label>`; status.querySelector("input")?.select(); }
       });
       const save = profileBody.querySelector('[data-panel-action="save"]');
@@ -3223,8 +3247,10 @@
       });
     })();
 
-    async function openProfile(props) {
+    // options.resolved: how the tree was asked for (a link or a search), for the panel's one-line note.
+    async function openProfile(props, options = {}) {
       if (!props?.tree_id) return;
+      panelNote = options.resolved ? ALTOTreeId.describe(options.resolved)?.note || null : null;
       ALTOEvidenceWorkspace.dispose();
       propertyRequestId++; setProfileMode("tree");
       if (mobileLayout.matches) { setSidebarCollapsed(true); setSheet("peek"); }
@@ -3236,6 +3262,7 @@
       const quick = ALTOTreeRecord.fromTile(props, env);
       profileBody.innerHTML = panelHtml(quick);
       bindPanel(quick); fillImageryCaption(quick);
+      if (quick.number) setUrlTree(quick.number);
       profileBody.scrollTop = 0;
       document.body.dataset.profileOpen = "true";
       profilePanel.setAttribute("aria-hidden", "false");
@@ -3249,6 +3276,7 @@
         profileBody.innerHTML = panelHtml(full);
         bindPanel(full); fillImageryCaption(full);
         profileBody.scrollTop = scroll;
+        if (full.number) setUrlTree(full.number);
         // The crown tiles may arrive after the record (the map is still flying in): draw the outline when they do.
         if (!panelGeometry) map.once("idle", () => {
           if (requestId !== profileRequestId || profilePanel.hidden) return;
@@ -3267,7 +3295,7 @@
           if (requestId !== profileRequestId) return;
           const slot = profileBody.querySelector("#tpCtx"); if (slot) slot.innerHTML = ALTOInstrument.contextSentence(full);
           const links = profileBody.querySelector("#tpPage")?.closest("section")?.querySelector(".ti-pagelinks");
-          if (links) links.outerHTML = ALTOInstrument.pageLinks(full, ALTOTreeId.url(full.id, { page: "tree" }));
+          if (links) links.outerHTML = ALTOInstrument.pageLinks(full, ALTOTreeId.url(full.number || full.id, { page: "tree" }));
         } }).catch(() => {});
       } catch (error) {
         if (requestId !== profileRequestId || profilePanel.hidden) return;
@@ -3369,7 +3397,7 @@
       if (!pid) return;
       pid = String(pid);
       ALTOEvidenceWorkspace.dispose();
-      profileRequestId++;
+      profileRequestId++; setUrlTree(null);
       const requestId = ++propertyRequestId, same = currentProperty?.pid === pid;
       currentProperty = { pid, address: address || (same ? currentProperty.address : null), tile: options.tile || (same ? currentProperty.tile : null),
         treeIds: same ? currentProperty.treeIds : [], streetIds: same ? currentProperty.streetIds : [], tenure: same ? currentProperty.tenure : null, bbox: same ? currentProperty.bbox : null, record: same ? currentProperty.record : null };
@@ -3564,19 +3592,41 @@
         items.push({ id: "panel:kyte", group: "Map", label: "Add a photo (KYTE)", words: ["kyte", "add a photo", "tree photo", "upload photo"], meta: "Opens KYTE", run: () => { document.querySelector('[data-site-link="kyte/"]')?.click(); return null; } });
         return items;
       }
+      // A tree by any of its IDs: a tree number (data release 6.1 on), a record ID or a crown key; an older ID opens
+      // its tree with one line in the panel saying which. A mistyped number offers the one correction the release
+      // holds, when there is exactly one (looked up once per typed number).
+      const numberFixes = new Map(), numberChecks = new Map();
+      function numberFix(key) {
+        if (!numberChecks.has(key)) numberChecks.set(key, releaseReady
+          .then(metadata => ALTOTreeId.suggestNumber(key, { base: DATA_BASE, version: TILE_VERSION, metadata })).catch(() => null)
+          .then(fix => { numberFixes.set(key, fix || null); search?.refresh(); return fix || null; }));
+        return numberFixes.get(key);
+      }
+      async function openTreeId(raw) {
+        search.say("Finding that tree…", { keep: true });
+        let got;
+        try { got = await loadTree(raw); }
+        catch (error) {
+          const r = error.resolved;
+          if (r?.position) map.flyTo({ center: [r.position.lon, r.position.lat], zoom: 18.5 });
+          throw new Error(r?.status === "retired" ? error.message : r?.status === "unknown" && r.kind === "number" ? "No tree has this number in this release."
+            : "No tree with that ID in this release. Check the ID, or search an address.");
+        }
+        const { record, resolved } = got, r = record.datasets.record || {};
+        if (Number.isFinite(Number(r.lon)) && Number.isFinite(Number(r.lat))) map.flyTo({ center: [Number(r.lon), Number(r.lat)], zoom: 18.5 });
+        openProfile({ ...r, tree_id: record.tree_id, tn: record.datasets.tree_number?.number }, { resolved });
+        search.say("");
+        return null;
+      }
       function treeIdItem(text) {
-        const t = text.trim();
-        if (!ALTOTreeId.looksLikeId(t)) return null;
-        return { id: "tree:" + t, label: `Open tree ${ALTOTreeId.normalise(t) || t}`, meta: "Tree ID", run: async () => {
-          search.say("Finding that tree…", { keep: true });
-          let record;
-          try { ({ record } = await loadTree(t)); } catch { throw new Error("No tree with that ID in this release. Check the ID, or search an address."); }
-          const r = record.datasets.record || {};
-          if (Number.isFinite(Number(r.lon)) && Number.isFinite(Number(r.lat))) map.flyTo({ center: [Number(r.lon), Number(r.lat)], zoom: 18.5 });
-          openProfile({ ...r, tree_id: record.tree_id });
-          search.say("");
-          return null;
-        } };
+        const t = text.trim(), Id = ALTOTreeId, shaped = Id.isNumberShaped(t) && !Id.isNumber(t) && Id.nearNumbers(t).length > 0;
+        const e = Id.searchEntry(t, shaped ? numberFix(t.replace(/[\s-]/g, "").toUpperCase()) : null);
+        if (!e) return null;
+        const invalid = () => `${Id.MESSAGES.invalid}.`;
+        if (e.kind === "invalid") return { id: "tree:invalid", label: e.label, meta: e.meta, keepText: t, run: invalid };
+        if (e.kind === "checking") return { id: "tree:check", label: e.label, meta: e.meta, keepText: t,
+          run: async () => { const f = await numberChecks.get(e.key); return f ? openTreeId(f) : invalid(); } };
+        return { id: "tree:" + e.key, label: e.label, meta: e.meta, run: () => openTreeId(e.kind === "mistyped" ? e.key : t) };
       }
       // Local boards: the Area's board file.
       let boardList = [];
@@ -3615,7 +3665,8 @@
         input, list: document.getElementById("propertyOptions"), status: document.getElementById("propertyStatus"), live: document.getElementById("searchLive"),
         ctx: {
           items: commandItems, species: speciesGroups, places: () => boardList, speciesItem, treeId: treeIdItem, height: n => heightItem(n), examples,
-          exampleNote: () => "Addresses and tree IDs work too: 12 Queen Street, trp_ACCT0245027." + (coarsePointer.matches ? "" : " Press / or Ctrl K on the map to come back here."),
+          exampleNote: () => (releaseMetadata?.derived_products?.tree_ids ? "Addresses, tree numbers and record IDs work too: 12 Queen Street, TMCTT6X4, trp_ACCT0245027."
+            : "Addresses and tree IDs work too: 12 Queen Street, trp_ACCT0245027.") + (coarsePointer.matches ? "" : " Press / or Ctrl K on the map to come back here."),
           combine: (left, place) => ({ id: `${left.id}@${place.id}`, label: `${left.label.replace(/ \((on|shown|already|current)\)$/, "")} in ${place.label}`,
             meta: `${left.group === "Species" ? "Species" : left.group === "Presets" ? "Preset" : "Filter"}, then ${place.label} Local Board and its Area`,
             run: () => { (left.ensure || left.run)(); return goToBoard(place.feature); } })

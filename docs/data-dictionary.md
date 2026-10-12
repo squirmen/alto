@@ -1,14 +1,20 @@
-# ALTO V6 full-record data dictionary
+# ALTO v6.1 full-record data dictionary
 
-Release: 20261012-v6.
+Release: 20261013-v6.1.
 
 Each tree profile exposes the datasets below. The schema gives their exact ordered fields. Blank means unavailable, not zero. All source IDs and original coordinates are retained.
 
-**Growth form** (`growth_form`) is a model estimate for the crown, never an identified species. `wording` is what the map shows; `display` is show, possibly or withhold.
+**Tree number** (`tree_number`) is the permanent public ID of the map tree a record belongs to: `T` + 6 Crockford base-32 characters + a Luhn mod 32 check character (any case; spaces and hyphens ignored; I and L read as 1, O as 0), drawn at random in v6.1 and never reused. Every record of a tree carries the same number: `role` marker for the record that is the tree's map marker, member for the other records on its crown, merged for records a reviewer joined to it. `akl_tree_*` stays the immutable record ID. Every record ID, v4 and v5 crown key and number ever published resolves through `data/tree_ids` (statuses current, member, merged, split, retired; see its schema.json). Link a tree as https://alto.tfwelch.com/tree/<number>.
 
-**Crown outline** (`outline`): the map polygon is a smoothed outline of the same V5 cells; `crown_area_m2` everywhere stays the V5 cell area.
+**Current crown area** is the segmented horizontal footprint in square metres (`crown_area_m2`: the crown's 0.5 m LiDAR cells as v5 segmented them; it drives every estimate). The smoothed polygon the map draws has its own area, `outline_area_m2` in `outline`. **Crown spread** is a width in metres and is not the same measurement. The area-derived equivalent diameter (`crown_diameter_m`) is a circular approximation, not a measured crown spread. Where a reviewer drew a crown (v6.1; `outline.crown_source` reviewer_outline) the crown area is the area of that outline and the original polygon stays in the database; where a reviewer merged crowns, the area is the sum of their cell areas and the polygon their union.
 
-Only current representative records carry current service estimates. Shared-crown aliases may repeat crown measurements: do not sum areas over every source record.
+Only current representative records carry current service estimates. Shared-crown aliases may repeat crown measurements: do not sum areas over every source record. Earlier datasets retain their previous spatial and methodological basis.
+
+Record-to-crown links (v5.2) are in `record_link`; `source_lon`/`source_lat` are the source position, unchanged, and `crown_source` `record_seeded_v52` marks a crown drawn from the record awaiting confirmation. Records outside survey coverage carry `record_link_status`. `record_link` is the v5.2 linker's result, kept as published: where a reviewer correction moved a record to another crown (v6.1), the current association is in `identity` and the correction in `corrections`.
+
+**Growth form** (`growth_form`) is a model estimate for the crown, never an identified species. `wording` is what the map shows; `display` is show, possibly or withhold. Rules: data/growth-form-v6.json.
+
+**Crown outline** (`outline`): the map polygon is a smoothed outline of the same v5 cells; `crown_area_m2` everywhere stays the v5 cell area, except where a reviewer drew or merged the crown (above).
 
 ## Original tree record
 
@@ -25,6 +31,14 @@ Polygon containment, audited crown continuity (v5.1) and record-to-crown links (
 `identity` → `tree_identity_v5`
 
 Fields: `seg_key`, `current_primary_tree_id`, `evidence_tier`, `link_role`, `current_height_m`, `current_crown_area_m2`, `top_distance_m`, `method_id`, `source_records`, `inventory_records`, `members_json`, `new_overlapping_crowns`, `old_overlapping_crowns`, `within_v5_footprint`, `spatial_evidence_note`.
+
+## Tree number (permanent ID)
+
+The permanent public number of the map tree this record belongs to (T + 6 Crockford base-32 characters + a Luhn mod 32 check character; never reused). role: marker (this record is the tree's map marker), member (a record on the tree's crown without its own marker) or merged (joined to the tree by a reviewer correction). Old IDs and crown keys resolve through data/tree_ids (see its schema.json). Link: https://alto.tfwelch.com/tree/<number>.
+
+`tree_number` → `tree_number_v61`
+
+Fields: `number`, `role`, `kind`, `status`, `representative_tree_id`, `minted_release`, `correction_id`.
 
 ## Current canopy dimensions
 
@@ -273,3 +287,11 @@ No v5 crowns or 2024 point cloud reach this position, so the record cannot be li
 `record_link_status` → `tree_record_link_status_v52`
 
 Fields: `status`, `reason`, `reason_text`, `method_id`, `crown_set_id`.
+
+## Reviewer corrections
+
+Accepted human corrections that concern this tree, from the append-only ALTO corrections ledger, and how this release carries each one: applied (the map and record show it), recorded_in_release (published with the tree, values unchanged), already_in_release, or pending (needs a crown or association rebuild; reason given). data/corrections-applied.json lists every correction in the ledger.
+
+`corrections` → `config/corrections/corrections.jsonl`
+
+Fields: `id`, `version`, `type`, `status`, `outcome`, `role`, `summary`, `decided_on`, `reviewer`, `evidence`, `reason`.

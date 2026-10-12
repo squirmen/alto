@@ -119,7 +119,7 @@ for(const [k,leg] of Object.entries(P.LEGENDS)){
 const page=fs.readFileSync(path.join(web,'index.html'),'utf8');
 const literal=page.match(/"(?:circle|fill|line|icon|text)-(?:color|stroke-color|outline-color|halo-color)"\s*:\s*"#[0-9a-f]{3,8}"/gi);
 assert.equal(literal,null,`map paint colours must come from palette.js: ${literal}`);
-for(const f of ['sources.js','growth-form.js','area.js','record-links.js','tree-page.js','tree-instrument.js','tree-panel.js']){
+for(const f of ['sources.js','growth-form.js','area.js','record-links.js','tree-page.js','tree-instrument.js','tree-panel.js','tree-imagery.js']){
   const hexes=fs.readFileSync(path.join(web,f),'utf8').match(/['"`]#[0-9a-f]{6}['"`;]/gi);
   assert.equal(hexes,null,`${f}: colour literals ${hexes}`);
 }

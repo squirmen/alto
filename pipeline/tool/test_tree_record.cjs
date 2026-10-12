@@ -73,7 +73,8 @@ for(const id of [DET,REG,NOT]){
   assert.equal(tdq.kind,'model');
   assert.ok(Math.abs(tdq.value-(Math.min(...models)+Math.max(...models))/2)<1e-9,`${id}: trunk ${tdq.value}`);
   assert.equal(tdq.range.label,'Trunk models');
-  assert.equal(tdq.provenance.method.href,'./v5-methods.html#trunk-diameter');
+  // Release 6 explains both trunk models (the benefit-equation curve now follows the growth form) on its own page.
+  assert.equal(tdq.provenance.method.href,'./v6-methods.html#trunk-diameter');
   // A computed central value is not presented as a stored field; the stored fields are named in the note.
   assert.equal(tdq.provenance.field,null);assert.ok(/assets\.dbh_cm_crown_est/.test(tdq.provenance.note)&&/services\.dbh_cm_est/.test(tdq.provenance.note));
   assert.equal(rec.measures.rootProtection.provenance.field,null);
@@ -86,7 +87,7 @@ for(const id of [DET,REG,NOT]){
   assert.equal(rec.roots.stored.rpaRadius,dd.roots.rpa_radius_m);
   for(const x of quantities(rec))if(x.range)assert.notEqual(x.range.text.replace(/ .*$/,'').split('–')[0],x.range.text.replace(/ [^–]*$/,'').split('–')[1]?.replace(/ .*$/,''),`${id} ${x.key}: zero-width range ${x.range.text}`);
   for(const s of strings(R.toJSON(rec)))assert.ok(!/(\d[\d.,]*)–\1 (m|cm|m²)\b/.test(s),`zero-width range in "${s}"`);
-  assert.deepEqual(rec.release.public,{text:'Release 11 Oct 2026 · Tool 0.2.1',preview:true});
+  assert.deepEqual(rec.release.public,{text:'Release 11 Oct 2026 · Tool 0.2.4',preview:true});
   // Parts that need the network start as pending.
   for(const p of ['context','imagery','place','photos','scenario'])assert.equal(rec[p].status,'pending',p);
   assert.equal(rec.lidar.points.status,'pending');
@@ -231,7 +232,9 @@ for(const id of [DET,REG,NOT]){
     streets:{cell_path:'streets/cells/{z}/{x}/{y}.json',street_path:'streets/s/{shard}.json',shards:256,zoom:14,max_distance_m:60}});
   const t=R.tileOf(174.74944924642253,-36.851178440144515,14);
   serve(`${D}/tree_context/streets/cells/14/${t.x}/${t.y}.json`,{addresses:[[174.7495,-36.8512,300],[174.7600,-36.8600,1]]});
-  serve(`${D}/tree_context/streets/s/2c.json`,{300:{name:'Franklin Road',board:'Waitematā',groups:{deciduous_broadleaf:{n:4,values:{height:[9.1,12.4,14,16.85],crownArea:[80,120,200,315.5],benefits:[20,40,80,537.9]}}}}});
+  // A street group is compared from R.MIN_STREET_N (10) trees of the class; Franklin Road has 12.
+  const streetGroup=n=>({n,values:{height:[9.1,9.4,10,10.5,11,11.2,12,12.4,13,13.5,14,16.85].slice(-n),crownArea:[40,55,60,70,80,90,100,110,120,150,200,315.5].slice(-n),benefits:[10,12,15,18,20,25,30,35,40,60,80,537.9].slice(-n)}});
+  serve(`${D}/tree_context/streets/s/2c.json`,{300:{name:'Franklin Road',board:'Waitematā',groups:{deciduous_broadleaf:streetGroup(12)}}});
   const rec=build(REG);
   const parts=[];
   await R.enrich(rec,ENV,{parts:['context','history','corrections','points'],onPart:p=>parts.push(p)});
@@ -242,13 +245,14 @@ for(const id of [DET,REG,NOT]){
   assert.deepEqual(ctx.scopes.map(s=>s.scope),['street','board','auckland']);
   const [street,board,akl]=ctx.scopes;
   assert.equal(street.name,'Franklin Road');
-  assert.equal(street.n,4);
+  assert.equal(R.MIN_STREET_N,10);
+  assert.equal(street.n,12);
   assert.equal(street.metrics.height.exact,true);
   assert.equal(street.metrics.height.rank,1);
-  assert.equal(street.metrics.height.text,'Tallest of 4');
-  assert.equal(street.metrics.crownArea.text,'Largest crown of 4');
+  assert.equal(street.metrics.height.text,'Tallest of 12');
+  assert.equal(street.metrics.crownArea.text,'Largest crown of 12');
   assert.equal(street.metrics.benefits.rank,1,'a tree meets its own published (rounded) value');
-  assert.equal(street.metrics.benefits.percentile,87.5);
+  assert.ok(Math.abs(street.metrics.benefits.percentile-(11.5/12*100))<1e-9);
   assert.equal(board.name,'Waitematā');
   assert.equal(board.n,500);
   assert.equal(akl.n,1000);
@@ -256,7 +260,7 @@ for(const id of [DET,REG,NOT]){
   assert.equal(akl.metrics.height.text,`Taller than ${akl.metrics.height.share}%`);
   // Each comparison carries its distribution, for a strip: sorted values for a small street group, quantiles otherwise.
   assert.equal(street.metrics.height.distribution.kind,'values');
-  assert.equal(street.metrics.height.distribution.values.length,4);
+  assert.equal(street.metrics.height.distribution.values.length,12);
   assert.equal(akl.metrics.height.distribution.kind,'quantiles');
   assert.equal(akl.metrics.height.distribution.quantiles.length,akl.metrics.height.distribution.probabilities.length);
   assert.equal(akl.irreplaceability.key,'effectively_irreplaceable');
@@ -265,6 +269,15 @@ for(const id of [DET,REG,NOT]){
   assert.equal(rec.corrections.status,'none');
   assert.equal(rec.corrections.receiptStatus,'not_published');
   assert.equal(rec.lidar.points.status,'not_published');
+
+  // A street with fewer than 10 trees of the class is not compared ("Tallest of 4" says nothing): its name and n
+  // stay, with no metrics, so a page can leave the row out and state the rule.
+  R._internal.clearCache();
+  serve(`${D}/tree_context/streets/s/2c.json`,{300:{name:'Franklin Road',board:'Waitematā',groups:{deciduous_broadleaf:streetGroup(4)}}});
+  const recS=build(REG);await R.enrich(recS,ENV,{parts:['context']});
+  const small=recS.context.scopes.find(x=>x.scope==='street');
+  assert.deepEqual([small.status,small.name,small.n,small.minN,Object.keys(small.metrics).length,small.irreplaceability],['small','Franklin Road',4,10,0,null]);
+  assert.deepEqual(recS.context.scopes.filter(x=>x.status==='ready').map(x=>x.scope),['board','auckland']);
 
   // Built for another release: not used.
   files.clear();R._internal.clearCache();withManifest();
@@ -315,6 +328,26 @@ for(const id of [DET,REG,NOT]){
   assert.equal(rec6.corrections.receiptStatus,'ready');
   assert.equal(rec6.corrections.receipt.url,'./data/corrections-applied.json');
   assert.deepEqual(rec6.corrections.items.map(x=>[x.id,x.outcome,x.basis]),[['C00007','recorded in release','ledger']]);
+
+  // A field observation the record holds and the decision that cites it as evidence are one review: the
+  // observation is matched by its ID and folded into the decision (akl_tree_not_336 listed it twice).
+  files.clear();R._internal.clearCache();
+  serve('./data/corrections-applied.json',{schema:'alto-corrections-applied/1',ledger:'alto-corrections/1',release:META.release.dataset_version,generated_utc:'2026-10-12T02:00:00Z',
+    corrections:[{id:'C00009',type:'identity_link',kind:'identity_link',status:'accepted',outcome:'applied',summary:'The plaque tree is the crown represented by akl_tree_lid_1',decided_on:'2026-10-11',reviewer:'ALTO reviewer',
+      evidence:['tree_field_observation_v5:obs-plaque-20260922','owner statement relayed 11 Oct 2026'],applied_in:['20261012-v6'],tree_ids:[DET],roles:{[DET]:'subject'},seg_keys:[]}]});
+  const r7=JSON.parse(JSON.stringify(F.trees[DET].record));
+  r7.datasets.field={observed_on:'2026-09-22',observation_json:JSON.stringify({observation_id:'obs-plaque-20260922',reported_on:'2026-09-22',description:'Notable-tree marker observed on another crown'})};
+  r7.datasets.corrections=[{id:'C00009',version:1,type:'identity_link',status:'accepted',outcome:'applied',role:'subject',summary:'The plaque tree is the crown represented by akl_tree_lid_1',decided_on:'2026-10-11',reviewer:'ALTO reviewer',
+    evidence:'tree_field_observation_v5:obs-plaque-20260922; owner statement relayed 11 Oct 2026',reason:null}];
+  const rec7=R.assemble({id:DET,record:r7,schema:F.schema,metadata:META6,env:ENV6});
+  await R.enrich(rec7,ENV6,{parts:['corrections']});
+  assert.deepEqual(rec7.corrections.items.map(x=>[x.id,x.kind]),[['C00009','identity link']],'one entry for the decision and its observation');
+  assert.deepEqual(rec7.corrections.items[0].basedOn.map(o=>[o.kind,o.ref,o.date.iso]),[['field_observation','obs-plaque-20260922','2026-09-22']]);
+  // Without a receipt the record's own copy of the decision folds the observation the same way.
+  files.clear();R._internal.clearCache();
+  const rec8=R.assemble({id:DET,record:r7,schema:F.schema,metadata:META,env:ENV});
+  await R.enrich(rec8,ENV,{parts:['corrections']});
+  assert.deepEqual(rec8.corrections.items.map(x=>[x.id,x.basis,x.basedOn?.[0]?.ref]),[['C00009','record','obs-plaque-20260922']]);
 
   // alto-points/1 decodes to metres from the crown top and the ground (a synthetic buffer for the codec).
   {

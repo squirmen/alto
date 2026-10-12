@@ -77,13 +77,13 @@
     crown_height_dbh_sensitivity_v5_inputs:{text:'Trunk diameter, life stage and regrowth time from crown size and height (sensitivity model)',doc:'docs/methods/tree_asset_model.md'},
     root_space_sensitivity_v5_inputs:{text:'Root-space scenario from trunk and crown size',doc:'docs/validation/root_zone_summary.md'},
     arcgis_dsm_dem_2024_chm_sample_2m:{text:'Canopy height (2024 surface minus terrain) sampled within 2 m of the recorded position',doc:'docs/methods/tree_qa_layers.md'},
-    pointcloud_v53_outline_B:{text:'Smoothed outline of the v5 crown cells, area-preserving (v6)',notes:'v6'}
+    pointcloud_v53_outline_B:{text:'Smoothed outline of the crown cells, area-preserving (v6)',notes:'v6',anchor:'outlines'}
   };
   const METHOD_PREFIX=[
-    [/^growth_form_v6/,{text:'Growth-form model on the 2024 LiDAR structure and aerial imagery (v6)',notes:'v6'}],
+    [/^growth_form_v6/,{text:'Growth-form model on the 2024 LiDAR structure and aerial imagery (v6)',notes:'v6',anchor:'growth-form'}],
     [/^valuation_/,{text:'i-Tree style service equations with stated unit values; sensitivity scenarios',notes:'v5',anchor:'benefits',doc:'docs/methods/tree_valuation_pilot.md'}],
     [/^trajectory|^ws2_/,{text:'Canopy matched across the 2013, 2016 and 2024 surveys',doc:'docs/validation/ws2_trajectories_v1.md'}],
-    [/outline/,{text:'Smoothed outline of the crown cells (v6)',notes:'v6'}]
+    [/outline/,{text:'Smoothed outline of the crown cells (v6)',notes:'v6',anchor:'outlines'}]
   ];
   // Release components in release-metadata.json "models", for the validation status of a model value.
   const COMPONENT={crown:'crown_segmentation',growth:'growth_form_classifier',services:'ecosystem_services',roots:'root_space',change:'tree_change'};
@@ -161,8 +161,10 @@
   // range implies; the release's stored radius (from one model) stays in the provenance.
   const RPA_FACTOR=12,RPA_AREA_CAP_M2=707;
   const rpaRadius=dbhCm=>num(dbhCm)===null?null:Math.min(RPA_FACTOR*num(dbhCm)/100,Math.sqrt(RPA_AREA_CAP_M2/Math.PI));
+  // From release 6 the benefit-equation model follows the growth form; its methods page explains both models.
+  const releaseNumber=env=>parseFloat(String(env.releaseLabel||'').replace(/^v/,''))||0;
   const trunkMethod=env=>({id:'trunk_central_estimate',text:'Median of the release’s trunk-diameter models (crown size and height; benefit equations); not measured',
-    href:`${env.siteRoot||'.'}/v5-methods.html#trunk-diameter`,doc:REPO+'docs/methods/tree_asset_model.md'});
+    href:`${env.siteRoot||'.'}/${releaseNumber(env)>=6?'v6':'v5'}-methods.html#trunk-diameter`,doc:REPO+'docs/methods/tree_asset_model.md'});
   const rootMethod=(env,id)=>({id:id||'root_space_sensitivity_v5_inputs',text:`Root protection radius: ${RPA_FACTOR} × trunk diameter (central estimate), area capped at ${RPA_AREA_CAP_M2} m²; a planning scenario, not a measured root extent`,
     href:`${env.siteRoot||'.'}/v5-methods.html#roots`,doc:REPO+'docs/validation/root_zone_summary.md'});
 
@@ -276,7 +278,7 @@
       uncertainty:{text:`${asp?`${asp} m² across ${as.length} segmentations of the 2024 survey; `:''}survey specification ${SURVEY_2024.horizontal}`,
         low:asp?Math.min(...as):null,high:asp?Math.max(...as):null,basis:asp?'spread across segmentations':'survey specification'}}),
       {range:asp?rangeOf(Math.min(...as),Math.max(...as),'m2','spread across segmentations'):null}));
-    if(o&&num(o.outline_area_m2)!==null)put(q(env,'crownOutline','Crown outline',num(o.outline_area_m2),'m2','derived',prov(env,'crownOutline',{source:'v5 crown cells',
+    if(o&&num(o.outline_area_m2)!==null)put(q(env,'crownOutline','Crown outline',num(o.outline_area_m2),'m2','derived',prov(env,'crownOutline',{source:'Crown cells from the 2024 LiDAR survey',
       method:o.method_id||'pointcloud_v53_outline_B',dataset:'outline',field:'outline_area_m2',note:o.outline_method?`Outline method: ${words(o.outline_method)}`:null})));
     put(q(env,'crownDiameter','Crown diameter',z.diameter,'m','derived',prov(env,'crownDiameter',{source:'Derived from the crown area',date:flown,
       method:{id:null,text:'Diameter of the circle with the crown’s area',href:null},dataset:'crown',field:'crown_diameter_m'})));
@@ -333,14 +335,14 @@
   }
 
   // ---------- records and identifiers ----------
-  const JOIN={pointcloud_v5_ndvi_watershed:'Recorded position inside the v5 crown',record_crown_link_v52:'v5.2 record-to-crown link',v5_containment_with_v51_continuity_repair:'v5.1 continuity repair'};
+  const JOIN={pointcloud_v5_ndvi_watershed:'Recorded position inside the crown',record_crown_link_v52:'v5.2 record-to-crown link',v5_containment_with_v51_continuity_repair:'v5.1 continuity repair'};
   function recordEntry(env,r,c){
     const d=r.datasets||{},rec=d.record||{},rl=d.record_link||{},idn=d.identity||{},S=dep('ALTOSources'),T=dep('ALTOTreeSummary'),L=dep('ALTORecordLinks');
     const ds=S?S.dataset(rec.source_primary):{name:words(rec.source_primary),kind:'Source',group:'other'};
     const isSelf=r.tree_id===c.id,isRep=idn.current_primary_tree_id===r.tree_id,detection=!!S?.DETECTION.includes(rec.source_primary);
     const link=L?.link({},r),sch=T?.schedule(rec);
     const lon=num(rec.lon),lat=num(rec.lat);
-    return {treeId:r.tree_id,self:isSelf,mapMarker:isRep,detection,
+    return {treeId:r.tree_id,number:d.tree_number?.number||null,self:isSelf,mapMarker:isRep,detection,
       source:{key:rec.source_primary||null,name:ds.name,kind:ds.kind,group:ds.group||null},role:words(rec.record_role),
       sourceId:rec.source_tree_id||null,objectId:rec.source_object_id??null,
       href:T?.sourceHref(rec.source_primary,rec.source_tree_id,d.source_crosswalk?.current_objectid??rec.source_object_id)||null,
@@ -405,8 +407,8 @@
     const P=(key,label,value,unit,dataset,field,note,digits)=>q(env,key,label,value,unit,'measured',prov(env,'lidar-'+key,{source:SOURCE.lidar2024,date:flown,dataset,field,note,method:dataset==='crown'?cr.method_id:null,
       uncertainty:unit==='m'?{text:`Survey specification ${SURVEY_2024.vertical}`,low:null,high:null,basis:'survey specification'}:null}),{digits});
     const rows=[
-      P('crownMax','Crown maximum',num(cr.crown_max_chm_m),'m','crown','crown_max_chm_m','v5 crown'),
-      P('meanHeight','Mean vegetation height',num(cr.mean_veg_height_m),'m','crown','mean_veg_height_m','v5 crown cells'),
+      P('crownMax','Crown maximum',num(cr.crown_max_chm_m),'m','crown','crown_max_chm_m','Crown'),
+      P('meanHeight','Mean vegetation height',num(cr.mean_veg_height_m),'m','crown','mean_veg_height_m','Crown cells'),
       P('canopyTop','Canopy top (returns)',num(pc.canopy_top_m??ppc.canopy_top_m),'m',pc.canopy_top_m!=null?'pointcloud':'previous_pointcloud','canopy_top_m',null),
       P('liveCrownBase','Live crown base',num(ppc.height_to_live_crown_m),'m','previous_pointcloud','height_to_live_crown_m','Earlier crown'),
       P('vegReturns','Vegetation returns',num(pc.n_veg_returns??ppc.n_vegetation),'n',pc.n_veg_returns!=null?'pointcloud':'previous_pointcloud','n_veg_returns',num(pc.n_ground_returns??ppc.n_ground)!==null?`${nf(num(pc.n_ground_returns??ppc.n_ground))} ground returns`:null),
@@ -585,7 +587,7 @@
         cr.crown_source==='record_seeded_v52'?{kind:'drawn',text:'Crown drawn from the record’s LiDAR returns; awaiting confirmation'}:null].filter(Boolean)});
     if(o||gf)rows.push({release:'v6',date:cur==='v6'?dated(env.metadata?.release?.dataset_last_updated_utc):null,crown:o?{key:o.seg_key||id.seg_key||null,height:null,area:num(o.outline_area_m2),method:methodRef(env,o.method_id||'pointcloud_v53_outline_B')}:null,role:null,evidence:null,
       events:[o?{kind:'outline',text:`Smoothed outline: ${nf(num(o.outline_area_m2)??0,1)} m² from ${nf(num(o.cell_area_m2)??0,1)} m² of cells`}:null,
-        gf?{kind:'growthForm',text:`Growth form estimated: ${cap(String(gf.wording||words(gf.display_key)||'').replace(/^(Probably|Likely|Possibly)\s+/i,'').replace(/\s*\(model\)$/,''))}`}:null,
+        gf?{kind:'growthForm',text:`Growth form estimated: ${cap(String(gf.wording||words(gf.display_key)||'').replace(/^(Probably|Likely|Possibly)\s+/i,'').replace(/\s*\(model\)$/,'').replace(/\(model,\s*/,'('))}`}:null,
         gf?.merged_call==='merged'?{kind:'merged',text:'Crown called merged (several trees) by the v6 model'}:null].filter(Boolean)});
     // The release on the page always has a row: the tree is in it.
     if(cur&&!rows.some(r=>r.release===cur)){
@@ -603,7 +605,7 @@
   function reviewsFromRecord(env,c){
     const d=c.record?.datasets||{},out=[];
     const f=parse(d.field?.observation_json);
-    if(d.field)out.push({id:null,kind:'field_observation',basis:'record',date:dated(d.field.observed_on),summary:f?.description||'Field observation',by:null,status:'applied',appliedIn:[]});
+    if(d.field)out.push({id:null,ref:f?.observation_id||null,kind:'field_observation',basis:'record',date:dated(d.field.observed_on),summary:f?.description||'Field observation',by:null,status:'applied',appliedIn:[]});
     if(d.ground)out.push({id:null,kind:'ground_visit',basis:'record',date:dated(d.ground.observed_on),summary:`KYTE visit accepted${d.ground.presence?`; presence: ${d.ground.presence}`:''}${d.ground.note?`. ${d.ground.note}`:''}`,by:null,status:'applied',appliedIn:[]});
     if(d.notable_link_review)out.push({id:null,kind:'notable_position',basis:'record',date:null,summary:d.notable_link_review.review_note||'Notable-tree position reviewed',by:null,status:'applied',appliedIn:[]});
     if(d.location_review)out.push({id:null,kind:'position_flag',basis:'record',date:null,summary:d.location_review.review_note||'Council position unverified',by:null,status:'applied',appliedIn:[]});
@@ -611,7 +613,7 @@
     // stage from the append-only ledger; one row per correction).
     const corr=Array.isArray(d.corrections)?d.corrections:d.corrections?[d.corrections]:[];
     for(const x of corr)out.push({id:x.id||null,kind:words(x.type)||'correction',basis:'record',date:dated(x.decided_on),summary:x.summary||null,by:x.reviewer||null,
-      status:words(x.status||'accepted'),outcome:words(x.outcome||null),reason:x.reason||null,role:words(x.role||null),appliedIn:[]});
+      status:words(x.status||'accepted'),outcome:words(x.outcome||null),reason:x.reason||null,role:words(x.role||null),evidence:evidenceList(x.evidence),appliedIn:[]});
     return out;
   }
 
@@ -639,11 +641,17 @@
     const tree_id=id||record?.tree_id||props?.tree_id;
     const summary=T.from(props||{tree_id},record||null);
     const c={id:tree_id,record,schema,members,summary,live,props:props||null};
-    const url=Id?Id.url(tree_id):null,mapUrl=Id?Id.url(tree_id,{page:'map'}):null;
-    const rec={schema:SCHEMA,loaded:!!record,id:tree_id,shortId:summary.shortId,url,mapUrl,
-      request:resolved?{input:resolved.input??null,canonical:resolved.canonical??tree_id,status:resolved.status||'current',resolvedBy:resolved.resolved_by||null,note:resolved.note||null}:null,
+    // The tree's permanent number (data release 6.1 on): the full record's tree_number, the map feature's tn, or the
+    // number the request resolved to. Before 6.1 there is none and the record ID stays the tree's only ID.
+    const tn=record?.datasets?.tree_number||null;
+    const number=[tn?.number,props?.tn,resolved?.status==='current'?resolved.number:null].find(n=>n&&(!Id||Id.isNumber(n)))||null;
+    const url=Id?Id.url(number||tree_id):null,mapUrl=Id?Id.url(number||tree_id,{page:'map'}):null,permalink=number&&Id?Id.permalink(number):null;
+    const rec={schema:SCHEMA,loaded:!!record,id:tree_id,number,permalink,shortId:summary.shortId,url,mapUrl,
+      numberRole:tn?{role:tn.role||null,kind:tn.kind||null,minted:tn.minted_release||null}:null,
+      request:resolved?{input:resolved.input??null,key:resolved.key??null,kind:resolved.kind||null,canonical:resolved.canonical??tree_id,number:resolved.number||null,status:resolved.status||'current',
+        relation:resolved.relation||null,resolvedBy:resolved.resolved_by||null,note:resolved.note||null,reason:resolved.reason||null}:null,
       release:release(E,c),
-      citation:V?V.citation({treeId:tree_id,url,metadata:E.metadata,title:'ALTO: Aotearoa Long-term Tree Observatory'}):null,
+      citation:V?V.citation({treeId:number||tree_id,url:permalink||url,metadata:E.metadata,title:'ALTO: Aotearoa Long-term Tree Observatory'}):null,
       identity:identity(E,c),measures:{},measureOrder:[],records:[],moreRecords:0,identifiers:summary.ids,bySource:null,
       outline:null,lidar:null,species:null,surveys:[],surveyChange:null,setting:null,benefits:null,lifeStage:null,replacement:null,roots:null,
       context:{status:'pending',scopes:[]},history:{status:'pending',releases:[]},corrections:{status:'pending',items:[]},
@@ -764,6 +772,7 @@
     const i=IRR_ORDER.indexOf(key),atOrAbove=IRR_ORDER.slice(Math.max(0,i)).reduce((s,k)=>s+(counts[k]||0),0);
     return {key,inClass:counts[key]||0,shareInClass:(counts[key]||0)/n*100,shareAtOrAbove:atOrAbove/n*100,n,counts};
   }
+  const MIN_STREET_N=10;
   // Where this tree sits among comparable crowns (same tree class) on its street, in its local board and
   // across Auckland, from the release's published distributions.
   async function context(rec,env){
@@ -794,7 +803,9 @@
     if(j.streets&&s.position){
       try{street=await streetGroup(env,d.base,j.streets,s.position,klass);}catch{street={status:'unavailable'};}
     }
-    if(street?.group)out.scopes.push({...scopeOf('street',street.name,street.group,street.definition),distance:street.distance??null,board:street.board||null});
+    // A street group is compared only from MIN_STREET_N trees of the class: "Tallest of 2" says nothing.
+    if(street?.group&&num(street.group.n)>=MIN_STREET_N)out.scopes.push({...scopeOf('street',street.name,street.group,street.definition),distance:street.distance??null,board:street.board||null});
+    else if(street?.group)out.scopes.push({scope:'street',status:'small',name:street.name,definition:street.definition,n:street.group.n,minN:MIN_STREET_N,metrics:{},irreplaceability:null,distance:street.distance??null,board:street.board||null});
     else out.scopes.push({scope:'street',status:street?.status||(j.streets?'none':'not_published'),name:street?.name||null,definition:street?.definition||null,n:street?.n??null,metrics:{},irreplaceability:null});
     // Local board, from the same polygons the tables were built with.
     let board=null;
@@ -877,15 +888,31 @@
     return list.filter(x=>{const r=refs(x);return [...r.ids].some(i=>mine.has(i))||(seg&&r.keys.has(seg));})
       .map(x=>({id:x.id||x.decision_id||null,kind:words(x.type||x.kind),basis:'ledger',date:dated(x.decided_on||x.date||x.decided_utc),
         summary:x.summary||x.subject_text||(typeof x.subject==='string'?x.subject:null)||x.note||null,by:x.reviewer||x.by||null,
-        status:words(x.status||'accepted'),outcome:words(x.outcome||x.result||null),reason:x.reason||null,
+        status:words(x.status||'accepted'),outcome:words(x.outcome||x.result||null),reason:x.reason||null,evidence:evidenceList(x.evidence),
         appliedIn:x.applied_in||x.releases||(j.release_label?[j.release_label]:[])}));
+  }
+  // A decision's evidence as a list ("a; b" in a record, a list in the receipt).
+  const evidenceList=e=>(Array.isArray(e)?e:typeof e==='string'?e.split(/;\s*/):[]).map(x=>String(x).trim()).filter(Boolean);
+  // One entry per review: a field observation the record holds and a ledger decision that cites it as evidence
+  // (e.g. "tree_field_observation_v5:<observation id>") are the same review, so the observation is folded
+  // into the decision (as basedOn) instead of being listed again.
+  function mergeObservations(list){
+    const cites=new Map();
+    for(const x of list)for(const e of x.evidence||[]){const id=e.split(':').pop();if(id&&!cites.has(id))cites.set(id,x);}
+    const out=[];
+    for(const x of list){
+      const by=x.ref?cites.get(x.ref):null;
+      if(by&&by!==x){by.basedOn=[...(by.basedOn||[]),{kind:x.kind,ref:x.ref,date:x.date,summary:x.summary}];continue;}
+      out.push(x);
+    }
+    return out;
   }
   async function corrections(rec,env){
     const own=(rec.corrections?.items||[]).filter(x=>x.basis==='record');
     const d=await derived(env,'corrections');
-    if(!d)return {status:own.length?'ready':'none',items:own,receipt:null,receiptStatus:'not_published'};
+    if(!d){const items=mergeObservations(own.map(x=>({...x})));return {status:items.length?'ready':'none',items,receipt:null,receiptStatus:'not_published'};}
     const items=receiptItems(d.json,rec),seen=new Set(items.map(x=>x.id).filter(Boolean));
-    const all=[...items,...own.filter(x=>!x.id||!seen.has(x.id))];
+    const all=mergeObservations([...items,...own.filter(x=>!x.id||!seen.has(x.id)).map(x=>({...x}))]);
     return {status:all.length?'ready':'none',items:all,receipt:{release:d.json.release||null,generated:dated(d.json.generated_utc||d.json.created_utc),ledger:d.json.ledger||null,matches:d.matches,url:d.url},
       receiptStatus:d.matches?'ready':'release_mismatch'};
   }
@@ -920,17 +947,16 @@
     return {...decodePoints(await res.arrayBuffer()),meta:p};
   }
 
-  // Imagery: the capture behind the current aerial tiles (Esri metadata) and, where the site allows it,
-  // the dated World Imagery Wayback releases that changed at this point.
+  // Imagery: the capture behind the current aerial tiles (Esri metadata), and the aerial surveys of Auckland since
+  // 2010 that a page can read at this tree from LINZ's open imagery archive (tree-imagery.js reads the pixels).
   async function imagery(rec,env){
     const pos=rec.summary.position;
     if(!pos)return {status:'none'};
-    const V=dep('ALTOViz');
+    const V=dep('ALTOViz'),X=dep('ALTOImagery');
     const current=V?.imageryInfo?await V.imageryInfo(pos.lon,pos.lat).catch(()=>null):null;
-    const wb=dep('ALTOWayback');
-    let wayback={status:'not_available',releases:[],requirement:null};
-    if(wb){try{wayback=await wb.releasesAt(pos.lon,pos.lat,env);}catch(e){wayback={status:'unavailable',releases:[],requirement:null,error:String(e?.message||e)};}}
-    return {status:'ready',current:current?{source:current.source,date:current.date,resolution:current.resolution,provider:'Esri World Imagery'}:null,wayback};
+    const surveys=X?{status:'available',provider:X.HOST,archive:X.ARCHIVE,catalogue:X.CATALOGUE,licence:X.LICENCE.name,
+      surveys:X.SURVEYS.map(s=>({id:s.id,label:s.label,kind:s.kind,gsd:s.gsd,start:s.start,end:s.end,title:s.title,licensors:s.licensors,collection:s.collection}))}:{status:'not_available',surveys:[]};
+    return {status:'ready',current:current?{source:current.source,date:current.date,resolution:current.resolution,provider:'Esri World Imagery'}:null,surveys};
   }
 
   // Place: local board now; land type and parcel come from the map (fromMap).
@@ -999,7 +1025,7 @@
       for(const f of points){const p=f.properties||{};if(p.tree_id===rep||p.tree_id===rec.id||seen.has(p.tree_id)||p.display_role==='earlier_detection')continue;seen.add(p.tree_id);
         const [x,y]=f.geometry.coordinates,dd=Math.hypot((x-pos.lon)*k,(y-pos.lat)*110540);if(dd>radius)continue;
         const s=T.from(p,null);near.push({treeId:p.tree_id,title:s.name.title,nameKind:s.name.kind,protected:!!s.status.protected,source:S?.source(s.classification.primary)?.short||null,
-          height:s.size.height,crownArea:s.size.area,distance:dd,href:dep('ALTOTreeId')?.url(p.tree_id)||null});}
+          height:s.size.height,crownArea:s.size.area,distance:dd,href:dep('ALTOTreeId')?.url(p.tn||p.tree_id)||null});}
       near.sort((a,b)=>a.distance-b.distance);
       rec.nearby={status:near.length?'ready':'none',radius,trees:near,basis:'Mapped trees on the loaded map tiles',
         provenance:prov(rec._env||envOf({},null),'nearby',{label:'Nearby trees',kind:'derived',source:'ALTO map tiles for this release',method:{id:null,text:`Map markers within ${radius} m of the recorded position (straight-line distance)`,href:null}})};
@@ -1013,9 +1039,10 @@
 
   // ---------- one call for a page ----------
   // members: how many of the crown's other records to read (0 for a quick panel; each is one bucket).
-  async function load(input,env={},{members:maxMembers=15}={}){
+  // resolved: the page's own ALTOTreeId.resolve() of the input, when it has one (saves a second lookup).
+  async function load(input,env={},{members:maxMembers=15,resolved:given=null}={}){
     const E=envOf(env,env.metadata||null),Id=dep('ALTOTreeId'),TD=dep('ALTOTreeDetails');
-    const resolved=Id?await Id.resolve(input,{base:E.dataBase,version:E.version,metadata:E.metadata}):{tree_id:input,canonical:input,status:'current',resolved_by:'input'};
+    const resolved=given||(Id?await Id.resolve(input,{base:E.dataBase,version:E.version,metadata:E.metadata}):{tree_id:input,canonical:input,status:'current',resolved_by:'input'});
     if(!resolved.tree_id){const e=new Error(resolved.note||'Not a tree ID');e.code='invalid';e.resolved=resolved;throw e;}
     let loaded;
     try{loaded=await TD.load(E.dataBase,E.version,resolved.tree_id);}
@@ -1033,7 +1060,7 @@
   // A plain copy for download or inspection (no internal fields).
   const toJSON=rec=>JSON.parse(JSON.stringify(rec));
 
-  const api={SCHEMA,SOURCE,SURVEY_2024,METHODS,RELEASES,decodePoints,loadPoints,load,assemble,fromTile,enrich,fromMap,parcel:(rec,env,pid)=>parcel(rec,envOf(env,env.metadata||rec._env?.metadata||null),pid),setLive,toJSON,percentile,exact,tileOf,fnvShard,methodRef:(m,env={})=>methodRef(envOf(env),m),envOf,
+  const api={SCHEMA,SOURCE,SURVEY_2024,METHODS,RELEASES,MIN_STREET_N,decodePoints,loadPoints,load,assemble,fromTile,enrich,fromMap,parcel:(rec,env,pid)=>parcel(rec,envOf(env,env.metadata||rec._env?.metadata||null),pid),setLive,toJSON,percentile,exact,tileOf,fnvShard,methodRef:(m,env={})=>methodRef(envOf(env),m),envOf,
     _internal:{receiptItems,historyFromRecord,rankEntry,irrEntry,derivedUrls,trunk,rpaRadius,RPA_FACTOR,RPA_AREA_CAP_M2,clearCache:()=>cache.clear()}};
   root.ALTOTreeRecord=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;

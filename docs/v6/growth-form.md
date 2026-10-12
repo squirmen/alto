@@ -51,17 +51,19 @@ and conifer they make the three coarse classes.
   outlines. A crown with a palm detection is called palm-type whatever the model says, except on crowns
   wider than 10 m whose model call is not palm-type high or medium: such crowns are often several trees,
   so the detection is not used on its own (1,028 crowns).
-- **Training labels:** 21,988 crowns: 19,329 whose growth form comes from a Council register species
-  (97% of them on the central isthmus) and 2,659 labelled blind from aerial imagery and LiDAR views
-  outside the isthmus. Tree fern is trained as its own class (197 crowns). Blind labels carry four times
-  the weight of register labels, a weight every training fold chose.
+- **Training labels:** about 22,000 crowns: Council tree register records, plus crowns labelled from
+  the 2024 aerial imagery and LiDAR profiles by a machine-learning image-interpretation model (one
+  pass; no independent second labeller yet). Of the 21,988, 19,329 take their growth form from a
+  register species (97% of them on the central isthmus) and 2,659 outside the isthmus were labelled
+  blind from the imagery and LiDAR profiles. Tree fern is trained as its own class (197 crowns). Image
+  labels carry four times the weight of register labels, a weight every training fold chose.
 - **Validation:** five spatial folds on 1 km blocks with a 100 m buffer; seed 20261002.
 
 ## How well it does
 
-**A fresh blind test outside the isthmus.** 600 crowns in 15 new 1 km blocks, never trained or tuned on;
-401 received a decided label. Results are weighted to the 2.89 million crowns of the outside blocks, with
-95% intervals from a block bootstrap:
+**A fresh blind test outside the isthmus.** 600 crowns in 15 new 1 km blocks, never trained or tuned on
+and labelled the same way; 401 received a decided label. Results are weighted to the 2.89 million crowns
+of the outside blocks, with 95% intervals from a block bootstrap:
 
 | | Earlier candidate (not released) | v6 model |
 |---|--:|--:|
@@ -78,9 +80,9 @@ acceptance bar set before the work asked for 0.70; the model passes 11 of the ba
 therefore publishes it as an additive model estimate under display rules that show a class only where
 calls of that kind were right often enough.
 
-**Label consistency.** 60 test crowns were labelled again, blind, under new ids. When both labels commit
-to a coarse class they agree on 30 of 31 (kappa 0.88); whether to commit at all is much less consistent
-(kappa 0.28), and 32% of test crowns were left undecided.
+**Label consistency.** 60 test crowns were labelled again the same way, blind, under new ids. When both
+labels commit to a coarse class they agree on 30 of 31 (kappa 0.88); whether to commit at all is much
+less consistent (kappa 0.28), and 32% of test crowns were left undecided.
 
 ## Display rules
 
@@ -131,8 +133,9 @@ estimates already came from a recorded species; they are unchanged.
 
 ## Pre-publication audit
 
-Before release, the calls v6 would show were checked in a blind, stratified visual audit across the
-whole metropolitan area. The gate criteria and estimators were written before any label existed.
+Before release, the calls v6 would show were checked in a blind, stratified audit from the imagery
+across the whole metropolitan area. The gate criteria and estimators were written before any label
+existed.
 
 - **Sample:** 18 cells (display class × isthmus or outside × May–June or leaf-on flight), 12 crowns
   each (all of a smaller cell), the rest of 240 shown crowns in proportion to cell size, plus 20 crowns
@@ -141,8 +144,8 @@ whole metropolitan area. The gate criteria and estimators were written before an
 - **Cards:** the 2024 chips at the crown top and at the lean-corrected position, colour infrared, older
   aerial surveys (2015–16, 2017 and, in the central survey, August 2023) and LiDAR side profiles. No
   model, display or register value appears on a card.
-- **Labels:** one labeller, one pass, blind to every model value; the labels were hashed before the key
-  was opened.
+- **Labels:** labelled the same way as the training and test crowns (one pass; no independent second
+  labeller yet), blind to every model value; the labels were hashed before the key was opened.
 
 **Result: 0.899 of shown calls correct** [0.828, 0.956] (coarse class, decided labels, weighted to the
 metro; bar 0.85). Counting uncertain labels as wrong gives 0.782. By class:
@@ -174,10 +177,10 @@ Changes made before release:
   of 12.
 
 With these changes the audit's overall figure is 0.921 [0.848, 0.980] (computed after the labels were
-joined). Its weak points: one labeller and no repeats; 12–31 crowns per cell, so only cells far from
-their bar are settled; leaf-habit evidence is thin outside the central survey; the labels describe the v5
-outlines the scores were computed on; and 43% of shown crowns (weighted) are merged outlines, scored by
-the majority growth form.
+joined). Its weak points: one labelling pass, no independent second labeller and no repeats; 12–31
+crowns per cell, so only cells far from their bar are settled; leaf-habit evidence is thin outside the
+central survey; the labels describe the v5 outlines the scores were computed on; and 43% of shown crowns
+(weighted) are merged outlines, scored by the majority growth form.
 
 ## Smoothed outlines
 
@@ -197,7 +200,7 @@ estimate keep the v5 cell area; the smoothed polygon's area is stored as `outlin
 3,352,099 v5 crowns and the 534 crowns drawn from a record in v5.2, smoothed area ÷ cell area has a
 median of 0.995 (1st–99th percentile 0.939–1.019; 0.997 in total).
 
-On the held-out test sites of the hand-labelled crown benchmark (an October 2026 update of the one in
+On the held-out test sites of the crown benchmark (an October 2026 update of the one in
 [`docs/v5/segmentation.md`](../v5/segmentation.md); 93 reference trees, scored once, matched one to one at
 IoU ≥ 0.5), the smoothed outlines keep v5's F1 (0.368) and raise the median matched IoU from 0.632 to
 0.634. Their shape now resembles the reference outlines:
@@ -289,6 +292,6 @@ records, 3,574,178 KYTE nearby records and 368,540 property records.
 - Crowns drawn from a record in v5.2, crowns outside the v5 survey and records without a crown have no
   growth form. 17.3% of scored crowns are "not yet determined".
 - Outlines smooth the v5 cells only: v5's merges remain, and crowns over 60 m² remain about 20% smaller
-  than hand-drawn outlines. Near-canopy polygons are not smoothed.
+  than the reference outlines. Near-canopy polygons are not smoothed.
 - The `rules` text in `data/growth-form-v6.json` and the late-June sentence on the v6 methods page were
   written before the audit; the counts in that file and the map follow the rules in this document.

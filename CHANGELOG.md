@@ -5,6 +5,93 @@ Two sections: the **Tool** (the interface, semantic versions) and the **Data** (
 
 ## Tool
 
+### 0.2.4 (13 October 2026)
+
+Changed
+- **Release 6 methods page:** the labels made from imagery (training, the 600-crown blind test and the pre-release
+  audit) are described as made by a machine-learning image-interpretation model, in one pass, with no independent
+  second labeller yet.
+
+### 0.2.3 (13 October 2026)
+
+Tested with data v6.1 (`metro-2026.10.13-pointcloud-v6.1`, local preview) and v6 (`metro-2026.10.12-pointcloud-v6`).
+
+Added
+- **Tree numbers** (data v6.1): the tree page and the map panel show the tree number as the tree's ID
+  ("Tree number", the value, Copy and the permalink `https://alto.tfwelch.com/tree/<number>`), with the
+  `akl_tree_*` record ID second as "Record ID". The citation, Share, the print header, the provenance popover and
+  the page's canonical link use the number and the permalink. With data before v6.1 (no `tn` in the tiles, no
+  `tree_number` in the records) the record ID stays the tree ID, as in 0.2.2.
+- **Lookups by number**: the map's search takes tree numbers (any case, spaces or a hyphen) and release 4 crown
+  keys as well as record IDs and crown keys. A number that fails its check character offers "Check character
+  doesn’t match; did you mean …?" when exactly one number one keystroke away (one character changed or two
+  neighbours swapped) is in the release's alias table, and "Not a valid tree number" otherwise; 8-letter words
+  such as Takapuna stay with the place and species search. An older ID opens its tree with one line in the panel
+  or on the tree page: "Record ID akl_tree_… is tree T…".
+- **Pages for IDs that name no current tree**: a retired, merged or split ID opens a page whose title states the
+  status and the reason ("Retired: no tree at this LiDAR detection", "Merged: reviewer correction C00004",
+  "Split: release 4 crown divided between 2 current crowns"), with the reason in full (and the correction from
+  the corrections receipt), a tombstone's last position, release and source ID, and the trees that took its place
+  as links, each named from its record. A mistyped number in the address gets the search's correction. On the map
+  the same IDs open the surviving tree, the largest part or the successor with that one line; a tombstone opens
+  the map at its last position with the reason.
+- **Release 6.1 methods page** (`web/v61-methods.html`) on the methods template: what changed, tree numbers and
+  their carry-over rules, the format and check character, how older IDs resolve, the corrections applied and the
+  limits. Linked from the 6, 5.2, 5.1 and 5 pages; the public build ships it.
+- `web/tree-id.js`: `nearNumbers`, `suggestNumber`, `searchEntry`, `describe`, `label`, `MESSAGES` and
+  `isNumberShaped`; `resolve()` also returns the alias row's `reason`, `last_release` and `source_id`.
+  `pipeline/tool/test_tree_numbers_ui.cjs` checks display, fallback, search, the check character and status pages.
+
+Changed
+- **Change since 2013 is v1**: 82,863 changes from crowns matched across the 2013, 2016 and 2024 LiDAR surveys, read
+  from a new file, `data/tree_change_v1.pmtiles` (revision `v1-20261013`; the screened `tree_change.pmtiles` stays
+  on the host for rollback). A blind photo check found 92% (88–95%) of shown changes real, against 74% for the
+  previous screened layer. Partial losses are not shown. The "(experimental)" label is removed from the legend and
+  the Colour by menu. A removal's popup says what the 2024 survey shows: open ground, or no tree canopy and built
+  over (10,051 removals: a house, extension or carport).
+- Selecting a tree on the map puts its number in the address (`?tree=T…`, replaced in place); closing the panel or
+  opening a property takes it off. Without numbers the address is left as before.
+- KYTE links (Add a photo, Know this tree?) keep the `akl_tree_*` record ID: KYTE does not take numbers yet.
+- With numbers, the records table links a record to a tree page only when the record carries another tree's
+  number; nearby trees and the page's mini map open trees by number.
+
+### 0.2.2 (13 October 2026)
+
+Tested with data v6 (`metro-2026.10.12-pointcloud-v6`) and v5.2.
+
+Added
+- **Aerial imagery through time** on the tree page (section 3): the crown in each aerial survey of
+  Auckland since 2010 that covers the tree (2010, 2010–11, 2010–12, 2012, 2015–16, 2017, 2020, 2022,
+  2023, 2024, 2024–25), oldest first, with each survey's flying period and pixel size and the 2024
+  crown outline drawn on every photograph. Read keylessly in the browser from LINZ's open imagery
+  archive (cloud-optimised GeoTIFFs, WebP tiles): one Range request for a file's header and one per
+  row of internal tiles under the window, at the overview that gives about 160–320 pixels across it,
+  four surveys at a time, only when the section comes near the screen, cached for the visit. A survey
+  without a file or pixels at the tree is listed as not covering it. Attribution: the licensors LINZ
+  lists for each survey shown, CC BY 4.0. Needs `https://nz-imagery.s3.ap-southeast-2.amazonaws.com`
+  in the site's CSP `connect-src` (`web/tree-imagery.js`, `pipeline/tool/test_tree_imagery.cjs`).
+- **Release 6 methods page** (`web/v6-methods.html`) on the methods template: growth form, the
+  12 October audit and its rule changes, smoothed outlines, benefit estimates, trunk diameter at 1.3 m,
+  the corrections ledger and limits, with three figures in the design system's colour-blind safe
+  colours. Linked from the 5.2, 5.1 and 5 pages; the public build ships it in place of the copy in
+  the v6 data bundle. The trunk-diameter method links to it for release 6 trees.
+
+Changed
+- The tree page's section bar shows the section links that fit whole and puts the rest in a More menu
+  (it showed a clipped "If it were lost" at 1440 px); phones keep the scrolling strip.
+- Street comparisons need at least 10 trees of the class on the street; smaller street groups are
+  left out with the rule stated ("Tallest of 2" said nothing).
+- A field observation and the review decision that cites it as evidence are listed once (matched by
+  the observation's ID; `akl_tree_not_336` listed its plaque observation twice).
+- Copy: no "v5 crown", "laser survey" or "(model)" in tree-page values, sources and notes; methods
+  copy describes the labels behind the growth-form model and its audit neutrally (one labeller, one
+  pass, no second labeller yet).
+- Builds stamp every page's local scripts and styles with the build's version (0.2.1 pages still
+  requested `?v=tool-0.2.0` files).
+
+Removed
+- The Esri World Imagery Wayback reader (`web/wayback.js`), never switched on.
+
 ### 0.2.1 (12 October 2026)
 
 - "Change since 2013" is marked experimental; points on buildings, ports, water, industrial yards and construction sites, and points the aerial photos do not confirm, are screened out (blind photo check: about three in four shown changes confirmed).
@@ -129,6 +216,16 @@ evidence summary, full research record, 3D tree forms, ground evidence from KYTE
 panel, land filter, Council recorded positions layer (v5.2).
 
 ## Data
+
+### v6.1 (13 October 2026, `20261013-v6.1`)
+
+Permanent tree numbers for all 4,200,336 map trees (`tn` in the map features, `tree_number` in the full
+records) and an alias table of 19,376,165 keys (`data/tree_ids`) that resolves every record ID, release 4 and 5
+crown key and tree number, with tombstones for the 7,405 LiDAR detections removed before the 9 September
+release. Corrections ledger applied in full (14 applied, 17 recorded, 318 already true, 5 awaiting review):
+3,574,821 trees on the map and 3,523,021 crowns counted, 3 fewer of each than v6. Otherwise v6's crowns,
+measurements and estimates. Tool: 0.2.3 and later show the numbers (live with 0.2.4); earlier tools keep
+working on record IDs. Method: `docs/v61/tree-numbers.md` in the repository.
 
 ### v6 (12 October 2026, `20261012-v6`)
 

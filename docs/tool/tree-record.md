@@ -125,8 +125,8 @@ repository; `method.doc` is the repository document. `model.validation` comes fr
 | `roots` | root-space scenario, or `null` when the release has none for the tree: `{kind:'scenario', rpaRadius, rpaArea, rpaRange{low,high,areaLow,areaHigh} \| null, rpaBasis, rule{factor:12, areaCap:707}, trunk{central,low,high,kind}, stored{rpaRadius,rpaArea,dbh}, effectiveRadius, effectiveArea, foragingRadius, constraint, basis, method, confidence, provenance}`. Present whenever the release stores a protection radius (a LiDAR-detected tree has one without an effective rooting radius). `rpaRadius` is 12 × the central trunk estimate (area capped at 707 m², the release's rule), `rpaRange` the radii of the lowest and highest trunk models; `stored` keeps the release's own values (from one model) |
 | `context` | comparisons with similar trees (below) |
 | `history` | `{status, source: 'record', releases[{release, date, crown{key,height,area,method}, role, evidence, events[{kind,text,method}], current}], lineage, lineageStatus, lineageReleases, lineageSource}`: crowns, links and repairs from the record's own fields; map-marker and ID changes (`kind: 'id'`) from `tree_history` when published. Roles are stated only where the record holds them for that release (v4 and the release on the page) |
-| `corrections` | `{status: ready\|none\|pending, items[{id, kind, basis: record\|ledger, date, summary, by, status, appliedIn[], outcome}], receipt{release,generated,ledger,matches,url}, receiptStatus}` |
-| `imagery` | `{status, current{source,date,resolution,provider}, wayback}`; `wayback` (from `wayback.js`, Esri World Imagery Wayback): `{status: ready\|none\|not_enabled\|unavailable, releases[{capture{date,source,description,resolution,accuracy}, release{id,date,title}, tiles, releasesShowing}], tileVersions, provider, attribution, requirement, hosts}`; one entry per distinct capture at the tree, newest first; `not_enabled` on the public site (CSP and Esri terms; `requirement` says what is needed) |
+| `corrections` | `{status: ready\|none\|pending, items[{id, kind, basis: record\|ledger, date, summary, by, status, appliedIn[], outcome, evidence[], basedOn[{kind,ref,date,summary}]}], receipt{release,generated,ledger,matches,url}, receiptStatus}`; a field observation the record holds (`ref`: its observation ID) that a decision cites in its `evidence` (`tree_field_observation_v5:<id>`) is folded into that decision's `basedOn`, so one review is listed once |
+| `imagery` | `{status, current{source,date,resolution,provider}, surveys}`; `surveys` (from `tree-imagery.js`): `{status: available\|not_available, provider, archive, catalogue, licence, surveys[{id,label,kind,gsd,start,end,title,licensors,collection}]}`, the LINZ aerial surveys of Auckland since 2010 that the tree page reads at the tree in the browser (keyless, from LINZ's open imagery archive; the page's "Aerial imagery through time" section draws the crown in each survey that covers it) |
 | `place` | `{status, board{name,canopyCover,canopyCoverBasis}, outsideBoards, landType{key,label,basis}, parcel{status,id,landType,zone,area,canopy,canopyCover,trees,benefits,href}}` |
 | `nearby` | `{status, radius, basis, trees[{treeId,title,nameKind,protected,source,height,crownArea,distance,href}]}` |
 | `photos` | `{status, visits[] (KYTE API), lead{name,common,score,organ,source}, live}` |
@@ -153,7 +153,10 @@ release totals use) of the same tree class (the class the benefit estimates used
 `services.species_class`). `percentile` is the share of the group below the tree's value (ties split
 evenly); `share` rounds it down so a statement never overstates; `text` is a data-sheet phrase
 ("Taller than 87%", "Top 1%", "3rd tallest of 27"). Small street groups are published as their sorted
-values, so their ranks are exact (`exact: true`). Regrowth time is crown area ÷ a class growth rate, so
+values, so their ranks are exact (`exact: true`). A street is compared only when at least
+`MIN_STREET_N` (10) trees of the class share it: a smaller street group keeps its name and `n` with
+`status: 'small'` and no metrics ("Tallest of 2" says nothing), and pages leave its row out and state
+the rule. Regrowth time is crown area ÷ a class growth rate, so
 within a class it ranks exactly as crown area; irreplaceability is given as the share of the group in
 the tree's class and in that class or higher.
 

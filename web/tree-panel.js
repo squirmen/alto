@@ -14,14 +14,22 @@
   const KEYS=['height','crownArea','trunkDiameter','rootProtection','lifeStage','benefits'];
 
   // ---- entity header (design system 2.7; the block approved in the v0.2 review) ----
-  function identity(rec,{treeUrl}){
+  function identity(rec,{treeUrl,note=null}){
     const id=rec.identity,t=I().title(id);
     let h=`<header class="tp-id"><p class="tp-kicker">${esc(I().eyebrow(id))}</p><h3 class="tp-name" id="tpName">${esc(t.text)}</h3>`;
     if(t.latin)h+=`<p class="tp-latin">${esc(t.latin)}</p>`;
     if(t.note)h+=`<p class="tp-model">${esc(t.note)}</p>`;
     if(id.nameKind==='recorded'&&id.growthForm?.shown){const top=(id.growthForm.probabilities||[]).find(p=>p.top);if(top)h+=`<p class="tp-gf">Growth form: ${esc(top.label)} <span class="badge badge-estimate">Estimate</span></p>`;}
     if(rec.loaded||id.protectionStatus?.status==='protected')h+=I().protectionLine(rec,{cls:'ti-prot tp-prot'});
-    return h+I().badges(rec,{icon:V().icon,recordsHref:`${String(treeUrl).replace(/#.*$/,'')}#m-records`})+'</header>';
+    return h+I().badges(rec,{icon:V().icon,recordsHref:`${String(treeUrl).replace(/#.*$/,'')}#m-records`})+ids(rec,{note})+'</header>';
+  }
+  // The tree's IDs from data release 6.1: its number (Copy, permalink) and, second, the record ID. note: one line
+  // when the tree was opened by another of its IDs ("Record ID akl_tree_… is tree T…").
+  function ids(rec,{note=null}={}){
+    const said=note?`<p class="tp-idnote" role="status">${esc(note)}</p>`:'';
+    if(!rec.number)return said;
+    return `<dl class="tp-ids"><dt>Tree number</dt><dd><code class="tp-tn">${esc(rec.number)}</code><button type="button" class="ti-copy" data-panel-action="copy-number" aria-label="Copy the tree number">Copy</button>
+      <a class="tp-permalink" href="${esc(rec.permalink)}">${esc(rec.permalink)}</a></dd><dt class="tp-sub">Record ID</dt> <dd class="tp-sub"><code>${esc(rec.id)}</code></dd></dl>${said}`;
   }
   function actions(rec,{treeUrl,saved,kyteBase='./kyte'}){
     return `<div class="tp-actions"><a class="btn btn-primary tp-open" href="${esc(treeUrl)}"><span>Open tree page</span>${V().icon('arrow',18)}</a>
@@ -55,12 +63,12 @@
     if(!rec.loaded)return '';
     return sec('tpPage','On the tree page','',I().pageLinks(rec,treeUrl));
   }
-  function render(rec,{treeUrl,saved=false,kyteBase='./kyte',geometry=null}={}){
-    return `<article class="tp ti-scope" data-loaded="${rec.loaded?'true':'false'}" aria-labelledby="tpName">`+identity(rec,{treeUrl})+actions(rec,{treeUrl,saved,kyteBase})+
+  function render(rec,{treeUrl,saved=false,kyteBase='./kyte',geometry=null,note=null}={}){
+    return `<article class="tp ti-scope" data-loaded="${rec.loaded?'true':'false'}" aria-labelledby="tpName">`+identity(rec,{treeUrl,note})+actions(rec,{treeUrl,saved,kyteBase})+
       metrics(rec)+lost(rec)+linked(rec,{geometry,treeUrl})+know(rec)+pageLinks(rec,treeUrl)+
-      `<footer class="tp-foot"><code>${esc(rec.id)}</code><span>${esc(I().versionLine(rec))}</span></footer></article>`;
+      `<footer class="tp-foot"><code>${esc(rec.number||rec.id)}</code><span>${esc(I().versionLine(rec))}</span></footer></article>`;
   }
-  const api={render,KEYS};
+  const api={render,ids,KEYS};
   root.ALTOTreePanel=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

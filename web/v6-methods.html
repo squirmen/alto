@@ -1,1 +1,307 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ALTO · V6 growth form and crown outlines</title><style>body{font:17px/1.65 system-ui,sans-serif;color:#23372b;background:#f2f5ef;margin:0}main{max-width:780px;margin:32px auto;padding:28px;background:white;border-radius:18px}a{color:#3e693c}h1{line-height:1.2}h2{font-size:1.25em}li{margin:.5em 0}table{border-collapse:collapse;width:100%;font-size:15px;margin:.6em 0}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #dfe6da;vertical-align:top}th{font-weight:600}.n{text-align:right;white-space:nowrap}@media (max-width:600px){main{margin:0;border-radius:0;padding:20px 16px}table{font-size:13px}}</style><main><a href="./">← Auckland map</a><h1>V6 · Growth form and smoother crowns</h1><p>This release adds a growth-form estimate for every V5 crown: whether a crown looks like an evergreen or deciduous broadleaf, a conifer, or a palm, cabbage tree or tree fern. It also redraws each crown with a smooth outline. Every growth form is a model estimate from the 2024 laser survey and aerial imagery, never an identified species: where the Council or another source recorded a species, that name stays the tree’s species and the model’s growth form is shown beside it.</p><h2>What the map shows</h2><table><tr><th>Shown as</th><th class="n">Crowns</th><th class="n">Share</th></tr><tr><td>Evergreen broadleaf (model, high confidence)</td><td class="n">1,491,608</td><td class="n">44.5%</td></tr><tr><td>Probably evergreen broadleaf (model)</td><td class="n">839,983</td><td class="n">25.1%</td></tr><tr><td>Deciduous broadleaf (model, high confidence; bare in late-autumn LiDAR)</td><td class="n">16,913</td><td class="n">0.5%</td></tr><tr><td>Likely deciduous (bare in late-autumn LiDAR)</td><td class="n">39,048</td><td class="n">1.2%</td></tr><tr><td>Broadleaf (model)</td><td class="n">136,708</td><td class="n">4.1%</td></tr><tr><td>Likely conifer (model)</td><td class="n">144,883</td><td class="n">4.3%</td></tr><tr><td>Possibly conifer (model)</td><td class="n">0</td><td class="n">0.0%</td></tr><tr><td>Likely palm or cabbage tree (palm-type crown seen in 2024 aerial imagery)</td><td class="n">19,600</td><td class="n">0.6%</td></tr><tr><td>Likely palm or cabbage tree (model)</td><td class="n">10,861</td><td class="n">0.3%</td></tr><tr><td>Likely tree fern (model)</td><td class="n">71,947</td><td class="n">2.1%</td></tr><tr><td>Possibly palm, cabbage tree or tree fern (model)</td><td class="n">0</td><td class="n">0.0%</td></tr><tr><td>Growth form not yet determined</td><td class="n">580,548</td><td class="n">17.3%</td></tr></table><p>A growth form is shown only where calls of its kind were right often enough when tested on crowns whose growth form is known from the Council register or from labelling by eye: at least 8 in 10 for a firm call, and at least 6 in 10 for a “possibly” call. Otherwise the crown reads “Growth form not yet determined”. On the laser surveys flown in April and October, when deciduous trees are in leaf, only evergreen broadleaf calls and palms seen by the palm detector are shown. “Likely deciduous (bare in late-autumn LiDAR)” is used outside the central isthmus only where the laser survey was flown in late June; elsewhere a deciduous call reads “Broadleaf (model)”.</p><h2>How it was estimated</h2><p>A gradient-boosted classifier (A2) reads the crown’s laser-return structure, its surroundings and image features from the 2024 aerial photograph at the crown top. It was trained on about 22,000 crowns labelled from the Council register and by hand, including 1,600 outside the isthmus, and checked on 600 fresh crowns it never saw. A separate palm detector confirms palms it can see from above. A variant trained to cope with leaves on the trees (A2_robust) scores crowns on April and October flights. A palm detection on a crown wider than 10 m is not used on its own, because such crowns are often several trees.</p><h2>Smoother crowns</h2><p>V5 traced crowns along the 0.5 m grid of the laser survey, so they looked square. V6 draws each crown with a smooth outline around the same cells: the crown’s area, height and every estimate are unchanged, and the outlines of neighbouring crowns do not overlap. Crowns drawn from a record in V5.2 are smoothed the same way.</p><h2>Services</h2><p>Service estimates use the growth form where a call is shown: leaf area and the trunk-size curve are weighted by the model’s probabilities, and the rest follows the call. Where the growth form is not yet determined, the estimate assumes an evergreen broadleaf tree, as before. The annual value estimate changes by +NZ$3,186,004, stored carbon by −114,533 t CO₂e and avoided runoff by −483,669 m³ a year; <a href="./data/growth-form-v6.json">every change is attributed by cause</a>. Most of it comes from crowns now called conifers that the previous release valued as evergreen broadleaf trees.</p><p><a href="./data/growth-form-v6.json">Counts, rules and changes</a> · <a href="./data/tree_details/schema.json">Full-record schema</a> · <a href="./release-metadata.json">Release metadata</a> · <a href="./v52-methods.html">V5.2 record links</a> · <a href="./v5-methods.html">Original V5 methods</a></p></main></html>
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · Release 6 · Growth form and smoothed crown outlines"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods: growth form and smoothed crown outlines (release 6) · ALTO</title>
+<meta name="description" content="How ALTO release 6 estimated a growth form for every crown of the 2024 LiDAR survey, what the 12 October audit changed, how crowns were redrawn with smoothed outlines, how benefit and trunk-diameter estimates changed, and the reviewer corrections applied from the ledger.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.2">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.2">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.2">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./alto-logo.png" alt="ALTO map" width="3934" height="1170"></a>
+      <span class="app-bar-context">Methods</span>
+      <nav class="app-bar-actions" aria-label="Page actions">
+        <a class="btn" href="./"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Map</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">Methods and release notes</p>
+    <h1>Growth form and smoothed crown outlines</h1>
+    <dl class="release">
+      <div><dt>Release</dt><dd>6</dd></div>
+      <div><dt>Published</dt><dd><time datetime="2026-10-12">12 Oct 2026</time></dd></div>
+      <div><dt>Previous release</dt><dd><a href="./v52-methods.html">5.2 · 10 Oct 2026</a></dd></div>
+      <div><dt>Next release</dt><dd><a href="./v61-methods.html">6.1 · 13 Oct 2026</a></dd></div>
+      <div class="release-id"><dt>Dataset ID</dt><dd><code>metro-2026.10.12-pointcloud-v6</code></dd></div>
+    </dl>
+    <p class="lede">This release estimates a growth form for each crown of the 2024 LiDAR survey: whether it looks like an evergreen or a deciduous broadleaf tree, a conifer, or a palm, cabbage tree or tree fern. It redraws every crown with a smoothed outline of the same cells, revises the benefit estimates with the growth form, and applies reviewer corrections from a ledger. Every growth form is a model estimate, never an identified species: where a source records a species, that name stays the tree’s species.</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#what-changed">What changed</a></li>
+      <li><a href="#growth-form">Growth form</a></li>
+      <li><a href="#audit">The 12 October audit</a></li>
+      <li><a href="#outlines">Smoothed outlines</a></li>
+      <li><a href="#benefits">Benefit estimates</a></li>
+      <li><a href="#trunk-diameter">Trunk diameter</a></li>
+      <li><a href="#corrections">Corrections ledger</a></li>
+      <li><a href="#unchanged">What stays the same</a></li>
+      <li><a href="#limits">Limits</a></li>
+      <li><a href="#sources">Notes and sources</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="what-changed">
+      <h2>What changed</h2>
+      <ul>
+        <li>3,352,099 crowns on 3,101 survey tiles were scored for growth form. 2,771,551 (82.7%) show one; 580,548 (17.3%) read <dfn>growth form not yet determined</dfn>.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup></li>
+        <li>A blind audit of the scores on 12 October 2026 checked the calls before publication. Two kinds of call that fell short are withheld and one is reworded; shown calls were right for 0.921 of crowns after those changes (95% interval 0.848–0.980).</li>
+        <li>Every crown is drawn with a smoothed outline of its release 5 cells: 3,352,099 release 5 crowns and 534 crowns drawn from a record in release 5.2. Crown area, height and every estimate keep the cell area.</li>
+        <li>Benefit estimates follow the growth form where the release had no recorded species. Estimated annual benefits rise by NZ$3,186,004 a year; stored carbon falls by 114,533 t CO₂e and avoided runoff by 483,669 m³ a year.</li>
+        <li>354 reviewer corrections from the ledger are accounted for, one of them applied to the map: a notable tree now stands on the crown its plaque marks.</li>
+      </ul>
+    </section>
+
+    <section id="growth-form">
+      <h2>Growth form</h2>
+      <p>A classifier reads each crown’s structure in the 2024 LiDAR returns, its surroundings and image features from the 2024 aerial photograph at the crown top. It was trained on about 22,000 crowns, 1,600 of them outside the central isthmus: Council tree register records, plus crowns labelled from the 2024 aerial imagery and LiDAR profiles by a machine-learning image-interpretation model (one pass; no independent second labeller yet). It was checked on 600 fresh crowns, labelled the same way, that it never saw. A separate palm detector confirms palms it can see from above. Crowns flown on 30 April, 4 July and 21 October, when deciduous trees are in leaf, are scored by a variant trained for leaves on the trees (417,335 crowns).<sup class="fn"><a href="#note-2" id="ref-2" aria-label="Note 2">2</a></sup></p>
+      <p>A growth form is shown only where calls of its kind were right often enough when tested on labelled crowns: at least 8 in 10 for a firm call and at least 6 in 10 for a “possibly” call. Otherwise the crown reads “growth form not yet determined”. After the audit no “possibly” call is shown in this release. On the leaf-on flights only evergreen broadleaf calls and palms seen by the palm detector are shown. The map and the tree page mark every growth form as an estimate, and a species recorded by the Council or another source stays the species shown, with the growth form beside it.</p>
+
+      <figure class="figure" id="figure-1">
+        <ul class="bars" aria-label="Crowns by growth form shown, release 6. Evergreen broadleaf, high confidence: 1,491,608 crowns, 44.5%. Probably evergreen broadleaf: 839,983, 25.1%. Not yet determined: 580,548, 17.3%. Likely conifer: 144,883, 4.3%. Broadleaf: 136,708, 4.1%. Likely tree fern: 71,947, 2.1%. Likely deciduous: 39,048, 1.2%. Likely palm or cabbage tree, palm-type crown seen in the aerial imagery: 19,600, 0.6%. Deciduous broadleaf, high confidence: 16,913, 0.5%. Likely palm or cabbage tree: 10,861, 0.3%.">
+          <li><span class="bar-label">Evergreen broadleaf, high confidence</span><span class="bar-track"><span class="bar" style="--v: 1; --c: var(--viz-form-evergreen-broadleaf)"></span><span class="bar-val" style="--v: 1">1,491,608 · 44.5%</span></span></li>
+          <li><span class="bar-label">Probably evergreen broadleaf</span><span class="bar-track"><span class="bar" style="--v: .5631; --c: var(--viz-form-evergreen-broadleaf)"></span><span class="bar-val" style="--v: .5631">839,983 · 25.1%</span></span></li>
+          <li><span class="bar-label">Not yet determined</span><span class="bar-track"><span class="bar" style="--v: .3892; --c: var(--viz-form-not-estimated)"></span><span class="bar-val" style="--v: .3892">580,548 · 17.3%</span></span></li>
+          <li><span class="bar-label">Likely conifer</span><span class="bar-track"><span class="bar" style="--v: .0971; --c: var(--viz-form-conifer)"></span><span class="bar-val" style="--v: .0971">144,883 · 4.3%</span></span></li>
+          <li><span class="bar-label">Broadleaf<small>leaf habit not shown</small></span><span class="bar-track"><span class="bar" style="--v: .0917; --c: var(--viz-form-broadleaf-undetermined)"></span><span class="bar-val" style="--v: .0917">136,708 · 4.1%</span></span></li>
+          <li><span class="bar-label">Likely tree fern</span><span class="bar-track"><span class="bar" style="--v: .0482; --c: var(--viz-form-palm-fern)"></span><span class="bar-val" style="--v: .0482">71,947 · 2.1%</span></span></li>
+          <li><span class="bar-label">Likely deciduous<small>bare in late-autumn LiDAR</small></span><span class="bar-track"><span class="bar" style="--v: .0262; --c: var(--viz-form-deciduous-broadleaf)"></span><span class="bar-val" style="--v: .0262">39,048 · 1.2%</span></span></li>
+          <li><span class="bar-label">Likely palm or cabbage tree<small>palm-type crown seen in the aerial imagery</small></span><span class="bar-track"><span class="bar" style="--v: .0131; --c: var(--viz-form-palm-fern)"></span><span class="bar-val" style="--v: .0131">19,600 · 0.6%</span></span></li>
+          <li><span class="bar-label">Deciduous broadleaf, high confidence<small>bare in late-autumn LiDAR</small></span><span class="bar-track"><span class="bar" style="--v: .0113; --c: var(--viz-form-deciduous-broadleaf)"></span><span class="bar-val" style="--v: .0113">16,913 · 0.5%</span></span></li>
+          <li><span class="bar-label">Likely palm or cabbage tree</span><span class="bar-track"><span class="bar" style="--v: .0073; --c: var(--viz-form-palm-fern)"></span><span class="bar-val" style="--v: .0073">10,861 · 0.3%</span></span></li>
+        </ul>
+        <figcaption><span class="caption-label">Figure 1.</span> Crowns by the growth form shown, of 3,352,099 scored crowns, in the colours of the map’s growth-form legend. Release 6, 12 Oct 2026; the counts by area are in Table 1 and in <a href="./data/growth-form-v6.json">growth-form counts and service changes</a>.</figcaption>
+      </figure>
+
+      <div class="table-wrap" role="region" aria-labelledby="table-1-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-1-caption"><span class="caption-label">Table 1.</span> Growth form shown, on the central isthmus and outside it.</caption>
+          <thead>
+            <tr><th scope="col">Growth form shown</th><th scope="col" class="num">Isthmus</th><th scope="col" class="num">Outside</th><th scope="col" class="num">Crowns</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Evergreen broadleaf, high confidence</th><td class="num">113,054</td><td class="num">1,378,554</td><td class="num">1,491,608</td></tr>
+            <tr><th scope="row">Probably evergreen broadleaf</th><td class="num">192,259</td><td class="num">647,724</td><td class="num">839,983</td></tr>
+            <tr><th scope="row">Likely conifer</th><td class="num">2,537</td><td class="num">142,346</td><td class="num">144,883</td></tr>
+            <tr><th scope="row">Broadleaf (leaf habit not shown)</th><td class="num">0</td><td class="num">136,708</td><td class="num">136,708</td></tr>
+            <tr><th scope="row">Likely tree fern</th><td class="num">771</td><td class="num">71,176</td><td class="num">71,947</td></tr>
+            <tr><th scope="row">Likely deciduous (bare in late-autumn LiDAR)</th><td class="num">39,048</td><td class="num">0</td><td class="num">39,048</td></tr>
+            <tr><th scope="row">Likely palm or cabbage tree (palm-type crown seen in the 2024 aerial imagery)</th><td class="num">4,780</td><td class="num">14,820</td><td class="num">19,600</td></tr>
+            <tr><th scope="row">Deciduous broadleaf, high confidence (bare in late-autumn LiDAR)</th><td class="num">16,913</td><td class="num">0</td><td class="num">16,913</td></tr>
+            <tr><th scope="row">Likely palm or cabbage tree</th><td class="num">2,114</td><td class="num">8,747</td><td class="num">10,861</td></tr>
+            <tr><th scope="row">Growth form not yet determined</th><td class="num">80,554</td><td class="num">499,994</td><td class="num">580,548</td></tr>
+            <tr><th scope="row">All scored crowns</th><td class="num">452,030</td><td class="num">2,900,069</td><td class="num">3,352,099</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Crowns not yet determined: 304,461 where the model abstained, 111,339 middle-band conifer calls outside the isthmus, 108,528 palm-type middle-band calls the palm detector did not confirm, 45,693 other calls on the leaf-on flights, where only evergreen broadleaf calls and palms seen by the palm detector are shown, and 10,527 “possibly conifer” calls on the isthmus withheld after the audit.</p>
+      <p>Outside the isthmus every deciduous call reads “Broadleaf”: there the model does not reliably tell deciduous trees from kānuka-type scrub, whose porous crowns look bare in the LiDAR returns. A palm-detector call on a crown wider than 10 m is not used on its own, because such crowns are often several trees; 1,028 crowns fall back to the model’s own call.</p>
+    </section>
+
+    <section id="audit">
+      <h2>The 12 October audit</h2>
+      <p>Before publication, about 200 crowns drawn from what the release would show, stratified by growth form, area and flight season, were labelled the same way, by the machine-learning image-interpretation model, together with abstentions and decoys, blind to the classifier’s calls, from the 2024 aerial imagery (7.5 cm) and LiDAR profiles: one pass, no independent second labeller yet. The labels were hashed before the key was opened, and the pass rules were written before any label existed. Crowns used to train, tune or test the model were left out.<sup class="fn"><a href="#note-3" id="ref-3" aria-label="Note 3">3</a></sup></p>
+      <p>Shown calls were right for 0.899 of crowns (95% interval 0.828–0.956, weighted to the metro; 186 of 214 decided crowns), against a bar of 0.85. Two kinds of call failed or nearly failed their own bar and are withheld; one wording was changed:</p>
+
+      <figure class="figure" id="figure-2">
+        <div class="dotplot labels-wide" style="--lo: 0; --hi: 1; --rows: 11" role="img" aria-label="Share of shown calls judged correct in the audit, with 95% intervals, on a scale from 0 to 1. All shown calls under the audited rules: 0.899 (0.828 to 0.956), bar 0.85. All shown calls under the released rules: 0.921 (0.848 to 0.980). Evergreen broadleaf: 0.927 (0.841 to 0.990). Deciduous broadleaf: 0.977 (0.926 to 1.00). Palm seen by the palm detector: 0.981 (0.943 to 1.00). Palm or cabbage tree, high band: 21 of 21 (0.85 to 1.00). Tree fern: 0.834 (0.587 to 1.00). Likely conifer on the isthmus: 7 of 9, 0.78 (0.45 to 0.94), bar 0.80. Likely conifer outside the isthmus: 4 of 6, 0.67 (0.30 to 0.90), bar 0.80. Possibly conifer on the isthmus, withheld: 1 of 9, 0.11 (0.02 to 0.44), bar 0.60. Possibly palm, cabbage tree or tree fern outside the isthmus, withheld: 4 of 11, 0.36 (0.15 to 0.65), bar 0.60.">
+          <ul class="dotplot-legend">
+            <li><span class="key key-s2"></span>Shown in this release, with its 95% interval</li>
+            <li><span class="key key-s3"></span>Withheld after the audit</li>
+            <li><span class="key-bar"></span>The bar the call had to clear</li>
+          </ul>
+          <div class="dotplot-plot">
+            <div class="dotplot-lines"><span style="--v: 0"></span><span style="--v: .2"></span><span style="--v: .4"></span><span style="--v: .6"></span><span style="--v: .8"></span><span style="--v: 1"></span></div>
+
+            <div class="dotplot-label" style="grid-row: 1">All shown calls, audited rules</div>
+            <div class="dotplot-track" style="grid-row: 1"><span class="dp-bar" style="--v: .85"></span><span class="dp-ci line-2" style="--a: .828; --b: .956; top: 50%"></span><span class="dp dp-s2" style="--v: .899; top: 50%" title="All shown calls, audited rules: 0.899; 95% interval 0.828–0.956; bar 0.85"></span></div>
+            <div class="dotplot-label" style="grid-row: 2">All shown calls, released rules</div>
+            <div class="dotplot-track" style="grid-row: 2"><span class="dp-bar" style="--v: .85"></span><span class="dp-ci" style="--a: .848; --b: .98; top: 50%"></span><span class="dp dp-s2" style="--v: .921; top: 50%" title="All shown calls, released rules: 0.921; 95% interval 0.848–0.980"></span></div>
+            <div class="dotplot-label" style="grid-row: 3">Evergreen broadleaf</div>
+            <div class="dotplot-track" style="grid-row: 3"><span class="dp-ci" style="--a: .841; --b: .99; top: 50%"></span><span class="dp dp-s2" style="--v: .927; top: 50%" title="Evergreen broadleaf: 0.927; 95% interval 0.841–0.990"></span></div>
+            <div class="dotplot-label" style="grid-row: 4">Deciduous broadleaf</div>
+            <div class="dotplot-track" style="grid-row: 4"><span class="dp-ci" style="--a: .926; --b: 1; top: 50%"></span><span class="dp dp-s2" style="--v: .977; top: 50%" title="Deciduous broadleaf: 0.977; 95% interval 0.926–1.00"></span></div>
+            <div class="dotplot-label" style="grid-row: 5">Palm seen by the palm detector</div>
+            <div class="dotplot-track" style="grid-row: 5"><span class="dp-ci" style="--a: .943; --b: 1; top: 50%"></span><span class="dp dp-s2" style="--v: .981; top: 50%" title="Palm seen by the palm detector: 0.981; 95% interval 0.943–1.00"></span></div>
+            <div class="dotplot-label" style="grid-row: 6">Palm or cabbage tree, high band</div>
+            <div class="dotplot-track" style="grid-row: 6"><span class="dp-ci" style="--a: .845; --b: 1; top: 50%"></span><span class="dp dp-s2" style="--v: 1; top: 50%" title="Palm or cabbage tree, high band: 21 of 21; 95% interval 0.85–1.00"></span></div>
+            <div class="dotplot-label" style="grid-row: 7">Tree fern</div>
+            <div class="dotplot-track" style="grid-row: 7"><span class="dp-ci" style="--a: .587; --b: 1; top: 50%"></span><span class="dp dp-s2" style="--v: .834; top: 50%" title="Tree fern: 0.834; 95% interval 0.587–1.00"></span></div>
+            <div class="dotplot-label" style="grid-row: 8">Likely conifer, isthmus</div>
+            <div class="dotplot-track" style="grid-row: 8"><span class="dp-bar" style="--v: .8"></span><span class="dp-ci" style="--a: .45; --b: .94; top: 50%"></span><span class="dp dp-s2" style="--v: .778; top: 50%" title="Likely conifer, isthmus: 7 of 9 (0.78); 95% interval 0.45–0.94; bar 0.80"></span></div>
+            <div class="dotplot-label" style="grid-row: 9">Likely conifer, outside the isthmus</div>
+            <div class="dotplot-track" style="grid-row: 9"><span class="dp-bar" style="--v: .8"></span><span class="dp-ci" style="--a: .3; --b: .9; top: 50%"></span><span class="dp dp-s2" style="--v: .667; top: 50%" title="Likely conifer, outside the isthmus: 4 of 6 (0.67); 95% interval 0.30–0.90; bar 0.80"></span></div>
+            <div class="dotplot-label" style="grid-row: 10">Possibly conifer, isthmus</div>
+            <div class="dotplot-track" style="grid-row: 10"><span class="dp-bar" style="--v: .6"></span><span class="dp-ci ci-s3" style="--a: .02; --b: .44; top: 50%"></span><span class="dp dp-s3" style="--v: .111; top: 50%" title="Possibly conifer, isthmus, withheld: 1 of 9 (0.11); 95% interval 0.02–0.44; bar 0.60"></span></div>
+            <div class="dotplot-label" style="grid-row: 11">Possibly palm-type, outside the isthmus</div>
+            <div class="dotplot-track" style="grid-row: 11"><span class="dp-bar" style="--v: .6"></span><span class="dp-ci ci-s3" style="--a: .15; --b: .65; top: 50%"></span><span class="dp dp-s3" style="--v: .364; top: 50%" title="Possibly palm, cabbage tree or tree fern, outside the isthmus, withheld: 4 of 11 (0.36); 95% interval 0.15–0.65; bar 0.60"></span></div>
+
+            <div class="dotplot-ticks" style="grid-row: 12"><span style="--v: 0">0</span><span style="--v: .2">0.2</span><span style="--v: .4">0.4</span><span style="--v: .6">0.6</span><span style="--v: .8">0.8</span><span style="--v: 1">1.0</span></div>
+            <p class="dotplot-title" style="grid-row: 13">Share of shown calls judged correct</p>
+          </div>
+        </div>
+        <figcaption><span class="caption-label">Figure 2.</span> The 12 October 2026 audit: share of calls judged correct, by kind of call, with 95% intervals (dots and lines), the withheld kinds (rings) and the bar each had to clear where the rules set one (dashed). The released-rules figure was computed after the labels were joined. The interval for 21 of 21 is a Wilson interval computed for this page; the others are the audit’s. Undecidable crowns are left out; counting them as wrong gives 0.782 overall (0.692–0.866).</figcaption>
+      </figure>
+
+      <div class="table-wrap" role="region" aria-labelledby="table-2-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-2-caption"><span class="caption-label">Table 2.</span> What the audit changed.</caption>
+          <thead>
+            <tr><th scope="col">Kind of call</th><th scope="col">Audit</th><th scope="col">In this release</th><th scope="col" class="num">Crowns</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">“Possibly conifer”, central isthmus</th><td>1 of 9 decided crowns was a conifer (bar 0.60); most were eucalypt, kānuka and native broadleaf crowns in bush remnants</td><td>Withheld: not yet determined</td><td class="num">10,527</td></tr>
+            <tr><th scope="row">“Possibly palm, cabbage tree or tree fern”, outside the isthmus</th><td>4 of 11 (bar 0.60); the errors were bush-canopy broadleaf crowns</td><td>Not shown: the planned addition was withdrawn</td><td class="num">94,858</td></tr>
+            <tr><th scope="row">Deciduous calls outside the isthmus, late-June flights</th><td>“Broadleaf” right for 9 of 9; “deciduous” right for 4 of the 7 with evidence of leaf habit</td><td>Worded “Broadleaf”, as on every other flight</td><td class="num">48,429</td></tr>
+            <tr><th scope="row">Palms seen by the palm detector</th><td>Palm-type crown 35 of 36; an actual palm 25 of 33</td><td>Worded “Likely palm or cabbage tree (palm-type crown seen in 2024 aerial imagery)”</td><td class="num">19,600</td></tr>
+            <tr><th scope="row">“Likely conifer”, outside the isthmus</th><td>4 of 6 decided (bar 0.80); 7 of 13 sampled crowns undecidable</td><td>Kept, with the limit stated below</td><td class="num">142,346</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Crowns: the crowns each change applies to in this release. Middle-band palm-type calls are withheld on the isthmus too (13,670 crowns), as before the audit.</p>
+    </section>
+
+    <section id="outlines">
+      <h2>Smoothed outlines</h2>
+      <p>Release 5 traced crowns along the 0.5 m cells of the LiDAR survey, so they looked square. Release 6 draws each crown with a smooth outline around the same cells. The crown’s area, height and every estimate keep the cell area; the outline’s own area is stored beside it as the <dfn>crown outline</dfn> area. Outlines keep 0.995 of the cell area at the median (1st–99th percentile 0.939–1.019; 0.997 in total). Crowns drawn from a record in release 5.2 are smoothed the same way.</p>
+      <p>The property pages count canopy from the redrawn outlines, so the map and a property agree: canopy over parcels is 185.65 km², 0.34% less than from the cells (186.28 km²). Smoothing lets neighbouring outlines touch: overlapping neighbours share 10,832 m² in all, 0.005% of the counted canopy, which the property totals can count twice.</p>
+    </section>
+
+    <section id="benefits">
+      <h2>Benefit estimates</h2>
+      <p>Where a crown has no recorded species, its benefit estimates now follow the growth form. For a shown call, leaf area and the curve from height to trunk diameter are averaged over the four growth-form classes, weighted by the model’s probabilities; every other class parameter (rain interception, biomass, root-to-shoot ratio, carbon fraction) follows the shown call, as release 5 let its class drive every parameter. A crown whose growth form is not yet determined takes the evergreen broadleaf default, as release 5 did; an older image-model class, uncalibrated, is replaced by that default. Recorded species keep their estimates.<sup class="fn"><a href="#note-4" id="ref-4" aria-label="Note 4">4</a></sup></p>
+
+      <figure class="figure" id="figure-3">
+        <ul class="bars bars-div" style="--label-w: 12.5rem" aria-label="Change in estimated annual benefits by cause, NZ dollars a year. Evergreen default to weighted by growth form: minus 6,914,939 (1,911,354 crowns). Older image-model class to weighted by growth form: plus 7,795,857 (838,325 crowns). Older image-model class to evergreen default: plus 2,305,087 (168,745 crowns). Evergreen default kept: no change (408,890 crowns). Recorded species: no change (24,785 crowns).">
+          <li><span class="bar-label">Evergreen default → weighted by growth form<small>1,911,354 crowns</small></span><span class="bar-track"><span class="bar neg" style="--at: .0565; --v: .4435; --c: var(--viz-div-loss-2)"></span><span class="bar-val neg" style="--at: .0565">−NZ$6,914,939</span></span></li>
+          <li><span class="bar-label">Older image-model class → weighted by growth form<small>838,325 crowns</small></span><span class="bar-track"><span class="bar" style="--at: .5; --v: .5; --c: var(--viz-div-gain-2)"></span><span class="bar-val" style="--at: .5; --v: .5">+NZ$7,795,857</span></span></li>
+          <li><span class="bar-label">Older image-model class → evergreen default<small>168,745 crowns, growth form not yet determined</small></span><span class="bar-track"><span class="bar" style="--at: .5; --v: .1478; --c: var(--viz-div-gain-2)"></span><span class="bar-val" style="--at: .5; --v: .1478">+NZ$2,305,087</span></span></li>
+          <li><span class="bar-label">Evergreen default kept<small>408,890 crowns</small></span><span class="bar-track"><span class="bar-val" style="--at: .5; --v: 0">no change</span></span></li>
+          <li><span class="bar-label">Recorded species<small>24,785 crowns</small></span><span class="bar-track"><span class="bar-val" style="--at: .5; --v: 0">no change</span></span></li>
+          <li aria-hidden="true"><span></span><span class="bars-axis"><span>−7.8 M</span><span>0</span><span>+7.8 M</span></span></li>
+        </ul>
+        <figcaption><span class="caption-label">Figure 3.</span> Change in estimated annual benefits by cause, NZ$ a year, release 5.2 basis to release 6 basis. Decreases in orange, increases in teal; each bar is labelled.</figcaption>
+      </figure>
+
+      <div class="table-wrap" role="region" aria-labelledby="table-3-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-3-caption"><span class="caption-label">Table 3.</span> Change in the benefit estimates by cause.</caption>
+          <thead>
+            <tr><th scope="col">Release 5.2 basis → release 6 basis</th><th scope="col" class="num">Crowns</th><th scope="col" class="num">NZ$ a year</th><th scope="col" class="num">Runoff m³ a year</th><th scope="col" class="num">Carbon t CO₂e</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Evergreen default → weighted by growth form</th><td class="num">1,911,354</td><td class="num">−6,914,939</td><td class="num">−277,526</td><td class="num">−319,140</td></tr>
+            <tr><th scope="row">Older image-model class → weighted by growth form</th><td class="num">838,325</td><td class="num">+7,795,857</td><td class="num">−231,313</td><td class="num">+100,829</td></tr>
+            <tr><th scope="row">Older image-model class → evergreen default</th><td class="num">168,745</td><td class="num">+2,305,087</td><td class="num">+25,173</td><td class="num">+103,802</td></tr>
+            <tr><th scope="row">Evergreen default kept</th><td class="num">408,890</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+            <tr><th scope="row">Recorded species</th><td class="num">24,785</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+            <tr><th scope="row">All scored crowns</th><td class="num">3,352,099</td><td class="num">+3,186,005</td><td class="num">−483,666</td><td class="num">−114,509</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Release totals: NZ$292,178,739 → NZ$295,364,743 a year; avoided runoff 21,006,648 → 20,522,978 m³ a year; stored carbon 3,491,027 → 3,376,494 t CO₂e. The sums by cause match the change in the totals to within NZ$1, 3 m³ and 24 t CO₂e. Outlines do not enter the estimates.</p>
+      <p>Most of the rise in value comes from crowns the older image model had called conifers: 498,012 of them are now evergreen broadleaf. Most of the fall in stored carbon comes from crowns now called conifers (−301,504 t CO₂e), 111,116 of which release 5.2 valued as evergreen broadleaf trees: for the same height the conifer curve gives a thinner trunk and less biomass.</p>
+      <p>Other readings of the rule were tested: keeping the release 5.2 class for the parameters the rule does not name would add NZ$4,979,744 a year, averaging every estimate over the classes NZ$2,578,258, and treating every palm-detector crown as a palm NZ$3,134,091. The estimates remain sensitivity scenarios.</p>
+    </section>
+
+    <section id="trunk-diameter">
+      <h2>Trunk diameter</h2>
+      <p>Trunk diameter (DBH) is the diameter at 1.3 m above the uphill ground. No trunk in this release was measured. Each crown holds two model estimates: one from crown size and height, unchanged from release 5, and one from the benefit equations, which from this release follows the growth form where no species is recorded (its height-to-diameter curve is weighted as described under <a href="#benefits">Benefit estimates</a>). The tree panel and tree page show their median as the central estimate, marked Estimate, with the two models as its range. A trunk measured with a tape at 1.3 m at a reviewed KYTE ground visit replaces both. Tree ferns take the palm curve until a tree-fern value is chosen.</p>
+      <p>The root protection radius on the tree page is 12 times the central trunk estimate, its area capped at 707 m² (a 15 m radius): a planning scenario, not a measured root extent.</p>
+    </section>
+
+    <section id="corrections">
+      <h2>Corrections ledger</h2>
+      <p>Reviewer decisions about trees, crowns and records are kept in an append-only ledger. After the build, each decision is applied to the release or recorded with the trees it names, and the release publishes a receipt of every outcome. Each tree page lists the decisions that name the tree, its records or its crown.<sup class="fn"><a href="#note-5" id="ref-5" aria-label="Note 5">5</a></sup></p>
+      <div class="table-wrap" role="region" aria-labelledby="table-4-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-4-caption"><span class="caption-label">Table 4.</span> Outcomes of the 354 corrections in the ledger (356 ledger events).</caption>
+          <thead>
+            <tr><th scope="col">Outcome</th><th scope="col">Meaning</th><th scope="col" class="num">Corrections</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Applied</th><td>The map and the tree record show the correction</td><td class="num">1</td></tr>
+            <tr><th scope="row">Recorded in the release</th><td>Published with the tree; map and values unchanged</td><td class="num">18</td></tr>
+            <tr><th scope="row">Already in the release</th><td>The release already reflected it</td><td class="num">318</td></tr>
+            <tr><th scope="row">Pending</th><td>Not yet applied; the reason is given</td><td class="num">12</td></tr>
+            <tr><th scope="row">Awaiting review</th><td>Proposed or tentative; not applied and not attached to any tree</td><td class="num">5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The applied correction moves a notable tree: Council notable tree schedule 1186 at Devonport is the plaque tree, a 191 m² crown, not the tree by the basketball court where the Council point sits. Its record now represents the plaque tree’s crown, so the map shows one marker fewer (3,574,824) and estimated benefits fall by NZ$12 a year. Moving field evidence between trees waits for a full build and is pending.</p>
+    </section>
+
+    <section id="unchanged">
+      <h2>What stays the same</h2>
+      <p>Every release 5.2 record, link, marker, source position, survey history, review decision and accepted KYTE visit is kept, with the release 5 growth-form fields and service rows, in the release database. Crown boundaries and sizes are those of release 5 and 5.2. The map shows 3,570 protected trees and counts 3,523,024 crowns, as in release 5.2. Low and sub-canopy vegetation and the Council recorded positions are unchanged.</p>
+    </section>
+
+    <section id="limits">
+      <h2>Limits</h2>
+      <ul>
+        <li>A growth form is a coarse class, not a species. Shown calls were about 94% right on the 600-crown blind test outside the isthmus (design-weighted) and 0.92 on the audit; the conifer and palm-type figures rest on small samples.</li>
+        <li>The labels made from imagery, used in training, in the blind tests and in the audit, come from a machine-learning image-interpretation model in one pass, from aerial imagery and LiDAR profiles; no independent second labeller has checked them, so agreement between labellers is not measured.</li>
+        <li>“Likely conifer” outside the isthmus is mostly tall forest crowns, 21–38 m, where pine, eucalypt and podocarp cannot be told apart from above. The audit could neither confirm nor reject its 0.80 bar.</li>
+        <li>Tree ferns use the palm leaf area and trunk curve until a tree-fern value is chosen.</li>
+        <li>Crowns drawn from a record in release 5.2, crowns outside the release 5 survey footprint and records without a crown have no growth form.</li>
+        <li>Outlines smooth the release 5 cells; crowns over 60 m² remain about 20% smaller than the reference outlines they were tested against. Low and sub-canopy polygons are not smoothed.</li>
+        <li>Benefit and trunk estimates are not independently validated; they remain sensitivity scenarios.</li>
+      </ul>
+    </section>
+
+    <section id="sources" class="sources">
+      <h2>Notes and sources</h2>
+      <ol class="notes">
+        <li id="note-1">Counts by growth form, area, flight date and model, the display rules and the service changes: <a href="./data/growth-form-v6.json">growth-form counts and service changes</a>. Its list of rules was written before the audit; the counts are those of the released rules. <a class="note-back" href="#ref-1" aria-label="Back to note 1 in the text">↑</a></li>
+        <li id="note-2">Model <code>growth_form_v6_A2_C1or_A2robust</code>: a gradient-boosted classifier (A2), the palm detector (C1) and the leaf-on variant (A2_robust); 2,934,764 crowns scored by A2 and 417,335 by A2_robust. <a class="note-back" href="#ref-2" aria-label="Back to note 2 in the text">↑</a></li>
+        <li id="note-3">The audit was stratified by display class, region (the isthmus or outside) and flight season, with abstentions and decoys mixed in; intervals are 95%, weighted to the metro for the overall figure. 37,395 scored crowns that were in a training, tuning or test set were left out of the draw. <a class="note-back" href="#ref-3" aria-label="Back to note 3 in the text">↑</a></li>
+        <li id="note-4">The service model: i-Tree style equations with stated unit values, release 5 coefficients unchanged; the release 5.2 rows were reproduced exactly from their own inputs before any change (3,352,099 of 3,352,099 crowns). <a class="note-back" href="#ref-4" aria-label="Back to note 4 in the text">↑</a></li>
+        <li id="note-5">The receipt lists every decision with its subject, outcome and reason: <a href="./data/corrections-applied.json">corrections applied in this release</a>; ledger format <code>alto-corrections/1</code>, ledger SHA-256 <code>da2d1f46c3d77fd568f0a5ea7fe976d57e6caefe4474e6db41f621cab29392ac</code>. <a class="note-back" href="#ref-5" aria-label="Back to note 5 in the text">↑</a></li>
+      </ol>
+      <h3>Files</h3>
+      <ul class="link-list">
+        <li><a href="./data/growth-form-v6.json">Growth-form counts and service changes</a><span class="meta"><code>data/growth-form-v6.json</code></span></li>
+        <li><a href="./data/corrections-applied.json">Corrections applied in this release</a><span class="meta"><code>data/corrections-applied.json</code></span></li>
+        <li><a href="./data/tree_details/schema.json">Full-record schema</a><span class="meta"><code>data/tree_details/schema.json</code></span></li>
+        <li><a href="./release-metadata.json">Release metadata</a><span class="meta"><code>release-metadata.json</code> · current release</span></li>
+      </ul>
+      <h3>Releases</h3>
+      <ul class="link-list">
+        <li><a href="./v61-methods.html">Permanent tree numbers</a><span class="meta">Release 6.1 · 13 Oct 2026</span></li>
+        <li><a href="./v6-methods.html" aria-current="page">Growth form and smoothed crown outlines</a><span class="meta">Release 6 · 12 Oct 2026</span></li>
+        <li><a href="./v52-methods.html">Linking records to crowns</a><span class="meta">Release 5.2 · 10 Oct 2026</span></li>
+        <li><a href="./v51-methods.html">Restoring links between records and crowns</a><span class="meta">Release 5.1 · 8 Oct 2026</span></li>
+        <li><a href="./v5-methods.html">Redrawing Auckland’s canopy</a><span class="meta">Release 5 · 23 Sep 2026</span></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span>, University of Auckland</span><span>Release 6 · 12 Oct 2026</span></p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -2,10 +2,10 @@
  *
  * The tool (this interface: the map, the tree page, their modules) has its own semantic version, set
  * here and nowhere else. The data release (v5.2, v6, ...) is described by release-metadata.json, which
- * ships with the data. Both are shown together as "Data v6 · Tool v0.2.0". See VERSIONING.md. */
+ * ships with the data. Both are shown together as "Data v6.1 · Tool v0.2.4". See VERSIONING.md. */
 (function(root){
   'use strict';
-  const TOOL={name:'ALTO',version:'0.2.1',released:null,status:'prototype',
+  const TOOL={name:'ALTO',version:'0.2.4',released:null,status:'prototype',
     repository:'https://github.com/squirmen/alto'};
   const LAB={name:'Better Places Lab',url:'https://betterplaces.blogs.auckland.ac.nz',
     affiliation:'Te Pare School of Architecture and Planning, Waipapa Taumata Rau | University of Auckland'};

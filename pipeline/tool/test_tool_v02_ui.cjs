@@ -8,15 +8,15 @@ require(web+'growth-form.js');require(web+'record-links.js');
 const V=require(web+'alto-viz.js'),T=require(web+'tree-summary.js'),P=require(web+'tree-panel.js'),A=require(web+'area.js');
 
 // Versions: the tool owns its version; the data label comes from the release metadata.
-assert.equal(Ver.TOOL.version,'0.2.1');
+assert.equal(Ver.TOOL.version,'0.2.4');
 assert.deepEqual([Ver.data({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}).label,Ver.data({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}).dev],['v5.2',false]);
 assert.deepEqual([Ver.data({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}).label,Ver.data({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}).dev],['v6',true]);
 assert.equal(Ver.data({release:{data_release:'6',dataset_version:'x'}}).label,'v6');
-assert.equal(Ver.label({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),'Data v5.2 · Tool v0.2.1');
-assert.equal(Ver.label(null),'Data release unknown · Tool v0.2.1');
+assert.equal(Ver.label({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),'Data v5.2 · Tool v0.2.4');
+assert.equal(Ver.label(null),'Data release unknown · Tool v0.2.4');
 // The public label names the release by its date; its number stays in provenance, About and methods.
-assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}),{text:'Release 11 Oct 2026 · Tool 0.2.1',preview:true});
-assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),{text:'Release 10 Oct 2026 · Tool 0.2.1',preview:false});
+assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}),{text:'Release 11 Oct 2026 · Tool 0.2.4',preview:true});
+assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),{text:'Release 10 Oct 2026 · Tool 0.2.4',preview:false});
 assert.ok(Ver.citation({treeId:'akl_tree_x',metadata:{release:{dataset_version:'a-v6',dataset_last_updated_utc:'2026-10-11'}}}).includes('Tree akl_tree_x'));
 
 // IDs: one tree, however it is typed; anything else is refused; links are canonical.
@@ -160,9 +160,23 @@ assert.equal(Id.url('akl_tree_x',{page:'map',base:'https://alto.tfwelch.com/tree
   const fontsCss=fs.readFileSync(web+'fonts.css','utf8'),urls=[...fontsCss.matchAll(/url\("([^"]+)"\)/g)].map(m=>m[1]);
   assert.ok(urls.length===2&&urls.every(u=>fs.existsSync(web+u)),`fonts.css files: ${urls}`);
   assert.ok(fs.existsSync(web+'fonts/Inter-LICENSE-OFL.txt'),'the Inter licence ships with the fonts');
-  for(const page of ['index.html','tree.html','v5-methods.html','v51-methods.html','v52-methods.html']){
+  for(const page of ['index.html','tree.html','v5-methods.html','v51-methods.html','v52-methods.html','v6-methods.html','v61-methods.html']){
     const html=fs.readFileSync(web+page,'utf8'),pre=html.match(/<link rel="preload" href="\.\/([^"]+)" as="font"[^>]*crossorigin>/);
     assert.ok(pre&&pre[1]===urls[0]&&html.includes('fonts.css'),`${page}: preloads ${pre&&pre[1]}, fonts.css uses ${urls[0]}`);
   }
-  console.log('Tool v0.2.0: versions, IDs, sources/status/quality expressions, summary, panel, pictures, Area and typeface checks passed.');
+  // Change since 2013 v1 (tool 0.2.3): its own file name and revision (the screened tree_change.pmtiles is served as
+  // immutable and stays on the host for rollback), no "(experimental)" label, and a removal popup that says what the
+  // 2024 survey shows where the crown stood.
+  const map=fs.readFileSync(web+'index.html','utf8');
+  assert.ok(map.includes('pmtiles://${DATA_BASE}/tree_change_v1.pmtiles`)}&rev=${CHANGE_TILES_REV}')&&map.includes('const CHANGE_TILES_REV = "v1-20261013";'),'change layer: v1 file and revision');
+  assert.ok(!/\/tree_change\.pmtiles/.test(map)&&!/experimental/i.test(map),'change layer: no old file name, no "(experimental)"');
+  const from=map.indexOf('    function changePopupHtml(p) {'),to=map.indexOf('    map.on("click", "tree-change"');
+  const popup=new Function('safe','fmt',`${map.slice(from,to)}\nreturn changePopupHtml;`)(v=>v==null||v===''?'Unknown':String(v),(v,d,u)=>v==null?'Unknown':`${Number(v).toFixed(d??1)}${u??''}`);
+  const removal={fate:'removed_to_open',confidence:'high',h_2013:6,h_2016:6.5,h_2024:null,species:null};
+  const built=popup({...removal,cover_2024:'built'}),open=popup({...removal,cover_2024:'open'}),older=popup(removal);
+  assert.ok(/<span>2024 survey<\/span><span>No tree canopy; built over<\/span>/.test(built)&&!/bare ground|open ground/.test(built),'built-over removal');
+  assert.ok(/<span>2024 survey<\/span><span>Open ground<\/span>/.test(open)&&!/built over/.test(open),'removal to open ground');
+  assert.ok(/the 2024 survey shows open ground/.test(older)&&!/bare ground/.test(older),'a file without cover_2024 still reads');
+  assert.ok(/New tree · since 2016/.test(popup({fate:'established_since_2016',h_2024:7.2,cover_2024:'canopy'})),'new trees unchanged');
+  console.log('Tool v0.2.0: versions, IDs, sources/status/quality expressions, summary, panel, pictures, Area, typeface and change layer checks passed.');
 })().catch(e=>{console.error(e);process.exit(1);});

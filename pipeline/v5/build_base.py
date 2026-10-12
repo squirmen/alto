@@ -40,7 +40,7 @@ from rasterio.transform import from_origin
 from scipy import ndimage
 
 import os
-# Benchmark kit: hand-labelled crowns and imagery used to calibrate segmentation (not distributed).
+# Benchmark kit: human-labelled crowns and imagery used to calibrate segmentation (not distributed).
 KIT = Path(os.environ.get("ALTO_BENCH_KIT", "/data/alto/bench_kit"))
 LAZ = Path("/data/alto/point_cloud_2024/auckland_metro_v1")
 # LINZ publishes this survey as cloud-optimised GeoTIFFs on public S3 under the same

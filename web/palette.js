@@ -73,7 +73,7 @@
       r('h15','15–25 m','--viz-seq-700','dot',{from:15,to:25}),
       r('h25','25 m and over','--viz-seq-900','dot',{from:25,to:null}),
       r('none','No height: no crown linked',MAP_OTHER,'hollow')]},
-    change:{title:'Change since 2013 (experimental)',kind:'diverging',note:'Experimental. Canopy points matched across the 2013, 2016 and 2024 LiDAR surveys; points on buildings, ports, water and industrial yards, and points the aerial photos do not confirm, are screened out. In a blind check of aerial photos about three in four shown changes were confirmed (12 Oct 2026).',rows:[
+    change:{title:'Change since 2013',kind:'diverging',note:'Earlier tree canopy and the 2024 crowns matched across the 2013, 2016 and 2024 LiDAR surveys by overlap and height, and checked in dated aerial photos. Removed: the top of an earlier crown is now open ground or a new structure. New: a 2024 crown at least 5 m tall where the earlier survey found no canopy. In a blind check of aerial photos about nine in ten shown changes were confirmed (13 Oct 2026). Partial losses, and young trees already growing in 2013, are not shown.',rows:[
       r('removed_to_open','Removed by 2024','--viz-div-loss-2'),
       r('established_since_2013','New since 2013','--viz-div-gain-2'),
       r('established_since_2016','New since 2016','--viz-div-gain-1')]},
