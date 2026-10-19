@@ -67,7 +67,7 @@ assert.equal(E.explain({tree_id:'x',datasets:{crown:{crown_source:'v5'}}}).heigh
 // The page: the switch is hidden until the release has the layer and unchecked when it appears;
 // faint crowns use one expression on the fill and on the outlines (solid for the others, dashed for drawn crowns);
 // the panel shows the link once.
-const page=require('node:fs').readFileSync(web+'/index.html','utf8');
+const page=(require('node:fs').readFileSync(web+'/index.html','utf8')+require('node:fs').readFileSync(web+'/map-app.js','utf8'));
 assert.match(page,/<label class="check" for="showCouncilPositions" id="councilPositionsToggle" title="Where the Council or other source recorded the tree, joined to the crown ALTO found it on\." hidden>\s*<input id="showCouncilPositions" type="checkbox">/);
 assert.ok(page.includes('showCouncilPositions: false'));
 assert.equal((page.match(/\["case", faintCrownExpr\(\), /g)||[]).length,1);

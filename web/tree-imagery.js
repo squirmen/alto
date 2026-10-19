@@ -1,5 +1,6 @@
-/* Aerial imagery through time at one tree: the crown in each aerial survey of Auckland since 2010 that covers it,
- * read in the browser from LINZ's open imagery archive, with the 2024 crown outline drawn on every photograph.
+/* Aerial imagery through time at one tree: the crown in each aerial survey of Auckland that covers it, from the scanned
+ * historical surveys (1939–2004) to the surveys since 2010, read in the browser from LINZ's open imagery archive, with
+ * the 2024 crown outline drawn on every photograph.
  *
  * No key and no tile server. The archive (https://nz-imagery.s3.ap-southeast-2.amazonaws.com/, LINZ STAC
  * catalogue catalog.json) holds each survey as cloud-optimised GeoTIFFs in NZTM2000 (EPSG:2193), one file per
@@ -8,19 +9,24 @@
  * from the sheet grid (no catalogue lookups), reads the file's header (one 16 KB Range request) and then only the
  * internal tiles under a window around the crown, at the overview level that gives about 160-320 pixels across
  * it (one more Range request per row of tiles), and decodes them with the browser's own WebP decoder onto a
- * canvas. A survey that does not cover the tree answers 404 for its file, or has no pixels at the tree (its alpha
- * band is 0 there): it is listed as not covering the tree, never drawn.
+ * canvas. The coverage index (imagery-coverage.json) gives each survey's capture area and the files it holds, so a
+ * survey whose capture area or files leave the tree out is listed as not covering it with no request; one without
+ * pixels at the tree (its alpha band is 0 there) is listed the same way, never drawn.
  *
  * Site requirement: the Content-Security-Policy must allow https://nz-imagery.s3.ap-southeast-2.amazonaws.com
  * in connect-src (the reads are fetch() calls; the pixels are drawn on a canvas, so img-src needs nothing new).
  *
- * Surveys and dates: Auckland's urban and rural aerial surveys in the LINZ catalogue, checked 12 Oct 2026.
- * LINZ publishes one capture period per survey (start_datetime to end_datetime, NZ dates stored as NZ midnight
- * in UTC), not a date per tile, so a card gives the survey's flying period. Licence CC BY 4.0; the licensors
- * and producers are those LINZ lists for each survey.
+ * Surveys and dates: Auckland's urban and rural aerial surveys since 2010 in the LINZ catalogue (SURVEYS, checked
+ * 12 Oct 2026), and its 85 scanned historical surveys, 1939–2004 (the coverage index's historic list, built from the
+ * catalogue on 17 Oct 2026 by pipeline/tool/build_imagery_coverage.py: survey number, pixel size, black and white or
+ * colour, licensors and producers). LINZ publishes one capture period per survey (start_datetime to end_datetime, NZ
+ * dates stored as NZ midnight in UTC), not a date per tile, so a card gives the survey's flying period. Licence
+ * CC BY 4.0; the licensors and producers are those LINZ lists for each survey.
  *
- * window.ALTOImagery: SURVEYS, nztm(lon, lat), tileName(e, n, scale), parseTiff(buffer), view(...),
- * read(survey, view), timeline(container, options). The pure parts also load in Node (tests). */
+ * window.ALTOImagery: SURVEYS, historic(index), covers(index, survey, view), inFootprint(index, survey, [x, y]),
+ * nztm(lon, lat), tileName(e, n, scale), tileNamesIn(window, scale), parseTiff(buffer), view(...), read(survey, view),
+ * timeline(container, options), and io (open, range, decode: the cached header reader, Range reads and tile decoding,
+ * which the larger view in tree-imagery-viewer.js shares). The pure parts also load in Node (tests). */
 (function(root){
   'use strict';
   const BUCKET='https://nz-imagery.s3.ap-southeast-2.amazonaws.com';
@@ -47,7 +53,7 @@
     S('auckland_2024_0.25m','2024','Rural',0.25,5000,'2024-03-20','2024-05-11',['National Institute of Water and Atmospheric Research'],['Aerial Surveys'],{title:'Auckland 0.25m Rural Aerial Photos (2024)'}),
     S('auckland_2024_0.075m','2024–25','Urban',0.075,1000,'2024-02-01','2025-03-06',['Auckland Council'],['Aerial Surveys'],{title:'Auckland 0.075m Urban Aerial Photos (2024-2025)'})
   ];
-  const SHORT={'National Institute of Water and Atmospheric Research':'NIWA'};
+  const SHORT={'National Institute of Water and Atmospheric Research':'NIWA','Toitū Te Whenua Land Information New Zealand':'Toitū Te Whenua LINZ'};
   const COARSE=0.25; // m: a survey this coarse is read only where no sharper survey of the same years covers the tree
 
   // ---------- NZTM2000 (EPSG:2193): transverse Mercator on GRS80, central meridian 173°E ----------
@@ -83,6 +89,16 @@
   function tileNames(v,scale){
     const out=[];
     for(const [e,n] of [[v.x0,v.y1],[v.x1-1e-6,v.y1],[v.x0,v.y0+1e-6],[v.x1-1e-6,v.y0+1e-6]]){const t=tileName(e,n,scale);if(t&&!out.includes(t))out.push(t);}
+    return out;
+  }
+  // The files under a window of any size: one sample per file width and height, so a frame wider than a file
+  // (the larger view's widened frames) names every file it crosses.
+  function tileNamesIn(v,scale){
+    const g=GRID[scale];if(!g)throw new Error(`No LINZ grid at 1:${scale}`);
+    const xs=[],ys=[],out=[];
+    for(let x=v.x0;x<v.x1;x+=g[0])xs.push(x);xs.push(v.x1-1e-6);
+    for(let y=v.y1;y>v.y0;y-=g[1])ys.push(y);ys.push(v.y0+1e-6);
+    for(const n of ys)for(const e of xs){const t=tileName(e,n,scale);if(t&&!out.includes(t))out.push(t);}
     return out;
   }
 
@@ -127,8 +143,9 @@
   // ---------- one cloud-optimised GeoTIFF ----------
   const headers=new Map();
   class HttpError extends Error{constructor(status,url){super(`${status} ${url}`);this.status=status;}}
-  async function range(url,a,b){
+  async function range(url,a,b,signal=null){
     const ctl=typeof AbortController==='undefined'?null:new AbortController();
+    if(signal&&ctl){if(signal.aborted)ctl.abort();else signal.addEventListener('abort',()=>ctl.abort(),{once:true});}
     const res=await fetch(url,{headers:{Range:`bytes=${a}-${b}`},signal:ctl?.signal,credentials:'omit',referrerPolicy:'strict-origin-when-cross-origin'});
     if(res.status===404||res.status===403){throw new HttpError(res.status,url);}
     // A server that ignores Range would send the whole file (tens of MB): stop.
@@ -209,6 +226,92 @@
     let best=0;for(let i=0;i<c.levels.length;i++)if(side/c.levels[i].res>=min)best=i;
     return best;
   }
+  // On a small screen or with Save-Data on, one overview coarser (at least 80 pixels across) where that reads fewer of
+  // the archive's tiles (FE-18). The files are cut in 512-pixel tiles at every overview, so a coarser tile is no
+  // smaller: where the window sits in one tile at both overviews, the sharper one costs the same and is read.
+  const lite=()=>!!(root.navigator?.connection?.saveData||root.matchMedia?.('(max-width: 760px)').matches);
+  function tileCount(files,v,res){
+    let n=0;
+    for(const c of files){
+      const L=c.levels.find(l=>Math.abs(l.res-res)<1e-9);if(!L)continue;
+      const px0=(v.x0-c.originX)/res,px1=(v.x1-c.originX)/res,py0=(c.originY-v.y1)/res,py1=(c.originY-v.y0)/res;
+      const tx0=Math.max(0,Math.floor(px0/L.tw)),tx1=Math.min(L.across-1,Math.floor((px1-1e-9)/L.tw));
+      const ty0=Math.max(0,Math.floor(py0/L.th)),ty1=Math.min(L.down-1,Math.floor((py1-1e-9)/L.th));
+      if(tx0<=tx1&&ty0<=ty1)n+=(tx1-tx0+1)*(ty1-ty0+1);
+    }
+    return n;
+  }
+  function thumbLevel(files,v,small=lite()){
+    const lv=pickLevel(files[0],v.side);if(!small)return lv;
+    const lo=pickLevel(files[0],v.side,80),L=files[0].levels;
+    return lo>lv&&tileCount(files,v,L[lo].res)<tileCount(files,v,L[lv].res)?lo:lv;
+  }
+
+  // ---------- which files each survey holds (imagery-coverage.json, FE-18) ----------
+  // Built from each survey's STAC collection in the archive (pipeline/tool/build_imagery_coverage.py): the timeline
+  // and the larger view ask only for files that exist, so a survey without a file at the tree is "not covering" with
+  // no request and no 404. A survey missing from the index, or no index, is probed as before.
+  let coverageRead=null;
+  function coverageIndex(){
+    if(!coverageRead){
+      const url=root.ALTOVersion?.asset?.('./imagery-coverage.json')||'./imagery-coverage.json';
+      coverageRead=typeof fetch==='function'?fetch(url).then(r=>r.ok?r.json():null).catch(()=>null):Promise.resolve(null);
+    }
+    return coverageRead;
+  }
+  const sheetBits=new Map();
+  // true: the survey holds the file; false: it does not; null: not known (probe it).
+  function holds(index,survey,name){
+    const s=index?.surveys?.[survey.id],g=index?.grid?.[String(survey.scale)];
+    const m=/^([A-Z]{2}\d{2})_(\d+)_(\d+)$/.exec(name||'');
+    if(!s||!g||s.scale!==survey.scale||!m)return null;
+    const b64=s.sheets[m[1]];if(!b64)return false;
+    const k=`${survey.id}|${m[1]}`;
+    if(!sheetBits.has(k))sheetBits.set(k,Uint8Array.from(atob(b64),c=>c.charCodeAt(0)));
+    const d=survey.scale===500?3:2,row=Number(m[3].slice(0,d)),col=Number(m[3].slice(d)),i=(row-1)*g[0]+(col-1);
+    return !!(sheetBits.get(k)[i>>3]&(1<<(i&7)));
+  }
+  // Each survey's capture area (LINZ's capture-area.geojson, grown by 20 m and simplified, so it contains LINZ's
+  // outline): bbox and rings of NZTM metres, stored as x0, y0, dx1, dy1, ... and decoded once.
+  const footprints=new WeakMap();
+  function footprintOf(index,survey){
+    const f=index?.surveys?.[survey.id]?.footprint;
+    if(!f||!Array.isArray(f.rings)||!f.rings.length||!Array.isArray(f.bbox))return null;
+    if(!footprints.has(f))footprints.set(f,f.rings.map(r=>{const out=[];let x=0,y=0;for(let i=0;i+1<r.length;i+=2){x+=r[i];y+=r[i+1];out.push([x,y]);}return out;}));
+    return {bbox:f.bbox,rings:footprints.get(f)};
+  }
+  // true: the point (NZTM) is inside the survey's capture area; false: outside; null: not known.
+  function inFootprint(index,survey,[x,y]){
+    const f=footprintOf(index,survey);if(!f)return null;
+    const [x0,y0,x1,y1]=f.bbox;if(x<x0||x>x1||y<y0||y>y1)return false;
+    let inside=false;
+    for(const r of f.rings)for(let i=0,j=r.length-1;i<r.length;j=i++){const [xi,yi]=r[i],[xj,yj]=r[j];if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)inside=!inside;}
+    return inside;
+  }
+  // Whether a survey covers the tree, from the index alone: false (its capture area, or the files it holds, leave the
+  // tree out: nothing is requested), true (both hold it), null (not known: read it and see).
+  function covers(index,survey,v){
+    const fp=inFootprint(index,survey,v.tree);if(fp===false)return false;
+    const h=holds(index,survey,tileName(v.tree[0],v.tree[1],survey.scale));if(h===false)return false;
+    return fp===true&&h===true?true:null;
+  }
+  // The scanned historical surveys in the index, oldest first, as surveys this module reads: label (the years of
+  // LINZ's title), survey number, black and white or colour, pixel size, sheet scale, flying period, licensors and
+  // producers. Entries without a path or a known sheet grid are left out.
+  function historic(index){
+    return (Array.isArray(index?.historic)?index.historic:[]).filter(h=>h&&h.id&&/^[\w./-]+\/rgb\/2193$/.test(h.path||'')&&GRID[h.scale]&&h.start&&h.end).map(h=>({
+      id:h.id,label:String(h.label||h.start.slice(0,4)),kind:'Scanned',scanned:true,colour:!!h.colour,number:String(h.number||''),title:h.title||'',
+      gsd:Number(h.gsd),scale:h.scale,start:h.start,end:h.end,licensors:Array.isArray(h.licensors)?h.licensors:[],producers:Array.isArray(h.producers)?h.producers:[],
+      path:h.path,collection:`${BUCKET}/${h.path}/collection.json`}));
+  }
+  // What a survey's photographs are: "Urban survey" (since 2010), "Scanned black-and-white photograph" (historical).
+  const kindText=s=>s.scanned?`Scanned ${s.colour?'colour':'black-and-white'} photograph`:`${s.kind} survey`;
+  // Labels for a set of surveys shown together (the larger view's year strip): a scanned survey whose label another
+  // shown survey shares also names its survey number ("2000 SN9907C").
+  function stripLabels(surveys){
+    const n=new Map();for(const s of surveys)n.set(s.label,(n.get(s.label)||0)+1);
+    return new Map(surveys.map(s=>[s.id,n.get(s.label)>1&&s.scanned&&s.number?`${s.label} ${s.number}`:s.label]));
+  }
 
   const results=new Map();
   // One survey at one window: {status: 'ready' | 'none' | 'error', canvas, res, coverage, files}.
@@ -218,10 +321,15 @@
     return results.get(key);
   }
   async function readNow(survey,v,makeCanvas){
-    const names=tileNames(v,survey.scale);
-    const files=(await Promise.all(names.map(n=>open(`${BUCKET}/${survey.path}/${n}.tiff`).catch(e=>{if(e instanceof HttpError&&(e.status===404||e.status===403))return null;throw e;})))).filter(Boolean);
+    const index=await coverageIndex();
+    if(inFootprint(index,survey,v.tree)===false)return {status:'none',survey,reason:'footprint',files:[]};
+    const names=tileNames(v,survey.scale),held=names.filter(n=>holds(index,survey,n)!==false);
+    if(!held.length)return {status:'none',survey,reason:'no_file',files:names};
+    const files=(await Promise.all(held.map(n=>open(`${BUCKET}/${survey.path}/${n}.tiff`).catch(e=>{if(e instanceof HttpError&&(e.status===404||e.status===403))return null;throw e;})))).filter(Boolean);
     if(!files.length)return {status:'none',survey,reason:'no_file',files:names};
-    const lv=pickLevel(files[0],v.side),res=files[0].levels[lv].res,size=Math.max(1,Math.round(v.side/res));
+    // A scanned survey's film grain makes its tiles the heaviest: it takes the coarser overview whenever that reads
+    // fewer tiles, on every screen (FE-18's phone rule).
+    const lv=thumbLevel(files,v,survey.scanned||lite()),res=files[0].levels[lv].res,size=Math.max(1,Math.round(v.side/res));
     const canvas=(makeCanvas||(n=>{const c=document.createElement('canvas');c.width=c.height=n;return c;}))(size),ctx=canvas.getContext('2d');
     for(const c of files){
       const L=c.levels.find(l=>Math.abs(l.res-res)<1e-9);if(!L)continue;
@@ -264,9 +372,21 @@
   }
   const cm=m=>`${+(m*100).toFixed(1)} cm`;
   const names=list=>{const a=[...new Set(list)];return a.length<2?a.join(''):`${a.slice(0,-1).join(', ')} and ${a[a.length-1]}`;};
-  function attribution(surveys){
-    const lic=names(surveys.flatMap(s=>s.licensors.map(x=>SHORT[x]||x))),prod=names(surveys.flatMap(s=>s.producers.map(x=>SHORT[x]||x)));
-    return `Aerial photographs: ${esc(lic)} (licensors), flown by ${esc(prod)}; from the open imagery archive of ${esc(HOST)} (LINZ), licensed under <a href="${LICENCE.href}" target="_blank" rel="noopener">${LICENCE.name}</a>.`;
+  // one: a single photograph (the larger view), "Aerial photograph: Auckland Council (licensor), ...". The scanned
+  // surveys name their survey numbers, licensors and producers as LINZ lists them.
+  function attribution(surveys,{one=false}={}){
+    const short=(list,key)=>[...new Set(list.flatMap(s=>(s[key]||[]).map(x=>SHORT[x]||x)))];
+    const modern=surveys.filter(s=>!s.scanned),scanned=surveys.filter(s=>s.scanned),parts=[];
+    if(modern.length){const L=short(modern,'licensors');parts.push(`Aerial photograph${one?'':'s'}: ${esc(names(L))} (licensor${one&&L.length<2?'':'s'}), flown by ${esc(names(short(modern,'producers')))}`);}
+    if(scanned.length){const L=short(scanned,'licensors'),P=short(scanned,'producers'),N=[...new Set(scanned.map(s=>s.number))];
+      parts.push(`${parts.length?'s':'S'}canned aerial photograph${one?'':'s'} (survey${N.length>1?'s':''} ${esc(names(N))}): ${esc(names(L))} (licensor${L.length<2?'':'s'}), ${esc(names(P))} (producer${P.length<2?'':'s'})`);}
+    return `${parts.join('; ')}; from the open imagery archive of ${esc(HOST)} (LINZ), licensed under <a href="${LICENCE.href}" target="_blank" rel="noopener">${LICENCE.name}</a>. ${accessed()}`;
+  }
+  // LINZ's wording for the archive: when and where the imagery was accessed (this page reads it as it opens), and
+  // what ALTO changed (CC BY 4.0 asks re-users to say so).
+  function accessed(when=new Date()){
+    const day=when.toLocaleDateString('en-NZ',{day:'numeric',month:'short',year:'numeric'});
+    return `New Zealand Imagery accessed on ${esc(day)} from <a href="https://registry.opendata.aws/nz-imagery/" target="_blank" rel="noopener">registry.opendata.aws/nz-imagery</a>. Cropped and resampled by ALTO, which draws the 2024 crown outline or the recorded position on it.`;
   }
   // Colours come from the design tokens (tokens.css): the crown outline is --viz-overlay-focus, as in the crown
   // figure and the page's map, on the --viz-overlay-halo halo; the scale bar is --neutral-0.
@@ -294,17 +414,47 @@
     ctx.font=`600 ${Math.round(S/17)}px system-ui, sans-serif`;ctx.textBaseline='bottom';ctx.lineWidth=S/80;ctx.strokeStyle=halo;ctx.fillStyle=white;
     ctx.strokeText(`${m} m`,x0,y0-S*.02);ctx.fillText(`${m} m`,x0,y0-S*.02);
   }
-  // A timeline in a container: cards in date order, read lazily (when the container comes near the viewport),
-  // four surveys at a time, newest first. options: {lon, lat, area, geometry: () => GeoJSON | null,
-  // colours, onDone(summary)}. Returns {redraw()} to draw the outline again once the page knows it.
+  // A timeline in a container: one card per survey covering the tree, oldest first. The scanned historical surveys
+  // that cover it (the coverage index: capture area and files) come first, under "Historic surveys (scanned)", a
+  // disclosure open on a desktop and closed on a phone; then the surveys since 2010. Read lazily: when the container
+  // comes near the viewport, the surveys since 2010 four at a time, newest first; the scanned surveys two at a time,
+  // newest first, once those are read and only while their group is open. A survey number LINZ publishes twice
+  // (two pixel sizes) is read once, at the finer size. options: {lon, lat, area, geometry: () => GeoJSON | null,
+  // colours, historic (false: the surveys since 2010 only), eager, marks, viewer, onDone(summary)}. Returns the handle
+  // below; redraw() draws the outline again once the page knows it.
+  // Each photograph is a button that opens the larger view (tree-imagery-viewer.js, opt.viewer or
+  // window.ALTOImageryViewer) on that survey; the handle gives the viewer the surveys read, their order and the frame.
+  const EXPAND='<span class="ti-ix-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5"/></svg></span>';
+  const PHONE='(max-width: 759px)';
+  // The positions caveat for the scanned surveys, said once (under their group heading).
+  const SCANNED_NOTE='Scanned from film and orthorectified to a lower positional standard than the surveys since 2010: features can be several metres from their true position, and the 2024 outline may sit beside the crown.';
+  function cardHtml(s,shown=false){
+    const alt=s.scanned?`${s.label} ${kindText(s).toLowerCase()} of this crown, survey ${s.number}`:`${s.label} aerial photograph (${s.kind.toLowerCase()} survey) of this crown`;
+    const lines=s.scanned?`<small>${esc(kindText(s))}</small><small>${esc(s.number)} · ${esc(cm(s.gsd))} pixels</small>`:`<small>${esc(s.kind)} survey · ${esc(cm(s.gsd))}</small>`;
+    return `<li class="ti-ix-card" data-survey="${esc(s.id)}" data-state="waiting"${shown?'':' hidden'}>
+        <figure><div class="ti-ix-img"><button type="button" class="ti-ix-open" aria-haspopup="dialog"><canvas width="400" height="400" role="img" aria-label="${esc(alt)}"></canvas><span class="sr-only">. Open the larger view</span>${EXPAND}</button></div>
+        <figcaption><b>${esc(s.label)}</b><span>${esc(period(s))}</span>${lines}</figcaption></figure></li>`;
+  }
+  // "14 surveys, 1940–2004": the scanned surveys listed at the tree (one per survey number).
+  const span=list=>{if(!list.length)return '';const a=list.map(s=>s.start.slice(0,4)).sort()[0],b=list.map(s=>s.end.slice(0,4)).sort().pop();
+    return `${list.length} survey${list.length>1?'s':''}, ${a===b?a:`${a}–${b}`}`;};
   function timeline(el,opt){
-    const list=SURVEYS.slice(),state=new Map();let v=null,started=false,blocked=false;
+    const modern=SURVEYS.slice(),state=new Map(),subs=new Set(),queued=new Set(),withHistoric=opt.historic!==false;
+    let list=modern.slice(),groups=[],v=null,index=null,started=false,blocked=false,histStarted=false,modernDone=null;
     el.innerHTML=`<p class="ti-status ti-ix-status" role="status">Aerial photographs are read from LINZ when this section comes into view.</p>
-      <ol class="ti-ix" aria-label="The crown in each aerial survey, oldest first">${list.map(s=>`<li class="ti-ix-card" data-survey="${esc(s.id)}" data-state="waiting" hidden>
-        <figure><div class="ti-ix-img"><canvas width="400" height="400" role="img" aria-label="${esc(`${s.label} aerial photograph (${s.kind.toLowerCase()} survey) of this crown`)}"></canvas></div>
-        <figcaption><b>${esc(s.label)}</b><span>${esc(period(s))}</span><small>${esc(s.kind)} survey · ${esc(cm(s.gsd))}</small></figcaption></figure></li>`).join('')}</ol>
+      <details class="ti-ix-group ti-ix-hist" hidden><summary><span class="ti-ix-gt">Historic surveys (scanned)</span> <span class="ti-ix-gn"></span></summary>
+        <p class="ti-cap ti-ix-caveat">${esc(SCANNED_NOTE)}</p>
+        <ol class="ti-ix ti-ix-scanned" aria-label="The crown in each scanned historical survey, oldest first"></ol></details>
+      <p class="ti-ix-gt ti-ix-since" hidden>Surveys since 2010</p>
+      <ol class="ti-ix" aria-label="The crown in each aerial survey since 2010, oldest first">${modern.map(s=>cardHtml(s)).join('')}</ol>
       <p class="ti-cap ti-ix-none" hidden></p><p class="ti-cap ti-ix-attr" hidden></p>`;
-    const status=el.querySelector('.ti-ix-status'),noneEl=el.querySelector('.ti-ix-none'),attrEl=el.querySelector('.ti-ix-attr');
+    el.querySelector('.ti-ix-status').insertAdjacentHTML('afterend','<p class="ti-ix-again" hidden><button type="button" class="btn btn-quiet">Read again</button></p>');
+    const status=el.querySelector('.ti-ix-status'),noneEl=el.querySelector('.ti-ix-none'),attrEl=el.querySelector('.ti-ix-attr'),againEl=el.querySelector('.ti-ix-again');
+    const hist=el.querySelector('.ti-ix-hist'),histList=el.querySelector('.ti-ix-scanned'),histCount=el.querySelector('.ti-ix-gn'),since=el.querySelector('.ti-ix-since');
+    // Each card's picture markup, to put back when a failed survey is read again.
+    const imgHtml=new Map();
+    const keepPictures=()=>{for(const s of list)if(!imgHtml.has(s.id))imgHtml.set(s.id,el.querySelector(`[data-survey="${s.id}"] .ti-ix-img`)?.innerHTML||'');};
+    keepPictures();
     const card=id=>el.querySelector(`[data-survey="${id}"]`);
     // The site's CSP blocking the archive is reported as a securitypolicyviolation event, after the fetch fails.
     const onViolation=e=>{if(String(e.blockedURI||'').startsWith(BUCKET)&&!blocked){blocked=true;if(started)summary();}};
@@ -313,8 +463,9 @@
       const r=state.get(id),c=card(id);if(!r||!c)return;
       c.dataset.state=r.status;
       if(r.status==='ready'){c.hidden=false;draw(c.querySelector('canvas'),r,v,{geometry:opt.geometry?.()||null,colours:opt.colours||{}});
-        const s=r.survey,cv=c.querySelector('canvas'),part=r.coverage.share<.98?' Part of the window is outside this survey.':'';
-        cv.setAttribute('aria-label',`${s.label} aerial photograph of this crown, ${s.kind.toLowerCase()} survey flown ${period(s)}, ${cm(s.gsd)} survey shown at ${cm(r.res)}${opt.geometry?.()?', with the 2024 crown outline':''}.${part}`);
+        const s=r.survey,cv=c.querySelector('canvas'),part=r.coverage.share<.98?' Part of the window is outside this survey.':'',ol=opt.geometry?.()?', with the 2024 crown outline':'';
+        cv.setAttribute('aria-label',s.scanned?`${s.label} ${kindText(s).toLowerCase()} of this crown, survey ${s.number} flown ${period(s)}, ${cm(s.gsd)} pixels shown at ${cm(r.res)}${ol}.${part}`
+          :`${s.label} aerial photograph of this crown, ${s.kind.toLowerCase()} survey flown ${period(s)}, ${cm(s.gsd)} survey shown at ${cm(r.res)}${ol}.${part}`);
         if(part&&!c.querySelector('.ti-ix-part'))c.querySelector('figcaption').insertAdjacentHTML('beforeend','<small class="ti-ix-part">Partly outside this survey</small>');
         if(s.dateNote&&!c.querySelector('.ti-ix-note'))c.querySelector('figcaption').insertAdjacentHTML('beforeend',`<small class="ti-ix-note">${esc(s.dateNote)}</small>`);
       // A blocked request (the site's CSP, or no network) is said once, in the status line; other failures per card.
@@ -325,50 +476,123 @@
       const done=[...state.values()],ready=done.filter(r=>r.status==='ready'),none=done.filter(r=>r.status==='none'),err=done.filter(r=>r.status==='error');
       const order=s=>list.indexOf(s);
       none.sort((a,b)=>order(a.survey)-order(b.survey));
-      const sup=done.filter(r=>r.status==='superseded').sort((a,b)=>order(a.survey)-order(b.survey));
-      const name=r=>`${r.survey.label} ${r.survey.kind.toLowerCase()} (${cm(r.survey.gsd)})`;
+      const sup=done.filter(r=>r.status==='superseded').sort((a,b)=>order(a.survey)-order(b.survey)),coarse=sup.filter(r=>!r.same),same=sup.filter(r=>r.same);
+      const name=r=>r.survey.scanned?`${r.survey.label} ${r.survey.number} (${cm(r.survey.gsd)})`:`${r.survey.label} ${r.survey.kind.toLowerCase()} (${cm(r.survey.gsd)})`;
       noneEl.hidden=!none.length&&!sup.length;
       noneEl.textContent=[none.length?`Not covering this tree: ${none.map(name).join(', ')}.`:'',
-        sup.length?`Not read: ${sup.map(name).join(', ')}; sharper photographs of the same years are shown.`:''].filter(Boolean).join(' ');
+        coarse.length?`Not read: ${coarse.map(name).join(', ')}; sharper photographs of the same years are shown.`:'',
+        same.length?`Not read: ${same.map(r=>`${r.survey.number} at ${cm(r.survey.gsd)}`).join(', ')}; the same survey is shown at a finer pixel size.`:''].filter(Boolean).join(' ');
       attrEl.hidden=!ready.length;
-      if(ready.length)attrEl.innerHTML=`${attribution(ready.map(r=>r.survey))} <a href="${ARCHIVE}" target="_blank" rel="noopener">LINZ imagery archive</a>.`;
-      const left=list.length-done.length;
-      if(left)status.textContent=`Reading aerial surveys from LINZ… ${done.length} of ${list.length}`;
+      if(ready.length)attrEl.innerHTML=`${attribution(ready.map(r=>r.survey).sort((a,b)=>order(a)-order(b)))} <a href="${ARCHIVE}" target="_blank" rel="noopener">LINZ imagery archive</a>.`;
+      // The scanned surveys listed at the tree, less any found not to cover it.
+      if(groups.length)histCount.textContent=span(groups.map(g=>g.find(s=>state.get(s.id)?.status==='ready')||g[0]).filter(s=>state.get(s.id)?.status!=='none'));
+      const total=queued.size,doneN=[...queued].filter(id=>state.has(id)).length,left=total-doneN,errAll=err.length&&err.length===done.filter(r=>r.status!=='superseded').length;
+      if(left)status.textContent=`Reading aerial surveys from LINZ… ${doneN} of ${total}`;
       else if(blocked)status.textContent='The aerial photographs could not be read: this site does not yet allow requests to LINZ’s imagery archive (Content-Security-Policy connect-src).';
-      else if(err.length===list.length&&err.every(r=>r.blocked))status.textContent='The aerial photographs could not be read: the requests to LINZ’s imagery archive were blocked or the network is unavailable.';
-      else if(!ready.length)status.textContent=err.length?`No aerial survey could be read for this tree (${err.length} failed).`:'None of the aerial surveys covers this tree.';
+      else if(errAll&&err.every(r=>r.blocked))status.textContent='The aerial photographs could not be read: the requests to LINZ’s imagery archive were blocked or the network is unavailable.';
+      else if(!ready.length)status.textContent=err.length?`No aerial survey could be read for this tree (${err.length} failed).`:groups.length&&!histStarted?'None of the aerial surveys since 2010 covers this tree.':'None of the aerial surveys covers this tree.';
       else status.textContent=err.length?`${ready.length} surveys cover this tree; ${err.length} could not be read.`:'';
       status.hidden=!status.textContent;
-      if(!left&&el.dataset.state!=='done'){el.dataset.state='done';opt.onDone?.({ready:ready.map(r=>r.survey.id),none:none.map(r=>r.survey.id),superseded:sup.map(r=>r.survey.id),error:err.map(r=>r.survey.id),blocked});}
+      // A failed read (the network, the archive) offers Read again; a site policy that blocks the archive does not.
+      againEl.hidden=!(!left&&err.length&&!blocked);
+      if(started&&!left&&el.dataset.state!=='done'){el.dataset.state='done';
+        const ids=f=>done.filter(f).map(r=>r.survey.id);
+        opt.onDone?.({ready:ids(r=>r.status==='ready'),none:ids(r=>r.status==='none'),superseded:ids(r=>r.status==='superseded'),error:ids(r=>r.status==='error'),blocked,
+          historic:{listed:groups.length,read:histStarted,ready:ready.filter(r=>r.survey.scanned).length}});}
+      subs.forEach(f=>{try{f();}catch(e){console.error(e);}});
     }
-    // Sharp surveys first (newest first, four at a time); then each coarse survey (25 cm pixels or more,
-    // whose full-resolution tiles are the heaviest to read) only where no sharp survey of the same years
-    // covers the tree.
+    // Surveys since 2010: sharp surveys first (newest first, four at a time); then each coarse survey (25 cm pixels or
+    // more, whose full-resolution tiles are the heaviest to read) only where no sharp survey of the same years covers
+    // the tree. Scanned surveys: newest first, two at a time.
+    const run=async(queue,n)=>{const worker=async()=>{while(queue.length){const s=queue.shift();
+      const by=!s.scanned&&s.gsd>=COARSE?sharperOf(s):null;
+      queued.add(s.id);
+      const r=by?{status:'superseded',survey:s,by:by.survey}:await read(s,v);
+      state.set(s.id,r);paint(s.id);summary();}};
+      await Promise.all(Array.from({length:n},worker));};
+    const readSet=async surveys=>{const m=surveys.filter(s=>!s.scanned);
+      await run(m.filter(s=>s.gsd<COARSE).reverse(),4);await run(m.filter(s=>s.gsd>=COARSE).reverse(),2);
+      await run(surveys.filter(s=>s.scanned).reverse(),2);};
+    // The scanned surveys that cover the tree, from the index (no request): one group per survey number, finest first.
+    function listHistoric(){
+      if(!withHistoric||!index)return;
+      const covering=historic(index).filter(s=>covers(index,s,v)!==false),byNumber=new Map();
+      for(const s of covering){const k=s.number||s.id;if(!byNumber.has(k))byNumber.set(k,[]);byNumber.get(k).push(s);}
+      groups=[...byNumber.values()].map(g=>g.sort((a,b)=>a.gsd-b.gsd));
+      if(!groups.length)return;
+      const first=new Set(groups.map(g=>g[0].id));
+      list=[...covering,...modern];
+      histList.innerHTML=covering.map(s=>cardHtml(s,first.has(s.id))).join('');
+      keepPictures();
+      hist.hidden=false;since.hidden=false;
+      // Open on a desktop; on a phone the group starts closed and is read when opened.
+      hist.open=!root.matchMedia?.(PHONE)?.matches;
+      hist.addEventListener('toggle',()=>{if(hist.open&&started)(modernDone||Promise.resolve()).then(readHistoric);});
+      summary();
+    }
+    async function readHistoric(){
+      if(histStarted||!groups.length)return;histStarted=true;
+      const firsts=groups.map(g=>g[0]);
+      for(const s of firsts){queued.add(s.id);const c=card(s.id);if(c)c.dataset.state='loading';}
+      el.dataset.state='loading';summary();
+      await readSet(firsts);
+      // A survey number whose finest copy does not cover the tree after all: its next copy. Once one is shown, the
+      // others are not read.
+      for(const g of groups.filter(g=>g.length>1)){
+        let shown=g.find(s=>state.get(s.id)?.status==='ready')||null;
+        for(const s of g){
+          if(state.has(s.id))continue;
+          if(shown||state.get(g[0].id)?.status==='error'){state.set(s.id,{status:'superseded',survey:s,by:shown||g[0],same:true});paint(s.id);continue;}
+          queued.add(s.id);el.dataset.state='loading';
+          const r=await read(s,v);state.set(s.id,r);paint(s.id);if(r.status==='ready')shown=s;
+        }
+      }
+      el.dataset.state='loading';summary();
+    }
     async function start(){
       if(started)return;started=true;el.dataset.state='loading';
       v=view({lon:opt.lon,lat:opt.lat,area:opt.area,geometry:opt.geometry?.()||null});
-      list.forEach(s=>{const c=card(s.id);if(c){c.dataset.state='loading';}});
+      modern.forEach(s=>{queued.add(s.id);const c=card(s.id);if(c){c.dataset.state='loading';}});
       summary();
-      const run=async(queue,n)=>{const worker=async()=>{while(queue.length){const s=queue.shift();
-        const by=s.gsd>=COARSE?sharperOf(s):null;
-        const r=by?{status:'superseded',survey:s,by:by.survey}:await read(s,v);
-        state.set(s.id,r);paint(s.id);summary();}};
-        await Promise.all(Array.from({length:n},worker));};
-      await run(list.filter(s=>s.gsd<COARSE).reverse(),4);
-      await run(list.filter(s=>s.gsd>=COARSE).reverse(),2);
+      if(withHistoric){index=await coverageIndex();listHistoric();}
+      modernDone=readSet(modern);
+      await modernDone;
+      if(groups.length&&hist.open)await readHistoric();
     }
-    // A sharp survey shown for this tree whose flying period overlaps the coarse one's, give or take a year.
+    // Read again: only the surveys that failed (failed reads are never cached), each card back to its picture.
+    async function again(){
+      const failed=list.filter(s=>state.get(s.id)?.status==='error');
+      if(!failed.length)return;
+      for(const s of failed){state.delete(s.id);const c=card(s.id);if(c){c.querySelector('.ti-ix-img').innerHTML=imgHtml.get(s.id)||'';c.hidden=!s.scanned;c.dataset.state='loading';}}
+      el.dataset.state='loading';againEl.hidden=true;summary();status.tabIndex=-1;status.focus({preventScroll:true});
+      await readSet(failed);
+    }
+    againEl.querySelector('button').addEventListener('click',()=>{again();});
+    // A sharp survey since 2010 shown for this tree whose flying period overlaps the coarse one's, give or take a year.
     function sharperOf(s){
       const yr=d=>Number(d.slice(0,4))+(Number(d.slice(5,7))-1)/12,a=yr(s.start)-1,b=yr(s.end)+1;
-      return [...state.values()].find(r=>r.status==='ready'&&r.survey.gsd<COARSE&&yr(r.survey.end)>=a&&yr(r.survey.start)<=b)||null;
+      return [...state.values()].find(r=>r.status==='ready'&&!r.survey.scanned&&r.survey.gsd<COARSE&&yr(r.survey.end)>=a&&yr(r.survey.start)<=b)||null;
     }
+    // A photograph opens the larger view on its survey.
+    el.addEventListener('click',e=>{
+      const b=e.target.closest?.('.ti-ix-open'),id=b?.closest('[data-survey]')?.dataset.survey,V=opt.viewer||root.ALTOImageryViewer;
+      if(id&&V&&state.get(id)?.status==='ready')V.open(handle,id,{opener:b});
+    });
     if(typeof IntersectionObserver!=='undefined'&&!opt.eager){
       const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){io.disconnect();start();}},{rootMargin:'600px 0px'});io.observe(el);
     }else start();
-    return {start,redraw:()=>{for(const id of state.keys())paint(id);},view:()=>v};
+    // For the larger view: the surveys shown (read and covering the tree), oldest first; each one's survey and
+    // reading; the frame; the outline; the surveys to mark (opt.marks: {before, after} survey ids, for a change on
+    // the map); changes (another survey read, the outline arriving).
+    const handle={start,again,redraw:()=>{for(const id of state.keys())paint(id);subs.forEach(f=>{try{f();}catch(e){console.error(e);}});},view:()=>v,
+      order:()=>list.filter(s=>state.get(s.id)?.status==='ready').map(s=>s.id),survey:id=>list.find(s=>s.id===id)||null,
+      result:id=>state.get(id)||null,geometry:()=>opt.geometry?.()||null,colours:()=>opt.colours||{},marks:()=>opt.marks||null,
+      subscribe:f=>{subs.add(f);return ()=>subs.delete(f);}};
+    return handle;
   }
 
-  const api={SURVEYS,BUCKET,CATALOGUE,ARCHIVE,LICENCE,HOST,GRID,COARSE,nztm,tileName,tileNames,parseTiff,valueAt,view,pickLevel,read,timeline,attribution,period,_internal:{cog,NeedMore,coverageOf}};
+  const api={SURVEYS,BUCKET,CATALOGUE,ARCHIVE,LICENCE,HOST,GRID,COARSE,SCANNED_NOTE,nztm,tileName,tileNames,tileNamesIn,parseTiff,valueAt,view,pickLevel,read,timeline,coverageIndex,holds,inFootprint,covers,historic,kindText,stripLabels,lite,thumbLevel,tileCount,attribution,accessed,period,cm,token,
+    io:{open,range,decode,HttpError},_internal:{cog,NeedMore,coverageOf}};
   root.ALTOImagery=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

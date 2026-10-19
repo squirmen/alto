@@ -24,6 +24,23 @@
 .tp-status { margin: 0; font-size: 12px; color: var(--color-text-accent); min-height: 0; }
 .tp-status:empty { display: none; }
 .tp-status input { width: 100%; margin-top: 4px; }
+/* A ?tree= link that names no tree (UX-13): the tree page's status view, set in the panel's own type and spacing. */
+.tp-linkerror .ti-status-page { padding: 18px 18px 14px; background: linear-gradient(180deg, var(--color-surface-tint), var(--color-surface)); }
+.tp-linkerror .ti-kicker { margin: 0 0 6px; font: 700 10.5px/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--color-accent); }
+.tp-linkerror h1 { margin: 0; font: 760 22px/1.15 var(--font-sans); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.tp-linkerror .ti-lead { margin: 8px 0 0; font: 600 15px/1.4 var(--font-sans); color: var(--color-text); }
+.tp-linkerror .ti-lead a, .tp-linkerror .ti-kv a { color: var(--color-text-link); font-weight: 600; text-underline-offset: 3px; }
+.tp-linkerror code { font: 600 0.95em/1 var(--font-mono, ui-monospace, monospace); overflow-wrap: anywhere; }
+.tp-linkerror .ti-kvs { display: grid; margin: 14px 0 0; padding-top: 6px; border-top: 1px solid var(--color-border-subtle); }
+.tp-linkerror .ti-kv { display: grid; grid-template-columns: 30% minmax(0, 1fr); gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--color-border-subtle); }
+.tp-linkerror .ti-kv:last-child { border-bottom: 0; }
+.tp-linkerror .ti-kv dt { font: 400 13px/1.35 var(--font-sans); color: var(--color-text-muted); }
+.tp-linkerror .ti-kv dd { margin: 0; font: 600 14px/1.35 var(--font-sans); color: var(--color-text); overflow-wrap: anywhere; }
+.tp-linkerror .ti-kv dd small { display: block; margin-top: 2px; font: 400 12px/1.45 var(--font-sans); color: var(--color-text-muted); }
+.tp-linkerror .ti-succ { margin: 0; padding-left: 1.2em; }
+.tp-linkerror .ti-id-actions { display: grid; gap: 8px; padding: 4px 18px 0; }
+.tp-linkerror .ti-id-actions:empty { display: none; }
+.tp-linkerror .ti-id-actions .btn { justify-content: flex-start; min-height: 44px; }
 .tp-card { margin: 10px 14px 0; padding: 14px; border: 1px solid var(--color-border-subtle); border-radius: 14px; background: var(--color-surface); }
 .tp-card h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font: 700 11px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-accent); }
 .tp-figure { margin: 0 0 6px; font-size: 14px; color: var(--color-text-secondary); }
@@ -52,6 +69,7 @@
 .tp-error p { margin: 0 0 8px; }
 .tp-skeleton { padding: 18px; }
 .tree-profile-body { scroll-behavior: smooth; }
+.tree-profile-body.is-keyboard { scroll-behavior: auto; }
 .property-area-link { margin-top: 12px; width: 100%; }
 
 /* Panel slides in; content fades as it refreshes. */
@@ -78,6 +96,21 @@
 .area-quality li { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; }
 .area-quality i { width: 10px; height: 10px; border-radius: 50%; }
 .area-quality b { font-variant-numeric: tabular-nums; }
+/* Species maxima in the Area tab (AREA-01): the three largest clear leads per measure, each a button that opens the tree. */
+.area-card h4 { margin: 12px 0 4px; justify-content: space-between; }
+.area-card h4 .area-max-n { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--color-text-muted); }
+.area-max-lead { margin: 0; }
+.area-max { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; font-size: 13px; }
+.area-max li { border-bottom: 1px solid var(--color-border-subtle); }
+.area-max li:last-child { border-bottom: 0; }
+.area-max li > button { appearance: none; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; width: 100%; min-height: 32px; margin: 0; padding: 4px; border: 0; border-radius: 6px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.area-max li > button:hover { background: var(--color-bg); }
+.area-max li > button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.area-max span code { display: block; font: var(--text-mono); font-size: 11px; color: var(--color-text-muted); }
+.area-max b { flex: 0 0 auto; text-align: right; font-variant-numeric: tabular-nums; font-weight: 650; }
+.area-max b small { display: block; font-weight: 400; font-size: 11px; color: var(--color-text-muted); }
+.area-links { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 10px 0 0; font-size: 12.5px; }
+.area-links a { color: var(--color-text-link); font-weight: 600; }
 .area-empty { display: grid; justify-items: center; gap: 6px; padding: 24px 8px; text-align: center; color: var(--color-text-muted); font-size: 13px; }
 .area-actions { display: grid; gap: 8px; }
 .area .kpis { grid-template-columns: 1fr 1fr; }
@@ -96,6 +129,7 @@
   .tree-profile[data-sheet="full"] { height: calc(100dvh - 56px); }
   .sheet-handle { display: grid; place-items: center; width: 100%; height: 22px; padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; flex: 0 0 auto; }
   .sheet-handle span { width: 42px; height: 5px; border-radius: 3px; background: #c8cfc6; }
+  @media (pointer: coarse) { .sheet-handle { height: var(--target-touch); } }
   .tree-profile-head { padding: 0 12px 6px; border-bottom: 0; }
   .tp-id { padding: 4px 16px 12px; background: var(--color-surface); }
   .tp-name { font-size: 23px; }
@@ -200,8 +234,19 @@
 .lp-handle { display: none; }
 
 /* Header: wordmark, region, About, hide. 48 px. */
-#explorer.lp .lp-head { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border: 0; flex: none; }
+#explorer.lp .lp-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border: 0; flex: none; }
+/* "Saved trees (n)", once a tree is saved: its own line under the brand and About, so the first line never changes. */
+#explorer.lp .lp-about.lp-saved { flex: 1 0 100%; justify-content: flex-start; margin: calc(-1 * var(--space-1)) 0 0 calc(-1 * var(--space-2)); }
+#explorer.lp .lp-about.lp-saved[hidden] { display: none; }
 #explorer.lp .lp-head .title-block { display: flex; align-items: center; gap: var(--space-2); flex: 1 1 auto; min-width: 0; padding: 0; }
+/* The ALTO pages menu (site-nav.css): under the panel's heading on desktop; in the sheet's foot on phones, where the
+   heading is not shown. One copy shows at a time. */
+#explorer.lp .site-nav { flex: none; background: none; border: 0; }
+#explorer.lp .site-nav ul { column-gap: var(--space-3); }
+#explorer.lp .site-nav li + li::before { content: none; }
+#explorer.lp .lp-site-nav ul { padding: 0 var(--space-4) var(--space-2); font: var(--text-label); }
+#explorer.lp .sheet-site-nav { display: none; flex: 1 0 100%; }
+#explorer.lp .sheet-site-nav ul { padding: var(--space-1) 0; }
 #explorer.lp h1.brand { margin: 0; padding: 0; line-height: 0; flex: none; }
 #explorer.lp h1.brand img { display: block; width: auto; height: 26px; max-width: none; }
 #explorer.lp .release-row { display: block; margin: 0; min-width: 0; }
@@ -244,6 +289,12 @@
 .lp-chips { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); }
 .lp-chips > li { display: flex; min-width: 0; max-width: 100%; }
 .lp-chips-empty { min-height: 28px; align-items: center; font: 600 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-secondary); }
+/* FTA-23: "Copy link to this view" under the chips; the text lines up with the panel's edge. */
+.lp-viewlink { margin: var(--space-1) 0 0 calc(-1 * var(--space-2)); }
+.lp-viewlink .lp-text-btn { font-size: var(--fs-xs); }
+.lp-viewlink-copy { margin: var(--space-1) 0 0; font: 400 var(--fs-xs)/var(--lh-xs) var(--font-sans); color: var(--color-text-secondary); }
+.lp-viewlink-copy label { display: grid; gap: var(--space-1); }
+.lp-viewlink-copy input { box-sizing: border-box; width: 100%; min-height: var(--control-sm); padding: 0 var(--space-2); border: 1px solid var(--color-border-input); border-radius: var(--radius-sm); font: 400 var(--fs-xs)/1 var(--font-mono, monospace); color: var(--color-text); background: var(--color-surface); }
 .lp-chip { display: inline-flex; align-items: stretch; height: 28px; border: 1px solid var(--alto-green-200); border-radius: 999px; background: var(--color-surface-tint); color: var(--color-text-accent); overflow: hidden; }
 .lp-chip[data-kind="layer"] { border-color: var(--color-border); background: var(--color-surface); color: var(--color-text-secondary); }
 .lp-chip[data-kind="highlight"] { border-color: #0a6fd6; background: #eef5fd; color: #0a4f99; }
@@ -305,6 +356,7 @@
 #explorer.lp .legend-row { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; align-items: center; gap: var(--space-2); width: 100%; min-height: var(--control-sm); margin: 0; padding: 0 var(--space-2); border: 0; border-radius: 6px; background: none; color: var(--color-text); font: 400 var(--fs-sm)/var(--lh-sm) var(--font-sans); text-align: left; text-decoration: none; opacity: 1; cursor: pointer; transition: background 120ms var(--ease-standard); }
 #explorer.lp .legend-row:hover { background: var(--color-surface-tint); }
 #explorer.lp .legend-row .dot { justify-self: center; width: 10px; height: 10px; border: 0; border-radius: 50%; }
+#explorer.lp .legend-row .dot.dot-ringed { box-shadow: inset 0 0 0 1px var(--color-surface), 0 0 0 2px var(--color-protected); }
 #explorer.lp .legend-row .chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: inherit; font-size: inherit; }
 #explorer.lp .legend-row .chip-count { font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
 #explorer.lp .legend-row[aria-pressed="false"] { color: var(--color-text-muted); }
@@ -335,6 +387,10 @@
 #explorer.lp .species-option:hover { background: var(--color-surface-tint); }
 #explorer.lp .species-option.active { background: var(--color-surface-tint-hover); color: var(--color-text-accent); font-weight: 600; }
 #explorer.lp .species-option .count { font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+/* Release 6.3: Latin names beside a common name, and each Latin name of a common name as its own option, indented. */
+#explorer.lp .species-option .species-latin { flex: 1; margin-left: var(--space-1); color: var(--color-text-secondary); font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#explorer.lp .species-option.species-sub { padding-left: calc(var(--space-2) + var(--space-3)); color: var(--color-text-secondary); }
+#explorer.lp .species-option.species-sub.active { color: var(--color-text-accent); }
 
 /* Basemap segmented control inside Layers. */
 #explorer.lp .segmented { margin: var(--space-1) 0 0; }
@@ -408,6 +464,8 @@
 .sw { display: inline-block; justify-self: center; flex: none; box-sizing: border-box; }
 .sw-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px rgb(23 32 26 / 35%); }
 .sw-ring { width: 12px; height: 12px; border-radius: 50%; border: 2.5px solid var(--sw); }
+/* A dot with the schedule ring: how every Notable Trees schedule record is drawn on the map. */
+.sw-ringed-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px var(--color-surface), 0 0 0 2px var(--color-protected); margin: 1px; }
 .sw-hollow { width: 11px; height: 11px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--sw); }
 .sw-dashed-ring { width: 8px; height: 8px; border-radius: 50%; background: var(--sw); outline: 1.5px dashed var(--neutral-700); outline-offset: 2px; }
 .sw-line { width: 16px; height: 0; border-top: 2px solid var(--sw); }
@@ -435,11 +493,15 @@
     transform: translateY(var(--sheet-offset, calc(100% - 168px))); visibility: visible; opacity: 1; pointer-events: auto;
     transition: transform 260ms var(--ease-standard), visibility 0s linear 0s; z-index: 30;
   }
-  #explorer.lp.is-dragging { transition: none; }
+  #explorer.lp.is-dragging, #explorer.lp.is-instant { transition: none; }
   body[data-profile-open="true"] #explorer.lp { transform: translateY(100%); visibility: hidden; transition: transform 260ms var(--ease-standard), visibility 0s linear 260ms; }
   .lp-handle { display: grid; place-items: center; flex: none; width: 100%; height: 24px; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; }
   .lp-handle span { width: 40px; height: 4px; border-radius: 2px; background: #b9c1b7; }
+  /* A11Y-13: the handles are 44 px tall on a touch screen (the sheet's stops follow its content). */
+  @media (pointer: coarse) { .lp-handle { height: var(--target-touch); } }
   #explorer.lp .lp-head { display: none; }
+  #explorer.lp .lp-site-nav { display: none; }
+  #explorer.lp .sheet-site-nav { display: block; }
   #explorer.lp .property-search { margin: 0 var(--space-4) var(--space-2); }
   #explorer.lp .property-search input { height: var(--target-touch); font-size: 16px; }
   #explorer.lp .property-search > svg { top: 13px; }
@@ -458,12 +520,15 @@
   .map-dock, body[data-aside-collapsed="true"] .map-dock { display: grid; width: auto; }
   .map-dock .floating-stats, .reveal-aside .dock-action, .reveal-aside .filter-count { display: none !important; }
   .reveal-aside, body[data-aside-collapsed="true"] .reveal-aside { width: auto; height: 40px; padding: 0 var(--space-3); }
-  .dock-heading { grid-template-columns: auto 40px; }
-  .about-dock { min-height: 40px; width: 40px; }
+  .dock-heading { grid-template-columns: auto auto auto; }
+  .saved-dock { min-height: 40px; }
+  .about-dock { min-height: 40px; width: auto; padding: 0 var(--space-3); }
   body[data-profile-open="true"][data-sheet="full"] .map-dock { display: none; }
-  /* Map controls and the colour key sit above the visible part of the sheet. */
-  .maplibregl-ctrl-bottom-right { bottom: calc(var(--sheet-clear, 0px) + env(safe-area-inset-bottom)); transition: bottom 260ms var(--ease-standard); }
-  .maplibregl-ctrl-bottom-left { bottom: calc(var(--sheet-clear, 0px) + var(--scale-lift, 0px)); transition: bottom 260ms var(--ease-standard); }
+  /* Map controls and the colour key sit above the visible part of the sheet. They move by transform, from the sheet's
+     peek height in CSS (168 px) until the sheet has measured itself: moving their bottom edge shifted the page as the
+     sheet settled (FE-09, CLS). */
+  .maplibregl-ctrl-bottom-right { bottom: env(safe-area-inset-bottom); transform: translateY(calc(-1 * var(--sheet-clear, 168px))); transition: transform 260ms var(--ease-standard); }
+  .maplibregl-ctrl-bottom-left { bottom: 0; transform: translateY(calc(-1 * (var(--sheet-clear, 168px) + var(--scale-lift, 0px)))); transition: transform 260ms var(--ease-standard); }
   .pick-banner { bottom: calc(var(--sheet-clear, 0px) + 16px); }
 }
 
@@ -471,7 +536,8 @@
 .segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: var(--space-1); border: 1px solid var(--color-border-subtle); border-radius: 10px; background: var(--color-bg); }
 .segmented button { appearance: none; min-height: var(--control-sm); padding: 0 var(--space-2); border: 0; border-radius: 7px; background: transparent; color: var(--color-text-secondary); font: 600 var(--fs-sm)/1 var(--font-sans); cursor: pointer; transition: background 140ms var(--ease-standard), color 140ms var(--ease-standard); }
 .segmented button:hover { color: var(--color-text); }
-.segmented button.active, .segmented button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text-accent); box-shadow: 0 1px 3px rgb(23 32 26 / 14%); }
+/* The chosen basemap: a 2 px bar under it as well as the raised fill (A11Y-13). */
+.segmented button.active, .segmented button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text-accent); box-shadow: 0 1px 3px rgb(23 32 26 / 14%), inset 0 -2px 0 currentColor; }
 /* Fieldset legends lay out like any heading row. */
 #explorer.lp fieldset.lp-inline > legend { float: left; width: 100%; }
 #explorer.lp fieldset.lp-inline > legend + * { clear: both; }
@@ -529,13 +595,18 @@ button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible
    left; attribution bottom right. Zoom, basemap and attribution move left of the tree panel when it opens. */
 .maplibregl-ctrl-group { overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-sm) !important; background: var(--color-surface); box-shadow: var(--shadow-1) !important; }
 .maplibregl-ctrl-group button { width: var(--control-md); height: var(--control-md); }
+/* The narrowest phones: with "Saved trees (n)" beside the brand and About, the saved button takes a line of its own. */
+@media (max-width: 359px) {
+  .map-dock .dock-heading:has(.saved-dock:not([hidden])) { grid-template-columns: auto auto; }
+  .map-dock .dock-heading .saved-dock { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
+}
 @media (pointer: coarse) { .maplibregl-ctrl-group button { width: var(--target-touch); height: var(--target-touch); } }
 .maplibregl-ctrl-scale, .maplibregl-ctrl-attrib { font-family: var(--font-sans); }
 .maplibregl-ctrl-scale { font-size: var(--fs-2xs); }
 body .basemap-switch { z-index: var(--z-map-ui); gap: 2px; padding: 2px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-sunken); box-shadow: var(--shadow-1); font: 600 var(--fs-sm)/1 var(--font-sans); }
 body .basemap-switch button, body .basemap-switch:not(:hover) button:not(.active) { min-height: var(--control-sm); padding: 0 var(--space-3); border-radius: 6px; background: transparent; color: var(--color-text-secondary); font: inherit; }
 body .basemap-switch button:hover { background: var(--color-surface-tint-hover); color: var(--color-text); }
-body .basemap-switch button.active { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-1); }
+body .basemap-switch button.active { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-1), inset 0 -2px 0 var(--color-text); }
 @media (min-width: 761px) {
   body { --tree-w: 0px; }
   body[data-profile-open="true"] { --tree-w: 400px; }
@@ -554,7 +625,7 @@ body .basemap-switch button.active { background: var(--color-surface); color: va
 @media (min-width: 761px) and (max-width: 979px) {
   body[data-profile-open="true"] .basemap-switch { visibility: hidden; }
 }
-@media (prefers-reduced-motion: reduce) { .maplibregl-ctrl-top-right, body .basemap-switch { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .maplibregl-ctrl-top-right, body .basemap-switch, .maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left { transition: none; } }
 @media (max-width: 760px) {
   body .basemap-switch, body[data-aside-collapsed] .basemap-switch { display: none !important; }
 }
@@ -567,6 +638,8 @@ body .basemap-switch button.active { background: var(--color-surface); color: va
 #explorer.lp .ar-go { min-height: var(--target-min); padding: 2px 0; }
 #explorer.lp .area-highlight { font-size: var(--fs-sm); }
 #explorer.lp .area-card h3 .badge-estimate, #explorer.lp .ml-title .badge-estimate { text-transform: none; letter-spacing: 0; }
+#explorer.lp .area-card h4 { margin: 12px 0 4px; color: var(--color-text-secondary); }
+#explorer.lp .area-card h4 .area-max-n { font: var(--text-caption); letter-spacing: 0; text-transform: none; color: var(--color-text-muted); }
 /* About: version pills and the close button. */
 .about-versions .version-pill { font-weight: 600; }
 .about-close { font-size: var(--fs-lg); }
@@ -601,3 +674,33 @@ body .basemap-switch button.active { background: var(--color-surface); color: va
 .ml-rows .ml-count { flex: none; margin-left: auto; }
 .lp-legend .ml-rows li:not(:has(> .ml-row)), .lp-legend .ml-rows .ml-row { display: inline-flex; align-items: center; }
 .lp-legend .ml-rows .sw { margin-top: 0; }
+
+/* Species maxima filter (tool 0.2.8; its own Filters group since 0.2.9, UX-06): the switch, the area it ranks in, one
+   note, and with the filter on the link to the ringed trees' list. */
+#explorer.lp .lp-maxima #maximaList { margin-top: var(--space-1); }
+#explorer.lp .lp-maxima #maximaList a { color: var(--color-text-link); }
+#explorer.lp .lp-maxima-area { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-2); margin: var(--space-1) 0 var(--space-2); padding: 0 var(--space-2) 0 calc(var(--space-2) + 16px + var(--space-2)); }
+#explorer.lp .lp-maxima-area label { margin: 0; font: 400 var(--fs-sm)/var(--lh-sm) var(--font-sans); color: var(--color-text-secondary); text-transform: none; letter-spacing: 0; }
+#explorer.lp .lp-maxima-area select { width: 100%; height: var(--control-sm); min-height: 0; padding: 0 28px 0 var(--space-2); border: 1px solid var(--color-border-input); border-radius: var(--radius-sm); background-color: var(--color-surface); color: var(--color-text); font: 400 var(--fs-sm)/1 var(--font-sans); }
+#explorer.lp .lp-maxima .lp-note { padding: 0 var(--space-2); }
+@media (max-width: 760px) { #explorer.lp .lp-maxima-area select { height: var(--target-touch); font-size: 16px; } }
+
+/* The address chosen in the search: a pin that stays after its panel closes, until the next search or Escape. */
+.search-pin { width: 18px; height: 26px; }
+.search-pin::before { content: ""; position: absolute; left: 1px; top: 0; width: 16px; height: 16px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--color-selection); box-shadow: 0 0 0 2px var(--color-selection-halo); }
+.search-pin::after { content: ""; position: absolute; left: 6px; top: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--color-selection-halo); }
+/* The note that says the map shows OpenStreetMap's streets for street names above zoom 16 (Light basemap). */
+.basemap-note { position: absolute; z-index: var(--z-map-ui, 5); top: max(12px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); margin: 0; padding: 4px var(--space-2, 8px); border: 1px solid var(--color-border); border-radius: var(--radius-sm, 6px); background: var(--color-surface); box-shadow: var(--shadow-1); font: var(--text-caption); color: var(--color-text-secondary); white-space: nowrap; pointer-events: none; }
+@media (max-width: 760px) { .basemap-note { top: auto; bottom: calc(var(--sheet-clear, 168px) + 56px); white-space: normal; max-width: calc(100vw - 120px); text-align: center; } }
+
+/* The sheet's legend button (phones only): the legend starts folded, under the Filters, Layers and Area tabs. */
+.lp-legend-toggle { display: none; }
+@media (max-width: 760px) {
+  #explorer.lp .lp-legend-toggle { display: flex; align-items: center; justify-content: space-between; order: 2; flex: none; min-height: var(--target-touch); margin: 0 var(--space-4); padding: 0; border: 0; border-top: 1px solid var(--color-border-subtle); background: none; color: var(--color-text-secondary); font: 600 var(--fs-sm)/1 var(--font-sans); cursor: pointer; }
+  #explorer.lp .lp-legend-toggle::after { content: ""; width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); }
+  #explorer.lp .lp-legend-toggle[aria-expanded="true"]::after { transform: rotate(-135deg); }
+  #explorer.lp .lp-legend { order: 2; }
+  #explorer.lp:not([data-sheet-legend="open"]) .lp-legend { display: none; }
+  #explorer.lp .lp-body { order: 3; }
+  #explorer.lp .panel-foot { order: 4; }
+}

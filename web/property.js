@@ -10,12 +10,17 @@
 (function(root){
   'use strict';
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const num=v=>v===null||v===undefined||v===''?null:(Number.isFinite(Number(v))?Number(v):null);
-  const nf=(v,d=0)=>new Intl.NumberFormat('en-NZ',{maximumFractionDigits:d}).format(v);
-  const money=v=>{const n=num(v);if(n===null)return '—';return '$'+(n>0&&n<10?n.toFixed(2):nf(Math.round(n)));};
-  const co2=t=>{const n=num(t);if(n===null)return '—';return n<0.0005&&n>0?'under 1 kg':n<1?`${nf(n*1000)} kg`:`${nf(n,n<10?2:1)} t`;};
-  const vol=m3=>{const n=num(m3);return n===null?'—':`${nf(n,n<100?1:0)} m³`;};
-  const area=m2=>{const n=num(m2);if(n===null)return '—';return n>=10000?`${nf(n/10000,n>=1e6?0:2)} ha`:`${nf(n)} m²`;};
+  // Numbers print by the one shared rule set (alto-format.js, FE-16): a property's totals to 3 significant figures,
+  // one tree's values to 2, a missing value as an en dash.
+  const F=root.ALTOFormat||(typeof require==='function'?require('./alto-format.js'):null);
+  const num=F.num,nf=F.nf;
+  const money=v=>F.money(v,{total:true});        // the property's sums
+  const treeMoney=v=>F.money(v);                 // one tree
+  const co2=t=>F.co2(t,{total:true});
+  const area=m2=>F.land(m2);
+  // Release 6.3 parcels carry benefit_value_nzd_y(_low/_high/_confident) (stormwater and carbon); release 6.2 parcels
+  // total_value_nzd_y(…) with air quality and cooling (release-fields.js reads either).
+  const FD=()=>root.ALTOFields||(typeof require==='function'?require('./release-fields.js'):null);
 
   // Same rules as the address build (build_property_tenure_v5.py: norm_text, norm_street, shard_key).
   const ABBREV={ave:'avenue',av:'avenue',st:'street',rd:'road',dr:'drive',drv:'drive',cres:'crescent',cr:'crescent',crs:'crescent',pl:'place',tce:'terrace',terr:'terrace',hwy:'highway',ln:'lane',ct:'court',cl:'close',gr:'grove',gro:'grove',pde:'parade',esp:'esplanade',sq:'square',blvd:'boulevard',hts:'heights',wy:'way',cir:'circle',crt:'court'};
@@ -70,9 +75,17 @@
   }
   const numberOrder=(a,b)=>(parseInt(a,10)||0)-(parseInt(b,10)||0)||String(a).localeCompare(String(b));
 
-  async function search(base,version,query,limit=8){
+  // A street typed with the wrong suburb ("Grattan Place, Parnell") falls back to the street wherever it is
+  // ({suburbMismatch:true}); streets: with {streets:true}, the matching streets with their address counts and extents.
+  async function search(base,version,query,limit=8,{streets=false}={}){
     const p=parseQuery(query),words=normText(p.street).split(' ').filter(Boolean),suburbText=normText(p.suburb);
     if(words.join('').length<2)return {rows:[],total:0,short:true};
+    const first=await searchStreet(base,version,p,words,suburbText,limit,streets);
+    if(first.rows.length||!suburbText)return first;
+    const loose=await searchStreet(base,version,p,words,'',limit,streets);
+    return loose.rows.length?{...loose,suburbMismatch:true,typedSuburb:p.suburb}:first;
+  }
+  async function searchStreet(base,version,p,words,suburbText,limit,streets){
     const index=await meta(base,version);
     // The whole text as the street first, then shorter streets with the remaining words read as the suburb.
     for(let k=words.length;k>=1;k--){
@@ -91,7 +104,15 @@
       }
       if(!hits.length)continue;
       hits.sort((a,b)=>a[0]-b[0]||a[1][3].localeCompare(b[1][3])||String(a[1][4]).localeCompare(String(b[1][4]))||numberOrder(a[1][0],b[1][0])||numberOrder(a[1][1]||'',b[1][1]||''));
-      return {rows:hits.slice(0,limit).map(([,r,rows])=>({...asAddress(r),shared:sharedCount(rows,r[8])})),total:hits.length,streetOnly:!p.number};
+      const out={rows:hits.slice(0,limit).map(([,r,rows])=>({...asAddress(r),shared:sharedCount(rows,r[8])})),total:hits.length,streetOnly:!p.number,hasNumber:!!p.number};
+      if(streets&&!p.number){
+        const g=new Map();
+        for(const [,r] of hits){const a=asAddress(r),k=`${a.street_norm}|${a.suburb||''}`;
+          if(!g.has(k))g.set(k,{street:a.street,suburb:a.suburb||null,n:0,bbox:[Infinity,Infinity,-Infinity,-Infinity]});
+          const x=g.get(k);x.n++;if(Number.isFinite(a.lon)&&Number.isFinite(a.lat)){x.bbox=[Math.min(x.bbox[0],a.lon),Math.min(x.bbox[1],a.lat),Math.max(x.bbox[2],a.lon),Math.max(x.bbox[3],a.lat)];}}
+        out.streets=[...g.values()].filter(x=>Number.isFinite(x.bbox[0])).sort((a,b)=>b.n-a.n).slice(0,4);
+      }
+      return out;
     }
     return {rows:[],total:0};
   }
@@ -117,17 +138,19 @@
 
   const TENURE={street:'Street or road',park:'Park or reserve',institutional:'School or institution',private:'Private property',other:'Coastal or water',unknown:'Land type unknown'};
   const BASIS={zone:'the Unitary Plan zone',park_extent:'Council park extents',conservation_land:'park and conservation land records',council_road_reserve:'Council road reserve records',council_property:'Council property records',designation:'a public works designation',golf_course:'a golf course outline',parcel_intent:'the parcel’s recorded purpose',statutory_reserve:'a recorded reserve',zone_school_name:'a school’s zone',open_space_zone_public:'an open space zone on public land',open_space_zone_unconfirmed:'an open space zone without a public-ownership record',verge_reserve:'a narrow roadside strip',parcel_title_unzoned:'a titled island parcel',outside_plan_zones:'no plan zone',no_evidence:'no usable record'};
-  const TIER={very_likely:'very likely',probable:'probable',possible:'possible',unverified:'unverified',possible_duplicate:'possible duplicate',recorded:'recorded tree',not_assessed:'not yet checked',location_unverified:'position unverified',outside_v5_coverage:'earlier record'};
+  // The tier names what it is about ("tree very likely"), never a bare "very likely".
+  const TIER={very_likely:'tree very likely',probable:'tree probable',possible:'tree possible',unverified:'unverified',possible_duplicate:'possible duplicate',recorded:'recorded tree',not_assessed:'not yet checked',location_unverified:'position unverified',outside_v5_coverage:'earlier record'};
   const row=(name,value,sub)=>`<div class="pp-row"><span class="pp-label">${name}</span><span class="pp-value">${value}${sub?`<span class="pp-sub">${sub}</span>`:''}</span></div>`;
   function treeButton(t,i,street){
     const facts=[street?(num(t.distance_m)>0?`${nf(t.distance_m,1)} m outside`:'on the boundary'):null,num(t.height_m)!==null?`${nf(t.height_m,1)} m tall`:null,TIER[t.evidence_tier]||t.evidence_tier].filter(Boolean).join(' · ');
-    return `<li><button type="button" data-property-tree="${esc(t.tree_id)}" data-index="${i}" data-street="${street?1:0}"><span class="pt-rank">${street?'':i+1}</span><span class="pt-name">${esc(t.species_common||'Species not recorded')}<small>${esc(facts)}</small></span>${num(t.total_value_nzd_y)===null?'<span class="pt-value pt-none">not valued</span>':`<span class="pt-value">${money(t.total_value_nzd_y)}<small>/yr</small></span>`}</button></li>`;
+    return `<li><button type="button" data-property-tree="${esc(t.tree_id)}" data-index="${i}" data-street="${street?1:0}"><span class="pt-rank">${street?'':i+1}</span><span class="pt-name">${esc(t.species_common||'Species not recorded')}<small>${esc(facts)}</small></span>${FD().benefitValue(t)===null?'<span class="pt-value pt-none">not valued</span>':`<span class="pt-value">${treeMoney(FD().benefitValue(t))}<small>/yr</small></span>`}</button></li>`;
   }
   function list(rows,street,first=10){
     const head=rows.slice(0,first).map((t,i)=>treeButton(t,i,street)).join(''),rest=rows.slice(first).map((t,i)=>treeButton(t,i+first,street)).join('');
     return `<ol class="property-trees">${head}</ol>`+(rest?`<ol class="property-trees" hidden>${rest}</ol><button type="button" class="property-more" data-property-more>Show all ${nf(rows.length)}</button>`:'');
   }
-  const SOURCES='<p class="pp-note property-sources">Parcels: <a href="https://data.linz.govt.nz/layer/50823" target="_blank" rel="noopener noreferrer">LINZ NZ Primary Parcels</a>, CC BY 4.0. Zones, designations and park extents: Auckland Council, CC BY 4.0. Conservation land: Department of Conservation, CC BY 4.0. Addresses, golf courses and island roads © OpenStreetMap contributors, ODbL.</p>';
+  // Each dataset in the provider's own words (credits.html lists them all).
+  const SOURCES='<p class="pp-note property-sources">Parcels: <a href="https://data.linz.govt.nz/layer/50823" target="_blank" rel="noopener noreferrer">NZ Primary Land Parcels</a>; contains data sourced from the LINZ Data Service licensed for reuse under CC BY 4.0; not for defining legal boundaries. Zones and designations: Plans and Places, Auckland Council; park extents: Auckland Council (CC BY 4.0). Conservation land: Crown Copyright: Department of Conservation Te Papa Atawhai 2026 (CC BY 4.0; retrieved 2 Oct 2026, may be out of date). Addresses, golf courses and island roads: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>, ODbL. <a href="./credits.html">Sources and credits</a>.</p>';
   const CAVEAT='<p class="property-caveat"><strong>Model estimates from aerial surveys; no property valuation.</strong> Land type: inferred from zoning and parcel records; ownership records not used.</p>';
 
   function render(record,{pid,address=null,tile=null}={}){
@@ -135,24 +158,24 @@
     const tenure=p?.tenure||tile?.tn||null,id=p?.pid||pid;
     let html=`<div class="evidence-summary property-summary"><div class="evidence-kicker">${esc(tenure?TENURE[tenure]||tenure:'Property')}</div><h3>${esc(address?label(address):'Land parcel')}</h3><p class="evidence-id">${esc([address?.suburb,`LINZ parcel ${id}`].filter(Boolean).join(' · '))}</p>`;
     if(!p)return html+'<p class="pp-note">No counted trees, canopy or nearby street trees are mapped on this parcel.</p></div><div class="pp-section">'+CAVEAT+SOURCES+'</div>';
-    const conf=num(p.total_value_confident_nzd_y),total=num(p.total_value_nzd_y);
+    const pb=FD().benefit(p)||{value:null,low:null,high:null,confident:null},conf=pb.confident,total=pb.value,v63=pb.basis==='stormwater_carbon';
     html+=`<div class="evidence-metrics">
       <div class="evidence-metric"><span>Trees on the property</span><strong>${nf(p.n_trees)}</strong><p>${nf(p.n_confident)} confident · ${nf(p.n_uncertain)} possible</p></div>
       <div class="evidence-metric"><span>Canopy over the property</span><strong>${nf(p.canopy_m2)}<small> m²</small></strong><p>${nf(p.canopy_cover_pct,1)}% of ${area(p.area_m2)}</p></div>
-      ${p.n_trees>0?`<div class="evidence-metric property-metric-wide"><span>Estimated services each year</span><strong>${money(total)}<small>/yr</small></strong><p>Likely range ${money(p.total_value_nzd_y_low)} to ${money(p.total_value_nzd_y_high)}</p></div>`:''}
+      ${p.n_trees>0?`<div class="evidence-metric property-metric-wide"><span>${v63?'Benefits each year: stormwater and carbon':'Estimated services each year'}</span><strong>${money(total)}<small>/yr</small></strong><p>Likely range ${money(pb.low)} to ${money(pb.high)}</p></div>`:''}
     </div></div>`;
     if(p.n_trees>0){
       html+=`<div class="pp-section"><div class="pp-section-title">Estimated annual services</div>
-        ${row('Stormwater',money(p.stormwater_value_nzd_y)+'/yr',`${vol(p.avoided_runoff_m3_y)} of runoff avoided`)}
-        ${row('Carbon',money(p.carbon_value_nzd_y)+'/yr',`${co2(p.stored_co2e_tonnes_est)} CO₂e stored · ${co2(p.annual_sequestration_tco2e_y_est)} absorbed a year`)}
-        ${row('Air quality',money(p.air_quality_value_nzd_y)+'/yr',`${nf(p.pm25_removed_kg_y,p.pm25_removed_kg_y<10?2:0)} kg of PM2.5 removed`)}
-        ${row('Cooling',money(p.cooling_value_nzd_y)+'/yr','shade and evaporative cooling')}
-        <div class="pp-row property-total"><span class="pp-label">Total</span><span class="pp-value">${money(total)}/yr<span class="pp-sub">range ${money(p.total_value_nzd_y_low)} to ${money(p.total_value_nzd_y_high)}</span></span></div>
+        ${row('Stormwater',money(p.stormwater_value_nzd_y)+'/yr',`${F.volume(p.avoided_runoff_m3_y,{total:true}).replace('/yr','')} of runoff avoided`)}
+        ${row('Carbon',money(p.carbon_value_nzd_y)+'/yr',`${co2(p.stored_co2e_tonnes_est)} stored · ${co2(p.annual_sequestration_tco2e_y_est)} absorbed a year`)}
+        ${p.air_quality_value_nzd_y!==undefined&&p.air_quality_value_nzd_y!==null?row('Air quality',money(p.air_quality_value_nzd_y)+'/yr',`${F.sigText(p.pm25_removed_kg_y,3)} kg of PM2.5 removed`):''}
+        ${p.cooling_value_nzd_y!==undefined&&p.cooling_value_nzd_y!==null?row('Cooling',money(p.cooling_value_nzd_y)+'/yr','shade and evaporative cooling'):''}
+        <div class="pp-row property-total"><span class="pp-label">${v63?'Benefit value (stormwater and carbon)':'Total'}</span><span class="pp-value">${money(total)}/yr<span class="pp-sub">range ${money(pb.low)} to ${money(pb.high)}</span></span></div>
         ${conf!==null&&total!==null&&Math.abs(conf-total)>=0.5?`<p class="pp-note">From the ${nf(p.n_confident)} confident trees alone: ${money(conf)}/yr.</p>`:''}
       </div>`;
     }
     html+=`<div class="pp-section"><div class="pp-section-title">Land &amp; canopy</div>
-      ${row('Land type',esc(TENURE[p.tenure]||p.tenure||'—'),`inferred from ${esc(BASIS[p.tenure_basis]||String(p.tenure_basis||'').replaceAll('_',' '))}`)}
+      ${row('Land type',esc(TENURE[p.tenure]||p.tenure||F.MISSING),`inferred from ${esc(BASIS[p.tenure_basis]||String(p.tenure_basis||'').replaceAll('_',' '))}`)}
       ${p.zone?row('Zone',esc(p.zone)):''}
       ${row('Parcel area',area(p.area_m2))}
       ${row('Canopy',`${nf(p.canopy_m2)} m² · ${nf(p.canopy_cover_pct,1)}%`,`${nf(p.canopy_own_m2)} m² from its own trees · ${nf(p.canopy_overhang_m2)} m² overhanging from neighbours or the street`)}
@@ -163,6 +186,7 @@
       html+=`<div class="pp-section"><div class="pp-section-title">Trees on this property · highest value first</div>${list(trees,false)}
         ${p.trees_truncated?`<p class="pp-note">Listing the ${nf(trees.length)} highest-value of ${nf(p.n_trees)} trees; the totals above include them all.</p><p class="pp-note" data-property-rings>At this zoom the map may ring only these ${nf(trees.length)}. Zoom in until the parcel outline appears to ring all ${nf(p.n_trees)}.</p>`:''}
         ${p.n_earlier_not_counted?`<p class="pp-note">${nf(p.n_earlier_not_counted)} earlier ${p.n_earlier_not_counted===1?'detection is':'detections are'} not counted (see Layers › Earlier unmatched detections).</p>`:''}
+        ${num(p.n_height_not_plausible)?`<p class="pp-note">${nf(p.n_height_not_plausible)} ${num(p.n_height_not_plausible)===1?'crown whose height is':'crowns whose height is'} not plausible (height check) ${num(p.n_height_not_plausible)===1?'is':'are'} not counted.</p>`:''}
       </div>`;
     }else html+=`<div class="pp-section"><p class="pp-note">No counted trees on this parcel.${p.canopy_m2>0?' Canopy from neighbouring or street trees.':''}</p></div>`;
     if(street.length){
@@ -175,7 +199,7 @@
     container.querySelectorAll('[data-property-more]').forEach(b=>b.addEventListener('click',()=>{b.previousElementSibling.hidden=false;b.remove();}));
     container.querySelectorAll('[data-property-tree]').forEach(b=>b.addEventListener('click',()=>{
       const t=(b.dataset.street==='1'?record.street_trees:record.trees)[Number(b.dataset.index)]||{};
-      open({tree_id:t.tree_id,species_common:t.species_common,evidence_tier:t.evidence_tier,total_value_nzd_y:t.total_value_nzd_y,crown_area_m2:t.crown_area_m2,crown_max_chm_m:t.height_m});
+      open({tree_id:t.tree_id,species_common:t.species_common,evidence_tier:t.evidence_tier,...(t.benefit_value_nzd_y!==undefined?{benefit_value_nzd_y:t.benefit_value_nzd_y}:{total_value_nzd_y:t.total_value_nzd_y}),crown_area_m2:t.crown_area_m2,crown_max_chm_m:t.height_m});
     }));
   }
 

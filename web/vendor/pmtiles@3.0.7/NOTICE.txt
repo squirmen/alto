@@ -1,0 +1,7 @@
+PMTiles 3.0.7 (dist/pmtiles.js), https://github.com/protomaps/PMTiles
+BSD-3-Clause licence, Protomaps; licence text: https://github.com/protomaps/PMTiles/blob/main/LICENSE
+
+The bundle includes fflate (https://github.com/101arrowz/fflate), MIT licence.
+
+This copy is byte-identical to https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js
+(sha384-MjejsnWXHmuz93aE35YWLh5AbS/6ceRB3Vb+ukOwqFzJRTpQ8vvbkLbNV7I0QK4f). ALTO loads it only when unpkg.com cannot be reached.

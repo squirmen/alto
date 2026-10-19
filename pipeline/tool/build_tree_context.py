@@ -17,16 +17,43 @@ its street is the street of the nearest OpenStreetMap address point within --max
 Groups are published as quantiles (probabilities 0, 1, ..., 99, 99.5, 99.9, 100); a street group with
 at most --exact-max crowns is published as its sorted values, so the page can state an exact rank.
 
+From data release 6.3 the population, its fields and the counts per group are options, so a release names its own
+tables (none of them is assumed):
+  --population-table TABLE   one row per crown, joined to trees by tree_id (else the v5/v6 service tables)
+  --population-filter SQL    a condition on it, columns prefixed z. (release 6.3: "z.in_comparisons = 1")
+  --class-field, --height-field, --area-field   its columns for the tree class, height and crown area
+  --benefit-table TABLE --benefit-field COLUMN  the benefit value, joined by tree_id
+  --unique-field COLUMN      one row per value of this column of the population table (a crown key: each crown once)
+  --count NAME=COLUMN:KEY,KEY,...   counts per group of COLUMN's values, in that key order (repeat; release 6.3:
+                             bands=replacement_band:... and height_class=height_class:...; without --count the
+                             releases up to 6.2 count irreplaceability classes)
+  --population FILE          or a parquet/CSV population with columns tree_id, lon, lat, cls, benefits, height, area
+                             (and each --count COLUMN)
+  --texts FILE.json          the published wording: population {description, short, rule}, class_field,
+                             metrics {height|crownArea|benefits: {label, field}}, counts {NAME: {field, labels}},
+                             counts_note
+  --built-on DATASET_VERSION the release the tables were built on (default: the metadata's dataset_version),
+                             stamped beside release in comparisons.json and the derived manifest (DB-13)
+
 Usage:
   build_tree_context.py --db RELEASE.sqlite --metadata release-metadata.json --boards local_boards.json \
       --addresses osm_addresses.tsv.gz --out DERIVED/<dataset_version>
+  Release 6.3:
+  build_tree_context.py --db RELEASE.sqlite --metadata release-metadata.json --boards local_boards.json \
+      --addresses osm_addresses.tsv.gz --out DERIVED/<dataset_version> \
+      --population-table tree_size_class_v63 --population-filter "z.in_comparisons = 1" --class-field class_used \
+      --height-field height_m --area-field crown_area_m2 --benefit-table tree_benefits_v63 --benefit-field headline_value_nzd_y \
+      --count bands=replacement_band:under_5y,5_15y,15_40y,40_80y,80y_plus \
+      --count height_class=height_class:very_small,small,medium,large,very_large --texts context_texts_v63.json
 """
 import argparse
 import gzip
 import json
 import math
 import os
+import re
 import sqlite3
+import subprocess
 import time
 from datetime import datetime, timezone
 
@@ -53,6 +80,61 @@ def log(*a):
 
 def tables(c):
     return {r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+
+
+IDENT = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+
+
+def ident(name, what):
+    if not IDENT.match(name or ''):
+        raise SystemExit(f'{what}: not a column or table name: {name!r}')
+    return name
+
+
+def parse_count(spec):
+    """NAME=COLUMN:KEY,KEY,... -> (name, column, [keys])."""
+    m = re.match(r'^([A-Za-z_][A-Za-z0-9_]*)=([A-Za-z_][A-Za-z0-9_]*):(.+)$', spec)
+    if not m:
+        raise SystemExit(f'--count {spec!r}: expected NAME=COLUMN:KEY,KEY,...')
+    return m.group(1), m.group(2), [k.strip() for k in m.group(3).split(',') if k.strip()]
+
+
+def read_population_table(db, a, counts):
+    """The population a release names (--population-table and its fields), one row per crown."""
+    if a.population_filter and ';' in a.population_filter:
+        raise SystemExit('--population-filter: one condition, no ";"')
+    z, cf, hf, af = (ident(a.population_table, '--population-table'), ident(a.class_field, '--class-field'),
+                     ident(a.height_field, '--height-field'), ident(a.area_field, '--area-field'))
+    cols = [f'z.{ident(col, "--count")} AS c_{name}' for name, col, _ in counts]
+    if a.unique_field:
+        cols.append(f'z.{ident(a.unique_field, "--unique-field")} AS u_key')
+    join = ''
+    ben = 'NULL'
+    if a.benefit_table:
+        join = f'LEFT JOIN {ident(a.benefit_table, "--benefit-table")} b ON b.tree_id = z.tree_id'
+        ben = f'b.{ident(a.benefit_field, "--benefit-field")}'
+    elif a.benefit_field:
+        ben = f'z.{ident(a.benefit_field, "--benefit-field")}'
+    q = (f"SELECT z.tree_id, t.lon, t.lat, z.{cf} AS cls, {ben} AS benefits, z.{hf} AS height, z.{af} AS area"
+         f"{''.join(', ' + c for c in cols)} FROM {z} z JOIN trees t ON t.tree_id = z.tree_id {join}"
+         f"{' WHERE ' + a.population_filter if a.population_filter else ''}")
+    c = sqlite3.connect(f'file:{db}?mode=ro&immutable=1', uri=True)
+    try:
+        df = pd.read_sql_query(q, c)
+    finally:
+        c.close()
+    if a.unique_field:
+        df = df.sort_values('tree_id').drop_duplicates(subset=['u_key'], keep='first').drop(columns=['u_key']).reset_index(drop=True)
+    return df
+
+
+def read_population_file(path, counts):
+    df = pd.read_parquet(path) if str(path).endswith('.parquet') else pd.read_csv(path)
+    need = ['tree_id', 'lon', 'lat', 'cls', 'benefits', 'height', 'area'] + [col for _, col, _ in counts]
+    missing = [c for c in need if c not in df.columns]
+    if missing:
+        raise SystemExit(f'{path}: missing columns {missing}')
+    return df.rename(columns={col: f'c_{name}' for name, col, _ in counts})[['tree_id', 'lon', 'lat', 'cls', 'benefits', 'height', 'area'] + [f'c_{n}' for n, _, _ in counts]]
 
 
 def read_population(db):
@@ -111,6 +193,10 @@ def rounded(v, d):
     return [round(float(x), d) for x in v]
 
 
+# Counts per group: [(name, column in the population frame, key order)]; releases up to 6.2 count irreplaceability.
+COUNTS = [('irr', 'irr', IRR)]
+
+
 def group_stats(sub, probs, exact_max=None):
     out = {'n': int(len(sub))}
     if exact_max is not None and len(sub) <= exact_max:
@@ -127,8 +213,9 @@ def group_stats(sub, probs, exact_max=None):
                 out.setdefault('nm', {})[m] = int(len(v))
         if probs is not PROBS:
             out['p'] = probs
-    counts = sub.irr.value_counts()
-    out['irr'] = {k: int(counts.get(k, 0)) for k in IRR}
+    for name, col, keys in COUNTS:
+        counts = sub[col].value_counts()
+        out[name] = {k: int(counts.get(k, 0)) for k in keys}
     return out
 
 
@@ -146,20 +233,31 @@ def write_json(path, obj):
         json.dump(obj, f, separators=(',', ':'), ensure_ascii=False)
 
 
-def register(out_root, release, key, path):
-    """Record a derived product in <out_root>/manifest.json (merged with what is already there)."""
+def register(out_root, release, key, path, built_on=None):
+    """Record a derived product in <out_root>/manifest.json (merged with what is already there); built_on: the release
+    the products were built on (DB-13)."""
     mf = os.path.join(out_root, 'manifest.json')
     m = json.load(open(mf)) if os.path.exists(mf) else {'schema': 'alto.derived-manifest/1', 'release': release, 'products': {}}
     if m.get('release') != release:
         raise SystemExit(f'{mf} is for {m.get("release")}, not {release}')
     m['products'][key] = path
     m['updated_utc'] = datetime.now(timezone.utc).isoformat(timespec='seconds')
+    if built_on:
+        m['built_on'] = built_on
     write_json(mf, m)
+
+
+def tool_commit():
+    try:
+        return subprocess.run(['git', '-C', os.path.dirname(os.path.abspath(__file__)), 'rev-parse', '--short', 'HEAD'],
+                              capture_output=True, text=True, check=True).stdout.strip() or None
+    except Exception:
+        return None
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
-    ap.add_argument('--db', required=True)
+    ap.add_argument('--db', help='the release database (read only); not needed with --population')
     ap.add_argument('--metadata', required=True)
     ap.add_argument('--boards', required=True)
     ap.add_argument('--addresses', required=True)
@@ -168,7 +266,25 @@ def main():
     ap.add_argument('--max-distance', type=float, default=60.0)
     ap.add_argument('--exact-max', type=int, default=60)
     ap.add_argument('--street-shards', type=int, default=256)
+    ap.add_argument('--population-table', help='release 6.3 and later: the table of the comparison population, one row per crown')
+    ap.add_argument('--population-filter', help='a condition on it, columns prefixed z. (release 6.3: "z.in_comparisons = 1")')
+    ap.add_argument('--class-field', default='class_used')
+    ap.add_argument('--height-field', default='height_m')
+    ap.add_argument('--area-field', default='crown_area_m2')
+    ap.add_argument('--benefit-table', help='the table holding the benefit value, joined by tree_id')
+    ap.add_argument('--benefit-field', help='the benefit value column')
+    ap.add_argument('--unique-field', help='one row per value of this population-table column (a crown key)')
+    ap.add_argument('--count', action='append', default=[], help='NAME=COLUMN:KEY,KEY,... counts per group (repeat)')
+    ap.add_argument('--population', help='a parquet or CSV population in place of the database')
+    ap.add_argument('--texts', help='JSON: the population, class-field, metric and count wording to publish')
+    ap.add_argument('--built-on', help='the release the tables were built on (default: the metadata dataset_version)')
     a = ap.parse_args()
+    if not a.db and not a.population:
+        ap.error('--db or --population')
+    if a.population_table and not a.db:
+        ap.error('--population-table reads --db')
+    counts = [parse_count(s) for s in a.count]
+    texts = json.load(open(a.texts)) if a.texts else {}
 
     md = json.load(open(a.metadata))
     release = md['release']['dataset_version']
@@ -176,9 +292,19 @@ def main():
     label = ('v' + m.group(1) + (' dev' if m.group(2) else '')) if m else release
     out = os.path.join(a.out, 'tree_context')
 
-    log('reading population from', os.path.basename(a.db))
-    df, v6 = read_population(a.db)
-    log(len(df), 'service records', '(v6 services merged)' if v6 else '')
+    if a.population:
+        log('reading population from', os.path.basename(a.population))
+        df, v6 = read_population_file(a.population, counts), True
+    elif a.population_table:
+        log('reading population from', os.path.basename(a.db), a.population_table)
+        df, v6 = read_population_table(a.db, a, counts), True
+    else:
+        log('reading population from', os.path.basename(a.db))
+        df, v6 = read_population(a.db)
+    if counts or a.population or a.population_table:
+        global COUNTS
+        COUNTS = [(name, f'c_{name}', keys) for name, _, keys in counts]
+    log(len(df), 'crowns in the population', '(v6 services merged)' if v6 and not (a.population or a.population_table) else '')
     df = df[df.cls.isin(CLASSES.keys())].reset_index(drop=True)
     log(len(df), 'with a tree class')
     df['board'] = assign_boards(df, a.boards)
@@ -229,19 +355,30 @@ def main():
     log(len(cells), 'address cells')
 
     population = {'description': 'Current crowns with a benefit estimate in this release, one per crown (the set the release totals use)',
-                  'short': 'crowns with a benefit estimate', 'n': int(len(df))}
+                  'short': 'crowns with a benefit estimate', **{k: v for k, v in (texts.get('population') or {}).items() if k != 'n'}, 'n': int(len(df))}
+    metrics = {k: {**v, **{f: x for f, x in ((texts.get('metrics') or {}).get(k) or {}).items() if f in ('label', 'field')}} for k, v in METRICS.items()}
+    built_on = a.built_on or release
+    extra = {}
+    if counts:
+        labels = texts.get('counts') or {}
+        extra['counts_per_group'] = {name: {'field': (labels.get(name) or {}).get('field', col), 'keys': keys,
+                                            **({'labels': labels[name]['labels']} if (labels.get(name) or {}).get('labels') else {})}
+                                     for name, col, keys in counts}
+        if texts.get('counts_note'):
+            extra['counts_per_group']['note'] = texts['counts_note']
     write_json(os.path.join(out, 'comparisons.json'), {
         'schema': 'alto.tree-context.comparisons/1', 'release': release, 'release_label': label,
         'generated_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
-        'population': population, 'classes': CLASSES, 'class_field': 'services.species_class',
-        'metrics': METRICS, 'probabilities': PROBS, 'auckland': auckland, 'boards': boards,
+        'population': population, 'classes': CLASSES, 'class_field': texts.get('class_field', 'services.species_class'),
+        'metrics': metrics, 'probabilities': PROBS, 'auckland': auckland, 'boards': boards,
         'board_layer': 'data/local_boards.json',
         'streets': {'cell_path': 'streets/cells/{z}/{x}/{y}.json', 'street_path': 'streets/s/{shard}.json', 'shards': a.street_shards,
                     'zoom': z, 'max_distance_m': a.max_distance, 'exact_max': a.exact_max,
                     'source': 'OpenStreetMap address points (ODbL)', 'n_streets': len(keys)},
         'counts': {'classes': {k: int((df.cls == k).sum()) for k in CLASSES}, 'outside_boards': int(df.board.isna().sum()),
-                   'with_street': int(ok.sum())}})
-    register(a.out, release, 'tree_context', 'tree_context/comparisons.json')
+                   'with_street': int(ok.sum())}, **extra,
+        'built_with': {'script': 'pipeline/tool/build_tree_context.py', 'tool_commit': tool_commit()}, 'built_on': built_on})
+    register(a.out, release, 'tree_context', 'tree_context/comparisons.json', built_on=built_on)
     total = 0
     for root, _, files in os.walk(out):
         total += sum(os.path.getsize(os.path.join(root, f)) for f in files)

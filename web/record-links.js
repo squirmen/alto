@@ -38,7 +38,7 @@
   };
   const STATUS_CLASS={linked_high:'linked',linked_medium:'probable',linked_new_crown:'drawn_from_record'};
   const SOURCE_LABEL={tree_register_points:'The Council tree register',notable_trees_overlay:'The Notable Trees overlay',
-    ruru_obskauri_tiaki_public:'The kauri survey (RŪRU)',osm_natural_tree:'OpenStreetMap'};
+    ruru_obskauri_tiaki_public:'The kauri survey (Ruru)',osm_natural_tree:'OpenStreetMap'};
 
   // The link a tree carries, from its full record when loaded and otherwise from its map tile.
   function link(props,record){

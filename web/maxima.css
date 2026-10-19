@@ -1,0 +1,86 @@
+/* Species maxima list (maxima.html, tool 0.2.8), on the methods template (methods.css, tokens.css).
+   Every picture is the tree's own data: its 2024 crown outline at one scale for the page and, for height, a bar on one
+   metre scale. Text says what each mark means; nothing relies on colour. Below 600 px each row is a card. */
+/* A wider page than the methods pages: the table needs the room; prose keeps its measure. */
+.doc, .app-bar-inner, .site-nav, .site-footer-inner { --page-col: minmax(0, calc(56rem + 2 * var(--card-pad))); }
+.mx-coverage { font: var(--text-body-ui); color: var(--color-text-secondary); }
+.mx-controls { display: grid; gap: var(--space-3); margin: var(--space-5) 0 var(--space-3); }
+.mx-tabs { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; justify-self: start; gap: 2px; padding: var(--space-1); border: 1px solid var(--color-border-subtle); border-radius: 10px; background: var(--color-surface-sunken); }
+.mx-tabs button { appearance: none; min-height: var(--control-sm); padding: 0 var(--space-3); border: 0; border-radius: 7px; background: transparent; color: var(--color-text-secondary); font: 600 var(--fs-sm)/1 var(--font-sans); cursor: pointer; white-space: nowrap; }
+.mx-tabs button:hover { color: var(--color-text); }
+.mx-tabs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: 0 0 0 1px var(--color-text); }
+.mx-tabs button:focus-visible, .mx-table thead button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.mx-fields { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-3); }
+.mx-field { display: grid; gap: var(--space-1); font: var(--text-label); color: var(--color-text-muted); }
+.mx-field input, .mx-field select { min-height: var(--control-sm); padding: 0 var(--space-2); border: 1px solid var(--color-border-input); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); font: 400 var(--fs-md)/1.2 var(--font-sans); }
+.mx-field input { width: 15rem; max-width: 100%; }
+.mx-sort-m { display: none; }
+/* FE-09: the controls and the list's room are on the page from the first paint (disabled until the data arrives), so
+   nothing jumps when it does; a link that names one species reserves less. */
+.mx-controls[data-loading] .mx-map { pointer-events: none; opacity: .6; }
+.mx-wrap[data-loading="list"] { min-height: max(70vh, 480px); }
+.mx-wrap[data-loading="few"] { min-height: 160px; }
+/* A source's link names its place; any long link or code wraps rather than widening a phone's page (A11Y-07). */
+#sources a, .mx-scope a, .table-note a, .mx-coverage a, .doc-body code { overflow-wrap: anywhere; }
+/* Sorting on a touch screen: the measure tabs, the fields, "Sort by" and the header's sort buttons are 44 px tall. */
+@media (pointer: coarse) {
+  .mx-tabs button, .mx-field input, .mx-field select { min-height: var(--target-touch); }
+  .mx-table thead button { display: inline-flex; align-items: center; min-height: var(--target-touch); }
+}
+.mx-map { margin-left: auto; }
+.mx-count { margin: var(--space-2) 0 0; font: var(--text-label); color: var(--color-text-muted); }
+.mx-count .mx-retry { margin-left: var(--space-2); vertical-align: middle; }
+
+.mx-wrap { margin-top: var(--space-2); }
+.mx-table { font: var(--text-body-ui); }
+.mx-table thead th { white-space: nowrap; }
+.mx-table thead button { appearance: none; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; text-decoration: underline; text-decoration-color: var(--color-border-strong); text-underline-offset: 3px; }
+.mx-table thead th[aria-sort="ascending"] button::after { content: " ↑"; }
+.mx-table thead th[aria-sort="descending"] button::after { content: " ↓"; }
+.mx-table td, .mx-table tbody th { vertical-align: middle; }
+.mx-table tbody th { font-weight: 600; }
+.mx-table tbody th i { display: block; font-weight: 400; color: var(--color-text-secondary); }
+.mx-c { width: 52px; }
+.mx-crown { display: block; color: var(--color-text); background: var(--color-surface-sunken); border-radius: var(--radius-xs); }
+.mx-crown polygon { fill: color-mix(in srgb, currentColor 14%, transparent); stroke: currentColor; stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.mx-v { min-width: 9.5rem; }
+.mx-num b { font-weight: 600; color: var(--color-text); font-variant-numeric: tabular-nums; }
+.mx-pm { color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.mx-bar { display: block; width: 100%; max-width: 9rem; height: 4px; margin-top: var(--space-1); background: var(--color-border-subtle); border-radius: 2px; }
+.mx-bar i { display: block; height: 100%; background: var(--color-text); border-radius: 2px; }
+.mx-cap { display: block; max-width: 15rem; margin-top: var(--space-1); font: var(--text-caption); color: var(--color-text-secondary); }
+/* Release 6.3: a species ranked under its accepted Latin name names the name its records carry. */
+.mx-as { display: block; margin-top: 2px; font: var(--text-caption); color: var(--color-text-secondary); }
+.mx-tie { display: block; margin-top: var(--space-1); font: var(--text-caption); color: var(--color-text-secondary); }
+.mx-t { white-space: nowrap; }
+.mx-t code { font-weight: 600; }
+.mx-pin { margin-left: var(--space-1); font: var(--text-caption); }
+.mx-n { color: var(--color-text-secondary); }
+.mx-n-tie { max-width: 15rem; font: var(--text-caption); color: var(--color-text-secondary); }
+.mx-n-tie small { display: block; color: var(--color-text-muted); }
+.mx-scope { margin: 0 0 var(--space-3); padding: var(--space-2) var(--space-3); border-left: 3px solid var(--color-border-strong); font: var(--text-body-ui); color: var(--color-text-secondary); }
+
+@media (max-width: 599px) {
+  .mx-tabs { justify-self: stretch; }
+  .mx-tabs button { min-height: var(--target-touch); padding: 0 var(--space-2); }
+  .mx-fields { display: grid; grid-template-columns: 1fr 1fr; }
+  .mx-field input, .mx-field select { width: 100%; min-height: var(--target-touch); font-size: 16px; }
+  .mx-field:first-of-type { grid-column: 1 / -1; }
+  .mx-sort-m { display: grid; }
+  .mx-map { grid-column: 1 / -1; margin-left: 0; min-height: var(--target-touch); }
+  .mx-wrap { overflow: visible; }
+  .mx-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .mx-table, .mx-table tbody { display: block; }
+  .mx-table tr { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; column-gap: var(--space-3); row-gap: 2px; padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-subtle); }
+  .mx-table td, .mx-table tbody th { display: block; padding: 0; border: 0; }
+  .mx-table tbody th { position: static; grid-column: 2 / 4; grid-row: 1; background: none; }
+  .mx-table .mx-c { grid-column: 1; grid-row: 1 / 4; width: auto; }
+  .mx-table .mx-v { grid-column: 2 / 4; grid-row: 2; min-width: 0; }
+  .mx-table .mx-t { grid-column: 2; grid-row: 3; }
+  .mx-table .mx-n { grid-column: 3; grid-row: 3; text-align: right; }
+  .mx-table .mx-n-tie { grid-column: 2 / 4; grid-row: 5; max-width: none; text-align: left; }
+  .mx-table .mx-b { grid-column: 2 / 4; grid-row: 4; font: var(--text-caption); color: var(--color-text-muted); }
+}
+@media print {
+  .mx-controls, .mx-pin { display: none !important; }
+}

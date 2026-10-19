@@ -1,0 +1,6 @@
+MapLibre GL JS 4.7.1 (dist/maplibre-gl.js and dist/maplibre-gl.css), https://github.com/maplibre/maplibre-gl-js
+BSD-3-Clause licence: LICENSE.txt in this folder.
+
+These copies are byte-identical to https://unpkg.com/maplibre-gl@4.7.1/dist/ (maplibre-gl.js
+sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj; maplibre-gl.css
+sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V). ALTO loads them only when unpkg.com cannot be reached.

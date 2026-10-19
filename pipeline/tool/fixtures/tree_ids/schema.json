@@ -1,0 +1,70 @@
+{
+ "bucket_algorithm": "fnv1a_utf8_mod65536_hex4_split2",
+ "bucket_note": "FNV-1a (32-bit, UTF-8 bytes) of the key, mod 65536, four hex digits as {hh}/{hh}.json.gz; the tree_details layout.",
+ "counts": {
+  "by_status": {
+   "current": 16090609,
+   "member": 2038080,
+   "merged": 5,
+   "retired": 1058072,
+   "split": 189399
+  },
+  "by_type": {
+   "number": 4200336,
+   "seg_key_seeded_v52": 534,
+   "seg_key_v4": 5576618,
+   "seg_key_v5": 3352852,
+   "tree_id": 6238420,
+   "tree_id_deleted": 7405
+  },
+  "bytes": 401366913,
+  "files": 65536,
+  "keys": 19376165,
+  "largest_file_bytes": 7737
+ },
+ "generated_utc": "2026-10-12T13:00:00.288411+00:00",
+ "keys": "tree numbers (canonical: upper case, no hyphen), akl_tree_* record IDs, v4 and v5 crown keys as published",
+ "notes": {
+  "C#####": "a reviewer correction, see data/corrections-applied.json",
+  "deleted_pointcloud_false_positive": "removed in Sep 2026 before the 9 Sep release: the 2024 point cloud showed no tree at this LiDAR detection (roof, vessel, crane or water); no successor",
+  "seeded_crown_retired": "a crown drawn from a record in v5.2 that a reviewer moved to another crown; the successor is that record's tree",
+  "v4_continues": "v4 crown continuing as this crown (at least half of it lies in this crown and no other crown holds a fifth)",
+  "v4_not_continued": "v4 crown no current crown continues; the successor is the tree its representative record belongs to now",
+  "v4_outside_v5": "v4 crown outside the 2024 v5 survey, still drawn",
+  "v4_split": "v4 crown divided between several current crowns (each holds at least a fifth of it; largest share first)"
+ },
+ "number_format": {
+  "alphabet": "0123456789ABCDEFGHJKMNPQRSTVWXYZ",
+  "check": "Luhn mod 32 over the 6 characters after T",
+  "input": "any case; spaces and hyphens ignored; I and L read as 1, O as 0",
+  "pattern": "^T[0-9A-HJKMNP-TV-Z]{7}$",
+  "url": "https://alto.tfwelch.com/tree/{number}"
+ },
+ "release": "20261013-v6.1",
+ "row": [
+  "canonical",
+  "detail",
+  "status",
+  "successor",
+  "note",
+  "extra"
+ ],
+ "row_note": "canonical = the tree number the key resolves to (null for a number itself, a split or a tombstone); detail = the tree_id whose full record shows that tree (null: the key itself); trailing nulls are omitted.",
+ "schema": "alto-tree-ids/1",
+ "statuses": {
+  "current": "the key is the tree, its marker record or its crown",
+  "member": "a record on the tree's crown without a marker of its own",
+  "merged": "merged into the tree named by successor (a reviewer correction)",
+  "retired": "no tree carries it now; successor names the tree that replaced it, if any; extra.p is the last known position",
+  "split": "divided between the trees in successor (largest share first)"
+ },
+ "subset": {
+  "keys": 20,
+  "note": "Test fixture: a few rows of the published table, plus synthetic rows labelled below.",
+  "synthetic_keys": [
+   "TKYTE01R",
+   "TKYTE02P"
+  ]
+ },
+ "version": 1
+}

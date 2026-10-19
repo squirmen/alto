@@ -2,7 +2,8 @@
  *
  * From data release v6.1 every map tree has a permanent number: "T" + 6 Crockford base-32 characters + a Luhn
  * mod 32 check character (e.g. T8K5P7T3). It may be typed in any case, with spaces or a hyphen (T8K5-P7T3); I and
- * L read as 1 and O as 0. Numbers are random and never reused. akl_tree_* stays the record ID (the key of a full
+ * L read as 1 and O as 0; a no-break space, the dashes U+2010-2015 and zero-width characters count as separators, and
+ * punctuation copied from around a link (TMCTT6X4. or (TMCTT6X4)) is dropped. Numbers are random and never reused. akl_tree_* stays the record ID (the key of a full
  * record); a tree's records all carry its number.
  *
  * The release's alias table (release-metadata derived_products.tree_ids -> data/tree_ids/schema.json, 65,536
@@ -29,6 +30,21 @@
   const FAMILY=/^(akl_tree_)?(trp|not|kau|osm|lid|pc4|pc5|lcp|pcm)_[A-Za-z0-9_]+$/i;
   const PUBLIC_ORIGIN='https://alto.tfwelch.com';
 
+  // ---- typed and copied text
+  // Separators in a typed or copied number, as KYTE reads them (app/treeid.js, api/lib/numbers.php): any space (a
+  // no-break space from a copied page), a hyphen, the dashes U+2010-2015 and zero-width characters.
+  const SEP=/[\s\u2010-\u2015\u200B-\u200D\u2060\uFEFF-]/g,EDGE=/^[\s\u200B-\u200D\u2060\uFEFF]+|[\s\u200B-\u200D\u2060\uFEFF]+$/g;
+  // Punctuation a link picks up from the sentence around it: /tree/TMCTT6X4. or (see /tree/TMCTT6X4).
+  const WRAP=/^[(\[{"'\u2018\u201C\u00AB]+|[.,;:!?)\]}"'\u2019\u201D\u00BB]+$/g;
+  // The text of an input or a link: %-escapes decoded, outer spaces and wrapping punctuation dropped.
+  function tidy(raw){
+    let s=String(raw??'');
+    try{s=decodeURIComponent(s);}catch{}
+    return s.replace(EDGE,'').replace(WRAP,'').replace(EDGE,'');
+  }
+  // The same text with every separator dropped and upper-cased: the form a number is read in.
+  const compact=raw=>tidy(raw).replace(SEP,'').toUpperCase();
+
   // ---- numbers
   const value=c=>ALPHABET.indexOf(c);
   function luhn(chars,startFactor){
@@ -38,23 +54,27 @@
   }
   const checkChar=payload=>ALPHABET[(32-luhn(payload,2)%32)%32];
   const validNumber=n=>NUMBER.test(n)&&luhn(n.slice(1),1)%32===0;
-  // -> {number, problem}: any case, spaces and hyphens ignored, I/L read as 1 and O as 0, check character verified.
+  const NO_U='Tree numbers do not use the letter U: is a character mistyped?';
+  // -> {number, problem}: any case, separators ignored, I/L read as 1 and O as 0, check character verified.
   function parseNumber(raw){
-    const s=String(raw??'').replace(/[\s-]/g,'').toUpperCase();
+    const s=compact(raw);
     if(s.length!==8||s[0]!=='T')return {number:null,problem:'not a tree number'};
     const body=s.slice(1).replace(/[IL]/g,'1').replace(/O/g,'0');
-    if(!/^[0-9A-HJKMNP-TV-Z]{7}$/.test(body))return {number:null,problem:'not a tree number'};
+    if(!/^[0-9A-HJKMNP-TV-Z]{7}$/.test(body))return {number:null,problem:/^[0-9A-Z]{7}$/.test(body)?NO_U:'not a tree number'};
     const n='T'+body;
     return validNumber(n)?{number:n,problem:null}:{number:null,problem:'The check character does not match: is a character mistyped?'};
   }
   const isNumber=s=>!!parseNumber(s).number;
-  // Typed like a number, valid or not: T and 7 letters or digits with at least one digit (spaces and hyphens
-  // ignored), so 8-letter words such as Takapuna or Tanekaha are left to the place and species search.
-  const isNumberShaped=s=>{const t=String(s??'').replace(/[\s-]/g,'').toUpperCase();return /^T[0-9A-Z]{7}$/.test(t)&&/\d/.test(t);};
+  // Shaped like a number, valid or not: T and 7 letters or digits once separators are dropped, in any case. A tree
+  // link or the tree page reads every such input as a number (TATFKBGX is a mistyped number, never a record ID).
+  const isNumberShaped=s=>/^T[0-9A-Z]{7}$/.test(compact(s));
+  // The map's search is stricter: an 8-letter word such as Takapuna or Tanekaha is left to the place and species
+  // search unless it carries a digit or is typed in capitals, as numbers are printed.
+  const typedAsNumber=s=>{const t=tidy(s);return isNumberShaped(t)&&(/\d/.test(t)||t===t.toUpperCase());};
   // The well-formed numbers one keystroke from a mistyped one: one character changed (exactly one per position
   // passes the check) or two neighbours swapped. Empty for a valid number or anything not typed like one.
   function nearNumbers(raw){
-    const s=String(raw??'').replace(/[\s-]/g,'').toUpperCase();
+    const s=compact(raw);
     if(s.length!==8||s[0]!=='T')return [];
     const body=s.slice(1).replace(/[IL]/g,'1').replace(/O/g,'0');
     if(!/^[0-9A-HJKMNP-TV-Z]{7}$/.test(body)||validNumber('T'+body))return [];
@@ -65,18 +85,19 @@
   }
 
   // ---- IDs
-  // "akl_tree_trp_ACCT0050811", "trp_ACCT0050811" and " AKL_TREE_trp_ACCT0050811 " all mean one record; a number is
-  // returned in its canonical form; crown keys pass through as published.
+  // "akl_tree_trp_ACCT0050811", "trp_ACCT0050811" and " AKL_TREE_TRP_ACCT0050811. " all mean one record (the prefix
+  // and the source family are lower case in every record ID); a number is returned in its canonical form; crown keys
+  // pass through as published.
+  const FAMILY_HEAD=/^akl_tree_(trp|not|kau|osm|lid|pc4|pc5|lcp|pcm)_/i;
   function normalise(raw){
-    let s=String(raw??'').trim();
-    try{s=decodeURIComponent(s);}catch{}
+    let s=tidy(raw);
     const p=parseNumber(s);
     if(p.number)return p.number;
-    if(/^The check/.test(p.problem||''))return null;   // number-shaped but mistyped: never guess a record ID from it
+    if(isNumberShaped(s))return null;   // shaped like a number but not one: never guess a record ID from it
     if(CROWN_V5.test(s)||CROWN_V4.test(s))return s;
     s=s.replace(/^akl_tree_/i,PREFIX);
     if(!s||!VALID.test(s))return null;
-    return s.startsWith(PREFIX)?s:PREFIX+s;
+    return (s.startsWith(PREFIX)?s:PREFIX+s).replace(FAMILY_HEAD,(m,f)=>`${PREFIX}${f.toLowerCase()}_`);
   }
   const kindOf=key=>!key?null:NUMBER.test(key)?'number':CROWN_V5.test(key)?'crown_key':CROWN_V4.test(key)?'crown_key_v4':key.startsWith(PREFIX)?'record':'other';
   const short=id=>String(id||'').replace(/^akl_tree_/,'');
@@ -88,12 +109,19 @@
     const h=fnv(key)%65536;return `${(h>>8).toString(16).padStart(2,'0')}/${(h&255).toString(16).padStart(2,'0')}.json.gz`;
   }
   const tables=new Map(),packs=new Map();
+  // Three outcomes for every file: found, absent (404) and unavailable (a network error, a server error or a file that
+  // cannot be read). An unavailable file is never reported as an absent tree: the error says which file and why.
+  const fileOf=url=>String(url).replace(/\?.*$/,'').replace(/^.*?\/data\//,'data/').replace(/^\.\//,'');
+  function unavailable(url,reason){const e=new Error(`Not loaded: ${fileOf(url)} (${reason}).`);e.unavailable=true;e.file=fileOf(url);e.reason=reason;return e;}
   async function json(url){
-    const res=await fetch(url);
-    if(!res.ok){const e=new Error(`ID table request failed (${res.status})`);e.status=res.status;throw e;}
-    let bytes=new Uint8Array(await res.arrayBuffer());
-    if(bytes[0]===31&&bytes[1]===139)bytes=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
-    return JSON.parse(new TextDecoder().decode(bytes));
+    let res;
+    try{res=await (root.ALTO_PREFETCH?.take?.(url)||fetch(url));}catch{throw unavailable(url,'network error');}  // FE-03: a schema tree.html started early
+    if(!res.ok){if(res.status!==404)throw unavailable(url,`HTTP ${res.status}`);const e=new Error(`ID table request failed (${res.status})`);e.status=res.status;throw e;}
+    try{
+      let bytes=new Uint8Array(await res.arrayBuffer());
+      if(bytes[0]===31&&bytes[1]===139)bytes=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }catch{throw unavailable(url,'could not be read');}
   }
   function aliasTable(metadata){return metadata?.derived_products?.tree_ids||null;}
   function tableDir(path,base){return `${String(base||'./data').replace(/\/+$/,'')}/${String(path).replace(/^data\//,'').replace(/\/schema\.json$/,'')}`;}
@@ -126,22 +154,28 @@
     const base={input:raw,key,kind:kindOf(key),tree_id:null,canonical:null,number:null,status:'invalid',relation:null,successor:null,successors:[],
       note:null,reason:null,position:null,last_release:null,source_id:null,record:null,resolved_by:'format'};
     if(!key){
-      const p=parseNumber(String(raw??'').trim());
-      return {...base,note:/^The check/.test(p.problem||'')?p.problem:'This is not a tree ID ALTO recognises.'};
+      const p=parseNumber(raw);
+      return {...base,note:p.problem&&p.problem!=='not a tree number'?p.problem:isNumberShaped(raw)?'Not a valid tree number.':'This is not a tree number or record ID that ALTO recognises.'};
     }
+    // The release metadata itself did not load: nothing about the input can be said yet.
+    if(options.metadataError)return {...base,status:'unavailable',note:`Not loaded: ${options.metadataError.file||'release-metadata.json'} (${options.metadataError.reason||'error'}).`,
+      file:options.metadataError.file||'release-metadata.json',reason:options.metadataError.reason||'error',resolved_by:'none'};
     let t=null;
-    try{t=await table(options);}catch{t=null;}
+    try{t=await table(options);}catch(e){
+      // The release lists a table and it did not load: unavailable, never "no table" or "no tree".
+      if(e.unavailable||e.status!==404)return {...base,status:'unavailable',note:e.unavailable?e.message:`Not loaded: the tree number table (${e.message}).`,file:e.file||null,reason:e.reason||null,resolved_by:'none'};
+      t=null;
+    }
     if(!t){
       // Releases before v6.1: a record ID is its own detail key; numbers and crown keys cannot be resolved here.
       if(base.kind==='record')return {...base,tree_id:key,canonical:key,status:'current',relation:'record',resolved_by:'release_tree_id'};
       return {...base,status:'unknown',note:'This release has no table of permanent tree numbers.',resolved_by:'none'};
     }
     let hit=null;
-    try{hit=await row(t,key);}catch{hit=null;}
-    if(!hit){
-      if(base.kind==='record')return {...base,tree_id:key,canonical:key,status:'current',relation:'record',resolved_by:'release_tree_id'};
-      return {...base,status:'unknown',note:base.kind==='number'?'No tree has this number.':'This ID is not in the release\'s ID table.',resolved_by:'alias_table'};
-    }
+    try{hit=await row(t,key);}catch(e){return {...base,status:'unavailable',note:e.unavailable?e.message:`Not loaded: the tree number table (${e.message}).`,file:e.file||null,reason:e.reason||null,resolved_by:'alias_table'};}
+    // The table holds every number, record ID and crown key the releases published: a key it does not hold is
+    // unknown, a record ID included (it is not opened as a record of its own).
+    if(!hit)return {...base,status:'unknown',note:base.kind==='number'?'No tree has this number.':'This ID is not in the release\'s ID table.',resolved_by:'alias_table'};
     const out={...base,resolved_by:'alias_table',note:noteText(hit.note,t.schema),record:base.kind==='record'?key:null,
       reason:hit.extra?.reason||hit.note||null,last_release:hit.extra?.last_release||null,source_id:hit.extra?.source_tree_id||null,
       position:Array.isArray(hit.extra?.p)?{lon:hit.extra.p[0],lat:hit.extra.p[1]}:null};
@@ -188,8 +222,8 @@
   // invalid. fix: that lookup's answer for a mistyped number (undefined while it runs, null for none).
   function searchEntry(text,fix){
     const t=String(text??'').trim();
-    if(isNumberShaped(t)&&!isNumber(t)){
-      const key=t.replace(/[\s-]/g,'').toUpperCase();
+    if(typedAsNumber(t)&&!isNumber(t)){
+      const key=compact(t);
       if(fix===null||!nearNumbers(key).length)return {kind:'invalid',key,label:MESSAGES.invalid,meta:'Tree number'};
       if(fix===undefined)return {kind:'checking',key,label:'Checking the tree number…',meta:'Tree number'};
       return {kind:'mistyped',key:fix,label:MESSAGES.mistyped(fix),meta:'Tree number'};
@@ -208,8 +242,9 @@
       case 'split':return {status:'split',heading:`Split: ${short||`divided between ${n} trees`}`,note:`${what} was split between ${n} trees; the largest part is tree ${r.successors[0]}.`};
       case 'retired':return {status:'retired',heading:`Retired: ${short||'no tree carries this ID'}`,
         note:r.successor?`${what} is retired (${short||'replaced'}); its successor is tree ${r.successor}.`:`${what} is retired: ${short||'no tree carries it now'}.`};
-      case 'unknown':return {status:'unknown',heading:r.resolved_by==='none'?`${label(r.kind)} not in this release`:r.kind==='number'?'No tree has this number':'Unknown tree ID',note:r.note};
-      default:return {status:'invalid',heading:isNumberShaped(r.input)?MESSAGES.invalid:'Not a tree ID',note:r.note};
+      case 'unknown':return {status:'unknown',heading:r.resolved_by==='none'?`${label(r.kind)} not in this release`:r.kind==='number'?'No tree has this number':'Unknown record ID',note:r.note};
+      case 'unavailable':return {status:'unavailable',heading:'Not loaded',note:r.note};
+      default:return {status:'invalid',heading:isNumberShaped(r.input)?MESSAGES.invalid:'Not a tree number or record ID',note:r.note};
     }
   }
 
@@ -232,12 +267,12 @@
     const l=loc||(typeof location!=='undefined'?location:null);
     if(!l)return null;
     const u=new URL(l.href||String(l));
-    const m=u.pathname.match(/\/tree\/([^/?#]+)\/?$/);
+    const m=u.pathname.match(/\/tree\/([^/?#]+)\/?$/i);
     if(m)return decodeURIComponent(m[1]);
     return u.searchParams.get('id')||u.searchParams.get('tree');
   }
-  const looksLikeId=s=>{const t=String(s||'').trim();return FAMILY.test(t)||isNumber(t)||CROWN_V5.test(t)||CROWN_V4.test(t);};
-  const api={PREFIX,ALPHABET,normalise,short,parseNumber,isNumber,isNumberShaped,nearNumbers,suggestNumber,checkChar,validNumber,kindOf,resolve,url,permalink,fromLocation,
+  const looksLikeId=s=>{const t=tidy(s);return FAMILY.test(t)||isNumber(t)||CROWN_V5.test(t)||CROWN_V4.test(t);};
+  const api={unavailable,fileOf,PREFIX,ALPHABET,tidy,compact,normalise,short,parseNumber,isNumber,isNumberShaped,typedAsNumber,nearNumbers,suggestNumber,checkChar,validNumber,kindOf,resolve,url,permalink,fromLocation,
     looksLikeId,aliasTable,bucketPath,label,shortReason,describe,searchEntry,MESSAGES};
   root.ALTOTreeId=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;

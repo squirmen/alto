@@ -18,6 +18,12 @@
 // design system's ordinal ramps, whose neighbouring steps are 9.8–10.3 for every reader. Brick (Notable
 // Trees schedule) against green (Council Parks) is 17.4 under deuteranopia and 25.0 under protanopia.
 // Ordinal legends must also keep lightness monotone, so their order reads without hue.
+//
+// Hard rule (12 Oct 2026): never red or brick against green or olive with the same mark. Under dichromacy every
+// warm colour falls on one hue axis, so a simulated-hue test cannot see it; the rule names the banned pair in normal
+// vision instead: two same-mark categories fail when one has a CIELCh hue of 0–60° or 330–360° and the other 90–180°,
+// both with chroma 15 or more (tool 0.2.8's #3ca17b, h 164°, against #a74639, h 35°, fails; so would #bc662f, h 56°,
+// beside a green).
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path');
 const web=path.join(__dirname,'..','..','web');
@@ -49,6 +55,15 @@ function de2000([L1,a1,b1],[L2,a2,b2]){ // Sharma, Wu & Dalal (2005)
   const Rt=-Math.sin(2*30*Math.exp(-(((hb-275)/25)**2))*rad)*Rc;
   return Math.sqrt((dL/Sl)**2+(dC/Sc)**2+(dH/Sh)**2+Rt*(dC/Sc)*(dH/Sh));}
 const dE=(x,y,type)=>de2000(lab(simulate(hex(x),type)),lab(simulate(hex(y),type)));
+// CIELCh of a colour in normal vision: [L, C, h°].
+const lch=c=>{const [L,a,b]=lab(simulate(hex(c),null));let h=Math.atan2(b,a)*180/Math.PI;if(h<0)h+=360;return [L,Math.hypot(a,b),h];};
+const redOrBrick=c=>{const [,C,h]=lch(c);return C>=15&&(h<=60||h>=330);};
+const greenOrOlive=c=>{const [,C,h]=lch(c);return C>=15&&h>=90&&h<=180;};
+const redGreen=(x,y)=>redOrBrick(x)&&greenOrOlive(y)||redOrBrick(y)&&greenOrOlive(x);
+// The rule catches the pair it was written for, and the one the review named.
+assert.ok(redGreen('#3ca17b','#a74639'),'#3ca17b (h 164°) against #a74639 (h 35°) is a red–green pair');
+assert.ok(redGreen('#bc662f','#3ca17b'),'#bc662f (h 56°) beside green is a red–green pair');
+assert.ok(!redGreen('#16558c','#3ca17b')&&!redGreen('#ba7f14','#3ca17b'),'blue and ochre against green are not');
 // Reference values (Sharma et al. 2005, pairs 1 and 17) and a known failure: the old change palette.
 assert.ok(Math.abs(de2000([50,2.6772,-79.7751],[50,0,-82.7485])-2.0425)<1e-3,'CIEDE2000 pair 1');
 assert.ok(Math.abs(de2000([50,2.5,0],[73,25,-18])-27.1492)<1e-3,'CIEDE2000 pair 17');
@@ -76,6 +91,10 @@ for(const k of Object.keys(P.LEGENDS))for(const r of P.legend(k).rows){
 }
 function check(name,rows){
   const worst={};
+  for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){
+    const a=rows[i],b=rows[j];if(a.mark!==b.mark)continue;
+    assert.ok(!redGreen(a.colour,b.colour),`${name}: "${a.label}" (${a.legend}, ${a.colour}, h ${lch(a.colour)[2].toFixed(0)}°) and "${b.label}" (${b.legend}, ${b.colour}, h ${lch(b.colour)[2].toFixed(0)}°) are red or brick against green or olive with the same mark (${a.mark})`);
+  }
   for(const v of VISION){
     let w={d:Infinity};
     for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){
@@ -116,7 +135,7 @@ for(const [k,leg] of Object.entries(P.LEGENDS)){
 }
 // 4. No colour outside the palette: map paint colours in index.html and the modules that draw categories
 //    come from palette.js (tokens), never from a literal.
-const page=fs.readFileSync(path.join(web,'index.html'),'utf8');
+const page=(fs.readFileSync(path.join(web,'index.html'),'utf8')+fs.readFileSync(path.join(web,'map-app.js'),'utf8'));
 const literal=page.match(/"(?:circle|fill|line|icon|text)-(?:color|stroke-color|outline-color|halo-color)"\s*:\s*"#[0-9a-f]{3,8}"/gi);
 assert.equal(literal,null,`map paint colours must come from palette.js: ${literal}`);
 for(const f of ['sources.js','growth-form.js','area.js','record-links.js','tree-page.js','tree-instrument.js','tree-panel.js','tree-imagery.js']){

@@ -100,8 +100,9 @@ const R=raw=>Id.resolve(raw,{base:'./data',version:'t',metadata:META});
   assert.deepEqual([r.status,r.tree_id],['unknown',null]);
   r=await R(N1.slice(0,7)+(N1[7]==='0'?'1':'0'));
   assert.equal(r.status,'invalid');assert.match(r.note,/check character/);
-  r=await R('akl_tree_trp_NOT_IN_TABLE');   // a record ID missing from the table still opens its own record
-  assert.deepEqual([r.tree_id,r.status,r.resolved_by],['akl_tree_trp_NOT_IN_TABLE','current','release_tree_id']);
+  r=await R('akl_tree_trp_NOT_IN_TABLE');   // UX-13: a record ID the table does not hold is unknown, not opened as a record
+  assert.deepEqual([r.tree_id,r.status,r.resolved_by,r.note],[null,'unknown','alias_table','This ID is not in the release\'s ID table.']);
+  assert.equal(Id.describe(r).heading,'Unknown record ID');
   // releases before v6.1 (no table): record IDs resolve to themselves, numbers cannot be resolved
   r=await Id.resolve('trp_ACCT0050811',{base:'./data',version:'1',metadata:{}});
   assert.deepEqual([r.tree_id,r.canonical,r.status,r.resolved_by],['akl_tree_trp_ACCT0050811','akl_tree_trp_ACCT0050811','current','release_tree_id']);
@@ -127,6 +128,41 @@ const R=raw=>Id.resolve(raw,{base:'./data',version:'t',metadata:META});
       n++;
     }
     console.log(`real bundle: ${n} cases resolved as expected`);
+  }
+  // ---- UX-13: the vectors shared with KYTE, and the cases they hold (fixtures/tree_ids: rows from the release table)
+  {
+    const V=require('./tree_number_vectors.cjs'),v=await V.build();
+    assert.equal(fs.readFileSync(V.OUT,'utf8'),V.text(v),'fixtures/tree_number_vectors.json is what tree-id.js answers (node pipeline/tool/tree_number_vectors.cjs)');
+    const c=Object.fromEntries(v.cases.map(x=>[x.input,x]));
+    // a link copied from a sentence, %-escaped or typed with other spaces and dashes opens TMCTT6X4
+    for(const t of ['TMCTT6X4.','TMCTT6X4)','(TMCTT6X4)','TMCT%20T6X4','tmct-t6x4','TMCT\u00A0T6X4','TMCT\u2010T6X4','TMCT\u2011T6X4','TMCT\u2012T6X4','TMCT\u2013T6X4','TMCT\u2014T6X4','TMCT\u2015T6X4','TMCT\u200BT6X4'])
+      assert.deepEqual([c[t].normalise,c[t].resolve.status,c[t].resolve.number,c[t].resolve.tree_id],['TMCTT6X4','current','TMCTT6X4','akl_tree_not_336'],JSON.stringify(t));
+    for(const l of v.links)assert.equal(l.normalise,'TMCTT6X4',l.url);
+    assert.ok(v.links.some(l=>/\/Tree\//.test(l.url))&&v.links.some(l=>/\/TREE\/tmct-t6x4\//.test(l.url)),'/Tree/ and /TREE/ in the links');
+    // every 8-character input starting with T is shaped like a number
+    assert.deepEqual([c.TATFKBGX.isNumberShaped,c.TATFKBGX.resolve.status,c.TATFKBGX.suggest],[true,'invalid','TATFKBGZ'],'TATFKBGX offers TATFKBGZ');
+    assert.deepEqual([c.TZZZZZZZ.isNumberShaped,c.TZZZZZZZ.suggest,c.TZZZZZZZ.resolve.note],[true,null,'The check character does not match: is a character mistyped?'],'TZZZZZZZ: the check character fails');
+    assert.equal(Id.describe({...c.TZZZZZZZ.resolve,input:'TZZZZZZZ'}).heading,'Not a valid tree number');
+    for(const w of ['Takapuna','Tanekaha'])assert.deepEqual([c[w].isNumberShaped,c[w].normalise,c[w].resolve.status],[true,null,'invalid'],`${w}: a link reads it as a number, never a record ID`);
+    assert.equal(c.Takapuna.resolve.note,'Tree numbers do not use the letter U: is a character mistyped?');
+    // ... while the map's search leaves 8-letter words to the place and species search
+    assert.deepEqual(['Takapuna','Tanekaha','TATFKBGX','TANEKAHA','tatfkbgx','t1234567'].map(Id.typedAsNumber),[false,false,true,true,false,true]);
+    // record IDs: the family folds to lower case; a record ID the table does not hold is unknown
+    assert.deepEqual([c.AKL_TREE_NOT_336.normalise,c.AKL_TREE_NOT_336.resolve.status,c.AKL_TREE_NOT_336.resolve.number],['akl_tree_not_336','current','TMCTT6X4']);
+    for(const t of ['akl_tree_does_not_exist','akl_tree_lid_9999999'])assert.deepEqual([c[t].resolve.status,c[t].resolve.tree_id],['unknown',null],t);
+    assert.equal(Id.normalise('AKL_TREE_TRP_ACCT0050811'),'akl_tree_trp_ACCT0050811','the family folds; the source ID keeps its case');
+    assert.equal(Id.normalise('<script>'),null);
+    // Shared with KYTE: its tests read the same file (tests/fixtures/tree_number_vectors.json, numbers.test.js and
+    // numbers_test.php), byte for byte, with the release table's rows the cases need. Checked when a KYTE checkout sits
+    // beside this repository (or KYTE_REPO names one).
+    const kyte=process.env.KYTE_REPO||path.join(__dirname,'..','..','..','kyte'),kv=path.join(kyte,'tests','fixtures','tree_number_vectors.json');
+    if(fs.existsSync(kv)){
+      assert.equal(fs.readFileSync(kv,'utf8'),fs.readFileSync(V.OUT,'utf8'),`KYTE's copy (${kv}) is this fixture: copy pipeline/tool/fixtures/tree_number_vectors.json there`);
+      const shard=zlib.gunzipSync(fs.readFileSync(path.join(kyte,'tests','fixtures','tree_ids','00','00.json.gz'))).toString('utf8');
+      assert.ok(shard.includes('"TATFKBGZ"'),'KYTE’s table rows hold TATFKBGZ (the TATFKBGX correction)');
+      console.log(`vectors: KYTE's copy at ${kv} is identical`);
+    }else console.log('vectors: no KYTE checkout beside this repository; its copy not compared');
+    console.log(`vectors: ${v.cases.length} inputs and ${v.links.length} links as fixtures/tree_number_vectors.json holds them`);
   }
   console.log('tree-id.js: all checks passed');
 })().catch(e=>{console.error(e);process.exit(1);});

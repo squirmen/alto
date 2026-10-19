@@ -7,7 +7,7 @@
  *    (source tree_register_points: owner Auckland Council Parks 10,358 records, Auckland Transport
  *    28,365, owner not recorded 488). It is not a land type; the Land filter is.
  *  - The Notable Trees overlay (3,178 records) is the Unitary Plan schedule of notable trees. Every one
- *    is protected; 392 register records matched to the schedule are protected too: 3,570 in all.
+ *    is linked to its schedule entry; 392 register records matched to the schedule are linked too: 3,570 in all.
  *  - A crown's marker is the inventory record on it when there is one (no LiDAR-only marker carries a
  *    linked inventory record), so an inventory marker with crown_pilot = 1 has two sources: its own
  *    record and the LiDAR crown.
@@ -27,21 +27,21 @@
   // Sources. `match` is a MapLibre expression that is true when the marker has this source.
   const SOURCES=[
     {key:'register_parks',group:'council',label:'Council tree register · Parks',short:'Council tree register · Parks',colour:C('source','register_parks'),
-      note:'Auckland Council tree register, owner recorded as Auckland Council Parks (parks, reserves and other Council land).',
+      note:'Auckland Council tree register, owner recorded as Auckland Council Parks (parks, reserves and other Council land). Retrieved June 2026.',
       match:['all',['==',sp,'tree_register_points'],['==',owner,'Auckland Council Parks']]},
     {key:'register_at',group:'council',label:'Council tree register · Auckland Transport',short:'Council tree register · Auckland Transport',colour:C('source','register_at'),
-      note:'Auckland Council tree register, owner recorded as Auckland Transport (street trees).',
+      note:'Auckland Council tree register (incl. Auckland Transport), owner recorded as Auckland Transport (street trees). Retrieved June 2026.',
       match:['all',['==',sp,'tree_register_points'],['==',owner,'Auckland Transport']]},
     {key:'register_other',group:'council',label:'Council tree register · owner not recorded',short:'Council tree register · owner not recorded',colour:C('source','register_other'),
-      note:'Auckland Council tree register records with no owner recorded.',
+      note:'Auckland Council tree register records with no owner recorded. Retrieved June 2026.',
       match:['all',['==',sp,'tree_register_points'],['!',['in',['coalesce',owner,''],['literal',COUNCIL_OWNERS]]]]},
-    {key:'notable',group:'council',label:'Notable Trees schedule',short:'Notable Trees schedule',colour:C('source','notable'),
-      note:'The Auckland Unitary Plan schedule of notable trees (Schedule 10). Scheduled trees are protected.',
+    {key:'notable',group:'council',label:'Notable Trees schedule',short:'Notable Trees schedule',colour:C('source','notable'),mark:'ringed-dot',
+      note:'The Auckland Unitary Plan schedule of notable trees (Schedule 10): Notable Trees Overlay, Plans and Places, Auckland Council, CC BY 4.0. Drawn with the schedule ring.',
       match:['==',sp,'notable_trees_overlay']},
     {key:'osm',group:'community',label:'OpenStreetMap',short:'OpenStreetMap',colour:C('source','osm'),
-      note:'Trees mapped by OpenStreetMap contributors.',match:['==',sp,'osm_natural_tree']},
-    {key:'kauri',group:'community',label:'RŪRU kauri survey',short:'RŪRU kauri survey',colour:C('source','kauri'),
-      note:'Public kauri survey records (RŪRU), used for kauri dieback surveillance.',match:['==',sp,'ruru_obskauri_tiaki_public']},
+      note:'Trees mapped by OpenStreetMap contributors. © OpenStreetMap contributors, ODbL.',match:['==',sp,'osm_natural_tree']},
+    {key:'kauri',group:'community',label:'Ruru kauri survey (Auckland Council)',short:'Ruru kauri survey (Auckland Council)',colour:C('source','kauri'),
+      note:'Auckland Council kauri survey records (Ruru ObsKauri Tiaki, valid and public), Bio Info Team, Environmental Services, Auckland Council. Used for kauri dieback surveillance. Not a complete record; verify before relying on it.',match:['==',sp,'ruru_obskauri_tiaki_public']},
     {key:'kyte',group:'community',label:'KYTE ground visits',short:'KYTE ground visits',colour:C('source','osm'),soon:true,
       note:'Accepted KYTE visits: on each tree page. Map filter: planned for a data release.'},
     {key:'nztr',group:'community',label:'NZ Tree Register',short:'NZ Tree Register',colour:C('source','osm'),soon:true,
@@ -77,10 +77,11 @@
     return ['any',...on.map(s=>s.match)];
   }
 
-  // Status. Protected is the Unitary Plan schedule; Notable (NZ Tree Register) is recognition only.
+  // Status: linked to an entry of the Notable Trees schedule (Auckland Unitary Plan, Schedule 10). ALTO checks that
+  // schedule only and never says whether a tree is protected; NZ Tree Register recognition has no legal status.
   const protectedExpr=['==',['coalesce',['to-number',['get','is_protected_notable']],0],1];
   const STATUS=[
-    {key:'protected',label:'Protected',colour:P.token('--color-protected'),note:'Auckland Unitary Plan Schedule 10 notable trees (individual trees and groups).',match:protectedExpr},
+    {key:'protected',label:'Notable Trees schedule',colour:P.token('--color-protected'),note:'Map markers linked to an entry of the Notable Trees schedule (Auckland Unitary Plan, Schedule 10): scheduled trees and scheduled groups.',match:protectedExpr},
     {key:'notable',label:'Notable (NZ Tree Register)',colour:C('source','osm'),soon:true,note:'Recognised by the New Zealand Tree Register (no legal status). Planned with the register as a source.'}
   ];
   function statusFilter(only){
@@ -131,7 +132,7 @@
     tree_register_points:{name:'Auckland Council tree register',kind:'Council inventory',group:'council'},
     notable_trees_overlay:{name:'Notable Trees schedule (Unitary Plan)',kind:'Council schedule',group:'council'},
     osm_natural_tree:{name:'OpenStreetMap',kind:'Community mapping',group:'community'},
-    ruru_obskauri_tiaki_public:{name:'Kauri observations (RŪRU public survey)',kind:'Community survey',group:'community'},
+    ruru_obskauri_tiaki_public:{name:'Kauri survey records (Ruru ObsKauri Tiaki, Auckland Council)',kind:'Community survey',group:'community'},
     lidar_pointcloud_v5:{name:'2024 LiDAR point cloud (v5 crown detection)',kind:'Remote sensing',group:'detected'},
     lidar_pointcloud_v4:{name:'2024 LiDAR point cloud (v4 detection)',kind:'Remote sensing',group:'detected'},
     lidar_inferred_canopy:{name:'LiDAR canopy model detection',kind:'Remote sensing',group:'detected'},

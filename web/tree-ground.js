@@ -8,8 +8,13 @@
 (function(root){
   'use strict';
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const num=v=>v===null||v===undefined||v===''?null:(Number.isFinite(Number(v))?Number(v):null);
-  const fmt=(v,places=1)=>num(v)===null?'—':new Intl.NumberFormat('en-NZ',{maximumFractionDigits:places}).format(Number(v));
+  const F=root.ALTOFormat||(typeof require==='function'?require('./alto-format.js'):null);   // one rule set (FE-16)
+  const num=F.num;
+  const fmt=(v,places=1)=>num(v)===null?F.MISSING:F.nf(Number(v),places);
+  // Contributors' free text: C0 control characters (but not line breaks) and bidi overrides and isolates removed; shown
+  // inside <bdi> so a right-to-left run cannot reorder the page around it.
+  const clean=t=>String(t??'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u202A-\u202E\u2066-\u2069\u200E\u200F\u061C]/g,'').trim();
+  const free=t=>`<bdi>${esc(clean(t))}</bdi>`;
   const cache=new Map();let boardsPromise=null,config={kyteBase:'./kyte',dataBase:'./data',version:''};
   function init(options){config={...config,...options};}
   async function load(treeId){
@@ -38,7 +43,7 @@
   // lead when the record has none, and the fact that photographs exist.
   function live(data,record){
     const visits=data?.visits||[];if(!visits.length)return null;
-    const out={photos:[],observed_on:null,trunk_form:null,circumference_cm:null,diameter_cm:null,measuring_height_m:null,crown_spread_m:null,height_m:null,species:null};
+    const out={photos:[],observed_on:null,trunk_form:null,stems:null,multiStem:false,circumference_cm:null,diameter_cm:null,measuring_height_m:null,crown_spread_m:null,height_m:null,species:null};
     for(const v of visits){
       out.photos.push(...(v.photos||[]));if(!out.observed_on)out.observed_on=dateLabel(v.observed_on);
       const m=v.measurements||{};
@@ -46,7 +51,10 @@
       const spread=[m.crown_spread_1_m,m.crown_spread_2_m].map(num).filter(v=>v!==null);if(!out.crown_spread_m&&spread.length)out.crown_spread_m=spread.reduce((a,b)=>a+b,0)/spread.length;
       if(!out.height_m&&num(m.height_m))out.height_m=num(m.height_m);
       if(!out.trunk_form&&m.trunk_form&&m.trunk_form!=='unknown')out.trunk_form=m.trunk_form;
+      if(!out.stems&&num(m.girth_stems)>1)out.stems=num(m.girth_stems);
     }
+    // Several stems: the tape reading is the largest stem (KYTE asks for it and the stem count), not the tree's trunk.
+    out.multiStem=out.trunk_form==='multiple'||num(out.stems)>1;
     const r=record?.datasets?.record||{},recorded=r.species_latin||r.species_common,usable=recorded&&!/^(unknown|unidentified|species not recorded|0 records found\.)$/i.test(String(recorded).trim());
     if(!usable){
       const named=visits.map(v=>v.species_suggestion).find(Boolean);
@@ -61,7 +69,7 @@
     let html='<section class="evidence-section ground-section"><h3>Seen from the ground</h3>';
     if(!visits.length){
       html+='<p>No accepted ground visit yet. A photograph of the whole tree, its trunk and its leaves, taken with KYTE, checks the record and improves the model. A tape around the trunk tests the diameter estimate.</p>';
-      html+=`<p><a class="ground-cta" href="${esc(config.kyteBase)}/?tree=${encodeURIComponent(record.tree_id)}">Photograph this tree with KYTE ↗</a></p></section>`;
+      html+=`<p><a class="ground-cta" href="${esc(config.kyteBase)}/?tree=${encodeURIComponent(record.datasets?.tree_number?.number||record.tree_id)}">Photograph this tree with KYTE</a></p></section>`;
       return html;
     }
     const l=lead(data);
@@ -71,7 +79,8 @@
       const facts=[];
       const m=v.measurements||{};
       const METHOD={tape:'with a tape or cord',paced:'paced out',app:'with a phone measuring app',estimate:'judged by eye',sighting:'by the stick method',shadow:'by the shadow method',instrument:'with a clinometer or app'};
-      if(num(m.diameter_cm)||num(m.circumference_cm)){const dia=num(m.diameter_cm)??num(m.circumference_cm)/Math.PI;facts.push(m.trunk_tape==='diameter'?`Trunk ${fmt(dia,0)} cm through, read from a diameter tape${num(m.measuring_height_m)?` at ${fmt(m.measuring_height_m,2)} m`:''}`:`Trunk ${fmt(m.circumference_cm,0)} cm around${num(m.measuring_height_m)?` at ${fmt(m.measuring_height_m,2)} m`:''}, so about ${fmt(dia,0)} cm through`);}
+      const multi=m.trunk_form==='multiple'||num(m.girth_stems)>1,stemWord=multi?'Largest stem':'Trunk';
+      if(num(m.diameter_cm)||num(m.circumference_cm)){const dia=num(m.diameter_cm)??num(m.circumference_cm)/Math.PI;facts.push((m.trunk_tape==='diameter'?`${stemWord} ${fmt(dia,0)} cm through, read from a diameter tape${num(m.measuring_height_m)?` at ${fmt(m.measuring_height_m,2)} m`:''}`:`${stemWord} ${fmt(m.circumference_cm,0)} cm around${num(m.measuring_height_m)?` at ${fmt(m.measuring_height_m,2)} m`:''}, so about ${fmt(dia,0)} cm through`)+(multi?`${num(m.girth_stems)>1?` (${fmt(m.girth_stems,0)} stems)`:' (several stems)'}`:''));}
       const spread=[m.crown_spread_1_m,m.crown_spread_2_m].map(num).filter(v=>v!==null);if(spread.length)facts.push(`Crown ${spread.map(v=>fmt(v,1)).join(' × ')} m ${METHOD[m.crown_method]||''}`.trim());
       if(m.trunk_form&&m.trunk_form!=='unknown')facts.push(m.trunk_form==='multiple'?'Several trunks from the ground':'One trunk');
       if(num(m.height_m))facts.push(`Height ${fmt(m.height_m)} m ${METHOD[m.height_method]||esc(m.height_method||'')}`.trim());
@@ -80,20 +89,21 @@
       if((num(m.diameter_cm)||num(m.circumference_cm))&&sDbh!==null)vs.push(`trunk ${fmt(sDbh,0)} cm through`);if(spread.length&&sCrown!==null)vs.push(`crown ${fmt(sCrown,1)} m across`);if(num(m.height_m)&&sHeight!==null)vs.push(`height ${fmt(sHeight,1)} m`);
       if(vs.length)facts.push(`ALTO’s own estimate for comparison: ${vs.join(', ')}`);
       for(const [k,val] of Object.entries(v.field_observations||{}))if(FIELD[k]?.[val])facts.push(FIELD[k][val]);
-      if(v.species_suggestion)facts.push(`Identified by the visitor as ${esc(v.species_suggestion)}`);
+      if(v.species_suggestion)facts.push(`Identified by the visitor as ${free(v.species_suggestion)}`);
       if(facts.length)html+='<ul class="ground-facts">'+facts.map(f=>`<li>${f}</li>`).join('')+'</ul>';
-      if(v.notes)html+=`<p class="ground-notes">“${esc(v.notes)}”</p>`;
+      if(v.notes&&clean(v.notes))html+=`<p class="ground-notes">“${free(v.notes)}”</p>`;
       const ident=(v.identification||[]).filter(s=>s.rank<=3);
       if(ident.length){
         const byPhoto=new Map();for(const s of ident){if(!byPhoto.has(s.photo))byPhoto.set(s.photo,[]);byPhoto.get(s.photo).push(s);}
         html+='<details class="ground-ident"><summary>Photo identification (Pl@ntNet)</summary>';
         for(const [,rows] of byPhoto)html+=`<p><strong>${esc(rows[0].organ)}</strong>: `+rows.sort((a,b)=>a.rank-b.rank).map(s=>`<em>${esc(s.scientific_name)}</em>${s.common_name?` (${esc(s.common_name)})`:''} ${Math.round((num(s.score)||0)*100)}%`).join(' · ')+'</p>';
-        html+='<p class="pp-note">A score from a photograph alone. Leaf, flower and fruit photographs identify better than bark. This is a lead for checking, not a determination, and it is not written into the tree’s record.</p></details>';
+        html+='<p class="pp-note">A score from a photograph alone. Leaf, flower and fruit photographs identify better than bark. This is a lead for checking, not a determination, and it is not written into the tree’s record.</p>'+
+          '<p class="pp-note">The image-based plant species identification service used, is based on the <a href="https://plantnet.org/" target="_blank" rel="noopener">Pl@ntNet</a> recognition API, regularly updated and accessible through the site <a href="https://my.plantnet.org/" target="_blank" rel="noopener">https://my.plantnet.org/</a>.</p></details>';
       }
-      html+=`<p class="pp-note">Accepted by an ALTO reviewer${v.accepted_at?' on '+dateLabel(v.accepted_at):''}. Photographs are re-encoded without camera metadata; contributors are not named.</p></article>`;
+      html+=`<p class="pp-note">Accepted by an ALTO reviewer${v.accepted_at?' on '+dateLabel(v.accepted_at):''}. Photographs: KYTE contributors, shared with ALTO for this page; re-encoded without camera metadata; contributors are not named.</p></article>`;
     }
     if(l&&l.score>=.3){const r=record?.datasets?.record||{};const recorded=r.species_latin||r.species_common;if(!recorded||/^(unknown|unidentified|species not recorded|0 records found\.)$/i.test(String(recorded).trim()))html+=`<p class="ground-lead">The record has no species. The best photo lead is <em>${esc(l.name)}</em>${l.common?` (${esc(l.common)})`:''}, ${Math.round(l.score*100)}% from a ${esc(l.organ)} photograph; the 3D form below follows it until someone confirms.</p>`;}
-    html+=`<p><a class="ground-cta" href="${esc(config.kyteBase)}/?tree=${encodeURIComponent(record.tree_id)}">Add your own visit with KYTE ↗</a></p></section>`;
+    html+=`<p><a class="ground-cta" href="${esc(config.kyteBase)}/?tree=${encodeURIComponent(record.datasets?.tree_number?.number||record.tree_id)}">Add your own visit with KYTE</a></p></section>`;
     return html;
   }
   // ---- local board context ----
@@ -112,6 +122,6 @@
     if(!b)return '';
     return `${esc(b.board_name)} local board${num(b.canopy_cover_pct)!==null?` · ${fmt(b.canopy_cover_pct,1)}% canopy cover in the board-level assessment`:''}`;
   }
-  const api={init,load,lead,live,render,board,renderBoard};
+  const api={init,load,lead,live,render,board,renderBoard,clean};
   root.ALTOGround=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

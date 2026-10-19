@@ -1,0 +1,1211 @@
+{
+ "source": "ALTO web/tree-id.js (tool-v0.2) against pipeline/tool/fixtures/tree_ids; written by pipeline/tool/tree_number_vectors.cjs",
+ "cases": [
+  {
+   "input": "TMCTT6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "tmct-t6x4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": " TMCT T6X4 ",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCTT6X5",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "TKCTT6X5",
+    "TMCST6X5",
+    "TMCTA6X5",
+    "TMCTT5X5",
+    "TMCTT6D5",
+    "TMCTT6X4",
+    "TMVTT6X5"
+   ],
+   "suggest": "TMCTT6X4",
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "TMCTTX64",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "TCCTTX64",
+    "TM8TTX64",
+    "TMCJTX64",
+    "TMCTPX64",
+    "TMCTT6X4",
+    "TMCTTN64",
+    "TMCTTX24",
+    "TMCTTX6W"
+   ],
+   "suggest": "TMCTT6X4",
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "TMCT T6XA",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "TECTT6XA",
+    "TM9TT6XA",
+    "TMCMT6XA",
+    "TMCTQ6XA",
+    "TMCTT0XA",
+    "TMCTT6TA",
+    "TMCTT6X4"
+   ],
+   "suggest": "TMCTT6X4",
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "Takapuna",
+   "parse": {
+    "number": null,
+    "problem": "Tree numbers do not use the letter U: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "Tree numbers do not use the letter U: is a character mistyped?"
+   }
+  },
+  {
+   "input": "Tanekaha",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": false,
+   "near": [
+    "T9NEKAHA",
+    "TA5EKAHA",
+    "TANDKAHA",
+    "TANE3AHA",
+    "TANEK9HA",
+    "TANEKA1A",
+    "TANEKAH9"
+   ],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "T1234567",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "T1230567",
+    "T1234527",
+    "T123456Z",
+    "T1234X67",
+    "T12V4567",
+    "T1E34567",
+    "TS234567"
+   ],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "TIL0O0OO",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "T110000X",
+    "T11000Y0",
+    "T1100X00",
+    "T110Y000",
+    "T11X0000",
+    "T1Z00000",
+    "TY100000"
+   ],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "akl_tree_not_336",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_not_336",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_not_336",
+    "kind": "record",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "marker",
+    "successors": [],
+    "note": "Reviewer correction C00001, C00002."
+   }
+  },
+  {
+   "input": "not_336",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_not_336",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_not_336",
+    "kind": "record",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "marker",
+    "successors": [],
+    "note": "Reviewer correction C00001, C00002."
+   }
+  },
+  {
+   "input": "AKL_TREE_not_336",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_not_336",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_not_336",
+    "kind": "record",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "marker",
+    "successors": [],
+    "note": "Reviewer correction C00001, C00002."
+   }
+  },
+  {
+   "input": "akl_tree_lid_1097624",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_lid_1097624",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_lid_1097624",
+    "kind": "record",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "member",
+    "successors": [],
+    "note": "Reviewer correction C00001."
+   }
+  },
+  {
+   "input": "akl_tree_pc4_3493682_11851994",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_pc4_3493682_11851994",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_pc4_3493682_11851994",
+    "kind": "record",
+    "status": "merged",
+    "number": "T8PZBYKH",
+    "tree_id": "akl_tree_not_1429",
+    "relation": "merged",
+    "successors": [
+     "T8PZBYKH"
+    ],
+    "note": "Reviewer correction C00017."
+   }
+  },
+  {
+   "input": "akl_tree_lid_0001873",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_lid_0001873",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_lid_0001873",
+    "kind": "record",
+    "status": "retired",
+    "number": null,
+    "tree_id": null,
+    "relation": "retired",
+    "successors": [],
+    "note": "Removed in Sep 2026 before the 9 Sep release: the 2024 point cloud showed no tree at this LiDAR detection (roof, vessel, crane or water); no successor."
+   }
+  },
+  {
+   "input": "3503762_11855514",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "3503762_11855514",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "3503762_11855514",
+    "kind": "crown_key_v4",
+    "status": "split",
+    "number": "T29RAJGD",
+    "tree_id": "akl_tree_pc4_3503762_11855514",
+    "relation": "split",
+    "successors": [
+     "T29RAJGD",
+     "TAV68ZZB"
+    ],
+    "note": "V4 crown divided between several current crowns (each holds at least a fifth of it; largest share first)."
+   }
+  },
+  {
+   "input": "3481214_11826658",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "3481214_11826658",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "3481214_11826658",
+    "kind": "crown_key_v4",
+    "status": "retired",
+    "number": "TYZDH70C",
+    "tree_id": "akl_tree_kau_KAU007048",
+    "relation": "retired",
+    "successors": [
+     "TYZDH70C"
+    ],
+    "note": "V4 crown no current crown continues; the successor is the tree its representative record belongs to now."
+   }
+  },
+  {
+   "input": "3480992_11791538",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "3480992_11791538",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "3480992_11791538",
+    "kind": "crown_key_v4",
+    "status": "current",
+    "number": "TXBME5FT",
+    "tree_id": "akl_tree_lid_0000341",
+    "relation": "crown",
+    "successors": [],
+    "note": "V4 crown continuing as this crown (at least half of it lies in this crown and no other crown holds a fifth)."
+   }
+  },
+  {
+   "input": "pc_BA32_1000_3310:1760474.75:5922651.75",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "pc_BA32_1000_3310:1760474.75:5922651.75",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "pc_BA32_1000_3310:1760474.75:5922651.75",
+    "kind": "crown_key",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "akl_tree_lid_1128531",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_lid_1128531",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_lid_1128531",
+    "kind": "record",
+    "status": "current",
+    "number": "TP46WVEC",
+    "tree_id": "akl_tree_lid_1128531",
+    "relation": "marker",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TKYTE01R",
+   "parse": {
+    "number": "TKYTE01R",
+    "problem": null
+   },
+   "normalise": "TKYTE01R",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TKYTE01R",
+    "kind": "number",
+    "status": "merged",
+    "number": "TKYTE01R",
+    "tree_id": null,
+    "relation": "crown",
+    "successors": [
+     "TMCTT6X4"
+    ],
+    "note": "Reviewer correction C99999."
+   }
+  },
+  {
+   "input": "TKYTE02P",
+   "parse": {
+    "number": "TKYTE02P",
+    "problem": null
+   },
+   "normalise": "TKYTE02P",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TKYTE02P",
+    "kind": "number",
+    "status": "retired",
+    "number": "TKYTE02P",
+    "tree_id": null,
+    "relation": "crown",
+    "successors": [],
+    "note": "Test_retired."
+   }
+  },
+  {
+   "input": "T162DYHP",
+   "parse": {
+    "number": "T162DYHP",
+    "problem": null
+   },
+   "normalise": "T162DYHP",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "T162DYHP",
+    "kind": "number",
+    "status": "current",
+    "number": "T162DYHP",
+    "tree_id": "akl_tree_lid_1110327",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "T162-DYHP",
+   "parse": {
+    "number": "T162DYHP",
+    "problem": null
+   },
+   "normalise": "T162DYHP",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "T162DYHP",
+    "kind": "number",
+    "status": "current",
+    "number": "T162DYHP",
+    "tree_id": "akl_tree_lid_1110327",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "akl_tree_lid_9999999",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_lid_9999999",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_lid_9999999",
+    "kind": "record",
+    "status": "unknown",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "This ID is not in the release's ID table."
+   }
+  },
+  {
+   "input": "TZZZZZZZ",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "T6ZZZZZZ",
+    "TZ3ZZZZZ",
+    "TZZ6ZZZZ",
+    "TZZZ3ZZZ",
+    "TZZZZ6ZZ",
+    "TZZZZZ3Z",
+    "TZZZZZZ6"
+   ],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": null,
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "This is not a tree number or record ID that ALTO recognises."
+   }
+  },
+  {
+   "input": "hello world",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": null,
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "This is not a tree number or record ID that ALTO recognises."
+   }
+  },
+  {
+   "input": "akl_tree_a b",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": null,
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "This is not a tree number or record ID that ALTO recognises."
+   }
+  },
+  {
+   "input": "field:0b5e2c1a-1d2b-4c3d-8e4f-5a6b7c8d9e0f",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_field:0b5e2c1a-1d2b-4c3d-8e4f-5a6b7c8d9e0f",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_field:0b5e2c1a-1d2b-4c3d-8e4f-5a6b7c8d9e0f",
+    "kind": "record",
+    "status": "unknown",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "This ID is not in the release's ID table."
+   }
+  },
+  {
+   "input": "TMCTT6X4.",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCTT6X4)",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "(TMCTT6X4)",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT%20T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT‐T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT‑T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT‒T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT–T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT—T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT―T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "TMCT​T6X4",
+   "parse": {
+    "number": "TMCTT6X4",
+    "problem": null
+   },
+   "normalise": "TMCTT6X4",
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "TMCTT6X4",
+    "kind": "number",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "crown",
+    "successors": [],
+    "note": null
+   }
+  },
+  {
+   "input": "akl_tree_not_336.",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_not_336",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_not_336",
+    "kind": "record",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "marker",
+    "successors": [],
+    "note": "Reviewer correction C00001, C00002."
+   }
+  },
+  {
+   "input": "TATFKBGX",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "TATFKBGZ",
+    "TATFKBHX",
+    "TATFKDGX",
+    "TATFMBGX",
+    "TATHKBGX",
+    "TAVFKBGX",
+    "TCTFKBGX"
+   ],
+   "suggest": "TATFKBGZ",
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "TANEKAHA",
+   "parse": {
+    "number": null,
+    "problem": "The check character does not match: is a character mistyped?"
+   },
+   "normalise": null,
+   "isNumberShaped": true,
+   "typedAsNumber": true,
+   "near": [
+    "T9NEKAHA",
+    "TA5EKAHA",
+    "TANDKAHA",
+    "TANE3AHA",
+    "TANEK9HA",
+    "TANEKA1A",
+    "TANEKAH9"
+   ],
+   "suggest": null,
+   "resolve": {
+    "key": null,
+    "kind": null,
+    "status": "invalid",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "The check character does not match: is a character mistyped?"
+   }
+  },
+  {
+   "input": "akl_tree_does_not_exist",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_does_not_exist",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_does_not_exist",
+    "kind": "record",
+    "status": "unknown",
+    "number": null,
+    "tree_id": null,
+    "relation": null,
+    "successors": [],
+    "note": "This ID is not in the release's ID table."
+   }
+  },
+  {
+   "input": "AKL_TREE_NOT_336",
+   "parse": {
+    "number": null,
+    "problem": "not a tree number"
+   },
+   "normalise": "akl_tree_not_336",
+   "isNumberShaped": false,
+   "typedAsNumber": false,
+   "near": [],
+   "suggest": null,
+   "resolve": {
+    "key": "akl_tree_not_336",
+    "kind": "record",
+    "status": "current",
+    "number": "TMCTT6X4",
+    "tree_id": "akl_tree_not_336",
+    "relation": "marker",
+    "successors": [],
+    "note": "Reviewer correction C00001, C00002."
+   }
+  }
+ ],
+ "links": [
+  {
+   "url": "https://alto.tfwelch.com/tree/TMCTT6X4",
+   "id": "TMCTT6X4",
+   "normalise": "TMCTT6X4"
+  },
+  {
+   "url": "https://alto.tfwelch.com/Tree/TMCTT6X4",
+   "id": "TMCTT6X4",
+   "normalise": "TMCTT6X4"
+  },
+  {
+   "url": "https://alto.tfwelch.com/TREE/tmct-t6x4/",
+   "id": "tmct-t6x4",
+   "normalise": "TMCTT6X4"
+  },
+  {
+   "url": "https://alto.tfwelch.com/tree/TMCT%20T6X4",
+   "id": "TMCT T6X4",
+   "normalise": "TMCTT6X4"
+  },
+  {
+   "url": "https://alto.tfwelch.com/tree/TMCTT6X4.",
+   "id": "TMCTT6X4.",
+   "normalise": "TMCTT6X4"
+  },
+  {
+   "url": "https://alto.tfwelch.com/tree/TMCTT6X4)",
+   "id": "TMCTT6X4)",
+   "normalise": "TMCTT6X4"
+  },
+  {
+   "url": "https://alto.tfwelch.com/tree.html?id=TMCT%E2%80%93T6X4",
+   "id": "TMCT–T6X4",
+   "normalise": "TMCTT6X4"
+  },
+  {
+   "url": "https://alto.tfwelch.com/?tree=TMCT%C2%A0T6X4",
+   "id": "TMCT T6X4",
+   "normalise": "TMCTT6X4"
+  }
+ ],
+ "check_chars": [
+  {
+   "payload": "000000",
+   "check": "0"
+  },
+  {
+   "payload": "KYTE01",
+   "check": "R"
+  },
+  {
+   "payload": "MCTT6X",
+   "check": "4"
+  },
+  {
+   "payload": "162DYH",
+   "check": "P"
+  },
+  {
+   "payload": "ZZZZZZ",
+   "check": "6"
+  },
+  {
+   "payload": "A1B2C3",
+   "check": "K"
+  }
+ ]
+}

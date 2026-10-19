@@ -14,9 +14,16 @@
       "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/TreeRegisterPoints/FeatureServer",
       "layer_id": 0,
       "observed_count_2026_06_04": 50311,
-      "license": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "license": "© Auckland Council",
       "known_fields": ["FID", "TreeID", "TreeCommon", "TreeLatin", "TreeOwner"],
-      "notes": "Tree register points surfaced through the Waitemata Urban Forest public ArcGIS content. Strong first candidate for tree-by-tree species inventory, but spatial coverage appears local rather than all Auckland."
+      "notes": "Tree register points surfaced through the Waitemata Urban Forest public ArcGIS content. Strong first candidate for tree-by-tree species inventory, but spatial coverage appears local rather than all Auckland.",
+      "license_recorded_2026_06_04": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "license_url": "https://www.aucklandcouncil.govt.nz/en/terms-and-conditions.html",
+      "licensor": "Auckland Council",
+      "producer": "Auckland Council (records owned by Auckland Transport and Auckland Council Parks)",
+      "attribution": "© Auckland Council.",
+      "license_status": "Retrieved June 2026. The Council's public service for the register now requires a token, so its licence can no longer be checked; credited as on credits.html.",
+      "credits_name": "Auckland Council tree register (incl. Auckland Transport)"
     },
     {
       "slug": "notable_trees_overlay",
@@ -27,9 +34,16 @@
       "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Notable_Trees_Overlay/FeatureServer",
       "layer_id": 0,
       "observed_count_2026_06_04": 3718,
-      "license": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "license": "CC BY 4.0",
       "known_fields": ["OBJECTID", "TYPE", "SUBTYPE", "SCHEDULE", "NAME", "DocumentURL", "GlobalID"],
-      "notes": "Auckland Unitary Plan D13 / Schedule 10 notable tree point overlay. Useful for protected status and validation, not a complete tree inventory."
+      "notes": "Auckland Unitary Plan D13 / Schedule 10 notable tree point overlay. Useful for protected status and validation, not a complete tree inventory.",
+      "license_recorded_2026_06_04": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "licensor": "Auckland Council",
+      "producer": "Plans and Places, Auckland Council",
+      "attribution": "Auckland Unitary Plan Notable Trees Overlay. Plans and Places, Auckland Council. Licensed under CC BY 4.0.",
+      "url": "https://www.arcgis.com/home/item.html?id=583f5e99290b4adb9f7cc1196451f1e7",
+      "credits_name": "Notable trees"
     },
     {
       "slug": "notable_group_trees_overlay",
@@ -40,8 +54,15 @@
       "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Notable_Group_of_Trees_Overlay/FeatureServer",
       "layer_id": 0,
       "observed_count_2026_06_04": 229,
-      "license": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
-      "notes": "Polygon overlay for protected/notable groups of trees. Useful for protected status and validation; tree counts inside polygons must be inferred or sourced separately."
+      "license": "CC BY 4.0",
+      "notes": "Polygon overlay for protected/notable groups of trees. Useful for protected status and validation; tree counts inside polygons must be inferred or sourced separately.",
+      "license_recorded_2026_06_04": "Auckland Council Open Data licence / CC BY 4.0 with council caveats",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "licensor": "Auckland Council",
+      "producer": "Plans and Places, Auckland Council",
+      "attribution": "Auckland Unitary Plan Notable Group of Trees Overlay. Plans and Places, Auckland Council. Licensed under CC BY 4.0.",
+      "url": "https://www.arcgis.com/home/item.html?id=864f687d7d014aedb7e3dceaa797750e",
+      "credits_name": "Notable trees"
     },
     {
       "slug": "ruru_obskauri_tiaki_public",
@@ -52,18 +73,17 @@
       "service_url": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Ruru_ObsKauri_Tiaki_(Valid_and_Public)/FeatureServer",
       "layer_id": 0,
       "observed_count_2026_06_04": 52047,
-      "license": "Auckland Council data licence with biosecurity caveats",
-      "known_fields": [
-        "OBJECTID",
-        "ShortID",
-        "SurveyName",
-        "StartDate",
-        "SoilSampleResult",
-        "PhytAgathidicida",
-        "KDBFieldStatus",
-        "FinancialYear"
-      ],
-      "notes": "Public valid kauri survey and Phytophthora observations. The source description says it does not provide a complete picture of kauri or kauri dieback distribution."
+      "license": "Auckland Council Digital Data terms of use (copyright owned by or licensed to Auckland Council; no open licence)",
+      "known_fields": ["OBJECTID", "ShortID", "SurveyName", "StartDate", "SoilSampleResult", "PhytAgathidicida", "KDBFieldStatus", "FinancialYear"],
+      "notes": "Public valid kauri survey and Phytophthora observations. The source description says it does not provide a complete picture of kauri or kauri dieback distribution.",
+      "license_recorded_2026_06_04": "Auckland Council data licence with biosecurity caveats",
+      "license_url": "https://www.arcgis.com/home/item.html?id=98eb8eb841ed4205a5e97f7bd0dbdf86",
+      "licensor": "Auckland Council",
+      "producer": "Bio Info Team, Environmental Services, Auckland Council",
+      "attribution": "Bio Info Team, Environmental Services, Auckland Council.",
+      "caveat": "Not a complete record of kauri or kauri dieback; verify before relying on it.",
+      "url": "https://www.arcgis.com/home/item.html?id=98eb8eb841ed4205a5e97f7bd0dbdf86",
+      "credits_name": "Kauri survey records"
     },
     {
       "slug": "linz_auckland_part_1_lidar_dem_2024",
@@ -73,7 +93,14 @@
       "priority": "highest",
       "layer_id": 121990,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121990/",
-      "notes": "Bare-earth elevation, needed with DSM for canopy height."
+      "notes": "Bare-earth elevation, needed with DSM for canopy height.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Regional Software Holdings Limited (RSHL)",
+      "producer": "Woolpert",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Regional Software Holdings Limited for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/121990",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_part_2_lidar_dem_2024",
@@ -83,7 +110,15 @@
       "priority": "highest",
       "layer_id": 122580,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/122580/",
-      "notes": "Bare-earth elevation, second Auckland 2024 coverage segment."
+      "notes": "Bare-earth elevation, second Auckland 2024 coverage segment.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Regional Software Holdings Limited (RSHL)",
+      "producer": "Woolpert Ltd",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Regional Software Holdings Limited for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "license_status": "Licensor RSHL as LINZ names it in STAC and on credits.html; the layer metadata says the survey was captured for Auckland Council.",
+      "url": "https://data.linz.govt.nz/layer/122580",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_part_1_lidar_dsm_2024",
@@ -93,7 +128,14 @@
       "priority": "highest",
       "layer_id": 121992,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121992/",
-      "notes": "Surface elevation including buildings and vegetation, needed with DEM for canopy height."
+      "notes": "Surface elevation including buildings and vegetation, needed with DEM for canopy height.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Regional Software Holdings Limited (RSHL)",
+      "producer": "Woolpert",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Regional Software Holdings Limited for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/121992",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_part_2_lidar_dsm_2024",
@@ -103,7 +145,14 @@
       "priority": "highest",
       "layer_id": 122581,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/122581/",
-      "notes": "Surface elevation, second Auckland 2024 coverage segment."
+      "notes": "Surface elevation, second Auckland 2024 coverage segment.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Auckland Council",
+      "producer": "Woolpert Ltd",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Auckland Council for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/122581",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_part_1_lidar_index_tiles_2024",
@@ -113,7 +162,14 @@
       "priority": "high",
       "layer_id": 121993,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121993/",
-      "notes": "Tile index for targeted downloading."
+      "notes": "Tile index for targeted downloading.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Regional Software Holdings Limited (RSHL)",
+      "producer": "Woolpert",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Regional Software Holdings Limited for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/121993",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_part_2_lidar_index_tiles_2024",
@@ -123,7 +179,15 @@
       "priority": "high",
       "layer_id": 122590,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/122590/",
-      "notes": "Tile index for targeted downloading."
+      "notes": "Tile index for targeted downloading.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Auckland Council",
+      "producer": "Woolpert Ltd",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Auckland Council for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "license_status": "Layer metadata: captured for Auckland Council by Woolpert Ltd.",
+      "url": "https://data.linz.govt.nz/layer/122590",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_part_1_lidar_point_cloud_2024",
@@ -132,7 +196,14 @@
       "category": "lidar_point_cloud",
       "priority": "highest",
       "web_url": "https://data.linz.govt.nz/layer/d3VcCb5rKzNsNGk/auckland-lidar-point-cloud-2024/",
-      "notes": "Point cloud layer referenced by the Part 1 LiDAR index tile metadata. The v1 API metadata endpoint did not accept this opaque web-layer ID; confirm API/export route before bulk downloading."
+      "notes": "Point cloud layer referenced by the Part 1 LiDAR index tile metadata. The v1 API metadata endpoint did not accept this opaque web-layer ID; confirm API/export route before bulk downloading.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Regional Software Holdings Limited (RSHL)",
+      "producer": "Woolpert",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Regional Software Holdings Limited for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "license_status": "Part 1 layer metadata: captured for RSHL by Woolpert.",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_part_2_lidar_point_cloud_2024",
@@ -141,7 +212,14 @@
       "category": "lidar_point_cloud",
       "priority": "highest",
       "web_url": "https://data.linz.govt.nz/layer/d3W9HT9YGf35Ph8/auckland-part-2-lidar-1m-pointcloud-2024/",
-      "notes": "Point cloud layer referenced by the Part 2 LiDAR index tile metadata. The v1 API metadata endpoint did not accept this opaque web-layer ID; confirm API/export route before bulk downloading."
+      "notes": "Point cloud layer referenced by the Part 2 LiDAR index tile metadata. The v1 API metadata endpoint did not accept this opaque web-layer ID; confirm API/export route before bulk downloading.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Auckland Council",
+      "producer": "Woolpert Ltd",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Auckland Council for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "license_status": "Part 2 layer metadata: captured for Auckland Council by Woolpert Ltd.",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "linz_auckland_urban_aerial_2024_2025",
@@ -151,7 +229,14 @@
       "priority": "highest",
       "layer_id": 121752,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121752/",
-      "notes": "High-resolution urban imagery for canopy delineation and species/crown model features."
+      "notes": "High-resolution urban imagery for canopy delineation and species/crown model features.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Auckland Council",
+      "producer": "Aerial Surveys",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Auckland Council for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/121752",
+      "credits_name": "Auckland 0.075m Urban Aerial Photos (2024–2025), RGB and near-infrared"
     },
     {
       "slug": "linz_auckland_urban_aerial_index_2024_2025",
@@ -161,7 +246,14 @@
       "priority": "high",
       "layer_id": 121852,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/121852/",
-      "notes": "Aerial imagery tile index for targeted downloading."
+      "notes": "Aerial imagery tile index for targeted downloading.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Auckland Council",
+      "producer": "Aerial Surveys",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Auckland Council for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/121852",
+      "credits_name": "Auckland 0.075m Urban Aerial Photos (2024–2025), RGB and near-infrared"
     },
     {
       "slug": "linz_auckland_rural_aerial_2024",
@@ -171,7 +263,14 @@
       "priority": "medium",
       "layer_id": 119795,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/119795/",
-      "notes": "Rural imagery for regional coverage outside the 7.5 cm urban layer."
+      "notes": "Rural imagery for regional coverage outside the 7.5 cm urban layer.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "National Institute of Water and Atmospheric Research (NIWA)",
+      "producer": "Aerial Surveys",
+      "attribution": "Sourced from the LINZ Data Service and licensed by National Institute of Water and Atmospheric Research for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/119795",
+      "credits_name": "Auckland 0.25m Rural Aerial Photos (2024)"
     },
     {
       "slug": "linz_nz_building_outlines",
@@ -181,7 +280,14 @@
       "priority": "highest",
       "layer_id": 101290,
       "api_url": "https://data.linz.govt.nz/services/api/v1/layers/101290/",
-      "notes": "Authoritative building footprint source needed to mask buildings from DSM-DEM canopy candidates. Metadata is public; spatial query/WFS service advertises API-key authentication."
+      "notes": "Authoritative building footprint source needed to mask buildings from DSM-DEM canopy candidates. Metadata is public; spatial query/WFS service advertises API-key authentication.",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Toitū Te Whenua Land Information New Zealand (LINZ)",
+      "producer": "Toitū Te Whenua Land Information New Zealand (LINZ)",
+      "attribution": "Sourced from the LINZ Data Service and licensed for reuse under CC BY 4.0.",
+      "url": "https://data.linz.govt.nz/layer/101290",
+      "credits_name": "NZ Primary Land Parcels and NZ Building Outlines"
     },
     {
       "slug": "osm_overpass_buildings_waitemata_pilot",
@@ -190,7 +296,15 @@
       "category": "building_footprints",
       "priority": "pilot_interim",
       "service_url": "https://overpass-api.de/api/interpreter",
-      "notes": "Interim public building mask used only for the Waitemata crown segmentation pilot until authoritative LINZ building outlines are wired into the processing pipeline."
+      "notes": "Interim public building mask used only for the Waitemata crown segmentation pilot until authoritative LINZ building outlines are wired into the processing pipeline.",
+      "license": "Open Database Licence (ODbL) 1.0",
+      "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "licensor": "OpenStreetMap Foundation (OSMF)",
+      "producer": "OpenStreetMap contributors",
+      "attribution": "© OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "credits_name": "OpenStreetMap (tree records)",
+      "license_status": "Pilot only (Waitematā crown segmentation); not in the release products."
     },
     {
       "slug": "auckland_council_dsm_2024_imageservice",
@@ -199,7 +313,15 @@
       "category": "elevation_dsm",
       "priority": "high",
       "service_url": "https://tiledimageservices1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Auckland_DSM_2024/ImageServer",
-      "notes": "Auckland Council image service for regional 1m DSM, useful for viewing and targeted export. Full download may require contacting gis@aklc.govt.nz."
+      "notes": "Auckland Council image service for regional 1m DSM, useful for viewing and targeted export. Full download may require contacting gis@aklc.govt.nz.",
+      "license": "CC BY 4.0",
+      "license_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "licensor": "Auckland Council",
+      "producer": "Woolpert (2024 LiDAR survey)",
+      "attribution": "Auckland Council, CC BY 4.0.",
+      "url": "https://www.arcgis.com/home/item.html?id=f3139df0e1ef4114a3ba44e6420d6a0e",
+      "license_status": "Item licence (read 17 Oct 2026): CC BY 4.0, followed by Council GeoMaps clauses that conflict with it (credits audit section 5).",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
     },
     {
       "slug": "auckland_council_dem_2024_imageservice",
@@ -208,7 +330,192 @@
       "category": "elevation_dem",
       "priority": "high",
       "service_url": "https://tiledimageservices1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Auckland_Region_Digital_Elevation_Model__DEM__2024/ImageServer",
-      "notes": "Auckland Council 1m DEM tiled ImageServer used in the Waitemata LiDAR pilot. DEM is paired with the 2024 DSM to compute canopy height."
+      "notes": "Auckland Council 1m DEM tiled ImageServer used in the Waitemata LiDAR pilot. DEM is paired with the 2024 DSM to compute canopy height.",
+      "license": "CC BY 4.0",
+      "license_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "licensor": "Auckland Council",
+      "producer": "Woolpert (2024 LiDAR survey)",
+      "attribution": "Auckland Council, CC BY 4.0.",
+      "url": "https://www.arcgis.com/home/item.html?id=786f2f4cdec4462bb9beefc45e808b63",
+      "license_status": "Item licence (read 17 Oct 2026): CC BY 4.0, followed by Council GeoMaps clauses that conflict with it (credits audit section 5).",
+      "credits_name": "Auckland 2024 LiDAR, Parts 1 and 2"
+    },
+    {
+      "slug": "osm_natural_trees",
+      "name": "OpenStreetMap natural=tree nodes (Auckland)",
+      "type": "overpass_query",
+      "category": "tree_inventory",
+      "priority": "high",
+      "service_url": "https://overpass-api.de/api/interpreter",
+      "license": "Open Database Licence (ODbL) 1.0",
+      "license_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "licensor": "OpenStreetMap Foundation (OSMF)",
+      "producer": "OpenStreetMap contributors",
+      "attribution": "© OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "method_url": "https://github.com/squirmen/alto/blob/main/pipeline/base/scripts/fetch_osm_natural_trees.py",
+      "notes": "4,800 records (source_primary osm_natural_tree). Records derived from OpenStreetMap stay under the ODbL 1.0; ALTO's noncommercial terms do not apply to them (ODbL 4.7); the method is the fetch script (ODbL 4.6).",
+      "credits_name": "OpenStreetMap (tree records)"
+    },
+    {
+      "slug": "linz_nz_primary_parcels",
+      "name": "NZ Primary Land Parcels",
+      "type": "linz_layer",
+      "category": "land_parcels",
+      "priority": "high",
+      "layer_id": 50823,
+      "url": "https://data.linz.govt.nz/layer/50823",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Toitū Te Whenua Land Information New Zealand (LINZ)",
+      "producer": "Toitū Te Whenua Land Information New Zealand (LINZ)",
+      "attribution": "Contains data sourced from the LINZ Data Service and licensed for reuse under CC BY 4.0.",
+      "notes": "Property summaries. Not for defining legal boundaries.",
+      "credits_name": "NZ Primary Land Parcels and NZ Building Outlines"
+    },
+    {
+      "slug": "linz_auckland_lidar_2016_2018",
+      "name": "Auckland North LiDAR 2016–18 and Auckland South LiDAR 2016–17",
+      "type": "linz_layer",
+      "category": "elevation_history",
+      "priority": "medium",
+      "layer_ids": [106410, 105089, 104318, 104382],
+      "url": "https://data.linz.govt.nz/layer/106410",
+      "license": "CC BY 4.0",
+      "license_url": "https://data.linz.govt.nz/license/attribution-4-0-international/",
+      "licensor": "Auckland Council",
+      "producer": "Aerial Surveys (North); AAM NZ (South)",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Auckland Council for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "notes": "Canopy history and the change layer.",
+      "credits_name": "Auckland North LiDAR 2016–18 and Auckland South LiDAR 2016–17"
+    },
+    {
+      "slug": "linz_auckland_lidar_2013",
+      "name": "Auckland LiDAR 2013",
+      "type": "linz_layer",
+      "category": "elevation_history",
+      "priority": "medium",
+      "layer_ids": [53405, 53406],
+      "url": "https://data.linz.govt.nz/layer/53405",
+      "license": "Copyright Auckland Council (LINZ Data Service)",
+      "license_url": "https://data.linz.govt.nz/layer/53405",
+      "licensor": "Auckland Council",
+      "producer": "NZ Aerial Mapping and Aerial Surveying Ltd",
+      "attribution": "Copyright in the underlying dataset from which this work has been derived is owned by Auckland Council.",
+      "notes": "Canopy history and the change layer.",
+      "credits_name": "Auckland LiDAR 2013"
+    },
+    {
+      "slug": "nz_imagery_archive",
+      "name": "New Zealand Imagery (aerial photograph archive, 1939–2025)",
+      "type": "stac_catalog",
+      "category": "aerial_imagery",
+      "priority": "high",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "service_url": "https://nz-imagery.s3.ap-southeast-2.amazonaws.com/catalog.json",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "licensor": "Per survey: Auckland Council; AAM NZ; National Institute of Water and Atmospheric Research; Toitū Te Whenua LINZ; Ministry for Primary Industries",
+      "producer": "Per survey: New Zealand Aerial Mapping; Aerial Surveys; AAM NZ; Recon; SKYVUW",
+      "attribution": "New Zealand Imagery was accessed on DATE from https://registry.opendata.aws/nz-imagery. Licensed by LICENSOR for re-use under CC-BY-4.0.",
+      "notes": "Tree-page photographs; every survey with its licensor and producer is in credits.json (accessed 12 and 17 Oct 2026).",
+      "credits_name": "Aerial photographs"
+    },
+    {
+      "slug": "statsnz_local_boards_2026",
+      "name": "Territorial Authority Local Board 2026",
+      "type": "arcgis_feature_layer",
+      "category": "boundaries",
+      "priority": "medium",
+      "service_url": "https://services2.arcgis.com/vKb0s8tBIA3bdocZ/arcgis/rest/services/Territorial_Authority_Local_Board_2026/FeatureServer",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "licensor": "Stats NZ – Tatauranga Aotearoa",
+      "producer": "Stats NZ – Tatauranga Aotearoa",
+      "attribution": "Stats NZ – Tatauranga Aotearoa, CC BY 4.0.",
+      "notes": "Local board boundaries and land areas.",
+      "credits_name": "Local board boundaries and land areas"
+    },
+    {
+      "slug": "doc_public_conservation_land",
+      "name": "DOC Public Conservation Land",
+      "type": "arcgis_feature_layer",
+      "category": "land_tenure",
+      "priority": "medium",
+      "service_url": "https://services1.arcgis.com/3JjYDyG3oajxU6HO/arcgis/rest/services/DOC_Public_Conservation_Land/FeatureServer/0",
+      "url": "https://www.arcgis.com/home/item.html?id=72354ba9bf7a4706af3fdfe60f86eea1",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "licensor": "Department of Conservation Te Papa Atawhai (Crown copyright)",
+      "producer": "Department of Conservation Te Papa Atawhai",
+      "attribution": "Crown Copyright: Department of Conservation Te Papa Atawhai 2026.",
+      "notes": "Taken on 2 October 2026; it may be out of date.",
+      "credits_name": "Public Conservation Land"
+    },
+    {
+      "slug": "auckland_council_context_layers",
+      "name": "Auckland Council context layers",
+      "type": "arcgis_feature_layers",
+      "category": "context",
+      "priority": "medium",
+      "license": "CC BY 4.0",
+      "license_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "licensor": "Auckland Council",
+      "producer": "Plans and Places, Auckland Council (Unitary Plan base zones and designations); Auckland Council (park extents); Lynker Analytics and Healthy Waters, Auckland Council (impervious surfaces 2017, land cover 2017); Healthy Waters, Auckland Council (stormwater assets); Stormwater Hydraulic Modelling Team, Auckland Council (flood plains); WSP; Auckland Council: Healthy Waters, Geospatial (flood prone areas, overland flow paths); Arup New Zealand Limited, Lynker Analytics, Statistics NZ, Ministry for the Environment, Auckland Council (predicted air temperature)",
+      "attribution": "Each layer credited to its producer as above, CC BY 4.0; predicted air temperature: Contains modified Copernicus Climate Change Service information 2024.",
+      "notes": "Property tenure, paving, stormwater and cooling inputs.",
+      "credits_name": "Auckland Council context layers",
+      "url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html"
+    },
+    {
+      "slug": "itree_database",
+      "name": "i-Tree Database (species growth form and mature size)",
+      "type": "reference_table",
+      "category": "species_reference",
+      "priority": "high",
+      "url": "https://database.itreetools.org/",
+      "license": "i-Tree end-user licence agreement: free to use with credit to the i-Tree Cooperative",
+      "license_url": "https://help.itreetools.org/eula/",
+      "licensor": "i-Tree Cooperative (USDA Forest Service, Davey, Arbor Day Foundation, UCFS, ISA, Casey Trees)",
+      "producer": "USDA Forest Service and cooperators",
+      "attribution": "Nowak, D. J. (2024). Understanding i-Tree: 2023 summary of programs and methods. General Technical Report NRS-200-2023. USDA Forest Service, Northern Research Station.",
+      "notes": "i-Tree® is a registered trademark. Mature heights are published in feet (v6.3 converts to metres). Pūriri and cabbage tree classes corrected in v6.3 (ALTO curated class; i-Tree value kept).",
+      "credits_name": "i-Tree"
+    },
+    {
+      "slug": "nz_tree_register_links",
+      "name": "New Zealand Tree Register (record links)",
+      "type": "web_links",
+      "category": "tree_register",
+      "priority": "low",
+      "url": "https://www.treeregister.nz/",
+      "license": "No licence published: links only; no text or photographs copied",
+      "licensor": "New Zealand Notable Trees Trust",
+      "producer": "New Zealand Notable Trees Trust",
+      "attribution": "New Zealand Notable Trees Trust.",
+      "notes": "Register record identifiers and links on tree pages and KYTE missions.",
+      "credits_name": "New Zealand Tree Register"
+    },
+    {
+      "slug": "aup_schedule10",
+      "name": "Auckland Unitary Plan, Schedule 10 Notable Tree Schedule (July 2026)",
+      "type": "pdf",
+      "category": "protected_tree_schedule",
+      "priority": "high",
+      "url": "https://unitaryplan.aucklandcouncil.govt.nz/images/Auckland%20Unitary%20Plan%20Operative/Chapter%20L%20Schedules/Schedule%2010%20Notable%20Trees%20Schedule.pdf",
+      "license": "© Auckland Council (Auckland Unitary Plan Operative in part): item numbers, tree counts and addresses cited with a link",
+      "license_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "licensor": "Auckland Council",
+      "producer": "Plans and Places, Auckland Council",
+      "attribution": "Auckland Unitary Plan, Schedule 10 Notable Trees Schedule, Auckland Council.",
+      "notes": "Frozen copy sha256 9ea76cca... (v6.3 P5). The Plan is the legal record.",
+      "credits_name": "Notable trees"
     }
-  ]
+  ],
+  "license_review": {
+    "date": "2026-10-17",
+    "release": "v6.3",
+    "basis": ["docs/credits_audit_2026-10-13.md section 4.4 R2", "https://alto.tfwelch.com/credits.html (tool 0.2.11, updated 17 Oct 2026)", "LINZ layer metadata saved 4 Jun 2026 (data/raw/linz/*/layer.json)", "Auckland Council ArcGIS item licences read 17 Oct 2026"],
+    "credits": "credits.json (v6.3 work folder, licences/credits.json) holds one entry per credits.html row"
+  }
 }

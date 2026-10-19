@@ -41,7 +41,7 @@ img, svg { display: block; }
 /* ---------- Layout ----------
    One column below 1100 px; contents beside the page from 1100 px. The app bar and footer use the same
    columns, so the mark lines up with the contents and the actions with the page's right edge. */
-.doc, .app-bar-inner, .site-footer-inner {
+.doc, .app-bar-inner, .site-nav, .site-footer-inner {
   --card-pad: var(--space-10);
   --toc-w: 13.75rem;
   --page-col: minmax(0, calc(var(--prose-max) + 2 * var(--card-pad)));
@@ -63,7 +63,7 @@ img, svg { display: block; }
 .doc-body { border-top: 1px solid var(--color-border-subtle); border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding-bottom: var(--space-10); }
 
 @media (min-width: 1100px) {
-  .doc, .app-bar-inner, .site-footer-inner { grid-template-columns: var(--toc-w) var(--page-col); }
+  .doc, .app-bar-inner, .site-nav, .site-footer-inner { grid-template-columns: var(--toc-w) var(--page-col); }
   .doc-head { grid-column: 2; grid-row: 1; }
   .doc-body { grid-column: 2; grid-row: 2; }
   .toc {
@@ -73,10 +73,10 @@ img, svg { display: block; }
   }
 }
 @media (max-width: 759px) {
-  .doc, .app-bar-inner, .site-footer-inner { --card-pad: var(--space-6); }
+  .doc, .app-bar-inner, .site-nav, .site-footer-inner { --card-pad: var(--space-6); }
 }
 @media (max-width: 599px) {
-  .doc, .app-bar-inner, .site-footer-inner { --card-pad: var(--space-4); }
+  .doc, .app-bar-inner, .site-nav, .site-footer-inner { --card-pad: var(--space-4); }
   .doc { padding: 0 0 var(--space-8); }
   .doc-head, .toc, .doc-body { border-left: 0; border-right: 0; border-radius: 0; }
   .doc-head { border-top: 0; padding-top: var(--space-6); }
@@ -94,6 +94,18 @@ img, svg { display: block; }
 .app-bar-mark img { height: 28px; width: auto; }
 .app-bar-context { font: var(--text-label); color: var(--color-text-muted); padding-left: var(--space-3); border-left: 1px solid var(--color-border); }
 .app-bar-actions { margin-left: auto; display: flex; gap: var(--space-2); }
+/* The ALTO pages menu (site-nav.css) under the app bar, on the same columns: the list starts where the mark does. */
+.site-nav { padding: 0 var(--space-4); }
+.site-nav > ul { grid-column: 1 / -1; }
+
+/* Methods index (methods.html): one entry per release, newest first; the current release says so in words. */
+.doc-body .mi-list { list-style: none; padding: 0; margin: 0 0 var(--space-6); max-width: var(--prose-max); }
+.doc-body .mi-release { margin: 0; padding: var(--space-4) 0 var(--space-4) var(--space-4); border-top: 1px solid var(--color-border-subtle); border-left: 3px solid transparent; }
+.doc-body .mi-release.is-current { border-left-color: var(--color-text-accent); }
+.doc-body .mi-release h3 { margin: 0; font: var(--text-h3); }
+.doc-body .mi-release p { margin: var(--space-1) 0 0; }
+.mi-meta { font: var(--text-caption); color: var(--color-text-muted); }
+.mi-current { font-weight: var(--fw-semibold); color: var(--color-text); }
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
@@ -210,6 +222,7 @@ sup.fn a:hover { text-decoration: underline; }
 .dotplot-lines { grid-column: 2; grid-row: 1 / span var(--rows); position: relative; border-bottom: 1px solid var(--viz-axis); }
 .dotplot-lines span { position: absolute; top: 0; bottom: 0; width: 1px; margin-left: -0.5px; background: var(--viz-grid); }
 .dotplot-label { grid-column: 1; align-self: center; color: var(--color-text); line-height: var(--lh-snug); }
+.dotplot-label small { display: block; font-size: var(--fs-xs); color: var(--color-text-muted); }
 .dotplot-track { grid-column: 2; position: relative; }
 .dotplot-ticks { grid-column: 2; position: relative; height: var(--space-6); font: var(--text-caption); color: var(--viz-label); font-variant-numeric: var(--numeric-data); }
 .dotplot-ticks span { position: absolute; top: var(--space-1); transform: translateX(-50%); }
@@ -291,6 +304,18 @@ sup.fn a:hover { text-decoration: underline; }
 .link-list .meta { font: var(--text-caption); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); }
 .link-list .meta code { font: var(--text-mono); }
 .link-list a[aria-current="page"] { color: var(--color-text); text-decoration: none; }
+
+/* ---------- 404 page: search the map, open a tree named in the address ---------- */
+.nf-tree { margin: var(--space-3) 0 0; font: var(--text-body-ui); }
+.nf-search { display: grid; gap: var(--space-2); max-width: var(--prose-max); margin: 0 0 var(--space-6); }
+.nf-search label { font: var(--text-label); color: var(--color-text); }
+.nf-search-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.nf-search input { flex: 1 1 16rem; min-width: 0; min-height: var(--control-md); padding: 0 var(--space-3); border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); font: var(--text-body-ui); }
+.nf-search .btn { min-height: var(--control-md); }
+.btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-on-accent); }
+.btn-primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); color: var(--color-on-accent); }
+@media (max-width: 759px) { .nf-search input, .nf-search .btn { min-height: var(--target-touch); } }
 
 /* ---------- Footer credit (design system §2.24, §8.2): once per page ---------- */
 .site-footer-inner { padding: 0 var(--space-4) var(--space-10); }

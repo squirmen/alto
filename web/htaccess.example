@@ -12,6 +12,31 @@
 # the server: (1) Range requests work, and (2) the .pmtiles are never gzipped
 # (gzip + Range = corrupt tiles). Everything else here is caching + compression.
 
+# ---- HTTPS only -------------------------------------------------------------
+# Every plain-HTTP request answers 301 with the same host, path and query on
+# https: /, /tree/<number>, /kyte/ and /data/* alike. KYTE needs a secure
+# context (camera, location, offline storage), and a shared http:// link must
+# end on https. This block comes before every other rewrite rule in the root
+# .htaccess (the /tree/<number> rule included). Subfolders inherit it while
+# their own .htaccess has no RewriteEngine line (KYTE's have none). The second
+# condition stops a redirect loop if the host ever terminates TLS at a proxy.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L,NE]
+</IfModule>
+
+# HSTS on HTTPS responses: one year. No includeSubDomains and no preload until
+# every tfwelch.com subdomain is checked for HTTPS.
+# After deploy, check (browser user agent; never -k):
+#   curl -sI -A "Mozilla/5.0" "http://alto.tfwelch.com/tree/TZ69KK1G?x=1"  -> 301, Location: https://alto.tfwelch.com/tree/TZ69KK1G?x=1
+#   curl -sI -A "Mozilla/5.0" "http://alto.tfwelch.com/kyte/?tree=TZ69KK1G&task=girth" -> 301 to the same https URL
+#   curl -sI -A "Mozilla/5.0" "https://alto.tfwelch.com/" | grep -i strict-transport  -> max-age=31536000
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on'"
+</IfModule>
+
 # ---- MIME types -------------------------------------------------------------
 AddType application/octet-stream .pmtiles
 AddType text/javascript .js .mjs
@@ -19,11 +44,21 @@ AddType model/gltf-binary .glb
 AddType application/json         .json .geojson
 
 # ---- Browser security -------------------------------------------------------
-# The page currently keeps its application code inline and loads pinned
-# MapLibre/PMTiles assets from unpkg, so those narrowly scoped allowances are
-# explicit. Map tiles are limited to the providers configured in index.html.
+# Scripts come from this site's files only (no inline script from tool 0.2.9:
+# site-config.js, map-app.js, tree-prefetch.js; FE-15) and from the two pinned
+# library paths on unpkg (MapLibre GL JS 4.7.1 with its stylesheet, PMTiles
+# 3.0.7), each loaded with its SRI hash. unpkg is never fetched from script
+# (connect-src). Switch to this policy after every page under the site root is
+# from tool 0.2.9 or later (/beta/ included): older pages run inline script.
+# KYTE sets its own policy in kyte/.htaccess.
+# Map tiles are limited to the providers configured in index.html.
+# OpenStreetMap tiles come from tile.openstreetmap.org only (OSMF tile usage policy).
+# LINZ Basemaps aerial imagery (basemap-config.js: the beta channel, once LINZ
+# issues the site a key; docs/tool/linz-basemaps.md) comes from
+# https://basemaps.linz.govt.nz: connect-src for the map's tiles (MapLibre
+# fetches them) and img-src for the aerial figures (tiles in <img>). Tool 0.2.11.
 <IfModule mod_headers.c>
-  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; connect-src 'self' blob: https://unpkg.com https://server.arcgisonline.com https://*.tile.openstreetmap.org https://nz-imagery.s3.ap-southeast-2.amazonaws.com; img-src 'self' data: blob: https://server.arcgisonline.com https://*.tile.openstreetmap.org; font-src 'self' data:; worker-src 'self' blob:; frame-src 'none'; manifest-src 'self'"
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' https://unpkg.com/maplibre-gl@4.7.1/ https://unpkg.com/pmtiles@3.0.7/; style-src 'self' 'unsafe-inline' https://unpkg.com/maplibre-gl@4.7.1/; connect-src 'self' blob: https://server.arcgisonline.com https://tile.openstreetmap.org https://nz-imagery.s3.ap-southeast-2.amazonaws.com https://basemaps.linz.govt.nz; img-src 'self' data: blob: https://server.arcgisonline.com https://tile.openstreetmap.org https://basemaps.linz.govt.nz; font-src 'self' data:; worker-src 'self' blob:; frame-src 'none'; manifest-src 'self'"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
@@ -70,8 +105,37 @@ AddType application/json         .json .geojson
   <FilesMatch "\.html$">
     Header set Cache-Control "public, max-age=600, must-revalidate"
   </FilesMatch>
+  # The data release's metadata names what every page reads: fresh for a minute, then served while the browser checks
+  # it again in the background (FE-04; the pages no longer fetch it with no-store).
+  <Files "release-metadata.json">
+    Header set Cache-Control "public, max-age=60, stale-while-revalidate=600"
+  </Files>
+  # A file asked for with a version stamp (?v=tool-0.2.9, ?v=<tile version>) and a release's derived files
+  # (/derived/<release>/) never change at that address: a new build or release changes the stamp or the folder
+  # (FE-04). Pages (.html, folders) keep their 10 minutes; KYTE's folder keeps its own rules.
+  <If "%{REQUEST_URI} !~ m#^/kyte/# && %{REQUEST_URI} !~ m#(\.html|/)$# && (%{QUERY_STRING} =~ /(^|&)v=[^&]+/ || %{REQUEST_URI} =~ m#^/derived/[^/]+/.#)">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
 </IfModule>
 
 # ---- Misc -------------------------------------------------------------------
 Options -Indexes
 DirectoryIndex index.html
+
+# ---- Permanent tree links and the 404 page ----------------------------------
+# https://alto.tfwelch.com/tree/<number> (and any older tree ID: record IDs,
+# crown keys) opens the tree page, which resolves the ID through data/tree_ids.
+# This rule replaces the v6.1 one, which matched only
+# [A-Za-z0-9_.:-]: /Tree/ and /TREE/ are read as /tree/ (NC), and a link copied
+# with a space (%20), a no-break space, a dash such as – or a closing ")" or "."
+# reaches the page, which drops them; B escapes the ID into the query string.
+# A redirect, not an internal rewrite: the page loads its scripts and data by
+# relative paths, which must resolve from the site root. /tree/ and /tree/a/b
+# stay 404.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^tree/([^/]{1,190})/?$ /tree.html?id=$1 [NC,B,R=302,L,QSA]
+</IfModule>
+# Any other address that names no file: ALTO's page (search, Map, Species maxima,
+# Sources and credits), not the host's.
+ErrorDocument 404 /404.html

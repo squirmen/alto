@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="./fonts.css?v=tool-0.2.2">
 <link rel="stylesheet" href="./tokens.css?v=tool-0.2.2">
 <link rel="stylesheet" href="./methods.css?v=tool-0.2.2">
+<link rel="stylesheet" href="./site-nav.css?v=tool-0.2.9">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to the content</a>
@@ -19,14 +20,12 @@
 <header class="app-bar">
   <div class="app-bar-inner">
     <div class="app-bar-row">
-      <a class="app-bar-mark" href="./"><img src="./alto-logo.png" alt="ALTO map" width="3934" height="1170"></a>
+      <a class="app-bar-mark" href="./"><img src="./brand/alto-wordmark.png?v=tool-0.2.9" alt="ALTO map" width="282" height="84"></a>
       <span class="app-bar-context">Methods</span>
-      <nav class="app-bar-actions" aria-label="Page actions">
-        <a class="btn" href="./"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Map</a>
-      </nav>
     </div>
   </div>
 </header>
+<nav class="site-nav" aria-label="ALTO pages"><ul><li><a href="./">Map</a></li><li><a href="./maxima.html">Species maxima</a></li><li><a href="./methods.html" aria-current="true">Methods</a></li><li><a href="./credits.html">Sources and credits</a></li><li><a href="./kyte/">KYTE</a></li></ul></nav>
 
 <main id="main" class="doc" tabindex="-1">
   <header class="doc-head">
@@ -37,9 +36,10 @@
       <div><dt>Published</dt><dd><time datetime="2026-09-23">23 Sep 2026</time></dd></div>
       <div><dt>Previous release</dt><dd>4 · 18 Sep 2026</dd></div>
       <div><dt>Next release</dt><dd><a href="./v51-methods.html">5.1 · 8 Oct 2026</a></dd></div>
+      <div><dt>Overview</dt><dd><a href="./how-alto-is-made.html">How ALTO is made</a></dd></div>
       <div class="release-id"><dt>Dataset ID</dt><dd><code>metro-2026.09.23-pointcloud-v5</code></dd></div>
     </dl>
-    <p class="lede">Release 5 contains 3,352,851 crowns of tree height and 1,499,603 lower-vegetation candidates, across all 3,149 completed tiles of the 2024 LiDAR survey.</p>
+    <p class="lede">Release 5 contains 3,352,851 LiDAR crowns 3&nbsp;m or taller and 1,499,603 lower-vegetation candidates, across all 3,149 completed tiles of the 2024 LiDAR survey.</p>
   </header>
 
   <nav class="toc" aria-labelledby="toc-title">
@@ -58,8 +58,9 @@
   <div class="doc-body">
     <section id="crown-outline">
       <h2>What changed</h2>
-      <p>Release 5 combines the 2024 LiDAR survey with aerial NDVI (normalised difference vegetation index) to redraw the canopy.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup> Each current crown is shown as one tree on the map. Source records and earlier detections remain separate records, linked through their positions and overlapping crown boundaries.</p>
+      <p>Release 5 combines the 2024 LiDAR survey with aerial NDVI (normalised difference vegetation index) to redraw the canopy.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup> Each current crown is shown as one marker on the map; a crown can hold several trees, and a large tree can be split into several crowns. Source records and earlier detections remain separate records, linked through their positions and overlapping crown boundaries.</p>
       <p>The new tree layer uses a 3&nbsp;m height threshold. Separate layers show canopy <span class="nw">2–3&nbsp;m</span> tall, vegetation below 2&nbsp;m, and crowns at least 5&nbsp;m wide. Those lower layers do not contribute to benefit totals.</p>
+      <p id="merge-limit">Crowns are not merged beyond 400&nbsp;m²; a larger tree can be split into several crowns. Crown areas of 360&nbsp;m² or more read “at or near the 400&nbsp;m² segmentation limit; the tree may be larger” on tree pages and in <a href="./maxima.html?measure=area">Species maxima</a>.</p>
     </section>
 
     <section id="earlier-records">
@@ -112,6 +113,8 @@
       </ul>
       <h3>Releases</h3>
       <ul class="link-list">
+        <li><a href="./v63-methods.html">Benefit value, height checks and group areas</a><span class="meta">Release 6.3 · 17 Oct 2026</span></li>
+        <li><a href="./v62-methods.html">Reviewer-confirmed crowns and palm-type crowns</a><span class="meta">Release 6.2 · 13 Oct 2026</span></li>
         <li><a href="./v61-methods.html">Permanent tree numbers</a><span class="meta">Release 6.1 · 13 Oct 2026</span></li>
         <li><a href="./v6-methods.html">Growth form and smoothed crown outlines</a><span class="meta">Release 6 · 12 Oct 2026</span></li>
         <li><a href="./v52-methods.html">Linking records to crowns</a><span class="meta">Release 5.2 · 10 Oct 2026</span></li>
@@ -126,7 +129,7 @@
   <div class="site-footer-inner">
     <div class="site-footer-body">
       <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
-      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span>, University of Auckland</span><span>Release 5 · 23 Sep 2026</span></p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span> | University of Auckland</span><a href="./credits.html">Sources and credits</a><span>Release 5 · 23 Sep 2026</span></p>
     </div>
   </div>
 </footer>

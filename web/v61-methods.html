@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Methods: permanent tree numbers (release 6.1) · ALTO</title>
-<meta name="description" content="ALTO release 6.1: a permanent number for every tree on the map, its format and check character, the alias table that resolves every earlier tree ID and crown key, the reviewer corrections applied, and the limits.">
+<meta name="description" content="ALTO release 6.1: a permanent tree number for every marker on the map and every earlier LiDAR detection kept as a record, its format and check character, the alias table that resolves every earlier tree ID and crown key, the reviewer corrections applied, and the limits.">
 <meta name="theme-color" content="#4a6f46">
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
 <meta name="color-scheme" content="light">
@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="./fonts.css?v=tool-0.2.2">
 <link rel="stylesheet" href="./tokens.css?v=tool-0.2.2">
 <link rel="stylesheet" href="./methods.css?v=tool-0.2.2">
+<link rel="stylesheet" href="./site-nav.css?v=tool-0.2.9">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to the content</a>
@@ -19,14 +20,12 @@
 <header class="app-bar">
   <div class="app-bar-inner">
     <div class="app-bar-row">
-      <a class="app-bar-mark" href="./"><img src="./alto-logo.png" alt="ALTO map" width="3934" height="1170"></a>
+      <a class="app-bar-mark" href="./"><img src="./brand/alto-wordmark.png?v=tool-0.2.9" alt="ALTO map" width="282" height="84"></a>
       <span class="app-bar-context">Methods</span>
-      <nav class="app-bar-actions" aria-label="Page actions">
-        <a class="btn" href="./"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Map</a>
-      </nav>
     </div>
   </div>
 </header>
+<nav class="site-nav" aria-label="ALTO pages"><ul><li><a href="./">Map</a></li><li><a href="./maxima.html">Species maxima</a></li><li><a href="./methods.html" aria-current="true">Methods</a></li><li><a href="./credits.html">Sources and credits</a></li><li><a href="./kyte/">KYTE</a></li></ul></nav>
 
 <main id="main" class="doc" tabindex="-1">
   <header class="doc-head">
@@ -36,9 +35,11 @@
       <div><dt>Release</dt><dd>6.1</dd></div>
       <div><dt>Published</dt><dd><time datetime="2026-10-13">13 Oct 2026</time></dd></div>
       <div><dt>Previous release</dt><dd><a href="./v6-methods.html">6 · 12 Oct 2026</a></dd></div>
+      <div><dt>Next release</dt><dd><a href="./v62-methods.html">6.2 · 13 Oct 2026</a></dd></div>
+      <div><dt>Overview</dt><dd><a href="./how-alto-is-made.html">How ALTO is made</a></dd></div>
       <div class="release-id"><dt>Dataset ID</dt><dd><code>metro-2026.10.13-pointcloud-v6.1</code></dd></div>
     </dl>
-    <p class="lede">This release gives every tree on the map a permanent number, publishes a table that resolves every tree ID and crown key ALTO has published, and applies the corrections ledger in full. Crowns, measurements and estimates are those of release 6 except on the trees a correction changed.</p>
+    <p class="lede">This release gives every marker on the map, and every earlier LiDAR detection kept as a record, a permanent tree number, publishes a table that resolves every tree ID and crown key ALTO has published, and applies the corrections ledger in full. Crowns, measurements and estimates are those of release 6 except on the trees a correction changed.</p>
   </header>
 
   <nav class="toc" aria-labelledby="toc-title">
@@ -59,31 +60,31 @@
     <section id="what-changed">
       <h2>What changed</h2>
       <ul>
-        <li>4,200,336 map trees have a permanent tree number, such as <code>TMCTT6X4</code>. Each tree’s permanent link is <code>https://alto.tfwelch.com/tree/</code> followed by its number.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup></li>
+        <li>4,200,336 permanent tree numbers are issued, such as <code>TMCTT6X4</code>: 3,574,821 for the markers on the map and 625,515 for earlier LiDAR detections kept as records. Each tree’s permanent link is <code>https://alto.tfwelch.com/tree/</code> followed by its number.<sup class="fn"><a href="#note-1" id="ref-1" aria-label="Note 1">1</a></sup></li>
         <li>An alias table of 19,376,165 keys resolves every tree number, record ID and crown key published since June 2026 to the tree that carries it now, or to the reason it carries none.<sup class="fn"><a href="#note-2" id="ref-2" aria-label="Note 2">2</a></sup></li>
         <li>The corrections ledger is applied in full: 14 corrections change the map and the tree records, 17 are recorded with their trees, 318 were already true and 5 await review; none is pending.<sup class="fn"><a href="#note-3" id="ref-3" aria-label="Note 3">3</a></sup></li>
-        <li>The map shows 3,574,821 trees (3 fewer than release 6) and counts 3,523,021 crowns (3 fewer); 3,570 trees are protected, as in release 6.</li>
+        <li>The map shows 3,574,821 markers (3 fewer than release 6) and counts 3,523,021 LiDAR crowns 3&nbsp;m or taller (3 fewer; a crown can hold several trees, and a large tree can be split into several crowns); 3,570 map markers are linked to Schedule 10, as in release 6.</li>
       </ul>
     </section>
 
     <section id="numbers">
       <h2>Tree numbers</h2>
-      <p>A number belongs to a tree as the map draws it: one number for each map marker after the corrections. A crown’s number covers its marker, its outline and every record on the crown.</p>
+      <p>A number belongs to a tree as the map draws it: one number for each marker on the map after the corrections, and one for each earlier LiDAR detection kept as a record. A crown’s number covers its marker, its outline and every record on the crown.</p>
       <div class="table-wrap" role="region" aria-labelledby="table-1-caption" tabindex="0">
         <table class="data-table">
-          <caption id="table-1-caption"><span class="caption-label">Table 1.</span> Tree numbers issued in release 6.1, by what the map draws.</caption>
+          <caption id="table-1-caption"><span class="caption-label">Table 1.</span> Tree numbers issued in release 6.1: 3,574,821 markers on the map (crowns and records with their own marker) and 625,515 earlier LiDAR detections kept as records.</caption>
           <thead>
-            <tr><th scope="col">Map tree</th><th scope="col">Carries the number</th><th scope="col" class="num">Numbers</th></tr>
+            <tr><th scope="col">Numbered</th><th scope="col">Carries the number</th><th scope="col" class="num">Numbers</th></tr>
           </thead>
           <tbody>
             <tr><th scope="row">Crown</th><td>The crown outline, its marker and every record on the crown</td><td class="num">3,523,098</td></tr>
             <tr><th scope="row">Earlier LiDAR detection</th><td>A release 4 detection that no current crown covers</td><td class="num">625,515</td></tr>
             <tr><th scope="row">Record with its own marker</th><td>A record with a marker and no crown of its own: Council, OpenStreetMap and notable-tree records without a crown or outside the survey, and 14 protected records on a shared crown</td><td class="num">51,723</td></tr>
-            <tr><th scope="row">All map trees</th><td></td><td class="num">4,200,336</td></tr>
+            <tr><th scope="row">All tree numbers</th><td></td><td class="num">4,200,336</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Of the 6,238,420 records, 4,200,336 are a tree’s marker, 2,038,080 sit on another record’s crown and carry that tree’s number, and 4 were merged into another tree by a reviewer and carry the surviving tree’s number. Each full record lists its tree’s number, its role (marker, member or merged) and the release that issued the number.</p>
+      <p>Of the 6,238,420 records, 4,200,336 are the record that carries a tree’s number (role “marker”; 625,515 of them are earlier LiDAR detections, which the map does not draw), 2,038,080 sit on another record’s crown and carry that tree’s number, and 4 were merged into another tree by a reviewer and carry the surviving tree’s number. Each full record lists its tree’s number, its role (marker, member or merged) and the release that issued the number.</p>
       <p>Numbers are drawn at random from about 1.07 billion possible numbers and checked against every number issued before; a number is never reused and encodes nothing about the tree. The record ID (<code>akl_tree_…</code>) stays the key of each full record.</p>
       <p>Later releases carry numbers over. A crown that continues keeps its number: at least half of it lies in one new crown and no other new crown holds a fifth. When several numbered trees become one, the number with outside references, corrections or a source record survives (otherwise the largest overlap) and the others are marked merged. A split keeps the number on the part holding the representative record and lists every part. A tree with no successor is retired with a reason and its last position. A change of representative alone never changes a number.<sup class="fn"><a href="#note-4" id="ref-4" aria-label="Note 4">4</a></sup></p>
     </section>
@@ -202,6 +203,8 @@
       </ul>
       <h3>Releases</h3>
       <ul class="link-list">
+        <li><a href="./v63-methods.html">Benefit value, height checks and group areas</a><span class="meta">Release 6.3 · 17 Oct 2026</span></li>
+        <li><a href="./v62-methods.html">Reviewer-confirmed crowns and palm-type crowns</a><span class="meta">Release 6.2 · 13 Oct 2026</span></li>
         <li><a href="./v61-methods.html" aria-current="page">Permanent tree numbers</a><span class="meta">Release 6.1 · 13 Oct 2026</span></li>
         <li><a href="./v6-methods.html">Growth form and smoothed crown outlines</a><span class="meta">Release 6 · 12 Oct 2026</span></li>
         <li><a href="./v52-methods.html">Linking records to crowns</a><span class="meta">Release 5.2 · 10 Oct 2026</span></li>
@@ -216,7 +219,7 @@
   <div class="site-footer-inner">
     <div class="site-footer-body">
       <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
-      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span>, University of Auckland</span><span>Release 6.1 · 13 Oct 2026</span></p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span> | University of Auckland</span><a href="./credits.html">Sources and credits</a><span>Release 6.1 · 13 Oct 2026</span></p>
     </div>
   </div>
 </footer>

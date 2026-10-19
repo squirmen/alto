@@ -4,23 +4,25 @@
     "name": "ALTO — Auckland metropolitan research snapshot",
     "status": "research_only_not_independently_validated",
     "public_claims_enabled": false,
-    "software_version": "0.1.0",
-    "dataset_version": "metro-2026.10.13-pointcloud-v6.1",
-    "dataset_last_updated_utc": "2026-10-12T13:00:54.701130+00:00",
-    "metadata_generated_utc": "2026-10-12T13:00:54.701137+00:00",
-    "source_revision": "v6.1: permanent tree numbers and the corrections ledger applied in full; data/tree-numbers-v61.json, data/corrections-applied.json",
-    "source_dirty": null
+    "software_version": "0.2.12",
+    "dataset_version": "metro-2026.10.17-pointcloud-v6.3",
+    "dataset_last_updated_utc": "2026-10-17T12:30:40.427098+00:00",
+    "metadata_generated_utc": "2026-10-17T12:30:40.427104+00:00",
+    "source_revision": "v6.3: benefit value (stormwater and carbon), height and record checks, height class and crown replacement time, Schedule 10 entries and group areas, licences, species names",
+    "source_dirty": null,
+    "data_release": "v6.3",
+    "software_version_note": "Tool version this data release was checked with (web/version.js at commit 8871dca; VERSIONING.md), not the version of the interface in use."
   },
   "dataset": {
     "extent_id": "auckland_metro",
     "new_pointcloud_tree_records": 399290,
     "evidence_tiers": {
       "location_unverified": 646,
-      "possible": 59050,
+      "possible": 58765,
       "probable": 914878,
       "shared_crown_candidate": 2038093,
       "unmatched": 846296,
-      "very_likely": 2379457
+      "very_likely": 2379742
     },
     "current_v5_service_records": 3352851,
     "tree_records": 6238420,
@@ -35,8 +37,9 @@
       "outside_v5_coverage": 187105
     },
     "near_canopy_classes": {
-      "low_canopy": 594370,
-      "sub_canopy": 905233
+      "low_canopy": 594369,
+      "sub_canopy": 905233,
+      "promoted_tree_crown": 1
     },
     "tile_coverage": {
       "expected": 3149,
@@ -44,43 +47,152 @@
       "empty_tiles": 41
     },
     "crown_features": 3523098,
-    "current_service_records": 3540503,
+    "current_service_records": 3540500,
     "record_links_v52": 3088,
     "record_seeded_crowns_v52": {
       "features": 534,
       "counted": 457,
-      "low_canopy_not_counted": 77
+      "low_canopy_not_counted": 77,
+      "confirmed_v62": {
+        "crowns": 278,
+        "records_confirmed": 326,
+        "confirmations": 317,
+        "counted_in_services": 236,
+        "low_canopy_not_counted": 42,
+        "reviewer_outline_crowns": 5,
+        "retired_v61": 3,
+        "still_awaiting_confirmation": 248,
+        "reviewer_corrected_records_confirmed": 9
+      }
     },
     "growth_form_v6": {
       "scored_crowns": 3352099,
       "display_keys": {
         "evergreen_high": 1491608,
         "evergreen_medium": 839983,
-        "not_determined": 580548,
+        "not_determined": 564322,
         "conifer": 144883,
         "broadleaf": 136708,
         "tree_fern": 71947,
         "deciduous_likely": 39048,
-        "palm_c1": 19600,
+        "palm_c1": 35826,
         "deciduous_high": 16913,
         "palm_or_cabbage_tree": 10861
       },
-      "mode": "full"
+      "mode": "full",
+      "c1_threshold": 0.2,
+      "c1_scope": "v6_not_determined"
     },
     "current_service_records_reweighted_v6": 2918424,
     "headline_totals": {
-      "trees": 3574821,
+      "trees": 3574741,
       "protected": 3570,
-      "lidarInferred": 3510684,
-      "totalValueNzdY": 295364727.4299859,
-      "runoffM3Y": 20522968.673977666,
-      "carbonTco2e": 3376489.9339971733,
-      "crowns": 3523021
+      "lidarInferred": 3510604,
+      "benefitValueNzdY": 76731669.42599995,
+      "runoffM3Y": 20507648.935999766,
+      "carbonTco2e": 3371713.8490000367,
+      "crowns": 3522941
     },
-    "tree_numbers": 4200336
+    "tree_numbers": 4200336,
+    "not_release_eligible_totals": {
+      "totalValueNzdY": 295196074.34907985,
+      "airQualityValueNzdY": 163510783.7241361,
+      "coolingValueNzdY": 54953621.17038748,
+      "pm25RemovedKgYV6Rule": 6540431.3489654455,
+      "note": "Kept for provenance; not release-eligible from v6.3.",
+      "pm25RemovedTY": 128.56889309956497
+    },
+    "markers_in_totals": 3574741,
+    "crowns_in_totals": 3522941,
+    "valued_service_records": 3540420,
+    "inGroupArea": 3351,
+    "counts_note": "v6.3 (DB-12): counts from the published records. current_map_markers: map markers other than earlier detections; markers_in_totals and crowns_in_totals leave out the 80 markers whose height is not plausible. current_service_records: the published service rows (the v6.2 metadata counted table rows: 3,540,503). inGroupArea: markers in the totals inside a Notable Group of Trees area.",
+    "height_checks": {
+      "implausible": 80,
+      "implausible_55m_or_more": 66,
+      "implausible_below_55m": 14,
+      "check": 2692,
+      "dataset": "height_check",
+      "tile_property": "hchk"
+    },
+    "link_checks": {
+      "linked_records": 42491,
+      "likely_different": 253,
+      "check": 5556,
+      "map_markers_flagged": 4188,
+      "dataset": "link_check",
+      "tile_property": "lchk"
+    },
+    "size_classes": {
+      "height_class": {
+        "small": 1252676,
+        "medium": 922858,
+        "large": 601543,
+        "very_small": 484185,
+        "very_large": 279158,
+        "none": 34401
+      },
+      "crown_replacement": {
+        "15_40y": 1040238,
+        "not_classed": 951906,
+        "5_15y": 723003,
+        "40_80y": 453160,
+        "80y_plus": 284679,
+        "under_5y": 121835
+      },
+      "not_classed": 951906,
+      "not_classed_reason": {
+        "under_5m": 917582,
+        "no_estimate": 34244,
+        "height_not_plausible": 80
+      },
+      "tall_tree": 204156,
+      "dataset": "size",
+      "tile_properties": [
+        "height_class",
+        "crown_replacement",
+        "replacement_years_canopy"
+      ]
+    },
+    "group_areas": {
+      "polygons": 229,
+      "map_markers": 3824,
+      "by_kind": {
+        "crown": 3266,
+        "earlier_detection": 473,
+        "record": 85
+      },
+      "crowns_not_linked_to_schedule10": 2980,
+      "in_totals": 3351,
+      "layer": "data/notable_group_areas.geojson",
+      "dataset": "group_area",
+      "tile_property": "grp"
+    },
+    "schedule10": {
+      "entries": 2480,
+      "trees_listed_about": 4787,
+      "items_all_points_on_one_crown": 96,
+      "text": "linked to Schedule 10: 2,480 entries listing about 4,787 trees",
+      "dataset": "schedule_entry",
+      "schedule": "Auckland Unitary Plan, Schedule 10 Notable Trees Schedule (July 2026)"
+    },
+    "species_names": {
+      "filter_options": 1028,
+      "map_markers_with_species": 56258,
+      "accepted_names": 11,
+      "records_renamed": 3546,
+      "kauri_survey_records": 1205,
+      "list": "data/species_options.json",
+      "tile_property": "sp"
+    },
+    "licences": {
+      "odbl_records": 4800,
+      "dataset": "licence"
+    },
+    "crown_outlines_cleaned": 1447
   },
   "headline_scope": {
-    "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag and await confirmation; 77 drawn crowns 2–3 m tall are low canopy and not counted."
+    "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag (v6.2: 240 confirmed or drawn by a reviewer, 2 retired by a correction, 215 await confirmation); 77 drawn crowns 2–3 m tall are low canopy and not counted. v6.3: the benefit value is stormwater plus carbon; air-quality and cooling dollars, PM2.5 removal and the cooling index are not counted (kept in each tree's full record). The 80 crowns whose height is not plausible are left out of the totals (their estimates are withheld); crowns whose height or record link is to check stay in the totals."
   },
   "models": [
     {
@@ -124,13 +236,84 @@
     },
     {
       "component": "tree_change",
-      "validation_status": "not_independently_validated",
-      "release_eligible": false,
+      "validation_status": "photo_checked",
+      "release_eligible": true,
       "implementations": [
         {
-          "id": "legacy_unversioned_tree_change_output"
+          "id": "tree_change_v1",
+          "version": "v1",
+          "released": "2026-10-13",
+          "file": "data/tree_change_v1.pmtiles",
+          "source": "https://alto.tfwelch.com/v62-methods.html#what-changed"
         }
-      ]
+      ],
+      "validation": {
+        "method": "blind photo check of shown changes against LINZ aerial photographs of both dates",
+        "shown_changes_real": 0.92,
+        "ci95": [
+          0.88,
+          0.95
+        ],
+        "n": 315,
+        "by_class": {
+          "removed_seen_2016": [
+            0.92,
+            [
+              0.85,
+              0.97
+            ],
+            85
+          ],
+          "removed_seen_only_2013": [
+            0.98,
+            [
+              0.93,
+              1.0
+            ],
+            46
+          ],
+          "built_over": [
+            0.88,
+            [
+              0.79,
+              0.96
+            ],
+            54
+          ],
+          "new_since_2013": [
+            0.9,
+            [
+              0.81,
+              0.97
+            ],
+            77
+          ],
+          "new_since_2016": [
+            0.88,
+            [
+              0.76,
+              0.97
+            ],
+            53
+          ]
+        }
+      },
+      "extent": "central isthmus (the 2013 and 2016 height models): 1749-1766 kE x 5907-5925 kN (NZTM)",
+      "counts": {
+        "changes": 82863,
+        "removed_to_open": 68290,
+        "of_which_built_over": 10051,
+        "established_since_2013": 11293,
+        "established_since_2016": 3280
+      },
+      "limits": [
+        "Partial losses are not shown.",
+        "Grown and shrunk crowns are not validated.",
+        "About 113,600 real changes (91,100-136,600) are among the hidden candidates (missed partial losses, built-over cases with weak photo evidence, shrubs that grew).",
+        "The earliest photographs predate the 2013 LiDAR by 1-3 years and are offset by 1-4 m."
+      ],
+      "source_summary_sha256": "8bbbf3e9183fdcdbc6c45691329231512eab7d66af2c5adaef3287c54b64255a",
+      "release_eligible_basis": "v6.3: release-eligible with its limits kept (Tim Welch, 17 Oct 2026): photo-checked, 92 % of shown changes real."
     },
     {
       "component": "root_space",
@@ -152,7 +335,24 @@
           "id": "valuation_v4_exploratory_sensitivity_not_release_eligible"
         }
       ],
-      "application": "Existing sensitivity equations recalculated from v5 dimensions; earlier estimates retained separately."
+      "application": "Existing sensitivity equations recalculated from v5 dimensions; earlier estimates retained separately.",
+      "v63": {
+        "benefit_value": "stormwater + carbon (NZ$ a year), with a band from the valuation confidence (±30 % modelled medium, ±60 % modelled low)",
+        "release_eligible_components": [
+          "stormwater",
+          "carbon"
+        ],
+        "not_release_eligible": [
+          "air_quality_value_nzd_y",
+          "cooling_value_nzd_y",
+          "pm25_removed_kg_y (v6 rule)",
+          "total_value_nzd_y (v6.2 basis)"
+        ],
+        "pm25_removed_g_y": "deposition method after Nowak et al. (2013), kept in the record, not published (pm25_cooling_approved false)",
+        "cooling_index": "crown area (m²) × (paved fraction + 2 × degrees of mean air temperature above 18 °C); kept in the record, not published",
+        "withheld": "80 crowns whose height is not plausible",
+        "dataset": "benefits"
+      }
     },
     {
       "component": "canopy_height_forecast",
@@ -221,29 +421,34 @@
   ],
   "artifacts": [
     {
-      "path": "data/near_canopy.pmtiles",
-      "bytes": 554280732,
-      "last_modified_utc": "2026-09-23T03:41:23.737510+00:00"
-    },
-    {
-      "path": "data/trees_map_points.pmtiles",
-      "bytes": 1705004463,
-      "last_modified_utc": "2026-10-12T13:00:54.701166+00:00"
-    },
-    {
-      "path": "data/tree_crowns_pilot.pmtiles",
-      "bytes": 2046151883,
-      "last_modified_utc": "2026-10-12T13:00:54.701188+00:00"
-    },
-    {
-      "path": "data/properties.pmtiles",
-      "bytes": 233734636,
-      "last_modified_utc": "2026-10-12T13:00:54.701851+00:00"
-    },
-    {
       "path": "data/council_positions.pmtiles",
       "bytes": 1277767,
       "last_modified_utc": "2026-10-12T13:00:54.701880+00:00"
+    },
+    {
+      "path": "data/near_canopy.pmtiles",
+      "bytes": 554281303,
+      "last_modified_utc": "2026-10-12T23:18:31.642962+00:00"
+    },
+    {
+      "path": "data/trees_map_points.pmtiles",
+      "bytes": 1522632084,
+      "last_modified_utc": "2026-10-17T12:30:40.427360+00:00"
+    },
+    {
+      "path": "data/tree_crowns_pilot.pmtiles",
+      "bytes": 1861540109,
+      "last_modified_utc": "2026-10-17T12:30:40.427370+00:00"
+    },
+    {
+      "path": "data/properties.pmtiles",
+      "bytes": 231936327,
+      "last_modified_utc": "2026-10-17T12:30:40.427378+00:00"
+    },
+    {
+      "path": "data/notable_group_areas.geojson",
+      "bytes": 304262,
+      "last_modified_utc": "2026-10-17T12:30:40.427387+00:00"
     }
   ],
   "provenance": {
@@ -251,14 +456,15 @@
     "methods": "docs/methodology.md",
     "validation_directory": "docs/validation",
     "working_crs": "EPSG:2193",
-    "web_crs": "EPSG:4326"
+    "web_crs": "EPSG:4326",
+    "credits": "credits.html (credits.json in the release work folder)"
   },
   "assembly": {
-    "assembled_utc": "2026-10-12T13:00:54.701142+00:00",
-    "tile_version": "20261013-v6.1",
-    "database_mtime_ns": "1791806695743022549",
-    "mode": "verified_v61_build",
-    "note": "v6 streams, records and summaries with tree numbers and the corrections ledger applied by a rebuild of the affected trees."
+    "assembled_utc": "2026-10-17T12:30:40.427347+00:00",
+    "tile_version": "20261017-v6.3",
+    "database_mtime_ns": "1792204194828950876",
+    "mode": "verified_v63_build",
+    "note": "v6.2 streams, records and summaries with the v6.3 tables applied (new *_v63 tables only); every v6.2 value kept, retired values labelled in the full record."
   },
   "derived_products": {
     "longitudinal_model": "data/longitudinal/model.json",
@@ -271,114 +477,143 @@
     "growth_form": "data/growth-form-v6.json",
     "corrections_applied": "data/corrections-applied.json",
     "tree_ids": "data/tree_ids/schema.json",
-    "tree_numbers": "data/tree-numbers-v61.json"
+    "tree_numbers": "data/tree-numbers-v61.json",
+    "tree_change": "data/tree_change_v1.pmtiles",
+    "notable_group_areas": "data/notable_group_areas.geojson",
+    "species_options": "data/species_options.json"
   },
   "previous_release": {
     "release": {
       "name": "ALTO — Auckland metropolitan research snapshot",
       "status": "research_only_not_independently_validated",
       "public_claims_enabled": false,
-      "software_version": "0.1.0",
-      "dataset_version": "metro-2026.10.12-pointcloud-v6",
-      "dataset_last_updated_utc": "2026-10-11T21:30:30.220087+00:00",
-      "metadata_generated_utc": "2026-10-11T21:30:30.220110+00:00",
-      "source_revision": "V6 growth form and smoothed crown outlines; rules, counts and service changes in data/growth-form-v6.json",
-      "source_dirty": null
+      "software_version": "0.2.5",
+      "dataset_version": "metro-2026.10.13-pointcloud-v6.2",
+      "dataset_last_updated_utc": "2026-10-12T23:18:22.708817+00:00",
+      "metadata_generated_utc": "2026-10-12T23:18:22.708820+00:00",
+      "source_revision": "v6.2: reviewer-confirmed crowns drawn from a record, palm detection from a C1 score of 0.2, change-layer v1 metadata, the promoted near-canopy polygon re-classed",
+      "source_dirty": null,
+      "data_release": "v6.2",
+      "software_version_note": "Tool version this data release was checked with (web/version.js at commit ab98d65; VERSIONING.md), not the version of the interface in use."
     },
     "dataset": {
       "extent_id": "auckland_metro",
       "new_pointcloud_tree_records": 399290,
       "evidence_tiers": {
         "location_unverified": 646,
-        "possible": 59050,
+        "possible": 58765,
         "probable": 914878,
         "shared_crown_candidate": 2038093,
         "unmatched": 846296,
-        "very_likely": 2379457
+        "very_likely": 2379742
       },
       "current_v5_service_records": 3352851,
       "tree_records": 6238420,
-      "current_map_markers": 3574824,
-      "crown_records": 3523024,
+      "current_map_markers": 3574821,
+      "crown_records": 3523021,
       "pointcloud_v5_tree_crowns": 3352851,
       "near_canopy_candidates": 1499603,
       "display_roles": {
-        "current_crown": 3353399,
+        "current_crown": 3353396,
         "source_record": 34320,
-        "earlier_detection": 625517,
+        "earlier_detection": 625515,
         "outside_v5_coverage": 187105
       },
       "near_canopy_classes": {
-        "low_canopy": 594370,
-        "sub_canopy": 905233
+        "low_canopy": 594369,
+        "sub_canopy": 905233,
+        "promoted_tree_crown": 1
       },
       "tile_coverage": {
         "expected": 3149,
         "completed": 3149,
         "empty_tiles": 41
       },
-      "crown_features": 3523101,
+      "crown_features": 3523098,
       "current_service_records": 3540503,
       "record_links_v52": 3088,
       "record_seeded_crowns_v52": {
         "features": 534,
         "counted": 457,
-        "low_canopy_not_counted": 77
+        "low_canopy_not_counted": 77,
+        "confirmed_v62": {
+          "crowns": 278,
+          "records_confirmed": 326,
+          "confirmations": 317,
+          "counted_in_services": 236,
+          "low_canopy_not_counted": 42,
+          "reviewer_outline_crowns": 5,
+          "retired_v61": 3,
+          "still_awaiting_confirmation": 248,
+          "reviewer_corrected_records_confirmed": 9
+        }
       },
       "growth_form_v6": {
         "scored_crowns": 3352099,
         "display_keys": {
           "evergreen_high": 1491608,
           "evergreen_medium": 839983,
-          "not_determined": 580548,
+          "not_determined": 564322,
           "conifer": 144883,
           "broadleaf": 136708,
           "tree_fern": 71947,
           "deciduous_likely": 39048,
-          "palm_c1": 19600,
+          "palm_c1": 35826,
           "deciduous_high": 16913,
           "palm_or_cabbage_tree": 10861
         },
-        "mode": "full"
+        "mode": "full",
+        "c1_threshold": 0.2,
+        "c1_scope": "v6_not_determined"
       },
-      "current_service_records_reweighted_v6": 2918424
+      "current_service_records_reweighted_v6": 2918424,
+      "headline_totals": {
+        "trees": 3574821,
+        "protected": 3570,
+        "lidarInferred": 3510684,
+        "totalValueNzdY": 295218754.52198637,
+        "runoffM3Y": 20508609.941977713,
+        "carbonTco2e": 3379652.363997193,
+        "crowns": 3523021
+      },
+      "tree_numbers": 4200336
     },
     "headline_scope": {
-      "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag and await confirmation; 77 drawn crowns 2–3 m tall are low canopy and not counted."
+      "description": "Current crown representatives contribute one set of service estimates per crown. Lower vegetation and hidden earlier unmatched detections are excluded. Values remain sensitivity scenarios; overlapping crowns can still count shared canopy. V5.2: 457 crowns drawn from a source record (9,052 m²) are counted with a flag (v6.2: 240 confirmed or drawn by a reviewer, 2 retired by a correction, 215 await confirmation); 77 drawn crowns 2–3 m tall are low canopy and not counted."
     },
     "artifacts": [
       {
-        "path": "data/near_canopy.pmtiles",
-        "bytes": 554280732,
-        "last_modified_utc": "2026-09-23T03:41:23.737510+00:00"
-      },
-      {
         "path": "data/council_positions.pmtiles",
-        "bytes": 1276632,
-        "last_modified_utc": "2026-10-09T11:23:17.760762+00:00"
+        "bytes": 1277767,
+        "last_modified_utc": "2026-10-12T13:00:54.701880+00:00"
       },
       {
         "path": "data/trees_map_points.pmtiles",
-        "bytes": 1557759680,
-        "last_modified_utc": "2026-10-11T21:30:30.220183+00:00"
+        "bytes": 1705654319,
+        "last_modified_utc": "2026-10-12T23:18:31.642926+00:00"
       },
       {
         "path": "data/tree_crowns_pilot.pmtiles",
-        "bytes": 1921221031,
-        "last_modified_utc": "2026-10-11T21:30:30.220201+00:00"
+        "bytes": 2046823800,
+        "last_modified_utc": "2026-10-12T23:18:31.642942+00:00"
       },
       {
         "path": "data/properties.pmtiles",
-        "bytes": 233734612,
-        "last_modified_utc": "2026-10-11T21:30:30.220215+00:00"
+        "bytes": 233730758,
+        "last_modified_utc": "2026-10-12T23:18:31.642953+00:00"
+      },
+      {
+        "path": "data/near_canopy.pmtiles",
+        "bytes": 554281303,
+        "last_modified_utc": "2026-10-12T23:18:31.642962+00:00"
       }
     ],
     "assembly": {
-      "assembled_utc": "2026-10-11T21:30:30.220117+00:00",
-      "tile_version": "20261012-v6",
-      "database_mtime_ns": "1791750846774552655",
-      "mode": "verified_v6_growth_form_build",
-      "note": "V5.2 streams, profiles and summaries with growth form, reweighted services and smoothed outlines; hash-verified unchanged files."
+      "assembled_utc": "2026-10-12T23:18:31.642866+00:00",
+      "tile_version": "20261013-v6.2",
+      "database_mtime_ns": "1791845632777288541",
+      "mode": "verified_v62_build",
+      "note": "v6.1 streams, records and summaries with the four v6.2 changes applied to the affected trees and layers."
     },
     "derived_products": {
       "longitudinal_model": "data/longitudinal/model.json",
@@ -389,7 +624,10 @@
       "record_links": "data/record-links-v52.json",
       "council_positions": "data/council_positions.pmtiles",
       "growth_form": "data/growth-form-v6.json",
-      "corrections_applied": "data/corrections-applied.json"
+      "corrections_applied": "data/corrections-applied.json",
+      "tree_ids": "data/tree_ids/schema.json",
+      "tree_numbers": "data/tree-numbers-v61.json",
+      "tree_change": "data/tree_change_v1.pmtiles"
     }
   },
   "v5_changes": [
@@ -456,15 +694,16 @@
     "Outlines smooth the V5 cells; V5 crown boundaries and sizes are otherwise unchanged (crowns over 60 m² remain about 20% smaller than human outlines)."
   ],
   "corrections": {
-    "ledger_sha256": "da2d1f46c3d77fd568f0a5ea7fe976d57e6caefe4474e6db41f621cab29392ac",
+    "ledger_sha256": "4fdf11665193fe1ffaeb2d3b6f57821a633e293ccddc84ff857b8fd9ff33497f",
+    "ledger_events": 358,
     "receipt": "data/corrections-applied.json",
     "counts": {
-      "applied": 14,
+      "applied": 332,
       "recorded_in_release": 17,
       "awaiting_review": 5,
-      "already_in_release": 318
+      "already_in_release": 1
     },
-    "note": "Every accepted correction in config/corrections/corrections.jsonl applied by the v6.1 rebuild (build_v61.py, corrections_v61.py)."
+    "note": "Every accepted correction in config/corrections/corrections.jsonl carried by v6.3 (corrections_v63.py); corrections on tree pages read in tree numbers and plain names (public_summary)."
   },
   "v61_changes": [
     "Permanent tree numbers for all 4,200,336 map trees (T + 6 Crockford base-32 characters + a check character), in the map features (tn), the full records (tree_number) and an alias table of 19,376,165 keys (data/tree_ids) that resolves every record ID, v4 and v5 crown key ever published, and tombstones for the 7,405 LiDAR detections removed before the 9 Sep 2026 release. Links: https://alto.tfwelch.com/tree/<number>.",
@@ -472,7 +711,3053 @@
     "Retained every v6 record, link, marker, source position, history, estimate and growth-form field in the database."
   ],
   "v61_limits": [
-    "Reviewer outlines change the crown area; the height stays the v5.2 measurement of the crown drawn from the record.",
-    "The near-canopy layer still draws the low-canopy polygon that v6.1 links to a register tree (the tree crown is drawn over it)."
-  ]
+    "Reviewer outlines change the crown area; the height stays the v5.2 measurement of the crown drawn from the record."
+  ],
+  "v62_changes": [
+    "Crowns drawn from a record that a reviewer confirmed: 278 crowns (317 confirmations in the corrections ledger) now carry the confirmed evidence tier (very likely a tree), a solid outline and confirmed wording; so do the 5 crowns a reviewer outlined, and the 4 records a reviewer linked to another crown read as confirmed links. 248 crowns drawn from a record still await confirmation.",
+    "Palm detection shown from a C1 score of 0.2 (v6: 0.5) on crowns whose growth form v6 left undetermined, after a blind photo check passed its pre-set bar: 16,226 more crowns read \"Likely palm or cabbage tree (palm-type crown seen in 2024 aerial imagery)\"; their service estimates follow the v6 growth-form rules. Conservative post-hoc restriction (13 Oct 2026): the lower threshold is used only where v6 showed no growth form, so v6.2 shows fewer crowns than the pre-registered rule, which passed on the full set. In the check, the 49 newly shown crowns v6 had left undetermined were all palm-type, against 6 of 11 that v6 had shown as another class.",
+    "The change layer is described as the live v1 file (data/tree_change_v1.pmtiles, photo check 92% of shown changes real).",
+    "The near-canopy layer no longer draws the low-canopy polygon v6.1 made a tree crown (C00307); the polygon stays in the layer with canopy_class promoted_tree_crown.",
+    "Retained every v6.1 record, link, marker, tree number, source position, history, estimate and growth-form field in the database."
+  ],
+  "v62_limits": [
+    "Three records on confirmed crowns were not themselves reviewed; their own links still read awaiting confirmation.",
+    "Palm detections at the lower threshold were checked on 60 crowns before the scope was restricted; v6.2 uses them only on crowns v6 left undetermined (49 of 49 palm-type in that check)."
+  ],
+  "benefits": {
+    "headline_components": "stormwater, carbon",
+    "pm25_cooling_published": false,
+    "pm25_method": "pm25_deposition_v63",
+    "cooling_index_formula": "crown area (m²) × (paved fraction + 2 × degrees of mean air temperature above 18 °C)",
+    "pm25_cooling_note": "Not release-eligible in v6.3: the method awaits confirmation of its sources.",
+    "pm25_cooling_approved": false,
+    "pm25_cooling_approved_note": "benefits.pm25_cooling_approved (v63_config.json) is false: the per-m² check against Nowak et al. (2013) failed and not every coefficient is confirmed from the approved sources (verification/pm25_gate.json in the release work folder).",
+    "gate": {
+      "per_m2_inside_published_range": false,
+      "emissions_below_bound": true,
+      "passed": false
+    }
+  },
+  "sources": [
+    {
+      "name": "Auckland Council tree register (incl. Auckland Transport)",
+      "provider": "Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Auckland Council",
+      "licence": "© Auckland Council",
+      "attribution": "© Auckland Council.",
+      "retrieved": "June 2026",
+      "used_for": "tree records (50,311 records)",
+      "note": "The Council’s public service for the register now requires a token, so tree pages show register IDs without a link.",
+      "section": "Tree records"
+    },
+    {
+      "name": "Auckland Unitary Plan Notable Trees Overlay and Notable Group of Trees Overlay",
+      "provider": "Plans and Places, Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Plans and Places, Auckland Council",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Plans and Places, Auckland Council. Licensed under CC BY 4.0.",
+      "url": "https://www.arcgis.com/home/item.html?id=583f5e99290b4adb9f7cc1196451f1e7",
+      "retrieved": "2026-06-04",
+      "used_for": "Protected status of scheduled trees; notable group areas (map layer)",
+      "section": "Tree records"
+    },
+    {
+      "name": "Auckland Unitary Plan, Schedule 10 Notable Trees Schedule (July 2026)",
+      "provider": "Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Plans and Places, Auckland Council",
+      "licence": "© Auckland Council (Auckland Unitary Plan)",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "url": "https://unitaryplan.aucklandcouncil.govt.nz/images/Auckland%20Unitary%20Plan%20Operative/Chapter%20L%20Schedules/Schedule%2010%20Notable%20Trees%20Schedule.pdf",
+      "retrieved": "July 2026 version",
+      "used_for": "Schedule 10 item, number of trees and address on scheduled trees (linked)",
+      "note": "The overlay is indicative; the Plan is the legal record.",
+      "section": "Tree records"
+    },
+    {
+      "name": "Ruru ObsKauri Tiaki (valid and public records)",
+      "provider": "Bio Info Team, Environmental Services, Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Bio Info Team, Environmental Services, Auckland Council",
+      "licence": "Auckland Council terms of use",
+      "licence_url": "https://www.arcgis.com/home/item.html?id=98eb8eb841ed4205a5e97f7bd0dbdf86",
+      "attribution": "Bio Info Team, Environmental Services, Auckland Council.",
+      "url": "https://www.arcgis.com/home/item.html?id=98eb8eb841ed4205a5e97f7bd0dbdf86",
+      "retrieved": "June 2026",
+      "used_for": "tree records and survey status",
+      "caveat": "Not a complete record of kauri or kauri dieback; verify before relying on it.",
+      "section": "Tree records"
+    },
+    {
+      "name": "OpenStreetMap (trees, addresses, golf courses and island roads)",
+      "provider": "OpenStreetMap contributors",
+      "producer": "OpenStreetMap contributors",
+      "licence": "Open Database Licence (ODbL) 1.0",
+      "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "attribution": "© OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "used_for": "tree records (4,800 records, source osm_natural_tree); addresses, golf courses and island roads in property summaries",
+      "method_url": "https://github.com/squirmen/alto/blob/main/pipeline/base/scripts/fetch_osm_natural_trees.py",
+      "note": "ALTO’s tree records derived from OpenStreetMap stay under the ODbL; ALTO’s noncommercial terms do not apply to them.",
+      "section": "Tree records"
+    },
+    {
+      "name": "KYTE ground visits",
+      "provider": "KYTE contributors",
+      "producer": "KYTE contributors",
+      "licence": "ALTO (published after a reviewer accepts them)",
+      "used_for": "photographs, notes and measurements on tree pages",
+      "note": "Contributors are not named.",
+      "section": "Tree records"
+    },
+    {
+      "name": "New Zealand Tree Register",
+      "provider": "New Zealand Notable Trees Trust",
+      "producer": "New Zealand Notable Trees Trust",
+      "licence": "Links only (no text or photographs copied)",
+      "url": "https://www.treeregister.nz/",
+      "used_for": "links to the register record of the same tree",
+      "section": "Tree records"
+    },
+    {
+      "name": "Auckland 2024 LiDAR, Parts 1 and 2 (point clouds, 1 m DEM and DSM)",
+      "provider": "LINZ Data Service",
+      "licensor": "Regional Software Holdings Limited (Part 1 DEM and DSM, Part 2 DEM) and Auckland Council (Part 2 DSM)",
+      "producer": "Woolpert",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Regional Software Holdings Limited (Part 1 DEM and DSM, Part 2 DEM) and Auckland Council (Part 2 DSM) for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/121990",
+      "retrieved": "2026-06-04",
+      "used_for": "crowns, heights and every LiDAR measurement",
+      "section": "LiDAR surveys"
+    },
+    {
+      "name": "Auckland North LiDAR 2016–18 and Auckland South LiDAR 2016–17",
+      "provider": "LINZ Data Service",
+      "licensor": "Auckland Council",
+      "producer": "Aerial Surveys (North); AAM NZ (South)",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Sourced from the LINZ Data Service and licensed by Auckland Council for re-use under the Creative Commons Attribution 4.0 International licence.",
+      "url": "https://data.linz.govt.nz/layer/106410",
+      "used_for": "canopy history and the change layer",
+      "section": "LiDAR surveys"
+    },
+    {
+      "name": "Auckland LiDAR 2013",
+      "provider": "LINZ Data Service",
+      "licensor": "Auckland Council",
+      "producer": "NZ Aerial Mapping and Aerial Surveying Ltd",
+      "licence": "Copyright Auckland Council (LINZ Data Service)",
+      "licence_url": "https://data.linz.govt.nz/layer/53405",
+      "attribution": "Copyright in the underlying dataset from which this work has been derived is owned by Auckland Council.",
+      "url": "https://data.linz.govt.nz/layer/53405",
+      "used_for": "canopy history and the change layer",
+      "section": "LiDAR surveys"
+    },
+    {
+      "name": "Auckland 0.075m Urban Aerial Photos (2010)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "New Zealand Aerial Mapping",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.125m Urban Aerial Photos (2010–2011)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "Aerial Surveys",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.5m Rural Aerial Photos (2010–2012)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "New Zealand Aerial Mapping",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.075m Urban Aerial Photos (2012)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "New Zealand Aerial Mapping",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.075m Urban Aerial Photos (2015–2016)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "AAM NZ",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.075m Urban Aerial Photos (2017)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "AAM NZ and Auckland Council",
+      "producer": "AAM NZ",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by AAM NZ and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.075m Rural Aerial Photos (2020)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "AAM NZ",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.075m Rural Aerial Photos (2022)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "AAM NZ",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland Central 0.06m Urban Aerial Photos (2023)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "Recon",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.25m Rural Aerial Photos (2024)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "National Institute of Water and Atmospheric Research",
+      "producer": "Aerial Surveys",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by National Institute of Water and Atmospheric Research for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.075m Urban Aerial Photos (2024–2025), RGB and near-infrared",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Auckland Council",
+      "producer": "Aerial Surveys",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-12 from https://registry.opendata.aws/nz-imagery. Licensed by Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-12",
+      "used_for": "tree-page aerial photographs"
+    },
+    {
+      "name": "Auckland 0.4m SN139 (1939–1940)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.375m SN144 (1940)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.32m SN147 (1940–1949)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.24m SN146 (1940)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.32m SN143 (1940–1941)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.32m SN160 (1940)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.32m SN189 (1942)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.32m SN192 (1942–1954)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland / Waikato 0.375m SN348 (1944)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.125m SN347 (1947)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.25m SN583 (1950–1960)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.3m SN577 (1951–1960)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.25m SN1283 (1960)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.06m SN1411 (1961)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.25m SN1397 (1961–1963)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.4m SN1397 (1961–1963)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Waikato / Auckland 0.3m SN3607 (1972–1973)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN2714 (1974)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN2717 (1974)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.08m SN2751 (1974–1975)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.75m SN3800 (1975)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN2802 (1975)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.15m SN2863 (1975)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN2883 (1975–1976)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.375m SN2970 (1976)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.75m SN5015 (1976)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.75m SN2975 (1977–1978)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN5275 (1978–1979)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN5296 (1978)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.75m SN5308 (1978–1979)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN5414 (1979)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.375m SN5600 (1979)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries",
+      "producer": "New Zealand Aerial Mapping and SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.6m SN5615C (1979)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Auckland 0.05m SN5645 (1980)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN5646 (1980)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN5652 (1980)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN5707 (1980)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN5717 (1980)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.4m SN5783 (1980–1981)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN5840 (1981)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN5841 (1981)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN8083 (1982)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Northland / Auckland 0.4m SN8104 (1982–1983)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries",
+      "producer": "New Zealand Aerial Mapping and SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.375m SN8162 (1983)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.08m SN8211 (1983)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.1m SN8485 (1985)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN8608 (1986)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.4m SN8772 (1987–1988)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland / Waikato 0.375m SN8772 (1987–1988)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries",
+      "producer": "New Zealand Aerial Mapping and SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN8906 (1988)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.08m SN8930 (1988)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.05m SN9005 (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.375m SN9025C (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Auckland 0.375m SN9026C (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Auckland 0.625m SN11624 (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Ministry for Primary Industries",
+      "producer": "Aerial Surveys",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN9055 (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN9056 (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN9057 (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN9059 (1989)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN9140 (1991)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.24m SN8824 (1991)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.4m SN9150 (1991)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.1m SN9152 (1991)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.4m SN9151 (1991)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.1m SN9179 (1991)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN9206 (1992)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.4m SN9211 (1992)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries",
+      "producer": "New Zealand Aerial Mapping and SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.15m SN9274 (1993)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.1m SN9283 (1993)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.15m SN9349 (1994)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.15m SN9359 (1994)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.04m SN9394 (1994)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Northland / Auckland 0.8m SN9482 (1995–1996)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries",
+      "producer": "New Zealand Aerial Mapping and SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.2m SN9578 (1996)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.1m SN9909C (2000)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Auckland 0.1m SN9907C (2000)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Waikato / Auckland 0.75m SN9919 (2000)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries",
+      "producer": "New Zealand Aerial Mapping and SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.75m SN9938 (2000)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.375m SN9959 (2000)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland / Waikato 0.375m SN9888 (2000)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (black and white)"
+    },
+    {
+      "name": "Auckland 0.075m SN9999C (2001)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Auckland 0.075m SN9998C (2001)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Waikato / Auckland 0.6m SN9997C (2001)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Auckland 0.75m SNC50347 (2003–2004)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries",
+      "producer": "New Zealand Aerial Mapping and SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Ministry for Primary Industries for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Auckland 0.375m SN50393C (2004)",
+      "section": "Aerial photographs",
+      "provider": "Toitū Te Whenua LINZ (New Zealand Imagery)",
+      "licensor": "Toitū Te Whenua Land Information New Zealand and Auckland Council",
+      "producer": "SKYVUW",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "New Zealand Imagery was accessed on 2026-10-17 from https://registry.opendata.aws/nz-imagery. Licensed by Toitū Te Whenua Land Information New Zealand and Auckland Council for re-use under CC-BY-4.0",
+      "url": "https://registry.opendata.aws/nz-imagery/",
+      "retrieved": "2026-10-17",
+      "used_for": "tree-page aerial photographs (colour)"
+    },
+    {
+      "name": "Esri World Imagery",
+      "provider": "Esri",
+      "licence": "Esri terms of use",
+      "licence_url": "https://www.esri.com/content/dam/arcgisonline/docs/tou_summary.pdf",
+      "attribution": "Powered by Esri. Source: Esri, Vantor, Earthstar Geographics, and the GIS User Community.",
+      "url": "https://www.esri.com",
+      "used_for": "basemap and aerial figures (not in the data files)",
+      "section": "Basemaps"
+    },
+    {
+      "name": "LINZ Basemaps aerial imagery",
+      "provider": "Toitū Te Whenua Land Information New Zealand",
+      "licensor": "Toitū Te Whenua Land Information New Zealand",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.linz.govt.nz/linz-copyright",
+      "attribution": "© LINZ CC BY 4.0 © Imagery Basemap contributors",
+      "url": "https://basemaps.linz.govt.nz/",
+      "used_for": "basemap and aerial figures (not in the data files)",
+      "section": "Basemaps"
+    },
+    {
+      "name": "Esri World Boundaries and Places",
+      "provider": "Esri",
+      "licence": "Esri terms of use",
+      "licence_url": "https://www.esri.com/content/dam/arcgisonline/docs/tou_summary.pdf",
+      "attribution": "Powered by Esri. Esri, HERE, Garmin, © OpenStreetMap contributors, and the GIS user community.",
+      "url": "https://www.esri.com",
+      "used_for": "map labels (not in the data files)",
+      "section": "Basemaps"
+    },
+    {
+      "name": "Esri World Light Gray Canvas",
+      "provider": "Esri",
+      "licence": "Esri terms of use",
+      "licence_url": "https://www.esri.com/content/dam/arcgisonline/docs/tou_summary.pdf",
+      "attribution": "Powered by Esri. Esri, HERE, Garmin, © OpenStreetMap contributors, and the GIS user community.",
+      "url": "https://www.esri.com",
+      "used_for": "default basemap (not in the data files)",
+      "section": "Basemaps"
+    },
+    {
+      "name": "OpenStreetMap tiles (Streets basemap)",
+      "provider": "OpenStreetMap Foundation",
+      "licence": "ODbL (data); OpenStreetMap Foundation tile usage policy",
+      "licence_url": "https://operations.osmfoundation.org/policies/tiles/",
+      "attribution": "© OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "used_for": "basemap (not in the data files)",
+      "section": "Basemaps"
+    },
+    {
+      "name": "NZ Primary Land Parcels and NZ Building Outlines",
+      "provider": "LINZ Data Service",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "contains data sourced from the LINZ Data Service licensed for reuse under CC BY 4.0.",
+      "url": "https://data.linz.govt.nz/layer/50823",
+      "used_for": "property summaries (parcels); building masks (outlines)",
+      "note": "Parcels are not for defining legal boundaries.",
+      "section": "Land, boundaries and context"
+    },
+    {
+      "name": "Public Conservation Land",
+      "provider": "Department of Conservation Te Papa Atawhai",
+      "licensor": "Department of Conservation Te Papa Atawhai",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Crown Copyright: Department of Conservation Te Papa Atawhai 2026.",
+      "url": "https://www.arcgis.com/home/item.html?id=72354ba9bf7a4706af3fdfe60f86eea1",
+      "retrieved": "2026-10-02",
+      "used_for": "property tenure",
+      "note": "it may be out of date.",
+      "section": "Land, boundaries and context"
+    },
+    {
+      "name": "Territorial Authority Local Board 2026",
+      "provider": "Stats NZ – Tatauranga Aotearoa",
+      "licensor": "Stats NZ – Tatauranga Aotearoa",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Stats NZ – Tatauranga Aotearoa",
+      "url": "https://services2.arcgis.com/vKb0s8tBIA3bdocZ/arcgis/rest/services/Territorial_Authority_Local_Board_2026/FeatureServer",
+      "used_for": "local board boundaries and land areas",
+      "section": "Land, boundaries and context"
+    },
+    {
+      "name": "Unitary Plan base zones and designations",
+      "provider": "Plans and Places, Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Plans and Places, Auckland Council",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "attribution": "Plans and Places, Auckland Council.",
+      "used_for": "property tenure",
+      "section": "Land, boundaries and context",
+      "group": "Auckland Council, all CC BY 4.0:"
+    },
+    {
+      "name": "Park extents",
+      "provider": "Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Auckland Council",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "attribution": "Auckland Council.",
+      "used_for": "property tenure",
+      "section": "Land, boundaries and context",
+      "group": "Auckland Council, all CC BY 4.0:"
+    },
+    {
+      "name": "Impervious surfaces 2017 and land cover 2017",
+      "provider": "Lynker Analytics and Healthy Waters, Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Lynker Analytics and Healthy Waters, Auckland Council",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "attribution": "Lynker Analytics and Healthy Waters, Auckland Council.",
+      "used_for": "paving under crowns (stormwater and cooling estimates)",
+      "section": "Land, boundaries and context",
+      "group": "Auckland Council, all CC BY 4.0:"
+    },
+    {
+      "name": "Stormwater assets",
+      "provider": "Healthy Waters, Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Healthy Waters, Auckland Council",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "attribution": "Healthy Waters, Auckland Council.",
+      "used_for": "stormwater context",
+      "section": "Land, boundaries and context",
+      "group": "Auckland Council, all CC BY 4.0:"
+    },
+    {
+      "name": "Flood plains",
+      "provider": "Stormwater Hydraulic Modelling Team, Auckland Council",
+      "licensor": "Auckland Council",
+      "producer": "Stormwater Hydraulic Modelling Team, Auckland Council",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "attribution": "Stormwater Hydraulic Modelling Team, Auckland Council.",
+      "used_for": "stormwater context",
+      "section": "Land, boundaries and context",
+      "group": "Auckland Council, all CC BY 4.0:"
+    },
+    {
+      "name": "Flood prone areas and overland flow paths",
+      "provider": "WSP; Auckland Council: Healthy Waters, Geospatial",
+      "licensor": "Auckland Council",
+      "producer": "WSP; Auckland Council: Healthy Waters, Geospatial",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "attribution": "WSP; Auckland Council: Healthy Waters, Geospatial.",
+      "used_for": "stormwater estimates (runoff coefficient in flood prone areas)",
+      "section": "Land, boundaries and context",
+      "group": "Auckland Council, all CC BY 4.0:"
+    },
+    {
+      "name": "Predicted air temperature, November 2021 to March 2022",
+      "provider": "Arup New Zealand Limited, Lynker Analytics, Statistics NZ, Ministry for the Environment, Auckland Council",
+      "licensor": "Auckland Council",
+      "licence": "CC BY 4.0",
+      "licence_url": "https://www.aucklandcouncil.govt.nz/en/geospatial/council-open-data/user-licence-auckland-council-open-data.html",
+      "attribution": "Arup New Zealand Limited, Lynker Analytics, Statistics NZ, Ministry for the Environment, Auckland Council, Contains modified Copernicus Climate Change Service information 2024.",
+      "used_for": "cooling index",
+      "section": "Land, boundaries and context",
+      "group": "Auckland Council, all CC BY 4.0:"
+    },
+    {
+      "name": "i-Tree Database (species growth form and mature size)",
+      "provider": "i-Tree Cooperative (USDA Forest Service, Davey, Arbor Day Foundation, UCFS, ISA, Casey Trees)",
+      "producer": "USDA Forest Service and cooperators",
+      "licence": "i-Tree terms of use (free to use with credit)",
+      "licence_url": "https://help.itreetools.org/eula/",
+      "attribution": "Nowak, D. J. (2024). Understanding i-Tree: 2023 summary of programs and methods. General Technical Report NRS-200-2023. USDA Forest Service, Northern Research Station.",
+      "url": "https://database.itreetools.org/",
+      "used_for": "species growth form and reference height; benefit equations adapted",
+      "note": "i-Tree® is a registered trademark. The Cooperative has not reviewed or endorsed ALTO.",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "DINOv2",
+      "provider": "Meta",
+      "licence": "Apache License 2.0",
+      "attribution": "Oquab, M. et al. (2024). DINOv2: Learning Robust Visual Features without Supervision. Transactions on Machine Learning Research.",
+      "used_for": "image features for the growth-form model",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "LightGBM",
+      "provider": "Microsoft",
+      "licence": "MIT licence",
+      "attribution": "Ke, G. et al. (2017). LightGBM: A Highly Efficient Gradient Boosting Decision Tree. Advances in Neural Information Processing Systems 30.",
+      "used_for": "growth-form classifier",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "DeepForest and torchvision",
+      "provider": "Weecology, University of Florida",
+      "licence": "MIT licence (DeepForest); BSD 3-Clause (torchvision)",
+      "attribution": "Weinstein, B. G. et al. (2020). DeepForest: A Python package for RGB deep learning tree crown delineation. Methods in Ecology and Evolution 11: 1743–1751.",
+      "used_for": "palm detector",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "iNaturalist Research-grade Observations (via GBIF.org)",
+      "provider": "iNaturalist contributors",
+      "licence": "Each observation is under its observer’s licence",
+      "attribution": "iNaturalist contributors, iNaturalist (2026). iNaturalist Research-grade Observations. Occurrence dataset https://doi.org/10.15468/ab3s5x, accessed via GBIF.org on 2026-10-02.",
+      "url": "https://doi.org/10.15468/ab3s5x",
+      "retrieved": "2026-10-02",
+      "used_for": "independent check of palm detection",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "Pl@ntNet identification service",
+      "provider": "Pl@ntNet",
+      "licence": "Pl@ntNet terms of use",
+      "attribution": "The image-based plant species identification service used, is based on the Pl@ntNet recognition API, regularly updated and accessible through the site https://my.plantnet.org/",
+      "url": "https://my.plantnet.org/",
+      "used_for": "unconfirmed species leads from KYTE photographs",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "NZ Plant Conservation Network species pages",
+      "provider": "NZ Plant Conservation Network",
+      "licence": "Links only",
+      "used_for": "references for the form of native trees in 3D models; v6.3 species-class corrections (pūriri, cabbage tree)",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "Accepted names checked against the iNaturalist taxonomy (accessed 17 Oct 2026)",
+      "provider": "iNaturalist",
+      "licence": "Names only, under the iNaturalist Terms of Use (no text or photographs copied)",
+      "licence_url": "https://www.inaturalist.org/pages/terms",
+      "attribution": "checked against the iNaturalist taxonomy (accessed 17 Oct 2026)",
+      "url": "https://www.inaturalist.org/taxa",
+      "retrieved": "2026-10-17",
+      "used_for": "accepted Latin names for 11 misspelled or outdated names (3,546 records); each record keeps the name as supplied",
+      "section": "Methods, models and reference values"
+    },
+    {
+      "name": "Published maximum tree heights (species and genus ceilings of the v6.3 height and record checks)",
+      "provider": "New Zealand Plant Conservation Network, Flora of China (eFloras), Monumental Trees, the Gymnosperm Database, PlantNET (Botanic Gardens of Sydney), the New Zealand Tree Register, the World Agroforestry Agroforestree Database, VicFlora, FloraBase and other floras and registers",
+      "licence": "Facts cited with links (the height only; no text or photographs copied)",
+      "attribution": "Each check names its source and links it; ALTO quotes the height only.",
+      "retrieved": "2026-10-17",
+      "used_for": "credible maximum heights of 155 species and genera for the v6.3 height and record checks (height_check and link_check datasets: each check names its source and links the page)",
+      "note": "sources: every site the taxon ceilings cite, each in its provider's own words with its home page and the pages cited, by taxon.",
+      "section": "Methods, models and reference values",
+      "sources": [
+        {
+          "source_name": "New Zealand Plant Conservation Network",
+          "provider": "New Zealand Plant Conservation Network",
+          "url": "https://www.nzpcn.org.nz/",
+          "licence_url": "https://www.nzpcn.org.nz/help/website-terms-of-use/",
+          "checked": "the cited page",
+          "taxa": 36,
+          "cited_pages": [
+            {
+              "taxon": "Agathis",
+              "rank": "genus",
+              "max_height_m": 60.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/agathis-australis/"
+            },
+            {
+              "taxon": "Agathis australis",
+              "rank": "species",
+              "max_height_m": 60.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/agathis-australis/"
+            },
+            {
+              "taxon": "Alectryon excelsus",
+              "rank": "species",
+              "max_height_m": 20.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/alectryon-excelsus-subsp-excelsus/"
+            },
+            {
+              "taxon": "Beilschmiedia",
+              "rank": "genus",
+              "max_height_m": 35.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/beilschmiedia-tawa/"
+            },
+            {
+              "taxon": "Beilschmiedia tarairi",
+              "rank": "species",
+              "max_height_m": 22.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/beilschmiedia-tarairi/"
+            },
+            {
+              "taxon": "Carpodetus serratus",
+              "rank": "species",
+              "max_height_m": 10.0,
+              "source_url": "https://nzpcn.org.nz/flora/species/carpodetus-serratus/"
+            },
+            {
+              "taxon": "Coprosma repens",
+              "rank": "species",
+              "max_height_m": 8.0,
+              "source_url": "https://www.nzpcn.org.nz/flora_details.aspx?ID=1730"
+            },
+            {
+              "taxon": "Coprosma robusta",
+              "rank": "species",
+              "max_height_m": 6.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/coprosma-robusta/"
+            },
+            {
+              "taxon": "Cordyline",
+              "rank": "genus",
+              "max_height_m": 20.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/cordyline-australis/"
+            },
+            {
+              "taxon": "Cordyline australis",
+              "rank": "species",
+              "max_height_m": 20.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/cordyline-australis/"
+            },
+            {
+              "taxon": "Corokia",
+              "rank": "genus",
+              "max_height_m": 8.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/corokia-macrocarpa/"
+            },
+            {
+              "taxon": "Corynocarpus laevigatus",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/corynocarpus-laevigatus/"
+            },
+            {
+              "taxon": "Cyathea",
+              "rank": "genus",
+              "max_height_m": 20.0,
+              "source_url": "https://nzpcn.org.nz/flora/species/cyathea-medullaris/"
+            },
+            {
+              "taxon": "Dacrycarpus dacrydioides",
+              "rank": "species",
+              "max_height_m": 65.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/"
+            },
+            {
+              "taxon": "Dacrydium cupressinum",
+              "rank": "species",
+              "max_height_m": 60.0,
+              "source_url": "https://nzpcn.org.nz/flora/species/dacrydium-cupressinum/"
+            },
+            {
+              "taxon": "Dodonaea viscosa",
+              "rank": "species",
+              "max_height_m": 12.0,
+              "source_url": "https://nzpcn.org.nz/flora/species/dodonaea-viscosa/"
+            },
+            {
+              "taxon": "Dysoxylum spectabile",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/dysoxylum-spectabile/"
+            },
+            {
+              "taxon": "Hebe",
+              "rank": "genus",
+              "max_height_m": 12.0,
+              "source_url": "https://nzpcn.org.nz/flora/species/veronica-parviflora/"
+            },
+            {
+              "taxon": "Hoheria populnea",
+              "rank": "species",
+              "max_height_m": 8.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/hoheria-populnea/"
+            },
+            {
+              "taxon": "Knightia excelsa",
+              "rank": "species",
+              "max_height_m": 30.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/knightia-excelsa/"
+            },
+            {
+              "taxon": "Kunzea",
+              "rank": "genus",
+              "max_height_m": 30.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/kunzea-robusta/"
+            },
+            {
+              "taxon": "Meryta sinclairii",
+              "rank": "species",
+              "max_height_m": 8.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/meryta-sinclairii/"
+            },
+            {
+              "taxon": "Metrosideros",
+              "rank": "genus",
+              "max_height_m": 40.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/metrosideros-robusta/"
+            },
+            {
+              "taxon": "Metrosideros kermadecensis",
+              "rank": "species",
+              "max_height_m": 20.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/metrosideros-kermadecensis/"
+            },
+            {
+              "taxon": "Myoporum laetum",
+              "rank": "species",
+              "max_height_m": 10.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/myoporum-laetum/"
+            },
+            {
+              "taxon": "Nestegis",
+              "rank": "genus",
+              "max_height_m": 25.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/nestegis-cunninghamii/"
+            },
+            {
+              "taxon": "Nestegis cunninghamii",
+              "rank": "species",
+              "max_height_m": 25.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/nestegis-cunninghamii/"
+            },
+            {
+              "taxon": "Pittosporum crassifolium",
+              "rank": "species",
+              "max_height_m": 10.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/pittosporum-crassifolium/"
+            },
+            {
+              "taxon": "Pittosporum eugenioides",
+              "rank": "species",
+              "max_height_m": 12.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/pittosporum-eugenioides/"
+            },
+            {
+              "taxon": "Pittosporum tenuifolium",
+              "rank": "species",
+              "max_height_m": 10.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/pittosporum-tenuifolium/"
+            },
+            {
+              "taxon": "Pseudopanax",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/pseudopanax-crassifolius/"
+            },
+            {
+              "taxon": "Rhopalostylis sapida",
+              "rank": "species",
+              "max_height_m": 18.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/rhopalostylis-sapida/"
+            },
+            {
+              "taxon": "Sophora",
+              "rank": "genus",
+              "max_height_m": 25.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/sophora-microphylla/"
+            },
+            {
+              "taxon": "Sophora microphylla",
+              "rank": "species",
+              "max_height_m": 25.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/sophora-microphylla/"
+            },
+            {
+              "taxon": "Sophora tetraptera",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/sophora-tetraptera/"
+            },
+            {
+              "taxon": "Vitex lucens",
+              "rank": "species",
+              "max_height_m": 20.0,
+              "source_url": "https://www.nzpcn.org.nz/flora/species/vitex-lucens/"
+            }
+          ]
+        },
+        {
+          "source_name": "Flora of China",
+          "provider": "eFloras",
+          "url": "http://www.efloras.org/",
+          "checked": "not read: efloras.org refused connections on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 30,
+          "cited_pages": [
+            {
+              "taxon": "Abelia",
+              "rank": "genus",
+              "max_height_m": 4.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=100018"
+            },
+            {
+              "taxon": "Acer palmatum",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200013064"
+            },
+            {
+              "taxon": "Albizia julibrissin",
+              "rank": "species",
+              "max_height_m": 16.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200011875"
+            },
+            {
+              "taxon": "Alnus",
+              "rank": "genus",
+              "max_height_m": 40.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200006123"
+            },
+            {
+              "taxon": "Camellia",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=242310199"
+            },
+            {
+              "taxon": "Casuarina",
+              "rank": "genus",
+              "max_height_m": 35.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200005533"
+            },
+            {
+              "taxon": "Casuarina cunninghamiana",
+              "rank": "species",
+              "max_height_m": 35.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200005532"
+            },
+            {
+              "taxon": "Cedrus",
+              "rank": "genus",
+              "max_height_m": 60.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200005268"
+            },
+            {
+              "taxon": "Cercis",
+              "rank": "genus",
+              "max_height_m": 20.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200012042"
+            },
+            {
+              "taxon": "Cotoneaster",
+              "rank": "genus",
+              "max_height_m": 10.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200010733"
+            },
+            {
+              "taxon": "Eriobotrya japonica",
+              "rank": "species",
+              "max_height_m": 10.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200010834"
+            },
+            {
+              "taxon": "Euonymus",
+              "rank": "genus",
+              "max_height_m": 25.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=242321259"
+            },
+            {
+              "taxon": "Ginkgo biloba",
+              "rank": "species",
+              "max_height_m": 40.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200005235"
+            },
+            {
+              "taxon": "Gleditsia triacanthos",
+              "rank": "species",
+              "max_height_m": 45.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200012141"
+            },
+            {
+              "taxon": "Idesia polycarpa",
+              "rank": "species",
+              "max_height_m": 21.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200014461"
+            },
+            {
+              "taxon": "Koelreuteria",
+              "rank": "genus",
+              "max_height_m": 20.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200013198"
+            },
+            {
+              "taxon": "Ligustrum",
+              "rank": "genus",
+              "max_height_m": 25.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200017794"
+            },
+            {
+              "taxon": "Ligustrum lucidum",
+              "rank": "species",
+              "max_height_m": 25.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200017794"
+            },
+            {
+              "taxon": "Malus",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200010900"
+            },
+            {
+              "taxon": "Michelia",
+              "rank": "genus",
+              "max_height_m": 50.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=242332307"
+            },
+            {
+              "taxon": "Nerium oleander",
+              "rank": "species",
+              "max_height_m": 6.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200018424"
+            },
+            {
+              "taxon": "Paulownia",
+              "rank": "genus",
+              "max_height_m": 30.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200020797"
+            },
+            {
+              "taxon": "Phoenix",
+              "rank": "genus",
+              "max_height_m": 30.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200027092"
+            },
+            {
+              "taxon": "Photinia",
+              "rank": "genus",
+              "max_height_m": 20.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200011007"
+            },
+            {
+              "taxon": "Prunus serrulata",
+              "rank": "species",
+              "max_height_m": 8.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200010679"
+            },
+            {
+              "taxon": "Prunus × yedoensis",
+              "rank": "species",
+              "max_height_m": 16.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200010692"
+            },
+            {
+              "taxon": "Rhododendron",
+              "rank": "genus",
+              "max_height_m": 30.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200016337"
+            },
+            {
+              "taxon": "Schefflera",
+              "rank": "genus",
+              "max_height_m": 20.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=250073459"
+            },
+            {
+              "taxon": "Streblus",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=242350663"
+            },
+            {
+              "taxon": "Taxodium distichum",
+              "rank": "species",
+              "max_height_m": 50.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200005404"
+            }
+          ]
+        },
+        {
+          "source_name": "Flora of Pakistan",
+          "provider": "eFloras",
+          "url": "http://www.efloras.org/",
+          "checked": "not read: efloras.org refused connections on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Washingtonia filifera",
+              "rank": "species",
+              "max_height_m": 24.0,
+              "source_url": "http://www.efloras.org/florataxon.aspx?flora_id=5&taxon_id=220014259"
+            }
+          ]
+        },
+        {
+          "source_name": "Monumental Trees",
+          "provider": "Monumental Trees (monumentaltrees.com)",
+          "url": "https://www.monumentaltrees.com/",
+          "checked": "not read: the site turned automated reading away on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 22,
+          "cited_pages": [
+            {
+              "taxon": "Acer",
+              "rank": "genus",
+              "max_height_m": 46.7,
+              "source_url": "https://www.monumentaltrees.com/en/heightrecords/world/"
+            },
+            {
+              "taxon": "Acer negundo",
+              "rank": "species",
+              "max_height_m": 25.2,
+              "source_url": "https://www.monumentaltrees.com/en/trees/acernegundo/records/"
+            },
+            {
+              "taxon": "Aesculus",
+              "rank": "genus",
+              "max_height_m": 36.0,
+              "source_url": "https://www.monumentaltrees.com/en/trees/horsechestnut/records/"
+            },
+            {
+              "taxon": "Ailanthus altissima",
+              "rank": "species",
+              "max_height_m": 31.8,
+              "source_url": "https://www.monumentaltrees.com/en/trees/treeofheaven/records/"
+            },
+            {
+              "taxon": "Carya",
+              "rank": "genus",
+              "max_height_m": 48.0,
+              "source_url": "https://www.monumentaltrees.com/en/heightrecords/world/"
+            },
+            {
+              "taxon": "Cinnamomum camphora",
+              "rank": "species",
+              "max_height_m": 46.4,
+              "source_url": "https://www.monumentaltrees.com/en/trees/cinnamomumcamphora/records/"
+            },
+            {
+              "taxon": "Cupressus macrocarpa",
+              "rank": "species",
+              "max_height_m": 50.4,
+              "source_url": "https://www.monumentaltrees.com/en/heightrecords/nzl/"
+            },
+            {
+              "taxon": "Fagus",
+              "rank": "genus",
+              "max_height_m": 51.1,
+              "source_url": "https://www.monumentaltrees.com/en/trees/europeanbeech/records/"
+            },
+            {
+              "taxon": "Fraxinus",
+              "rank": "genus",
+              "max_height_m": 46.2,
+              "source_url": "https://www.monumentaltrees.com/en/trees/fraxinusamericana/records/"
+            },
+            {
+              "taxon": "Liriodendron",
+              "rank": "genus",
+              "max_height_m": 58.5,
+              "source_url": "https://www.monumentaltrees.com/en/trees/tuliptree/records/"
+            },
+            {
+              "taxon": "Pinus pinaster",
+              "rank": "species",
+              "max_height_m": 41.0,
+              "source_url": "https://www.monumentaltrees.com/en/heightrecords/europe/"
+            },
+            {
+              "taxon": "Populus",
+              "rank": "genus",
+              "max_height_m": 57.7,
+              "source_url": "https://www.monumentaltrees.com/en/heightrecords/world/"
+            },
+            {
+              "taxon": "Pyrus",
+              "rank": "genus",
+              "max_height_m": 22.2,
+              "source_url": "https://www.monumentaltrees.com/en/trees/pyruspyraster/records/"
+            },
+            {
+              "taxon": "Robinia pseudoacacia",
+              "rank": "species",
+              "max_height_m": 52.36,
+              "source_url": "https://www.monumentaltrees.com/en/trees/blacklocust/records/"
+            },
+            {
+              "taxon": "Salix",
+              "rank": "genus",
+              "max_height_m": 34.6,
+              "source_url": "https://www.monumentaltrees.com/en/trees/whitewillow/records/"
+            },
+            {
+              "taxon": "Schinus",
+              "rank": "genus",
+              "max_height_m": 15.6,
+              "source_url": "https://www.monumentaltrees.com/en/trees/schinusmolle/records/"
+            },
+            {
+              "taxon": "Schinus molle",
+              "rank": "species",
+              "max_height_m": 15.6,
+              "source_url": "https://www.monumentaltrees.com/en/trees/schinusmolle/records/"
+            },
+            {
+              "taxon": "Tilia",
+              "rank": "genus",
+              "max_height_m": 46.7,
+              "source_url": "https://www.monumentaltrees.com/en/trees/commonlime/records/"
+            },
+            {
+              "taxon": "Ulmus",
+              "rank": "genus",
+              "max_height_m": 44.0,
+              "source_url": "https://www.monumentaltrees.com/en/trees/ulmusglabra/records/"
+            },
+            {
+              "taxon": "Washingtonia robusta",
+              "rank": "species",
+              "max_height_m": 31.0,
+              "source_url": "https://www.monumentaltrees.com/en/trees/washingtoniarobusta/records/"
+            },
+            {
+              "taxon": "× Cuprocyparis",
+              "rank": "genus",
+              "max_height_m": 38.5,
+              "source_url": "https://www.monumentaltrees.com/en/trees/cupressusxleylandii/records/"
+            },
+            {
+              "taxon": "× Cuprocyparis leylandii",
+              "rank": "species",
+              "max_height_m": 38.5,
+              "source_url": "https://www.monumentaltrees.com/en/trees/cupressusxleylandii/records/"
+            }
+          ]
+        },
+        {
+          "source_name": "The Gymnosperm Database",
+          "provider": "Christopher J. Earle, editor",
+          "url": "https://www.conifers.org/",
+          "checked": "the cited page",
+          "taxa": 10,
+          "cited_pages": [
+            {
+              "taxon": "Abies",
+              "rank": "genus",
+              "max_height_m": 89.9,
+              "source_url": "https://www.conifers.org/pi/Abies_procera.php"
+            },
+            {
+              "taxon": "Araucaria",
+              "rank": "genus",
+              "max_height_m": 85.0,
+              "source_url": "https://www.conifers.org/ar/Araucaria_hunsteinii.php"
+            },
+            {
+              "taxon": "Araucaria heterophylla",
+              "rank": "species",
+              "max_height_m": 70.0,
+              "source_url": "https://www.conifers.org/ar/Araucaria_heterophylla.php"
+            },
+            {
+              "taxon": "Chamaecyparis",
+              "rank": "genus",
+              "max_height_m": 81.1,
+              "source_url": "https://www.conifers.org/cu/Chamaecyparis_lawsoniana.php"
+            },
+            {
+              "taxon": "Cryptomeria japonica",
+              "rank": "species",
+              "max_height_m": 65.0,
+              "source_url": "https://www.conifers.org/cu/Cryptomeria.php"
+            },
+            {
+              "taxon": "Juniperus",
+              "rank": "genus",
+              "max_height_m": 40.0,
+              "source_url": "https://www.conifers.org/cu/Juniperus_procera.php"
+            },
+            {
+              "taxon": "Phyllocladus",
+              "rank": "genus",
+              "max_height_m": 30.0,
+              "source_url": "https://www.conifers.org/po/Phyllocladus.php"
+            },
+            {
+              "taxon": "Pinus radiata",
+              "rank": "species",
+              "max_height_m": 64.0,
+              "source_url": "https://www.conifers.org/pi/pin/radiata.htm"
+            },
+            {
+              "taxon": "Sequoia sempervirens",
+              "rank": "species",
+              "max_height_m": 115.85,
+              "source_url": "https://www.conifers.org/cu/Sequoia.php"
+            },
+            {
+              "taxon": "Thuja",
+              "rank": "genus",
+              "max_height_m": 71.3,
+              "source_url": "https://www.conifers.org/cu/Thuja_plicata.php"
+            }
+          ]
+        },
+        {
+          "source_name": "PlantNET (The NSW Plant Information Network System)",
+          "provider": "Royal Botanic Gardens and Domain Trust, Sydney",
+          "url": "https://plantnet.rbgsyd.nsw.gov.au/",
+          "attribution": "PlantNET (The NSW Plant Information Network System). Royal Botanic Gardens and Domain Trust, Sydney. https://plantnet.rbgsyd.nsw.gov.au",
+          "licence_url": "https://plantnet.rbgsyd.nsw.gov.au/copyright.html",
+          "checked": "another page of the same site",
+          "taxa": 6,
+          "cited_pages": [
+            {
+              "taxon": "Brachychiton",
+              "rank": "genus",
+              "max_height_m": 35.0,
+              "source_url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?page=nswfl&lvl=sp&name=Brachychiton~acerifolius"
+            },
+            {
+              "taxon": "Grevillea robusta",
+              "rank": "species",
+              "max_height_m": 40.0,
+              "source_url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?page=nswfl&lvl=sp&name=Grevillea~robusta"
+            },
+            {
+              "taxon": "Hymenosporum flavum",
+              "rank": "species",
+              "max_height_m": 20.0,
+              "source_url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?page=nswfl&lvl=sp&name=Hymenosporum~flavum"
+            },
+            {
+              "taxon": "Macadamia",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?page=nswfl&lvl=sp&name=Macadamia~tetraphylla"
+            },
+            {
+              "taxon": "Stenocarpus sinuatus",
+              "rank": "species",
+              "max_height_m": 35.0,
+              "source_url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?page=nswfl&lvl=sp&name=Stenocarpus~sinuatus"
+            },
+            {
+              "taxon": "Tristaniopsis laurina",
+              "rank": "species",
+              "max_height_m": 30.0,
+              "source_url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?page=nswfl&lvl=sp&name=Tristaniopsis~laurina"
+            }
+          ]
+        },
+        {
+          "source_name": "The New Zealand Tree Register",
+          "provider": "NZ Notable Trees Trust",
+          "url": "https://www.treeregister.nz/",
+          "checked": "the cited page",
+          "taxa": 5,
+          "cited_pages": [
+            {
+              "taxon": "Lagunaria patersonia",
+              "rank": "species",
+              "max_height_m": 22.0,
+              "source_url": "https://www.treeregister.nz/tree/view/994"
+            },
+            {
+              "taxon": "Leptospermum",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://www.treeregister.nz/tree/view/1143"
+            },
+            {
+              "taxon": "Leptospermum scoparium",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "https://www.treeregister.nz/tree/view/1143"
+            },
+            {
+              "taxon": "Metrosideros excelsa",
+              "rank": "species",
+              "max_height_m": 23.5,
+              "source_url": "https://www.treeregister.nz/tree/view/804"
+            },
+            {
+              "taxon": "Podocarpus totara",
+              "rank": "species",
+              "max_height_m": 34.9,
+              "source_url": "https://www.treeregister.nz/tree/view/757"
+            }
+          ]
+        },
+        {
+          "source_name": "Agroforestree Database",
+          "provider": "World Agroforestry",
+          "url": "https://apps.worldagroforestry.org/treedb2/",
+          "attribution": "Orwa C, Mutua A, Kindt R, Jamnadass R, Simons A. 2009. Agroforestree Database: a tree reference and selection guide version 4.0. World Agroforestry Centre, Kenya.",
+          "checked": "the cited page",
+          "taxa": 4,
+          "cited_pages": [
+            {
+              "taxon": "Citrus",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://apps.worldagroforestry.org/treedb/AFTPDFS/Citrus_maxima.PDF"
+            },
+            {
+              "taxon": "Erythrina",
+              "rank": "genus",
+              "max_height_m": 35.0,
+              "source_url": "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Erythrina_poeppigiana.PDF"
+            },
+            {
+              "taxon": "Liquidambar",
+              "rank": "genus",
+              "max_height_m": 50.0,
+              "source_url": "https://apps.worldagroforestry.org/treedb2/speciesprofile.php?Spid=1078"
+            },
+            {
+              "taxon": "Melia azedarach",
+              "rank": "species",
+              "max_height_m": 45.0,
+              "source_url": "https://apps.worldagroforestry.org/treedb2/speciesprofile.php?Spid=1141"
+            }
+          ]
+        },
+        {
+          "source_name": "RELMA-ICRAF Useful Trees",
+          "provider": "World Agroforestry Centre",
+          "url": "https://apps.worldagroforestry.org/usefultrees/",
+          "attribution": "Katende A., Birnie A. & Tengnas B. 1995. Useful trees and shrubs for Uganda. Identification and management for agricultural and pastoral communities. Regional Soil Conservation Unit, Nairobi. Kindt R, Innocent J. 2016. RELMA-ICRAF Useful Trees Website.",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Celtis",
+              "rank": "genus",
+              "max_height_m": 50.0,
+              "source_url": "https://apps.worldagroforestry.org/usefultrees/pdflib/Celtis_mildbraedii_UGA.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "Plants of South Eastern New South Wales",
+          "provider": "Betty Wood (author)",
+          "url": "https://apps.lucidcentral.org/plants_se_nsw/text/intro/index.html",
+          "licence": "CC BY 4.0",
+          "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+          "checked": "the cited page",
+          "taxa": 3,
+          "cited_pages": [
+            {
+              "taxon": "Ficus",
+              "rank": "genus",
+              "max_height_m": 55.0,
+              "source_url": "https://apps.lucidcentral.org/plants_se_nsw/text/entities/ficus_macrophylla_f._macrophylla.htm"
+            },
+            {
+              "taxon": "Ficus macrophylla",
+              "rank": "species",
+              "max_height_m": 55.0,
+              "source_url": "https://apps.lucidcentral.org/plants_se_nsw/text/entities/ficus_macrophylla_f._macrophylla.htm"
+            },
+            {
+              "taxon": "Lophostemon confertus",
+              "rank": "species",
+              "max_height_m": 40.0,
+              "source_url": "https://apps.lucidcentral.org/plants_se_nsw/text/entities/lophostemon_confertus.htm"
+            }
+          ]
+        },
+        {
+          "source_name": "WATTLE: Acacias of Australia",
+          "provider": "R.S.Cowan, B.R.Maslin; data derived from Flora of Australia Volumes 11A (2001), 11B (2001) and 12 (1998), products of ABRS, ©Commonwealth of Australia",
+          "url": "https://apps.lucidcentral.org/wattle/text/intro/index.html",
+          "checked": "the cited page",
+          "taxa": 2,
+          "cited_pages": [
+            {
+              "taxon": "Acacia",
+              "rank": "genus",
+              "max_height_m": 45.0,
+              "source_url": "https://apps.lucidcentral.org/wattle/text/entities/acacia_melanoxylon.htm"
+            },
+            {
+              "taxon": "Acacia melanoxylon",
+              "rank": "species",
+              "max_height_m": 45.0,
+              "source_url": "https://apps.lucidcentral.org/wattle/text/entities/acacia_melanoxylon.htm"
+            }
+          ]
+        },
+        {
+          "source_name": "Wikipedia, The Free Encyclopedia",
+          "provider": "Wikipedia contributors (Wikimedia Foundation, Inc.)",
+          "url": "https://en.wikipedia.org/",
+          "licence": "CC BY-SA 4.0 (text)",
+          "licence_url": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_the_Creative_Commons_Attribution-ShareAlike_4.0_International_License",
+          "attribution": "Wikipedia contributors. In Wikipedia, The Free Encyclopedia (the article each check links).",
+          "checked": "the cited page",
+          "taxa": 4,
+          "cited_pages": [
+            {
+              "taxon": "Acmena smithii",
+              "rank": "species",
+              "max_height_m": 30.0,
+              "source_url": "https://en.wikipedia.org/wiki/Syzygium_smithii"
+            },
+            {
+              "taxon": "Callistemon",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://en.wikipedia.org/wiki/Melaleuca_salicina"
+            },
+            {
+              "taxon": "Magnolia grandiflora",
+              "rank": "species",
+              "max_height_m": 36.9,
+              "source_url": "https://en.wikipedia.org/wiki/Magnolia_grandiflora"
+            },
+            {
+              "taxon": "Syzygium",
+              "rank": "genus",
+              "max_height_m": 45.0,
+              "source_url": "https://en.wikipedia.org/wiki/Syzygium_crebrinerve"
+            }
+          ]
+        },
+        {
+          "source_name": "VicFlora (Flora of Victoria)",
+          "provider": "Royal Botanic Gardens Victoria",
+          "url": "https://vicflora.rbg.vic.gov.au/",
+          "licence_url": "https://vicflora.rbg.vic.gov.au/pages/copyright",
+          "attribution": "VicFlora (2026). Flora of Victoria, Royal Botanic Gardens Victoria. Available online: https://vicflora.rbg.vic.gov.au (accessed on: 17 Oct. 2026).",
+          "checked": "the cited page",
+          "taxa": 3,
+          "cited_pages": [
+            {
+              "taxon": "Banksia integrifolia",
+              "rank": "species",
+              "max_height_m": 25.0,
+              "source_url": "https://vicflora.rbg.vic.gov.au/flora/taxon/2b7b0e82-9f07-4a47-9da9-464f927946f6"
+            },
+            {
+              "taxon": "Olea europaea",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "https://vicflora.rbg.vic.gov.au/flora/taxon/d89d5b58-21a1-4acc-9d0e-0502dd9b7b83"
+            },
+            {
+              "taxon": "Trachycarpus fortunei",
+              "rank": "species",
+              "max_height_m": 13.0,
+              "source_url": "https://vicflora.rbg.vic.gov.au/flora/taxon/2d3e1bf0-2f07-4a13-98da-b1ec1c3da515"
+            }
+          ]
+        },
+        {
+          "source_name": "Florabase—the Western Australian flora",
+          "provider": "Western Australian Herbarium, Biodiversity and Conservation Science, Department of Biodiversity, Conservation and Attractions",
+          "url": "https://florabase.dbca.wa.gov.au/",
+          "licence_url": "https://florabase.dbca.wa.gov.au/help/copyright",
+          "attribution": "Western Australian Herbarium (1998–). Florabase—the Western Australian flora. Department of Biodiversity, Conservation and Attractions. https://florabase.dbca.wa.gov.au/ (Accessed 17 October 2026).",
+          "checked": "the cited page",
+          "taxa": 2,
+          "cited_pages": [
+            {
+              "taxon": "Agonis",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://florabase.dbca.wa.gov.au/browse/profile/22478"
+            },
+            {
+              "taxon": "Agonis flexuosa",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "https://florabase.dbca.wa.gov.au/browse/profile/22478"
+            }
+          ]
+        },
+        {
+          "source_name": "PlantZAfrica",
+          "provider": "The South African National Biodiversity Institute (SANBI)",
+          "url": "https://pza.sanbi.org/",
+          "licence_url": "https://www.sanbi.org/about-us/terms-and-conditions/",
+          "checked": "another page of the same organisation (www.sanbi.org; pza.sanbi.org turned automated reading away)",
+          "taxa": 2,
+          "cited_pages": [
+            {
+              "taxon": "Myrsine",
+              "rank": "genus",
+              "max_height_m": 18.0,
+              "source_url": "https://pza.sanbi.org/node/10859"
+            },
+            {
+              "taxon": "Olea",
+              "rank": "genus",
+              "max_height_m": 35.0,
+              "source_url": "https://pza.sanbi.org/node/10661"
+            }
+          ]
+        },
+        {
+          "source_name": "Flora of New Zealand Online",
+          "provider": "Landcare Research",
+          "url": "https://nzflora.info/",
+          "licence": "CC BY 3.0 NZ",
+          "licence_url": "https://creativecommons.org/licenses/by/3.0/nz/",
+          "attribution": "Breitwieser I., Heenan P.J.; Nelson W.A., Wilton A.D. eds. (2010-2026) Flora of New Zealand Online – Taxon Profiles. Accessed at http://www.nzflora.info, 17 October 2026.",
+          "checked": "the cited page",
+          "taxa": 2,
+          "cited_pages": [
+            {
+              "taxon": "Griselinia",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://nzflora.info/factsheet/taxon/Griselinia-littoralis.html"
+            },
+            {
+              "taxon": "Griselinia littoralis",
+              "rank": "species",
+              "max_height_m": 15.0,
+              "source_url": "https://nzflora.info/factsheet/taxon/Griselinia-littoralis.html"
+            }
+          ]
+        },
+        {
+          "source_name": "Reforestemos",
+          "provider": "Fundación Reforestemos",
+          "url": "https://reforestemos.org/",
+          "licence_url": "https://reforestemos.org/terminos-y-condiciones/",
+          "checked": "another page of the same site (the cited PDF answered 404 on 17 Oct 2026)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Persea",
+              "rank": "genus",
+              "max_height_m": 30.0,
+              "source_url": "https://www.reforestemos.org/content/uploads/lingue-30.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "Smithsonian Magazine",
+          "provider": "Smithsonian Magazine",
+          "url": "https://www.smithsonianmag.com/",
+          "checked": "not read: the site turned automated reading away on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Cupressus",
+              "rank": "genus",
+              "max_height_m": 102.0,
+              "source_url": "https://www.smithsonianmag.com/smart-news/see-the-new-tallest-tree-in-asia-a-335-foot-cypress-180982463/"
+            }
+          ]
+        },
+        {
+          "source_name": "Flora & Fauna Web",
+          "provider": "National Parks Board",
+          "url": "https://www.nparks.gov.sg/florafaunaweb",
+          "licence_url": "https://www.nparks.gov.sg/terms-of-use",
+          "checked": "the cited page",
+          "taxa": 2,
+          "cited_pages": [
+            {
+              "taxon": "Magnolia",
+              "rank": "genus",
+              "max_height_m": 50.0,
+              "source_url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/0/3025"
+            },
+            {
+              "taxon": "Melaleuca",
+              "rank": "genus",
+              "max_height_m": 40.0,
+              "source_url": "https://nparks.gov.sg/florafaunaweb/flora/3/0/3019"
+            }
+          ]
+        },
+        {
+          "source_name": "Cabildo Insular de La Gomera",
+          "provider": "Cabildo Insular de La Gomera",
+          "url": "https://www.lagomera.es/",
+          "licence_url": "https://www.lagomera.es/area/general/aviso-legal",
+          "checked": "another page of the same site",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Phoenix canariensis",
+              "rank": "species",
+              "max_height_m": 30.0,
+              "source_url": "https://www.lagomera.es/media/turismo/doc/Especies%20vegetales%20zonas%20ajardinadas/15_palmera-canaria.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "Global Invasive Species Database (GISD)",
+          "provider": "IUCN SSC Invasive Species Specialist Group (ISSG)",
+          "url": "https://www.iucngisd.org/gisd/",
+          "licence_url": "https://www.iucngisd.org/gisd/legal.php",
+          "attribution": "Global Invasive Species Database (2026) Species profile: Prunus campanulata.",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Prunus campanulata",
+              "rank": "species",
+              "max_height_m": 10.0,
+              "source_url": "https://www.iucngisd.org/gisd/pdf.php?sc=1666"
+            }
+          ]
+        },
+        {
+          "source_name": "Pl@ntUse",
+          "provider": "Pl@ntUse; text from PROSEA (Plant Resources of South-East Asia)",
+          "url": "https://plantuse.plantnet.org/en/Main_Page",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Vitex",
+              "rank": "genus",
+              "max_height_m": 45.0,
+              "source_url": "https://uses.plantnet-project.org/en/Vitex_quinata_(PROSEA)"
+            }
+          ]
+        },
+        {
+          "source_name": "Flora e Funga do Brasil",
+          "provider": "Flora e Funga do Brasil (reflora.jbrj.gov.br)",
+          "url": "https://reflora.jbrj.gov.br/",
+          "checked": "not read: the site turned automated reading away on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Syagrus romanzoffiana",
+              "rank": "species",
+              "max_height_m": 20.0,
+              "source_url": "https://reflora.jbrj.gov.br/reflora/listaBrasil/FichaPublicaTaxonUC/FichaPublicaTaxonUC.do?id=FB15745"
+            }
+          ]
+        },
+        {
+          "source_name": "Australian National Botanic Gardens",
+          "provider": "Parks Australia",
+          "url": "https://visit.anbg.gov.au/",
+          "checked": "another page of the same site (the cited page now leads to the home page)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Podocarpus",
+              "rank": "genus",
+              "max_height_m": 40.0,
+              "source_url": "https://anbg.gov.au/gardens/visiting/exploring/walks/conifers/podocarpus-elatus.html"
+            }
+          ]
+        },
+        {
+          "source_name": "Tropical Plant Database",
+          "provider": "National Tropical Botanical Garden",
+          "url": "https://ntbg.org/database/plants/",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Hibiscus",
+              "rank": "genus",
+              "max_height_m": 25.0,
+              "source_url": "https://ntbg.org/database/plants/detail/hibiscus-elatus"
+            }
+          ]
+        },
+        {
+          "source_name": "Native Plants Hawaii",
+          "provider": "Native Plants Hawaii (nativeplants.hawaii.edu)",
+          "url": "https://nativeplants.hawaii.edu/",
+          "checked": "not read: the site was unreachable on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Coprosma",
+              "rank": "genus",
+              "max_height_m": 15.0,
+              "source_url": "https://nativeplants.hawaii.edu/plants/coprosma-rhynchocarpa/"
+            }
+          ]
+        },
+        {
+          "source_name": "National Champion Tree Program",
+          "provider": "School of Natural Resources, University of Tennessee Institute of Agriculture",
+          "url": "https://nationalchampiontree.org/",
+          "licence_url": "https://utia.tennessee.edu/disclaimer-indicia-eeo-statement/",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Quercus palustris",
+              "rank": "species",
+              "max_height_m": 34.1,
+              "source_url": "https://nationalchampiontree.org/championTree/6950"
+            }
+          ]
+        },
+        {
+          "source_name": "Conservation Gap Analysis of Native Mesoamerican Oaks",
+          "provider": "The Morton Arboretum",
+          "url": "https://mortonarb.org/",
+          "attribution": "Good, K., Acosta-Vargas, L. G., and Alvarez-Clare, S. (2024). Quercus costaricensis Liebm. In Good, K., Coombes, A. J., Valencia-A, S., Rodríguez-Acosta, M., Beckman Bruns, E., and Alvarez-Clare, S. Conservation Gap Analysis of Native Mesoamerican Oaks. (pp. 109-116). Lisle, IL: The Morton Arboretum",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Quercus",
+              "rank": "genus",
+              "max_height_m": 50.0,
+              "source_url": "https://mortonarb.org/app/uploads/2024/09/gap_analysis_mesoamerica_profile_costaricensis_English.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "BMC Genomics",
+          "provider": "BioMed Central (Springer Nature)",
+          "url": "https://doi.org/10.1186/s12864-024-10810-4",
+          "licence": "CC BY-NC-ND 4.0",
+          "licence_url": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+          "attribution": "Ferguson, S., Bar-Ness, Y.D., Borevitz, J. et al. A telomere-to-telomere Eucalyptus regnans genome: unveiling haplotype variance in structure and genes within one of the world’s tallest trees. BMC Genomics 25, 913 (2024). https://doi.org/10.1186/s12864-024-10810-4",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Eucalyptus",
+              "rank": "genus",
+              "max_height_m": 100.5,
+              "source_url": "https://link.springer.com/article/10.1186/s12864-024-10810-4"
+            }
+          ]
+        },
+        {
+          "source_name": "European Atlas of Forest Tree Species",
+          "provider": "Publ. Off. EU, Luxembourg; chapter hosted by Instituut voor Landbouw-, Visserij- en Voedingsonderzoek (ILVO)",
+          "url": "https://ilvo.vlaanderen.be/",
+          "attribution": "Eaton, E., Caudullo, G., Oliveira, S., de Rigo, D., 2016. Quercus robur and Quercus petraea in Europe: distribution, habitat, usage and threats. In: San-Miguel-Ayanz, J., de Rigo, D., Caudullo, G., Houston Durrant, T., Mauri, A. (Eds.), European Atlas of Forest Tree Species. Publ. Off. EU, Luxembourg, pp. e01c6df+",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Quercus robur",
+              "rank": "species",
+              "max_height_m": 40.0,
+              "source_url": "https://ilvo.vlaanderen.be/uploads/documents/European_Atlas_of_Forest_Tree_Species_Wintereik-Zomereik.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "Earth Matters",
+          "provider": "Hitchcock Center for the Environment",
+          "url": "https://www.hitchcockcenter.org/",
+          "attribution": "Robert T. Leverett, Big Trees of the Eastern Forest, Past and Present. Earth Matters, Hitchcock Center for the Environment (2011).",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Platanus",
+              "rank": "genus",
+              "max_height_m": 48.8,
+              "source_url": "https://hitchcockcenter.org/?p=3670"
+            }
+          ]
+        },
+        {
+          "source_name": "GIASI Partnership",
+          "provider": "Global Invasive Alien Species Information Partnership (GIASI Partnership)",
+          "url": "https://giasipartnership.myspecies.info/",
+          "checked": "not read: the site turned automated reading away on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Pittosporum",
+              "rank": "genus",
+              "max_height_m": 30.0,
+              "source_url": "https://giasipartnership.myspecies.info/en/taxonomy/term/14174/descriptions"
+            }
+          ]
+        },
+        {
+          "source_name": "European Atlas of Forest Tree Species",
+          "provider": "Joint Research Centre, European Commission",
+          "url": "https://forest.jrc.ec.europa.eu/en/european-atlas/",
+          "licence_url": "https://commission.europa.eu/legal-notice_en",
+          "attribution": "de Rigo, D., Caudullo, G., 2016. Quercus ilex in Europe: distribution, habitat, usage and threats. In: San-Miguel-Ayanz, J., de Rigo, D., Caudullo, G., Houston Durrant, T., Mauri, A. (Eds.), European Atlas of Forest Tree Species. Publ. Off. EU, Luxembourg, pp. e014bcd+",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Quercus ilex",
+              "rank": "species",
+              "max_height_m": 30.0,
+              "source_url": "https://forest.jrc.ec.europa.eu/media/atlas/Quercus_ilex.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "New York State Big Tree Register",
+          "provider": "Department of Environmental Conservation (NYSDEC)",
+          "url": "https://dec.ny.gov/nature/animals-fish-plants/plants/big-tree-register",
+          "licence_url": "https://dec.ny.gov/about/website-usage-and-policies",
+          "checked": "another page of the same site",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Betula",
+              "rank": "genus",
+              "max_height_m": 30.8,
+              "source_url": "https://extapps.dec.ny.gov/docs/lands_forests_pdf/champsci.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "Kentucky's Champion Trees",
+          "provider": "Cooperative Extension Service, University of Kentucky—College of Agriculture; Kentucky Division of Forestry",
+          "url": "https://eec.ky.gov/Natural-Resources/Forestry/ky-champion-trees/Pages/default.aspx",
+          "licence_url": "https://www.kentucky.gov/policies/Pages/disclaimer.aspx",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Prunus",
+              "rank": "genus",
+              "max_height_m": 40.8,
+              "source_url": "https://eec.ky.gov/Natural-Resources/Forestry/ky-champion-trees/Documents/Cherry%20black.pdf"
+            }
+          ]
+        },
+        {
+          "source_name": "Biodiversity at LUMS",
+          "provider": "Lahore University of Management Sciences",
+          "url": "https://biodiversity.lums.edu.pk/",
+          "checked": "the cited page",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Jacaranda mimosifolia",
+              "rank": "species",
+              "max_height_m": 20.0,
+              "source_url": "https://biodiversity.lums.edu.pk/lums-biodiversity/plants/jacaranda-mimosifolia"
+            }
+          ]
+        },
+        {
+          "source_name": "USDA blog",
+          "provider": "U.S. Department of Agriculture",
+          "url": "https://www.usda.gov/",
+          "checked": "not read: the site turned automated reading away on 17 Oct 2026; named as ALTO's credits page and the cited pages name it (to confirm)",
+          "taxa": 1,
+          "cited_pages": [
+            {
+              "taxon": "Pinus",
+              "rank": "genus",
+              "max_height_m": 81.8,
+              "source_url": "https://www.usda.gov/about-usda/news/blog/oregon-forest-home-worlds-tallest-living-pine-tree"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MapLibre GL JS 4.7.1 and PMTiles 3.0.7",
+      "section": "Software and fonts",
+      "provider": "MapLibre; Protomaps",
+      "licence": "BSD 3-Clause",
+      "used_for": "software (not in the data files)"
+    },
+    {
+      "name": "three.js",
+      "section": "Software and fonts",
+      "provider": "three.js authors",
+      "licence": "MIT",
+      "used_for": "software (not in the data files)"
+    },
+    {
+      "name": "Inter typeface",
+      "section": "Software and fonts",
+      "provider": "The Inter Project Authors",
+      "licence": "SIL Open Font License 1.1",
+      "used_for": "software (not in the data files)"
+    },
+    {
+      "name": "Leaflet 1.9.4 and exifr 7.1.3 (KYTE)",
+      "section": "Software and fonts",
+      "provider": "Leaflet; exifr",
+      "licence": "BSD 2-Clause (Leaflet); MIT (exifr)",
+      "used_for": "software (not in the data files)"
+    },
+    {
+      "name": "tippecanoe and go-pmtiles",
+      "section": "Software and fonts",
+      "provider": "Felt; Protomaps",
+      "licence": "BSD 2-Clause (tippecanoe); BSD 3-Clause (go-pmtiles)",
+      "used_for": "software (not in the data files)"
+    },
+    {
+      "name": "ALTO",
+      "section": "ALTO",
+      "provider": "Better Places Lab",
+      "producer": "Better Places Lab (Dr Timothy F. Welch), Te Pare School of Architecture and Planning, Waipapa Taumata Rau | University of Auckland",
+      "licence": "PolyForm Noncommercial 1.0.0 (code); CC BY-NC 4.0 (documents); third-party data keep their licences",
+      "licence_url": "https://github.com/squirmen/alto/blob/main/LICENSE",
+      "url": "https://github.com/squirmen/alto",
+      "used_for": "ALTO"
+    }
+  ],
+  "licence_notice": {
+    "text": "Each record keeps its source's licence (source_licences, by source_primary; every source on credits.html). ALTO's own detections, measurements and estimates: CC BY-NC 4.0 (ALTO data). Records derived from OpenStreetMap: © OpenStreetMap contributors, available under the Open Database Licence 1.0 (https://opendatacommons.org/licenses/odbl/1-0/); see https://www.openstreetmap.org/copyright. They stay under the ODbL, ALTO's noncommercial terms do not apply to them, and exports that contain them carry its share-alike condition. Method: pipeline/base/scripts/fetch_osm_natural_trees.py (https://github.com/squirmen/alto). Data under CC BY 4.0: LiDAR from the LINZ Data Service (licensed by Regional Software Holdings Limited and Auckland Council) and aerial photographs from New Zealand Imagery (each survey's licensor on credits.html); NZ Primary Land Parcels and NZ Building Outlines (LINZ Data Service); the Auckland Unitary Plan Notable Trees and Notable Group of Trees overlays (Plans and Places, Auckland Council); Auckland Council context layers; Public Conservation Land (Crown Copyright: Department of Conservation Te Papa Atawhai 2026); local boards (Stats NZ – Tatauranga Aotearoa). Auckland Council tree register (incl. Auckland Transport): © Auckland Council, retrieved June 2026. Kauri survey records (Ruru ObsKauri Tiaki): Auckland Council terms of use; Bio Info Team, Environmental Services, Auckland Council; not a complete record of kauri or kauri dieback. i-Tree Database values: i-Tree Cooperative (USDA Forest Service and cooperators), used with credit.",
+    "odbl": {
+      "source_primary": "osm_natural_tree",
+      "records": 4800,
+      "licence": "Open Database Licence (ODbL) 1.0",
+      "licence_url": "https://opendatacommons.org/licenses/odbl/1-0/",
+      "attribution": "© OpenStreetMap contributors",
+      "attribution_url": "https://www.openstreetmap.org/copyright",
+      "noncommercial_terms": "do not apply (ODbL 4.7)",
+      "method": "pipeline/base/scripts/fetch_osm_natural_trees.py",
+      "method_url": "https://github.com/squirmen/alto/blob/main/pipeline/base/scripts/fetch_osm_natural_trees.py",
+      "dataset": "licence"
+    },
+    "credits": "credits.html"
+  },
+  "v63_changes": [
+    "The benefit value is stormwater plus carbon: about NZ$76.7 million a year, down from about NZ$295 million a year in release 6.2, which also counted air quality and cooling. Air-quality and cooling dollars stay in each tree's full record, marked not release-eligible. Map ranks, comparisons among similar trees, Area, property totals and the release totals use the benefit value.",
+    "Release 6.2's benefit value added four services: air quality NZ$163.5 million a year (55.4%), cooling NZ$55.0 million (18.6%), stormwater NZ$74.2 million (25.1%) and carbon NZ$2.5 million (0.9%). Release 6.3 withholds the estimates of the 80 crowns whose height is not plausible (−NZ$9,352 a year) and values the 103 crowns drawn outside the v5 survey on their drawn outline (−NZ$671 a year).",
+    "PM2.5 removal and the cooling index are kept in the full record and not published: the PM2.5 method awaits confirmation of its sources.",
+    "Heights are checked: 80 map markers have a height that is not plausible (66 at 55 m or more; 14 below 55 m), and their estimates are withheld and left out of the totals; 2,692 have a height to check. Record-to-crown links are checked: of 42,491 linked records, 253 may be on a different tree from their crown and 5,556 are to check, on 4,188 map markers. Flagged crowns are left out of comparisons, Species maxima and the property tallest tree.",
+    "Height class replaces the life-stage label, and crown replacement time replaces the irreplaceability class. Crown replacement time: 80 years or more 284,679 map markers; 40–80 years 453,160; 15–40 years 1,040,238; 5–15 years 723,003; under 5 years 121,835. Not classed: 951,906 map markers (26.6% of the 3,574,821 map markers): 917,582 crowns under 5 m tall, 80 crowns whose height is not plausible and 34,244 map markers with no crown estimate. Tall tree, 25 m or taller, is a separate fact: 204,156 crowns.",
+    "3,824 map markers inside a Notable Group of Trees area carry the area's Schedule 10 item (3,266 crowns, 473 earlier detections and 85 records; 2,980 of those crowns had no link to Schedule 10, 334 on private land in 75 areas), and the 229 areas are a map layer. Whether a tree inside an area is one of the scheduled trees has not been established: 3,570 map markers are linked to Schedule 10, as in release 6.2.",
+    "Trees holding a Council point carry their Schedule 10 entry as the July 2026 schedule lists it: 2,480 entries, which together list about 4,787 scheduled trees; for 96 items every Council point lies on one crown.",
+    "A reviewer's note can travel through the corrections ledger: tree T162DYHP, where Council's point for item 1186 lies, carries one, and the field visit shown on it reads \"A field visit found a tree at the Council point.\" Corrections on tree pages read in tree numbers and plain names.",
+    "Every source carries its licence; the 4,800 records derived from OpenStreetMap carry the Open Database Licence 1.0, and ALTO's noncommercial terms do not apply to them. Change since 2013 is release-eligible, with its limits.",
+    "The Species filter lists 1,028 species by Latin name under their common names, across the 56,258 map markers with a recorded species. 11 misspelled or outdated Latin names read their accepted names (3,546 records), checked against the iNaturalist taxonomy (accessed 17 Oct 2026); the name as supplied stays in each record. The 1,205 kauri survey records read Kauri.",
+    "i-Tree reference heights are stored in metres (kauri 165 ft is 50.3 m). Pūriri (952 records) reads evergreen broadleaf and cabbage tree (720 records) palm or palm-like; i-Tree's classes are kept beside them."
+  ],
+  "v63_unchanged": [
+    "Tree numbers, positions and crown outlines: release 6.2's. The map shows 3,574,821 map markers and 4,200,336 tree numbers; 1,447 crown outlines, nearly all earlier crowns outside the v5 survey, are cleaned to their polygon parts, with the same area.",
+    "Growth form, Council positions, the near-canopy layer and the Change since 2013 file are release 6.2's.",
+    "Every value release 6.3 retires stays in each tree's full record: the life-stage label, the irreplaceability class, the air-quality and cooling dollars and the release 6 PM2.5 rate."
+  ],
+  "v63_limits": [
+    "The height checks rest on the 2024 LiDAR survey and published maximum heights; a real tall tree can be flagged where its returns were misclassified.",
+    "The record check's third rule reads the growth-form model, which can itself be wrong (a kauri read as broadleaf), so one rule alone marks a record only to check.",
+    "The group-area flag places a marker inside Council's indicative overlay; it does not establish that the tree is one of the scheduled trees. The overlay may have changed since it was retrieved.",
+    "Height class and crown replacement time use ALTO planning defaults for four growth forms; species within a growth form vary. Trunk diameter and root zones keep the release 5.2 growth-form class.",
+    "Benefit estimates are not independently validated; they remain sensitivity scenarios. Stormwater is priced at NZ$3.50 per cubic metre of avoided runoff (1.5 times in flood-prone areas) and carbon at NZ$50 per tonne CO2e; neither price is an audited Auckland value. Each crown's band is set by its valuation confidence (±30% for modelled medium, ±60% for modelled low)."
+  ],
+  "v63_deferred": [
+    "PM2.5 removal and the cooling index: published once the method's sources are confirmed and its check passes.",
+    "Plantation forest: crowns in exotic forest are classed by regrowth time like every other crown; release 6.3 does not overlay a land-cover map (LCDB).",
+    "Trunk diameter calibration and ranges: they need reviewed girth measurements; KYTE's girth missions collect them.",
+    "Crowns at the 400 m² merge limit: not re-segmented; they keep the note \"at or near the 400 m² segmentation limit\".",
+    "The benefit class of a recorded species, and accepted names from national name lists: the benefit estimates keep the growth-form class.",
+    "For a multi-tree Schedule 10 entry, the other crowns of the parcel: no \"may be one of the trees\" line yet.",
+    "Lighter map tiles, a packed full-record archive and a place index."
+  ],
+  "v63_methods": {
+    "page": "v63-methods.html",
+    "tool_version": "0.2.12",
+    "tool_commit": "8871dca",
+    "note": "v63_changes, v63_unchanged, v63_limits and v63_deferred state what the methods page states (verify_v63 checks them)."
+  }
 }

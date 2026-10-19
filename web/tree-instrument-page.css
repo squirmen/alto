@@ -6,9 +6,13 @@
 body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text); font: var(--text-body-ui); position: relative; }
 .ti-page :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
 .ti-main { max-width: 1200px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-12); outline: none; }
+/* FE-09: until the record has rendered the page keeps a screen's height, so the footer does not jump down when it does. */
+body:not([data-ready="true"]) .ti-main { min-height: 100vh; min-height: 100dvh; }
 
 /* ---------- app bar and footer ---------- */
 .ti-page .tpg-top { position: sticky; top: 0; z-index: var(--z-panel); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: var(--app-bar-h); padding: 0 max(var(--space-6), calc((100vw - 1152px) / 2)); background: var(--color-app-bar-bg); border-bottom: 1px solid var(--color-border); box-shadow: none; backdrop-filter: none; }
+/* The ALTO pages menu (site-nav.css) under the sticky bar, on the bar's edges; it scrolls away with the page. */
+.ti-page nav.site-nav > ul { padding: var(--space-1) max(var(--space-6), calc((100vw - 1152px) / 2)); }
 .ti-brand { display: inline-flex; align-items: center; gap: var(--space-3); color: var(--color-text); text-decoration: none; }
 .ti-brand img { display: block; height: 28px; width: auto; }
 .ti-brand span { padding-left: var(--space-3); border-left: 1px solid var(--color-border); font: 600 var(--fs-md)/1 var(--font-sans); color: var(--color-text-secondary); }
@@ -48,16 +52,34 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
 .ti-idline code { font: var(--text-mono); }
 /* Data release 6.1 on: the tree number (Copy, permalink), then the record ID on one quieter line. */
 .ti-idline .ti-tn { font-size: var(--fs-md); font-weight: 600; letter-spacing: 0.04em; }
+/* The permalink has a line of its own, at least 24 px tall and clear of Copy above it (A11Y-13). */
 .ti-permalink { overflow-wrap: anywhere; }
+.ti-idline dd small { margin-top: var(--space-1); }
+.ti-idline dd small .ti-permalink { display: inline-block; min-height: 24px; padding: 4px 0; }
 .ti-idline dt.ti-sub { display: inline-block; margin-top: var(--space-1-5); font: var(--text-caption); letter-spacing: normal; text-transform: none; color: var(--color-text-muted); }
 .ti-idline dd.ti-sub { display: inline; margin: 0; font: var(--text-caption); color: var(--color-text-muted); }
 .ti-idline dd.ti-sub code { font: var(--text-mono); font-size: var(--fs-xs); color: var(--color-text-secondary); overflow-wrap: anywhere; }
+/* Location (the map pin, WGS84): one row across the ID line, coordinates in mono, plain links to other maps. */
+.ti-idline .ti-loc { grid-column: 1 / -1; }
+.ti-idline .ti-coord { font: var(--text-mono); font-variant-numeric: tabular-nums; }
+.ti-idline .ti-loc-links a { color: var(--color-text-link); font-weight: 600; display: inline-block; padding: var(--space-1) 0; }
+.ti-idline .ti-loc-links span[aria-hidden] { color: var(--color-text-muted); }
 /* A page about an ID that names no current tree (retired, merged, split, unknown, mistyped). */
 .ti-status-page .ti-lead { margin: var(--space-2) 0 0; font: var(--text-value); color: var(--color-text); }
 .ti-status-page .ti-lead a { color: var(--color-text-link); font-weight: 600; }
 .ti-status-kvs { margin-top: var(--space-4); padding-top: var(--space-2); border-top: 1px solid var(--color-border-subtle); max-width: 760px; }
 .ti-status-kvs .ti-kv { grid-template-columns: 30% minmax(0, 1fr); }
 .ti-status-kvs .ti-kv dd a { margin-left: 0; }
+/* Recognition (tool 0.2.8): a data sheet under the header, one row per source with its links and credit; the slot adds
+   no grid gap while it is empty. */
+#recogSlot { display: contents; }
+.ti-recog .ti-kv { grid-template-columns: minmax(8.5rem, 22%) minmax(0, 1fr); }
+.ti-recog .ti-kv dd a { margin-left: 0; }
+.ti-recog .ti-kv:last-child { border-bottom: 0; }
+.ti-recog .ti-rc-say { display: block; max-width: 72ch; }
+.ti-recog .ti-rc-links a { font-weight: 600; }
+.ti-recog .ti-rc-credit { margin-top: var(--space-1); }
+@media screen and (max-width: 759px) { .ti-recog .ti-kv { grid-template-columns: 1fr; gap: 2px; } }
 .ti-succ { margin: 0; padding-left: var(--space-5); }
 .ti-succ li + li { margin-top: var(--space-1); }
 .ti-succ-what { color: var(--color-text-secondary); }
@@ -68,6 +90,13 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
 /* ---------- sticky bar: survey year and module links ---------- */
 .ti-bar { position: sticky; top: var(--ti-top, 56px); z-index: calc(var(--z-panel) - 1); margin: var(--space-4) 0; }
 .ti-bar:empty { display: none; }
+/* A11Y-01: past a fifth of the window's height the bars scroll with the page (tree-page.js stickyStack, measured). */
+html.ti-bar-static .ti-bar { position: static; }
+html.ti-top-static .ti-page .tpg-top { position: static; }
+/* A section reached by a link takes focus (tabindex -1) so Tab continues there; it is a landing point, not a control. */
+.ti-mod[tabindex="-1"]:focus { outline: none; }
+/* The skip link shows below the app bar and whatever stays stuck, so it never covers or sits under the bars. */
+.ti-page .skip-link:focus { position: fixed; left: var(--space-2); top: max(var(--ti-stack, 64px), calc(var(--ti-top, 56px) + 8px)); }
 .ti-bar-in { display: grid; grid-template-columns: auto minmax(300px, 360px) minmax(0, 1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-1); }
 .ti-bar-name { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 var(--fs-md)/1.3 var(--font-sans); }
 .ti-bar-nav { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; overflow-x: auto; scrollbar-width: none; }
@@ -115,13 +144,31 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
 .ti-ix-status { margin: 0 0 var(--space-3); }
 .ti-ix-body + .ti-cap { max-width: 96ch; }
 .ti-ix-attr a { color: var(--color-text-link); }
+/* The scanned historical surveys: a disclosure above the surveys since 2010 (open on a desktop, closed on a phone). */
+.ti-ix-hist { margin: 0 0 var(--space-5); }
+.ti-ix-hist > summary { padding: var(--space-1) 0; cursor: pointer; }
+.ti-ix-hist > summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-radius: var(--radius-xs); }
+.ti-ix-gt { margin: 0; font: 600 var(--fs-md)/1.3 var(--font-sans); color: var(--color-text); }
+.ti-ix-gn { margin-left: var(--space-2); font: var(--text-caption); color: var(--color-text-secondary); font-variant-numeric: var(--numeric-data); white-space: nowrap; }
+.ti-ix-hist[open] > summary { margin-bottom: var(--space-1); }
+.ti-ix-caveat { max-width: 96ch; margin: 0 0 var(--space-3); }
+.ti-ix-since { margin-bottom: var(--space-2); }
+@media (pointer: coarse) { .ti-ix-hist > summary { padding: var(--space-2) 0; min-height: var(--target-touch); box-sizing: border-box; } }
+/* Each photograph opens the larger view (tree-imagery-viewer.js); the corner mark says so. */
+.ti-ix-open { all: unset; box-sizing: border-box; position: absolute; inset: 0; display: block; border-radius: inherit; cursor: zoom-in; }
+.ti-ix-open:focus-visible::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--color-focus), inset 0 0 0 4px var(--color-surface); }
+.ti-ix-zoom { position: absolute; top: var(--space-1-5); right: var(--space-1-5); display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--radius-xs); background: var(--viz-overlay-halo); color: var(--neutral-0); opacity: .8; transition: opacity var(--dur-fast) var(--ease-standard); }
+.ti-ix-open:hover .ti-ix-zoom, .ti-ix-open:focus-visible .ti-ix-zoom { opacity: 1; }
+
+/* The larger view (a dialog; a full-screen sheet on a phone): imagery-viewer.css. */
 
 /* ---------- modules (cards) ---------- */
 .ti-mods { display: grid; gap: var(--space-4); }
 .ti-row2 { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--space-4); align-items: start; }
-.ti-flow { columns: 2 440px; column-gap: var(--space-4); }
-.ti-flow > .ti-mod { display: block; width: 100%; margin: 0 0 var(--space-4); break-inside: avoid; contain: inline-size; }
-.ti-mod { min-width: 0; padding: var(--space-5) var(--space-6) var(--space-6); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); scroll-margin-top: calc(var(--ti-top, 56px) + 76px); }
+/* Sections 9-14 in one column at every width, so the visual order and the tab order follow the section numbers (UX-08b);
+   two balanced columns put 12 beside 9 and 11 last. */
+.ti-flow { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
+.ti-mod { min-width: 0; padding: var(--space-5) var(--space-6) var(--space-6); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); scroll-margin-top: var(--ti-stack, calc(var(--ti-top, 56px) + 76px)); }
 .ti-mod-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin: 0 0 var(--space-4); }
 .ti-mod-head h2 { display: flex; align-items: baseline; gap: var(--space-2); margin: 0; font: var(--text-h2); color: var(--color-text); }
 .ti-mod-n { font: 600 var(--fs-md)/1 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); }
@@ -165,6 +212,8 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
 .ti-table tr.is-self > * { background: var(--color-surface-sunken); }
 .ti-scroll .ti-table th:first-child, .ti-scroll .ti-table td:first-child { padding-left: var(--space-3); }
 .ti-mini th, .ti-mini td { padding: var(--space-1-5) var(--space-2) var(--space-1-5) 0; font-size: var(--fs-xs); }
+.ti-mini thead th, .ti-mini thead .num { white-space: normal; }  /* five columns fit a 320 px screen; the page never scrolls sideways */
+.ti-mini td .ti-na { white-space: normal; }  /* "outside survey", "not linked" and "no crown linked" wrap in their cell, as the headings do */
 .ti-hbar { display: block; width: var(--w); max-width: 120px; height: 4px; margin: 2px 0 var(--space-1) auto; border-radius: 2px; background: var(--viz-crown); }
 .ti-ids { display: grid; gap: var(--space-1); margin: var(--space-3) 0 0; padding: 0; list-style: none; }
 .ti-ids li { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: var(--space-3); font: var(--text-label); }
@@ -181,6 +230,8 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
 .ti-mm { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-2); }
 .ti-mm button { min-height: var(--control-sm); padding: 0 var(--space-3); border-radius: var(--radius-pill); border: 1px solid var(--color-border-input); background: var(--color-surface); font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-secondary); cursor: pointer; }
 .ti-mm button[aria-pressed="true"] { background: var(--color-surface-tint); border-color: var(--color-accent); color: var(--color-text-accent); }
+/* The inset map's zoom buttons and mode buttons are 44 px on a touch screen (A11Y-13), as on the map. */
+@media (pointer: coarse) { .ti-minimap .maplibregl-ctrl-group button { width: var(--target-touch); height: var(--target-touch); } .ti-mm button { min-height: var(--target-touch); } }
 .ti-p-survey .ti-table { margin-top: var(--space-2); }
 
 /* ---------- comparisons ---------- */
@@ -223,8 +274,6 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
 }
 @media screen and (max-width: 1100px) {
   .ti-row2 { grid-template-columns: 1fr; }
-  .ti-flow { columns: auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
-  .ti-flow > .ti-mod { margin: 0; }
   .ti-band-page { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .ti-struct { grid-template-columns: 160px minmax(0, 1fr); }
   .ti-p-map { grid-column: 1 / -1; }
@@ -232,6 +281,7 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
 @media screen and (max-width: 759px) {
   .ti-main { padding: var(--space-3) var(--space-4) var(--space-10); }
   .ti-page .tpg-top { padding: 0 var(--space-4); }
+  .ti-page nav.site-nav > ul { padding: var(--space-1) var(--space-4); }
   .ti-brand span { display: none; }
   .ti-id { grid-template-columns: 1fr; gap: var(--space-4); padding: var(--space-4); }
   .ti-id h1 { font: var(--text-title-panel); letter-spacing: var(--ls-tight); }
@@ -255,7 +305,7 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
   .ti-scroll { max-width: 100%; }
   .ti-cmp-row [role="cell"] { overflow: hidden; }
   .ti-key { gap: var(--space-1) var(--space-3); }
-  .ti-mod { padding: var(--space-4); scroll-margin-top: calc(var(--ti-top, 56px) + 64px); }
+  .ti-mod { padding: var(--space-4); scroll-margin-top: var(--ti-stack, calc(var(--ti-top, 56px) + 64px)); }
   .ti-band-page { grid-template-columns: 1fr 1fr; }
   .ti-band-page .ti-m-b { min-height: 104px; padding: var(--space-3); }
   .ti-struct { grid-template-columns: 1fr; }
@@ -272,13 +322,14 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
   .ti-classes li, .ti-classes li:first-child, .ti-classes li:last-child { border-radius: var(--radius-xs); }
   #m-lost .ti-row, .ti-row { grid-template-columns: 1fr; gap: var(--space-1); }
 }
+@media screen and (max-width: 359px) { .ti-page .tpg-top { padding: 0 var(--space-3); gap: var(--space-2); } }
 
 /* ---------- print: the record as a citable A4 document (concept A; design system 3.8) ---------- */
 @page { size: A4; margin: 15mm 14mm 17mm; }
 @media print {
   body.ti-page { background: #fff; font-size: 10pt; }
   .ti-page .tpg-top, .ti-bar, .ti-mm, .ti-pop, .ti-id-actions, .ti-copy, .ti-p-map, #downloadJson, #allFields, .skip-link, .tpg-alert, .maplibregl-ctrl, .ti-pagelinks { display: none !important; }
-  .ti-ix { grid-template-columns: repeat(4, minmax(0, 1fr)); } .ti-ix-card { break-inside: avoid; } .ti-ix-status { display: none; }
+  .ti-ix { grid-template-columns: repeat(4, minmax(0, 1fr)); } .ti-ix-card { break-inside: avoid; } .ti-ix-status { display: none; } .ti-ix-zoom, .ixv { display: none !important; }
   .ti-main { max-width: none; padding: 0; }
   .ti-id, .ti-mod { border: 0; border-radius: 0; padding: 0; background: #fff; }
   .ti-id { grid-template-columns: 1fr; padding-bottom: 4mm; border-bottom: 1px solid var(--neutral-200); }
@@ -287,7 +338,7 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
   .ti-mod { break-inside: auto; padding-top: 2mm; }
   .ti-mod-head { break-after: avoid; }
   .ti-mod-head h2 { font-size: 15pt; color: var(--alto-green-700); }
-  .ti-row2, .ti-flow { display: block; columns: auto; }
+  .ti-row2, .ti-flow { display: block; }
   .ti-row2 > .ti-mod, .ti-flow > .ti-mod { margin: 0 0 6mm; }
   .ti-struct { grid-template-columns: 46mm minmax(0, 1fr); gap: 4mm 6mm; }
   .ti-p-height .ti-hfig { max-width: 46mm; }
@@ -312,3 +363,10 @@ body.ti-page { margin: 0; background: var(--color-bg); color: var(--color-text);
   .ti-chip .chip-frame, .ti-sw, .ti-rb, .ti-cb, .ti-classes li { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .ti-page .tpg-foot { border-top: 1px solid var(--neutral-200); padding: 3mm 0 0; }
 }
+
+/* iNaturalist records at this tree: one line per record, its credit and link beneath. */
+.ti-inat { list-style: none; margin: var(--space-2) 0 0; padding: 0; max-width: 96ch; }
+.ti-inat li { padding: var(--space-2) 0; border-top: 1px solid var(--color-border-subtle); font: var(--text-label); color: var(--color-text-primary); }
+.ti-inat li:last-child { border-bottom: 1px solid var(--color-border-subtle); }
+.ti-inat small { display: block; margin-top: 2px; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-inat a { color: var(--color-text-link); font-weight: 600; text-underline-offset: 2px; }

@@ -1,0 +1,46 @@
+{
+ "note": "The wording build_tree_context.py publishes for data release 6.3 (--texts), as release 6.3's comparison tables carry it.",
+ "population": {
+  "description": "Crowns in this release with a benefit estimate and a crown replacement time, one per crown. Left out: crowns under 5 m, crowns with no crown estimate, crowns whose height is not plausible or is to check, and crowns whose record-to-crown link is flagged.",
+  "short": "classed crowns with a benefit estimate",
+  "rule": "published service rows minus not classed (under 5 m, no estimate, height not plausible) minus height checks and flagged record links (v63_checks.excluded_markers(c, \"comparisons\")); one row per marker, no crown key twice"
+ },
+ "class_field": "size.class_used (the published services class)",
+ "metrics": {
+  "height": {
+   "label": "Height",
+   "field": "size.height_m (published crown height, crown_max_chm_m)"
+  },
+  "crownArea": {
+   "label": "Crown area",
+   "field": "size.crown_area_m2 (published crown area)"
+  },
+  "benefits": {
+   "label": "Estimated benefits (stormwater and carbon)",
+   "field": "benefits.headline_value_nzd_y (stormwater and carbon)"
+  }
+ },
+ "counts": {
+  "bands": {
+   "field": "size.replacement_band (crown replacement time)",
+   "labels": {
+    "under_5y": "Under 5 years",
+    "5_15y": "5–15 years",
+    "15_40y": "15–40 years",
+    "40_80y": "40–80 years",
+    "80y_plus": "80 years or more"
+   }
+  },
+  "height_class": {
+   "field": "size.height_class",
+   "labels": {
+    "very_small": "Very small",
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large",
+    "very_large": "Very large"
+   }
+  }
+ },
+ "counts_note": "Counts per group of the crowns in that group; irreplaceability counts are retired in v6.3."
+}

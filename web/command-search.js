@@ -56,7 +56,9 @@
     const n=m?Number(m[1]):NaN;
     return Number.isFinite(n)&&n>=2&&n<=60?n:null;
   }
-  const GROUP_ORDER=['Tree','Presets','Filters','Map','Species','Places','Combined','Addresses','Examples'];
+  const GROUP_ORDER=['Tree','Presets','Filters','Map','Species','Places','Combined','Streets','Addresses','Examples'];
+  // Until a place index ships, the search says what it cannot find.
+  const NO_MATCH='No match. Suburbs, parks and schools are not searchable yet. Try a street address, a tree number, a species or a local board.';
   /* Rank items for a query.
      ctx.items(intent) -> [{id, group, label, words[], meta, run(intent), boost}]  (presets, filters, map commands)
      ctx.species() -> [[name, count]]; ctx.places() -> [{name, words[], run()}]
@@ -71,7 +73,7 @@
     // Common species first; names that bundle several species or carry lab notes, and names with only a few
     // records, rank after them.
     const spScore=(q,name,count)=>phraseScore(q,name)+Math.min(6,Math.log10((count||0)+1))-(/[(,]/.test(name)?12:0)-((count||0)<10?10:0);
-    let sp=(ctx.species?.()||[]).map(([name,count,names])=>({id:'species:'+name,group:'Species',label:name,count,names,score:spScore(tokens,name,count)})).filter(it=>it.score>=50);
+    let sp=(ctx.species?.()||[]).filter(([name])=>!/[,;]|\s&\s/.test(name)).map(([name,count,names])=>({id:'species:'+name,group:'Species',label:name,count,names,score:spScore(tokens,name,count)})).filter(it=>it.score>=50);
     if(sp.some(it=>it.score>=100))sp=sp.filter(it=>it.score>=100||(it.count||0)>=10);// an exact name: keep the rare variants out of the way
     const pl=(ctx.places?.()||[]).map(p=>({...p,group:'Places',score:itemScore(tokens,p)})).filter(it=>it.score>=55);
     const split=splitPlace(raw);
@@ -88,7 +90,7 @@
     if(ctx.speciesItem)for(const s of sp)Object.assign(s,ctx.speciesItem(s.label,s.count,s.names));
     const all=[...out,...base,...sp,...pl];
     // Best items first; at most a few per group; groups in the order of their best item.
-    const per={Tree:1,Presets:3,Filters:4,Map:4,Species:3,Places:3,Combined:3,Addresses:5};
+    const per={Tree:1,Presets:3,Filters:4,Map:4,Species:3,Places:3,Combined:3,Streets:3,Addresses:5};
     all.sort((a,b)=>b.score-a.score||String(a.label).localeCompare(String(b.label)));
     const seen=new Set(),kept=[],count={};
     for(const it of all){if(seen.has(it.id))continue;seen.add(it.id);count[it.group]=(count[it.group]||0)+1;if(count[it.group]>(per[it.group]||4))continue;kept.push(it);if(kept.length>=limit)break;}
@@ -100,7 +102,7 @@
     for(const it of items){if(!g.has(it.group))g.set(it.group,{name:it.group,best:-1,items:[]});const x=g.get(it.group);x.items.push(it);x.best=Math.max(x.best,it.score??0);}
     return [...g.values()].sort((a,b)=>b.best-a.best||GROUP_ORDER.indexOf(a.name)-GROUP_ORDER.indexOf(b.name));
   }
-  const LABEL={Tree:'Tree',Presets:'Presets',Filters:'Filters',Map:'Map',Species:'Species',Places:'Local boards',Combined:'Filter and place',Addresses:'Addresses',Examples:'Try'};
+  const LABEL={Tree:'Tree',Presets:'Presets',Filters:'Filters',Map:'Map',Species:'Species',Places:'Local boards',Combined:'Filter and place',Streets:'Streets',Addresses:'Addresses',Examples:'Try'};
   // The label with the typed words marked (macron-insensitive).
   function mark(label,text){
     const q=words(text).filter(w=>!STOP.has(w)&&!INTENT[w]);
@@ -172,11 +174,11 @@
         try{rows=await opts.addresses(text,items.slice());}catch{rows=null;}
         if(id!==seq)return;
         const keepId=items[active]?.id;
-        if(rows===null){say('Address search is not available right now.');}
+        if(rows===null){say('Not loaded: the address index. Try again in a moment.');}
         else if(rows.length){
           const lead=/^\s*(unit|flat|apt)?\s*\d/i.test(text);
           const best=items.length?Math.max(...items.map(x=>x.score||0)):0;
-          rows.forEach((r,k)=>items.push({...r,group:'Addresses',score:lead?130-k:Math.min(best-1,60)-k}));
+          rows.forEach((r,k)=>items.push({...r,group:r.group||'Addresses',score:r.group==='Streets'?(best>=80?Math.min(best-1,70):110)-k:lead?130-k:Math.min(best-1,60)-k}));
           items=items.sort((a,b)=>(b.score||0)-(a.score||0));
         }
         finish(text,id,keepId);
@@ -185,7 +187,7 @@
     function finish(text,id,keepId){
       if(id!==seq)return;
       const empty=!text.trim();
-      render(text,empty?ctx.exampleNote?.():(!items.length?'No match. Try an address with a house number, a tree ID, a species, a local board, or a command such as “colour by height”.':null));
+      render(text,empty?ctx.exampleNote?.():(!items.length?NO_MATCH:null));
       const k=keepId?items.findIndex(x=>x.id===keepId):-1;
       setActive(empty?-1:(k>=0?k:firstIndex()));
     }
@@ -227,7 +229,7 @@
     return {close,say,refresh:()=>{if(isOpen())compute();}};
   }
 
-  const api={normalise,fold,parse,phraseScore,itemScore,splitPlace,parseHeight,suggest,grouped,mark,bind,lev1};
+  const api={normalise,fold,parse,phraseScore,itemScore,splitPlace,parseHeight,suggest,grouped,mark,bind,lev1,NO_MATCH};
   root.ALTOCommand=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

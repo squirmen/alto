@@ -7,8 +7,9 @@
 (function(root){
   'use strict';
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const num=v=>v===null||v===undefined||v===''||typeof v==='boolean'?null:(Number.isFinite(Number(v))?Number(v):null);
-  const nf=(v,d=0)=>new Intl.NumberFormat('en-NZ',{maximumFractionDigits:d,minimumFractionDigits:0}).format(v);
+  // Numbers print by the one shared rule set (alto-format.js, FE-16).
+  const F=root.ALTOFormat||(typeof require==='function'?require('./alto-format.js'):null);
+  const num=F.num,nf=F.nf;
   const r1=v=>Math.round(v*10)/10;
   const parse=v=>{try{return typeof v==='string'?JSON.parse(v):v;}catch{return null;}};
 
@@ -41,8 +42,10 @@
   function niceBar(metresPerPx,maxPx){for(const m of [1,2,5,10,20,25,50,100,200])if(m/metresPerPx>=maxPx*0.35)return m;return 200;}
 
   // Aerial imagery around the crown with its outline and the record's recorded position, at a stated
-  // scale. Tiles: Esri World Imagery (keyless); the caption names the capture (see imageryInfo).
+  // scale. Tiles: the aerial basemap in credits.js (Esri World Imagery unless basemap-config.js switches to LINZ
+  // Basemaps); the caption names the capture (see imageryInfo) and the provider's credit.
   const ESRI='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile';
+  const aerialTiles=()=>root.ALTOCredits?.AERIAL?.tiles||null;
   const pc=(v,of)=>Math.round(v/of*100000)/1000;
   function aerialChip({geometry=null,point=null,recorded=null,width=360,height=220,minSide=14,zoomMax=20,cls='',tiles=null,marks=[]}={}){
     const rs=rings(geometry),pts=rs.flat();
@@ -59,7 +62,7 @@
     const left=cx*W-width/(2*k),top=cy*W-height/(2*k);
     const list=[];
     for(let tx=Math.floor(left/256);tx<=Math.floor((left+width/k)/256);tx++)for(let ty=Math.floor(top/256);ty<=Math.floor((top+height/k)/256);ty++)
-      list.push(`<img src="${tiles?esc(tiles.replace('{z}',z).replace('{y}',ty).replace('{x}',tx)):`${ESRI}/${z}/${ty}/${tx}`}" alt="" loading="lazy" decoding="async" style="left:${pc((tx*256-left)*k,width)}%;top:${pc((ty*256-top)*k,height)}%;width:${pc(256*k+0.6,width)}%;height:${pc(256*k+0.6,height)}%">`);
+      list.push(`<img src="${(tiles=tiles||aerialTiles())?esc(tiles.replace('{z}',z).replace('{y}',ty).replace('{x}',tx)):`${ESRI}/${z}/${ty}/${tx}`}" alt="" loading="lazy" decoding="async" style="left:${pc((tx*256-left)*k,width)}%;top:${pc((ty*256-top)*k,height)}%;width:${pc(256*k+0.6,width)}%;height:${pc(256*k+0.6,height)}%">`);
     const X=lon=>r1((mercX(lon)*W-left)*k),Y=la=>r1((mercY(la)*W-top)*k);
     const path=rs.map(ring=>'M'+ring.map(([lo,la])=>`${X(lo)} ${Y(la)}`).join('L')+'Z').join('');
     const mpp=mPerUnit/(W*k),bar=niceBar(mpp,width),barPx=bar/mpp;
@@ -79,9 +82,11 @@
     return `<defs><filter id="${id}" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="${width}" result="grown"/><feComposite in="grown" in2="SourceAlpha" operator="out" result="ring"/><feFlood flood-color="${colour}"/><feComposite in2="ring" operator="in"/></filter></defs>`+
       `<g opacity="${fillOpacity}"><path d="${d}" fill="#fff"/></g><path d="${d}" fill="#000" filter="url(#${id})"/>`;
   }
-  // The capture behind the Esri tiles at a point (source, date, resolution), from Esri's own metadata.
+  // The capture behind the Esri tiles at a point (source, date, resolution), from Esri's own metadata. None when the
+  // aerial basemap is LINZ Basemaps (its own credit names the imagery).
   const infoCache=new Map();
   function imageryInfo(lon,lat){
+    if(root.ALTOCredits&&root.ALTOCredits.AERIAL?.provider!=='esri')return Promise.resolve(null);
     const key=`${lon.toFixed(4)},${lat.toFixed(4)}`;
     if(!infoCache.has(key)){
       const d=0.002,url=`https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/identify?geometry=${lon},${lat}&geometryType=esriGeometryPoint&sr=4326&layers=all&tolerance=1&mapExtent=${lon-d},${lat-d},${lon+d},${lat+d}&imageDisplay=400,400,96&returnGeometry=false&f=json`;
@@ -94,7 +99,8 @@
     }
     return infoCache.get(key);
   }
-  const imageryCaption=i=>i?`Aerial: ${esc(i.source)}${i.resolution?`, ${nf(i.resolution*100,1)} cm`:''}, ${esc(i.date)} (Esri World Imagery)`:'Aerial: Esri World Imagery';
+  const imageryCaption=i=>{const C=root.ALTOCredits,name=C?.AERIAL?.name||'Esri World Imagery',credit=C?` ${C.aerialFigure()}`:'';
+    return (i?`Aerial: ${esc(i.source)}${i.resolution?`, ${nf(i.resolution*100,1)} cm`:''}, ${esc(i.date)} (${name}).`:`Aerial: ${name}.`)+credit;};
 
   // The crown outline alone, at a stated scale (for comparisons at one scale).
   function outline({geometry=null,width=120,height=96,metresAcross=null}={}){
@@ -124,12 +130,12 @@
     return `<svg class="viz viz-profile" viewBox="0 0 ${width} ${height}" role="img" aria-label="LiDAR returns by height band, ${nf(total)} returns, ${bands} one-metre bands"><path class="v-axis" d="M${L} ${T}V${B}H${width-4}"/>${s}${label?`<text class="v-tick" x="${L}" y="${height-3}">returns per 1 m band (n = ${nf(total)})</text>`:''}<text class="v-tick" x="2" y="${T+4}">m</text></svg>`;
   }
 
-  // Life stage: the five stored classes as a plain scale, with the tree's class marked.
-  const STAGES=[['juvenile','Juvenile','< 18%'],['young','Young','18–35%'],['semi-mature','Semi-mature','35–60%'],['mature','Mature','60–90%'],['veteran','Veteran','≥ 90%']];
+  // Height class (TS-07): the five stored classes as a plain scale named by size, with the tree's class marked. The
+  // classes are tree-summary.js HEIGHT_CLASS; stage is a release 6.3 height_class key or a release 6.2 life_stage key.
   function stageScale(stage){
-    const i=STAGES.findIndex(s=>s[0]===stage);
-    if(i<0)return '<p class="viz-none">Life stage not estimated.</p>';
-    return `<ol class="stage-scale" aria-label="Life stage scale; this tree: ${esc(STAGES[i][1])}">`+STAGES.map(([k,label,range],j)=>`<li${j===i?' class="is-current" aria-current="true"':''}><b>${esc(label)}</b><span>${esc(range)}</span></li>`).join('')+'</ol>';
+    const T=root.ALTOTreeSummary,C=T?T.HEIGHT_CLASS.map(c=>T.heightClass(c[0])):[],cur=T?.heightClass(stage),i=C.findIndex(c=>c.key===cur?.key);
+    if(i<0)return '<p class="viz-none">Height class not estimated.</p>';
+    return `<ol class="stage-scale" aria-label="Height class scale; this tree: ${esc(C[i].label)}">`+C.map((c,j)=>`<li${j===i?' class="is-current" aria-current="true"':''}><b>${esc(c.label)}</b><span>${esc(T.bandText(c))}</span></li>`).join('')+'</ol>';
   }
 
   // Years for a newly planted tree to reach this crown area at the release's planning growth rate
@@ -149,10 +155,10 @@
     if(!total)return '<p class="viz-none">None in this area.</p>';
     const shown=segments.filter(x=>x.value>0);
     // A clickable row is a button inside its list item, so the list stays a list.
-    const row=x=>{const inner=`<i style="background:${esc(x.colour)}"></i><span>${esc(x.label)}</span><b>${nf(x.value)}</b><small>${nf(x.value/total*100,x.value/total<0.1?1:0)}%</small>`;
+    const row=x=>{const inner=`<i${x.mark==='ringed-dot'?' class="is-ringed"':''} style="background:${esc(x.colour)}"></i><span>${esc(x.label)}</span><b>${nf(x.value)}</b><small>${nf(x.value/total*100,x.value/total<0.1?1:0)}%</small>`;
       return key&&x.key?`<li><button type="button" class="comp-row" data-highlight="${esc(key)}:${esc(x.key)}" data-label="${esc(x.label)} (${nf(x.value)})">${inner}</button></li>`:`<li>${inner}</li>`;};
     return `<div class="comp" role="group" aria-label="${esc(label)}"><div class="comp-bar" aria-hidden="true">`+
-      shown.map(x=>`<span style="flex:${x.value};background:${esc(x.colour)}" title="${esc(x.label)}: ${nf(x.value)} ${esc(unit)}"></span>`).join('')+
+      shown.map(x=>`<span${x.mark==='ringed-dot'?' class="is-ringed"':''} style="flex:${x.value};background:${esc(x.colour)}" title="${esc(x.label)}: ${nf(x.value)} ${esc(unit)}"></span>`).join('')+
       `</div><ul class="comp-legend">`+shown.map(row).join('')+'</ul></div>';
   }
   // Binned counts as columns; each column can be made clickable.
@@ -163,17 +169,17 @@
     // A group, not an image, when its columns are buttons.
     return `<svg class="viz viz-cols" viewBox="0 0 ${width} ${height}" role="${key?'group':'img'}" aria-label="${esc(label)}: ${bins.map(b=>`${b.label} ${nf(b.value||0)}`).join(', ')}">${s}</svg>`;
   }
-  // Calibrated class probabilities as horizontal bars.
-  function probabilities(rows){
+  // Calibrated class scores as horizontal bars. suffix names what each number is ("model score").
+  function probabilities(rows,{suffix=null}={}){
     const shown=rows.filter(r=>num(r.value)!==null);
     if(!shown.length)return '';
-    return '<ul class="prob-bars">'+shown.map(r=>`<li${r.top?' class="is-top"':''}><span>${esc(r.label)}</span><span class="prob-track"><span style="width:${Math.max(1,num(r.value)*100)}%"></span></span><b>${nf(num(r.value)*100,0)}%</b></li>`).join('')+'</ul>';
+    return '<ul class="prob-bars">'+shown.map(r=>`<li${r.top?' class="is-top"':''}><span>${esc(r.label)}</span><span class="prob-track"><span style="width:${Math.max(1,num(r.value)*100)}%"></span></span><b>${nf(num(r.value)*100,0)}%${suffix?` <small>${esc(suffix)}</small>`:''}</b></li>`).join('')+'</ul>';
   }
-  function money(v){const n=num(v);if(n===null)return '—';return '$'+(n>0&&n<10?n.toFixed(2):nf(Math.round(n)));}
+  const money=v=>F.money(v);
   function litres(m3){const n=num(m3);if(n===null)return null;const l=n*1000;return l>=1e6?`${nf(l/1000,0)} m³`:l>=1000?`${nf(Math.round(l/100)*100)} L`:`${nf(Math.round(l/10)*10)} L`;}
-  function co2(t){const n=num(t);if(n===null)return null;return n<1?`${nf(n*1000,0)} kg`:`${nf(n,n<10?2:1)} t`;}
+  const co2=t=>num(t)===null?null:F.co2(t,{unit:false});
   const profileCount=f=>{const p=parse(f);return Array.isArray(p)?p.reduce((a,b)=>a+(Number(b)||0),0):null;};
-  const api={esc,num,nf,icon,parse,rings,profileCount,aerialChip,imageryInfo,imageryCaption,outline,profile,stageScale,STAGES,replacementLine,composition,columns,probabilities,money,litres,co2};
+  const api={esc,num,nf,icon,parse,rings,profileCount,aerialChip,imageryInfo,imageryCaption,outline,profile,stageScale,replacementLine,composition,columns,probabilities,money,litres,co2};
   root.ALTOViz=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

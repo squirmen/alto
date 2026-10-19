@@ -1,0 +1,17 @@
+/* The ALTO pages menu (UX-01): the same text links on every page, Map · Species maxima · Methods · Sources and
+ * credits · KYTE, in a strip under the page's top bar (on the map: under the panel's heading on desktop, in the sheet's
+ * foot on phones). Text only, no icons. The current page is bold and carries aria-current; the separators are not
+ * read out. The strip is not sticky, so it never adds to a page's sticky bars. Each page's own stylesheet lines the
+ * list up with its content (methods.css, tree-page.css, map.css). */
+.site-nav { background: var(--color-surface); border-bottom: 1px solid var(--color-border-subtle); }
+.site-nav ul { display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: var(--space-1) 0; list-style: none; font: var(--text-body-ui); }
+.site-nav li { display: inline-flex; align-items: center; }
+.site-nav li + li::before { content: "·"; content: "·" / ""; padding: 0 var(--space-2); color: var(--color-text-muted); }
+.site-nav a { display: inline-flex; align-items: center; min-height: var(--target-min); color: var(--color-text-link); text-decoration: none; border-radius: var(--radius-xs); }
+.site-nav a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.site-nav a[aria-current] { color: var(--color-text); font-weight: 600; }
+.site-nav a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+@media (pointer: coarse) { .site-nav a { min-height: var(--target-touch); } }
+/* Narrow screens: the list wraps, so the items are spaced instead of dotted (no dot at the start of a line). */
+@media (max-width: 599px) { .site-nav ul { column-gap: var(--space-4); } .site-nav li + li::before { content: none; } }
+@media print { .site-nav { display: none; } }

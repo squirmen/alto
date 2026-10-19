@@ -2,7 +2,7 @@
 
 `web/tree-record.js` assembles everything ALTO holds about one tree as plain data: identity, records
 and identifiers, key measurements with per-number provenance, measurements by source, LiDAR, outline,
-species evidence, canopy by survey, benefits, life stage and replacement, roots, comparisons with
+species evidence, canopy by survey, benefits, height class and replacement, roots, comparisons with
 similar trees (street, local board, Auckland), history across releases, reviews and corrections,
 imagery, LiDAR point crops, place, nearby trees, photos and the height scenario. Presentations (the
 tree page, the map's tree panel, later collection pages) read this object and decide the markup. The
@@ -62,7 +62,7 @@ range: {low, high, text, basis, label} | null      e.g. label 'Segmentations', t
 ```
 
 `measured`: read from a survey (LiDAR, a reviewed ground measurement). `recorded`: as a source
-supplied it (species name, schedule). `model`: a model estimate (trunk diameter, benefits, life stage,
+supplied it (species name, schedule). `model`: a model estimate (trunk diameter, benefits, height class,
 growth form, regrowth time): never present it as a confirmed fact. `derived`: a fixed formula over
 measured values (equivalent-circle diameter, smoothed outline). `rule`: a class assigned by a stated
 rule (irreplaceability).
@@ -120,7 +120,7 @@ repository; `method.doc` is the repository document. `model.validation` comes fr
 | `surveyChange` | `{rates[{from, to, value}], unit:'m/yr', implausible, fate, provenance}` from the matched canopy heights, or `null` |
 | `setting` | where the tree stands, as joined by earlier builds (each part with provenance): `water{floodPlain, floodProne, floodProneMaxDepth, overlandFlowDistance, stormwaterPipeDistance, catchpitDistance}`, `heat{airTempMean, airTempMax, paved, buildings, trees}`, `surface{impervious, roads, buildings, other, radius:30}`, `neighbourhood{neighbours25, neighbours50, nearestTree, canopy25, canopy50, growthSetting, edgeTree, dominance, clusterSize}` (earlier crown); `null` when none is stored |
 | `benefits` | `{status: estimated\|scenario_only\|not_estimated, rows[{key,label,quantity{value,unit,text,detail},value}], total{value,low,high,text,rangeText}, method, classUsed{key,label,source}, confidence, uncertaintyFactor, lai, biomass{aboveKg,belowKg}, growthFormBasis, assumptions{}, note}` |
-| `lifeStage` | `{status, key, label, band, detail, definition, scale[{key,label,from,to,current}], referenceHeights, age: null}` |
+| `lifeStage` | the height class (decision TS-07): the release's stored `life_stage` (`key`: juvenile, young, semi-mature, mature, veteran) named by size (`label`: Very small, Small, Medium, Large, Very large; `web/tree-summary.js` `HEIGHT_CLASS`), from height as a share of the class reference height. `{status, key, label, band, detail, definition, scale[{key,label,from,to,band,current}], referenceHeights, age: null}`. The `lifeStage` measure (label "Height class") adds `share` (the whole per cent printed, kept inside the class's band; `null` when the height shown falls outside it) and `band` |
 | `replacement` | `{years, startYear, reachYear, rate, marks[{share,year}], irreplaceability{key,label,definition}, classes[{key,label,rule}], cost: null}` (no dollar replacement cost exists in the data) |
 | `roots` | root-space scenario, or `null` when the release has none for the tree: `{kind:'scenario', rpaRadius, rpaArea, rpaRange{low,high,areaLow,areaHigh} \| null, rpaBasis, rule{factor:12, areaCap:707}, trunk{central,low,high,kind}, stored{rpaRadius,rpaArea,dbh}, effectiveRadius, effectiveArea, foragingRadius, constraint, basis, method, confidence, provenance}`. Present whenever the release stores a protection radius (a LiDAR-detected tree has one without an effective rooting radius). `rpaRadius` is 12 × the central trunk estimate (area capped at 707 m², the release's rule), `rpaRange` the radii of the lowest and highest trunk models; `stored` keeps the release's own values (from one model) |
 | `context` | comparisons with similar trees (below) |

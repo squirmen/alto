@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · How ALTO is made"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How ALTO is made · ALTO</title>
+<meta name="description" content="How ALTO is made: its sources, the crowns drawn from the 2024 LiDAR survey, how records are linked to crowns, estimates and their ranges, reviews and corrections, and releases, with links to each release’s methods.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.9">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.9">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.9">
+<link rel="stylesheet" href="./site-nav.css?v=tool-0.2.9">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./brand/alto-wordmark.png?v=tool-0.2.9" alt="ALTO map" width="282" height="84"></a>
+      <span class="app-bar-context">Methods</span>
+    </div>
+  </div>
+</header>
+<nav class="site-nav" aria-label="ALTO pages"><ul><li><a href="./">Map</a></li><li><a href="./maxima.html">Species maxima</a></li><li><a href="./methods.html" aria-current="true">Methods</a></li><li><a href="./credits.html">Sources and credits</a></li><li><a href="./kyte/">KYTE</a></li></ul></nav>
+
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">ALTO methods</p>
+    <h1>How ALTO is made</h1>
+    <dl class="release">
+      <div><dt>Covers</dt><dd>Releases 5 to 6.2</dd></div>
+      <div><dt>Each release</dt><dd><a href="./methods.html">Methods</a></dd></div>
+      <div><dt>Every source</dt><dd><a href="./credits.html">Sources and credits</a></dd></div>
+    </dl>
+    <p class="lede">An overview of how ALTO is built: the sources, the crowns drawn from the 2024 LiDAR survey, how records are linked to crowns, how estimates and their ranges are made, how reviews and corrections reach the map, and how releases are numbered. Each section links the release methods that hold the detail, the figures and the checks.</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#crowns">Crowns from the 2024 LiDAR survey</a></li>
+      <li><a href="#record-links">Linking records to crowns</a></li>
+      <li><a href="#estimates">Estimates and their ranges</a></li>
+      <li><a href="#reviews">Reviews and corrections</a></li>
+      <li><a href="#releases">Releases</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="sources">
+      <h2>Sources</h2>
+      <p>ALTO combines tree records from their publishers with airborne LiDAR surveys and aerial photographs. Each source record keeps its original identifier and position in the tree’s full record. ALTO crops, resamples, reprojects and combines these data, matches records to LiDAR crowns and adds its own estimates. The organisations that publish the data have not reviewed or endorsed ALTO’s estimates.</p>
+      <div class="table-wrap" role="region" aria-labelledby="table-1-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-1-caption"><span class="caption-label">Table 1.</span> What each source gives ALTO. Licences and full credits: Sources and credits.</caption>
+          <thead>
+            <tr><th scope="col">Source</th><th scope="col">What ALTO uses it for</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Auckland Council tree register, including Auckland Transport and Parks trees</th><td>Recorded trees, their species names, positions and record IDs</td></tr>
+            <tr><th scope="row">Notable Trees schedule, Auckland Unitary Plan</th><td>Scheduled trees and their recorded positions</td></tr>
+            <tr><th scope="row">Kauri survey records, Auckland Council</th><td>Survey records, with each record’s status as the Council publishes it</td></tr>
+            <tr><th scope="row">OpenStreetMap</th><td>Trees mapped by contributors; addresses, golf courses and island roads for property summaries</td></tr>
+            <tr><th scope="row">Auckland 2024 LiDAR survey</th><td>Crown outlines, heights and crown areas</td></tr>
+            <tr><th scope="row">Earlier LiDAR surveys, 2013 and 2016–18</th><td>Earlier canopy records for each tree’s survey history</td></tr>
+            <tr><th scope="row">Aerial photographs</th><td>Vegetation index for drawing crowns, image features for the growth form, and the imagery on tree pages</td></tr>
+            <tr><th scope="row">KYTE ground visits</th><td>Photographs, notes and measurements made at the tree, published after a reviewer accepts them</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Species names come only from source records. Tree pages credit and link each register that lists a tree.</p>
+      <ul class="link-list">
+        <li><a href="./credits.html">Sources and credits</a><span class="meta">Every dataset, its licence and its credit</span></li>
+        <li><a href="./credits.html#changes">What ALTO changes</a><span class="meta">Sources and credits</span></li>
+      </ul>
+    </section>
+
+    <section id="crowns">
+      <h2>Crowns from the 2024 LiDAR survey</h2>
+      <p>Release 5 redrew Auckland’s canopy from the 2024 LiDAR survey and aerial NDVI (normalised difference vegetation index). Each LiDAR crown 3&nbsp;m or taller is one marker on the map. Separate layers show canopy 2–3&nbsp;m tall and vegetation below 2&nbsp;m, and those layers do not contribute to benefit totals.</p>
+      <p>Crowns are not merged beyond 400&nbsp;m²; a larger tree can be split into several crowns. A crown outline can still split one tree or join several: large spreading and multi-stem trees can be split or partly trimmed.</p>
+      <p>Release 6 draws each crown with a smoothed outline around the same cells; the crown’s area, height and every estimate keep the cell area. Release 6 also estimates a growth form for each crown from its LiDAR returns, its surroundings and the 2024 aerial photograph. A growth form is shown only where calls of its kind agreed with the reference labels often enough when tested; otherwise the crown reads “growth form not yet determined”. A growth form is a coarse class. The labels made from imagery, used in training and in the checks, come from a machine-learning image-interpretation model in one pass; no independent second labeller has checked them.</p>
+      <p id="crown-measures">Each crown carries the measures in Table 2. The tree page shows each with its source, date and margin; Species maxima ranks height, crown spread and crown area.</p>
+      <div class="table-wrap" role="region" aria-labelledby="table-2-caption" tabindex="0">
+        <table class="data-table">
+          <caption id="table-2-caption"><span class="caption-label">Table 2.</span> How a crown is measured, 2024 LiDAR survey.</caption>
+          <thead>
+            <tr><th scope="col">Measure</th><th scope="col">Definition</th><th scope="col">Margin</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Height</th><td>Highest point of the 2024 LiDAR canopy height model within the crown. The highest single laser return is usually a little higher, and airborne LiDAR usually reads below a field (hypsometer) height on a pointed crown.</td><td>Survey vertical accuracy ±0.2&nbsp;m; ±2&nbsp;m ranking margin on Species maxima (method and crown-edge differences)</td></tr>
+            <tr><th scope="row">Crown area</th><td>Area of the crown’s 0.5&nbsp;m cells; release 6’s smoothed outline keeps that area. Crowns are not merged beyond 400&nbsp;m².</td><td>Crown perimeter × 0.5&nbsp;m</td></tr>
+            <tr><th scope="row">Crown diameter (equal-area circle)</th><td>Diameter of the circle with the crown’s area (equal-area circle).</td><td>From the crown area</td></tr>
+            <tr><th scope="row">Crown spread</th><td>Mean of the widest width and the width at right angles, from the 0.5&nbsp;m crown cells. Held for the trees Species maxima ranks. A crown that is not round usually has a crown spread wider than its equal-area diameter.</td><td>±1&nbsp;m</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="link-list">
+        <li><a href="./v5-methods.html#crown-outline">How crowns are drawn</a><span class="meta">Release 5</span></li>
+        <li><a href="./v5-methods.html#merge-limit">The 400&nbsp;m² merge limit</a><span class="meta">Release 5</span></li>
+        <li><a href="./v6-methods.html#growth-form">Growth form</a><span class="meta">Release 6</span></li>
+        <li><a href="./v6-methods.html#audit">The growth-form audit</a><span class="meta">Release 6</span></li>
+        <li><a href="./v6-methods.html#outlines">Smoothed outlines</a><span class="meta">Release 6</span></li>
+        <li><a href="./v62-methods.html#palm-check">Palm check</a><span class="meta">Release 6.2</span></li>
+        <li><a href="./v63-methods.html#height-checks">Height and record checks</a><span class="meta">Release 6.3</span></li>
+      </ul>
+    </section>
+
+    <section id="record-links">
+      <h2>Linking records to crowns</h2>
+      <p>Records are linked to crowns using the actual crown boundary. Where a record lies outside every crown, nearby crowns are scored on the distance from the record to the crown’s edge, whether the crown’s height and area suit the recorded taxon, conflicts with other records’ taxa on the same crown, and how many records a crown of that size usually carries. A record is linked only when its crown is clearly better than every alternative, including no crown at all. Records that cannot be linked with confidence go to review.</p>
+      <p>A link is spatial evidence that a record describes the tree on that crown. One crown may contain several trunks or trees, and a crown drawn from a record is a proposal until it is confirmed. Unverified Notable Trees schedule positions stay at their source locations and are excluded from automatic crown matching. “No crown linked” does not mean a tree is absent.</p>
+      <p>Every marker on the map, and every earlier LiDAR detection kept as a record, has a permanent tree number, such as TMCTT6X4, and a permanent link. An alias table resolves every tree number, record ID and crown key ALTO has published to the tree that carries it now, or to the reason it carries none.</p>
+      <ul class="link-list">
+        <li><a href="./v5-methods.html#record-links">Tree identity and protected-tree positions</a><span class="meta">Release 5</span></li>
+        <li><a href="./v51-methods.html#link-meaning">What a link means</a><span class="meta">Release 5.1</span></li>
+        <li><a href="./v52-methods.html#record-links">How records were linked</a><span class="meta">Release 5.2</span></li>
+        <li><a href="./v52-methods.html#without-crown">Records that stay without a crown</a><span class="meta">Release 5.2</span></li>
+        <li><a href="./v61-methods.html#numbers">Tree numbers</a><span class="meta">Release 6.1</span></li>
+        <li><a href="./v61-methods.html#old-ids">Older IDs</a><span class="meta">Release 6.1</span></li>
+      </ul>
+    </section>
+
+    <section id="estimates">
+      <h2>Estimates and their ranges</h2>
+      <p>Crown heights, areas and spreads are measured from the crowns of the 2024 LiDAR survey. Every value ALTO derives from them with a model is marked Estimate and, where the method gives one, shown with its range.</p>
+      <ul>
+        <li><strong>Trunk diameter.</strong> The diameter at 1.3&nbsp;m above the uphill ground. Each crown holds two model estimates, one from crown size and height and one from the benefit equations; the tree page shows their median as the central estimate, with the two models as its range. A trunk measured at a reviewed KYTE ground visit replaces both.</li>
+        <li><strong>Root space.</strong> Root extents are scenarios drawn from the trunk estimate and its range, with known paving where available. The root extent itself is not measured.</li>
+        <li><strong>Benefits.</strong> ALTO benefit scenario: simplified equations adapted from published i-Tree Eco components (USDA Forest Service and cooperators), with stated unit values; they are not run in i-Tree Eco. From release 6.3 the benefit value is stormwater plus carbon; PM2.5 removal and the cooling index are kept in the full record and not published. Benefit and trunk estimates are not independently validated; they remain sensitivity scenarios.</li>
+        <li><strong>Height class and crown replacement time.</strong> From release 6.3, the crown’s height as a share of a reference height for its growth form, and the years a newly planted tree would take to grow a crown of its area, in bands; crowns under 5&nbsp;m tall, or whose height is not plausible, are not classed.</li>
+        <li><strong>Growth form.</strong> Marked Estimate, and shown only under the test described under <a href="#crowns">Crowns from the 2024 LiDAR survey</a>.</li>
+        <li><strong>Forecasts.</strong> Height scenarios start at the current height and reuse an earlier fitted model, whose transfer to the release 5 redraw has not yet been validated.</li>
+      </ul>
+      <ul class="link-list">
+        <li><a href="./v5-methods.html#estimates">Dimensions and estimates</a><span class="meta">Release 5</span></li>
+        <li><a href="./v51-methods.html#estimates">Consistent records and estimates</a><span class="meta">Release 5.1</span></li>
+        <li><a href="./v6-methods.html#trunk-diameter">Trunk diameter</a><span class="meta">Release 6</span></li>
+        <li><a href="./v6-methods.html#benefits">Benefit estimates</a><span class="meta">Release 6</span></li>
+        <li><a href="./v62-methods.html#services">Service estimates</a><span class="meta">Release 6.2</span></li>
+        <li><a href="./v63-methods.html#benefits">Benefit value</a><span class="meta">Release 6.3</span></li>
+        <li><a href="./v63-methods.html#size">Height class and crown replacement time</a><span class="meta">Release 6.3</span></li>
+        <li><a href="./v6-methods.html#limits">Limits</a><span class="meta">Release 6</span></li>
+      </ul>
+    </section>
+
+    <section id="reviews">
+      <h2>Reviews and corrections</h2>
+      <p>Reviewer decisions about trees, crowns and records are kept in an append-only corrections ledger. Each release applies them, or records them with the trees they name, and publishes a receipt of every outcome. Each tree page lists the decisions that name the tree, its records or its crown.</p>
+      <p>Records with competing crowns, with nothing of tree height nearby or with a position that cannot be matched go to the researcher workbench, and every crown drawn from a record awaits confirmation there. Confirmations reach the map in a release.</p>
+      <p>Ground visits are recorded in <a href="./kyte/">KYTE</a>: photographs, notes and measurements made at the tree. A visit appears on the tree’s page after a reviewer accepts it. <a href="mailto:t.welch@auckland.ac.nz">Email the Better Places Lab</a> (t.welch@auckland.ac.nz) to correct a record, with the tree number and what is wrong.</p>
+      <ul class="link-list">
+        <li><a href="./v6-methods.html#corrections">Corrections ledger</a><span class="meta">Release 6</span></li>
+        <li><a href="./v61-methods.html#corrections">Corrections applied</a><span class="meta">Release 6.1</span></li>
+        <li><a href="./v62-methods.html#what-changed">Reviewer confirmations</a><span class="meta">Release 6.2</span></li>
+        <li><a href="./v63-methods.html#group-areas">Schedule 10 entries and reviewer notes</a><span class="meta">Release 6.3</span></li>
+        <li><a href="./v52-methods.html#review">Records sent for review</a><span class="meta">Release 5.2</span></li>
+        <li><a href="./v5-methods.html#ground-visits">Ground visits and contributions</a><span class="meta">Release 5</span></li>
+      </ul>
+    </section>
+
+    <section id="releases" aria-labelledby="releases-title">
+      <h2 id="releases-title">Releases</h2>
+      <p>ALTO publishes numbered data releases. Each release has a dataset ID, a publication date and a methods page that says what changed, the methods, the checks and the limits. The map and its pages carry their own tool version; the release metadata records both. Releases 5 to 6.3 redraw or relink crowns of the same 2024 survey, so a change in the number of crowns between releases does not establish tree loss, new planting or growth.</p>
+      <ol class="mi-list">
+        <li class="mi-release" data-release="6.3">
+          <h3><a href="./v63-methods.html">Release 6.3: Benefit value, height checks and group areas</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-17">17 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+        </li>
+        <li class="mi-release is-current" data-release="6.2">
+          <h3><a href="./v62-methods.html" aria-current="true">Release 6.2: Reviewer-confirmed crowns and palm-type crowns</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-13">13 Oct 2026</time><span class="mi-current"> · Current release</span></p>
+        </li>
+        <li class="mi-release" data-release="6.1">
+          <h3><a href="./v61-methods.html">Release 6.1: Permanent tree numbers</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-13">13 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+        </li>
+        <li class="mi-release" data-release="6">
+          <h3><a href="./v6-methods.html">Release 6: Growth form and smoothed crown outlines</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-12">12 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+        </li>
+        <li class="mi-release" data-release="5.2">
+          <h3><a href="./v52-methods.html">Release 5.2: Linking records to crowns</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-10">10 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+        </li>
+        <li class="mi-release" data-release="5.1">
+          <h3><a href="./v51-methods.html">Release 5.1: Restoring links between records and crowns</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-08">8 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+        </li>
+        <li class="mi-release" data-release="5">
+          <h3><a href="./v5-methods.html">Release 5: Redrawing Auckland’s canopy</a></h3>
+          <p class="mi-meta"><time datetime="2026-09-23">23 Sep 2026</time><span class="mi-current" hidden> · Current release</span></p>
+        </li>
+      </ol>
+      <ul class="link-list">
+        <li><a href="./methods.html">Methods</a><span class="meta">Every release, newest first</span></li>
+        <li><a href="./release-metadata.json">Release metadata</a><span class="meta"><code>release-metadata.json</code> · current release</span></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span> | University of Auckland</span><a href="./credits.html">Sources and credits</a><span>Updated 13 Oct 2026</span></p>
+    </div>
+  </div>
+</footer>
+<script src="./methods-index.js?v=tool-0.2.9"></script>
+</body>
+</html>

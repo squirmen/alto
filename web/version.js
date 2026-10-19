@@ -2,10 +2,10 @@
  *
  * The tool (this interface: the map, the tree page, their modules) has its own semantic version, set
  * here and nowhere else. The data release (v5.2, v6, ...) is described by release-metadata.json, which
- * ships with the data. Both are shown together as "Data v6.1 · Tool v0.2.4". See VERSIONING.md. */
+ * ships with the data. Both are shown together as "Data v6.3 · Tool v0.2.13". See VERSIONING.md. */
 (function(root){
   'use strict';
-  const TOOL={name:'ALTO',version:'0.2.4',released:null,status:'prototype',
+  const TOOL={name:'ALTO',version:'0.2.13',released:null,status:'prototype',
     repository:'https://github.com/squirmen/alto'};
   const LAB={name:'Better Places Lab',url:'https://betterplaces.blogs.auckland.ac.nz',
     affiliation:'Te Pare School of Architecture and Planning, Waipapa Taumata Rau | University of Auckland'};
@@ -25,8 +25,8 @@
     const dataText=d.label?`Data ${d.label}${d.dev?(long?' (development build)':' dev'):''}`:'Data release unknown';
     return `${dataText} · Tool v${TOOL.version}`;
   }
-  // The release as the public interface names it: by its date ("Release 11 Oct 2026"). Its number (5.2, 6)
-  // appears only in provenance, About and the methods pages; a development build adds a Preview badge.
+  // The release as the public interface names it: its number and its date ("Release 6.2 · 13 Oct 2026"), since two
+  // releases can share a date (6.1 and 6.2, 13 Oct 2026); a development build adds a Preview badge.
   function releaseDate(metadata){
     const r=metadata?.release||{};
     const m=String(r.dataset_version||'').match(/(\d{4})\.(\d{2})\.(\d{2})/);
@@ -35,20 +35,26 @@
     return new Date(iso+'T12:00:00Z').toLocaleDateString('en-NZ',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
   }
   function publicLabel(metadata){
-    const date=releaseDate(metadata);
-    return {text:`${date?`Release ${date}`:'Release date unknown'} · Tool ${TOOL.version}`,preview:!!data(metadata).dev};
+    const date=releaseDate(metadata),d=data(metadata),n=d.label?String(d.label).replace(/^v/,''):null;
+    return {text:`${n?`Release ${n}`:'Release'}${date?` · ${date}`:n?'':' date unknown'} · Tool ${TOOL.version}`,preview:!!d.dev,number:n,date};
   }
   // One citation string for a tree, a view or the whole map.
-  function citation({title='ALTO: Aotearoa Long-term Tree Observatory',treeId=null,url=null,metadata=null,accessed=new Date()}={}){
+  // A tree's citation names it, its number, its place and its position (the map pin, WGS84):
+  // "Pōhutukawa (tree TZ69KK1G), Albert-Eden Local Board, at -36.87212, 174.79783 (WGS84)".
+  function citation({title='ALTO: Aotearoa Long-term Tree Observatory',treeId=null,url=null,metadata=null,accessed=new Date(),name=null,place=null,at=null}={}){
     const d=data(metadata),year=(metadata?.release?.dataset_last_updated_utc||'').slice(0,4)||String(accessed.getFullYear());
     const day=accessed.toLocaleDateString('en-NZ',{day:'numeric',month:'long',year:'numeric'});
-    const what=treeId?`Tree ${treeId}. In ${title}`:title;
+    const what=treeId?`${name?`${name} (tree ${treeId})`:`Tree ${treeId}`}${place?`, ${place}`:''}${at?`, at ${at} (WGS84)`:''}. In ${title}`:title;
     // The release by its date, with its number for exactness (design system: the number belongs in provenance).
     const date=releaseDate(metadata),num=d.label?String(d.label).replace(/^v/,''):null;
     const rel=date?`Release ${date}${num?` (release ${num}${d.dev?', preview':''})`:''}`:num?`Release ${num}${d.dev?' (preview)':''}`:'Release unknown';
     return `Welch, T. F. (${year}). ${what}. ${rel}, tool ${TOOL.version}. ${LAB.name}, University of Auckland.${url?` ${url}`:''} (accessed ${day}).`;
   }
-  const api={TOOL,LAB,data,label,releaseDate,publicLabel,citation};
+  // The build's cache stamp ("tool-0.2.13"; build_web_beta.py stamps every page's own files with it and writes the
+  // build's version here), for files a script adds later: asset('./tree-future.js') is './tree-future.js?v=tool-0.2.9'.
+  const stamp=()=>`tool-${TOOL.version}`;
+  const asset=path=>`${path}?v=${encodeURIComponent(stamp())}`;
+  const api={TOOL,LAB,data,label,releaseDate,publicLabel,citation,stamp,asset};
   root.ALTOVersion=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

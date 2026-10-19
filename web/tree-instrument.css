@@ -77,7 +77,9 @@
 .ti-cb-eq .ti-cb-s.is-cur { background: var(--color-estimate); outline: 0; }
 
 /* ---------- provenance popover ---------- */
-.ti-pop { position: absolute; z-index: var(--z-popover); width: 340px; max-width: calc(100% - 16px); padding: var(--space-3) var(--space-4) var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-2); }
+.ti-pop { position: absolute; z-index: var(--z-popover); width: 340px; max-width: calc(100% - 16px); padding: var(--space-3) var(--space-4) var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-2);
+  /* It opens next to its trigger (a table cell, a large figure): it takes none of their text styles. */
+  font: var(--text-body-ui); color: var(--color-text); text-align: left; white-space: normal; letter-spacing: normal; text-transform: none; font-variant-numeric: normal; cursor: auto; }
 .ti-pop.is-sheet { position: fixed; left: var(--space-2); right: var(--space-2); bottom: var(--space-2); top: auto; width: auto; max-width: none; max-height: 70dvh; overflow-y: auto; }
 .ti-pop-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
 .ti-pop-head h3 { margin: var(--space-1) 0 0; font: var(--text-h3); color: var(--color-text); }
@@ -101,7 +103,8 @@
 .ti-yb span { font: 400 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); }
 .ti-yb:hover, .ti-yb.is-preview { background: color-mix(in srgb, var(--color-surface) 60%, transparent); }
 .ti-yb:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
-.ti-yb[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-1); }
+/* The selected year, frame or toggle: a 2 px bar under it in the text colour (A11Y-13: the raised fill alone was 1.2:1). */
+.ti-yb[aria-pressed="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-1), inset 0 -2px 0 var(--color-text); }
 .ti-yb[aria-pressed="true"] span { color: var(--color-text-secondary); }
 .ti-fig { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-sans); }
 .ti-fig .ti-ax { stroke: var(--viz-axis); stroke-width: 1; fill: none; }
@@ -126,6 +129,21 @@
 .ti-sfig .ti-yr.is-sel .ti-val { font-weight: 700; }
 .ti-sfig.ti-lbl-sel .ti-yr:not(.is-sel) .ti-val { display: none; }
 .ti-sfig .ti-wh { stroke: var(--viz-seq-600); stroke-width: 1.5; fill: none; }
+/* the trend joins the matched-point heights; the 2024 crown maximum is its own mark (a diamond) */
+.ti-sfig .ti-trend { fill: none; stroke: var(--viz-seq-600); stroke-width: 1.25; stroke-opacity: .6; }
+.ti-sfig .ti-cmax path:not(.ti-wh) { fill: var(--color-surface); stroke: var(--viz-seq-800); stroke-width: 1.75; }
+.ti-sfig .ti-yr.is-sel .ti-cmax path:not(.ti-wh) { fill: var(--color-selection); stroke: var(--color-selection); }
+.ti-yb-m { font: 400 var(--fs-2xs, 10.5px)/1 var(--font-sans); color: var(--color-text-muted); }
+/* Survey-year chips: the year and height on the first line, the measure (or why there is no height) under them; the
+   second line may wrap, so a chip never needs more than its share of the strip's width (TS-15). */
+.ti-yb-s { flex-direction: column; justify-content: center; gap: 3px; min-width: 0; padding: var(--space-1) var(--space-1-5); white-space: normal; text-align: center; }
+.ti-yb-s .ti-yb-l, .ti-yb-s[aria-pressed="true"] .ti-yb-l { display: flex; align-items: baseline; justify-content: center; gap: var(--space-1-5); max-width: 100%; white-space: nowrap; color: inherit; }
+.ti-yb-s .ti-yb-m, .ti-yb-s .ti-yb-x { display: block; max-width: 100%; font: 400 var(--fs-2xs, 11px)/1.15 var(--font-sans); color: var(--color-text-muted); overflow-wrap: break-word; }
+.ti-yb-s[aria-pressed="true"] .ti-yb-m, .ti-yb-s[aria-pressed="true"] .ti-yb-x { color: var(--color-text-secondary); }
+@media (max-width: 759px) { .ti-bar .ti-yb-m { display: none; } }
+.ti-years-note { margin: var(--space-1-5) 0 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-m-caution { color: var(--color-text-secondary); }
+.ti-point-sample { color: var(--color-text-secondary); }
 .ti-sfig .ti-scen-band { fill: var(--color-surface-sunken); stroke: var(--color-estimate-border); stroke-dasharray: 3 2; }
 .ti-sfig .ti-scen-line { fill: none; stroke: var(--color-estimate); stroke-width: 1.5; stroke-dasharray: 4 3; }
 /* aerial chip: the 2024 outline dims when an earlier survey is selected; the matched point appears */
@@ -193,6 +211,13 @@
 .ti-scope.tp .tp-model { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-muted); }
 .ti-scope.tp .tp-gf { margin: var(--space-2) 0 0; padding: 0; background: none; font: var(--text-label); color: var(--color-text-secondary); }
 .ti-scope.tp .tp-badges { display: flex; flex-wrap: wrap; gap: var(--space-1-5); margin: var(--space-3) 0 0; padding: 0; list-style: none; }
+/* Species maxima (tool 0.2.8): one line of text in a 1 px ink outline, no fill colour and no icon; the words carry the
+   meaning. Under the tree's name on the tree page, and in the map panel at most two lines, cut at the end when space is
+   short (after the species, in practice); the full line is in the tooltip. */
+.ti-scope .ti-max { margin: var(--space-2) 0 0; max-width: 100%; }
+.ti-scope .max-chip { display: inline-block; max-width: 100%; box-sizing: border-box; padding: 3px var(--space-2); border: 1px solid var(--color-text); border-radius: var(--radius-xs); background: transparent; color: var(--color-text); font: 600 var(--fs-xs)/1.4 var(--font-sans); overflow-wrap: anywhere; }
+.ti-scope .max-chip i { font-weight: 500; }
+.ti-scope.tp .tp-max .max-chip { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; width: fit-content; overflow: hidden; overflow-wrap: normal; }
 .ti-scope.tp .tp-actions { display: grid; gap: var(--space-2); padding: 0 var(--space-4) var(--space-4); }
 .ti-scope.tp .tp-open { justify-content: space-between; min-height: var(--control-lg); font-size: var(--fs-lg); }
 .ti-scope.tp .tp-actions-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
@@ -210,6 +235,12 @@
 .ti-scope.tp .tp-ids dt.tp-sub { display: inline-block; margin-top: var(--space-1-5); font: var(--text-caption); letter-spacing: normal; text-transform: none; }
 .ti-scope.tp .tp-ids dd.tp-sub { display: inline; margin: 0; font: var(--text-caption); color: var(--color-text-muted); }
 .ti-scope.tp .tp-ids dd.tp-sub code { font-size: var(--fs-xs); color: var(--color-text-secondary); overflow-wrap: anywhere; }
+/* Location (the map pin, WGS84) under the record ID: coordinates with Copy, what the position is, plain links. */
+.ti-scope.tp .tp-ids dt.tp-loc { display: block; }
+.ti-scope.tp .tp-ids dd.tp-loc { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-2); margin-top: var(--space-0-5); }
+.ti-scope.tp .tp-ids dd.tp-loc code { font: var(--text-mono); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; color: var(--color-text); }
+.ti-scope.tp .tp-ids dd.tp-loc small { flex-basis: 100%; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-scope.tp .tp-loc-links a { display: inline-block; padding: var(--space-1) 0; color: var(--color-text-link); font-weight: 600; }
 .ti-scope.tp .tp-idnote { margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-secondary); }
 .ti-scope.tp .tp-foot code { font: var(--text-mono); overflow-wrap: normal; word-break: keep-all; }
 .ti-sec { padding: var(--space-4); border-top: 1px solid var(--color-border-subtle); }
@@ -227,7 +258,23 @@
 /* protection under the name (concept A) */
 .ti-prot { margin: var(--space-2) 0 0; font: var(--text-label); color: var(--color-text-secondary); }
 .ti-prot b { font-weight: 600; color: var(--color-text); }
-.ti-prot[data-protection="protected"] b { color: var(--color-protected); }
+.ti-prot[data-protection="scheduled"] b { color: var(--color-protected); }
+.ti-prot small { display: block; margin-top: 2px; font: var(--text-caption); color: var(--color-text-muted); }
+/* Release 6.3 group-area line: a dashed rule beside it, as the map draws the area. */
+.ti-prot.ti-group-area { padding-left: var(--space-2); border-left: 2px dashed var(--color-protected); }
+.ti-prot a { color: var(--color-text-link); font-weight: 600; text-underline-offset: 2px; }
+/* How sure ALTO is: one row of four facts (tree page hero). */
+/* Release lines (tool 0.2.12): the data's own lines about a tree (height check, record-and-crown check, group area,
+   Schedule 10 entry, reviewer note, kauri survey, licence), one per row; a check carries a left rule as well as its
+   label, so it never rests on colour alone. */
+.ti-lines { list-style: none; margin: var(--space-2) 0 0; padding: 0; max-width: 80ch; font: var(--text-caption); color: var(--color-text-secondary); }
+.ti-lines li { margin: 2px 0 0; padding-left: var(--space-2); border-left: 2px solid var(--color-border); }
+.ti-lines li[data-tone="warn"] { border-left: 3px solid var(--color-warning-mark); }
+.ti-lines b { font-weight: 600; color: var(--color-text); }
+.ti-lines a { color: var(--color-text-link); font-weight: 600; text-underline-offset: 2px; }
+.ti-evidence { display: flex; flex-wrap: wrap; gap: 2px var(--space-3); margin: var(--space-2) 0 0; font: var(--text-caption); color: var(--color-text-secondary); max-width: 80ch; }
+.ti-evidence b { font-weight: 600; color: var(--color-text); }
+.ti-recorded-as, .ti-survey-codes { max-width: 68ch; }
 /* the figure's key: each mark drawn as it appears, named in words */
 .ti-key { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin: var(--space-2) 0 0; padding: 0; list-style: none; font: var(--text-caption); color: var(--color-text-secondary); }
 .ti-key li { display: inline-flex; align-items: center; gap: var(--space-1-5); }
@@ -242,6 +289,8 @@
 .ti-sw-bar::after { left: 1px; width: 10px; top: 5px; height: 6px; background: var(--viz-crown); border-radius: 1px; }
 .ti-sw-dot { background: none; }
 .ti-sw-dot::after { inset: 3px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px var(--neutral-0); }
+.ti-sw-ringed-dot { background: none; }
+.ti-sw-ringed-dot::after { inset: 3px; border-radius: 50%; background: var(--sw); box-shadow: 0 0 0 1px var(--neutral-0), 0 0 0 3px var(--color-protected); }
 /* numbered links into the tree page (concept C) */
 .ti-pagelinks { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; counter-reset: none; }
 .ti-pagelinks a { display: grid; grid-template-columns: 24px minmax(0, auto) minmax(0, 1fr); align-items: baseline; gap: 0 var(--space-2); min-height: var(--target-min); padding: var(--space-1-5) var(--space-1); border-radius: var(--radius-sm); color: var(--color-text); text-decoration: none; }
@@ -251,6 +300,17 @@
 .ti-pl-t { font: 600 var(--fs-sm)/1.4 var(--font-sans); color: var(--color-text-link); white-space: nowrap; }
 .ti-pl-d { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--text-caption); color: var(--color-text-muted); font-variant-numeric: var(--numeric-data); }
 @media (pointer: coarse) { .ti-yb, .ti-know a, .ti-scope .btn { min-height: var(--target-touch); } }
+/* A11Y-13: on a touch screen a value that opens its provenance and a Method link reach 44 px under the finger, through an
+   invisible area around them; the data sheet looks the same. */
+/* A Method link is 24 px tall at any pointer (WCAG 2.5.8), its padding taken back by its margin so lines keep their height. */
+.ti-mlink { display: inline-block; padding: 5px 0; margin: -5px 0; }
+@media (pointer: coarse) {
+  .ti-v, .ti-mlink { position: relative; }
+  .ti-v::after, .ti-mlink::after { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, var(--target-touch)); height: max(100%, var(--target-touch)); transform: translate(-50%, -50%); }
+  /* Rows holding such values are 44 px apart, so neighbouring areas never overlap. */
+  .ti-table tr:has(.ti-v) > :is(th, td) { height: var(--target-touch); box-sizing: border-box; }
+  .ti-kv:has(.ti-v), .ti-row:has(.ti-v) { min-height: var(--target-touch); box-sizing: border-box; }
+}
 @media (max-width: 759px) {
   .tp .ti-band { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tp .ti-band .ti-m-b { min-height: 96px; }
@@ -262,3 +322,9 @@
 .tp-map-year i { width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 3px solid var(--viz-overlay-alt); box-shadow: 0 0 0 1.5px var(--viz-overlay-halo); }
 .tp-map-year span { padding: 2px var(--space-2); border-radius: var(--radius-pill); background: var(--color-surface-inverse); color: var(--color-text-inverse); font: 600 var(--fs-xs)/1.45 var(--font-sans); white-space: nowrap; }
 .tp-map-year.is-none i { border-style: dashed; }
+
+/* comparison strips end at the 99th percentile; the group's top value is named apart (it can be a structure or noise) */
+.ti-dist-max { display: block; font: var(--text-caption); color: var(--color-text-muted); }
+.ti-me.is-beyond path { stroke-dasharray: 2 2; }
+.ti-rgwrap { margin: 0; }
+.ti-rgwrap .ti-cap { margin-top: 0; }

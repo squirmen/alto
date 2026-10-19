@@ -26,8 +26,14 @@
     const height = number(c.crown_max_chm_m) ?? number(a.height_max_m) ?? number(a.height_p95_m);
     const heightBasis = c.crown_source==='v5'?'V5 segmented canopy maximum, 2024 survey':c.crown_source==='v4_outside_v5'?'Earlier crown outside the v5 footprint':c.crown_source==='record_seeded_v52'?'Crown drawn from the record, 2024 survey; awaiting confirmation':'Stored canopy estimate';
     return {trunks,low,high,timeline,questions,height,heightBasis,canopyArea:number(c.crown_area_m2)??number(s.crown_area_m2),
-      annualValue:number(s.total_value_nzd_y),valueLow:number(s.total_value_nzd_y_low),valueHigh:number(s.total_value_nzd_y_high),
-      runoff:number(s.avoided_runoff_m3_y),carbonStored:number(s.stored_co2e_tonnes_est),sequestration:number(s.annual_sequestration_tco2e_y_est),pm25:number(s.pm25_removed_kg_y)};
+      // Release 6.3: the benefits dataset (stormwater and carbon; withheld where the height is not plausible), the drawn
+      // crown's values for the 103 crowns release 6.3 values on their drawn outline; release 6.2: the services total.
+      ...(()=>{const b=d.benefits,w=!!b?.withheld_reason,v=d.services_drawn||s;
+        if(!b)return {annualValue:number(s.total_value_nzd_y),valueLow:number(s.total_value_nzd_y_low),valueHigh:number(s.total_value_nzd_y_high),
+          runoff:number(s.avoided_runoff_m3_y),carbonStored:number(s.stored_co2e_tonnes_est),sequestration:number(s.annual_sequestration_tco2e_y_est),pm25:number(s.pm25_removed_kg_y),release63:false};
+        return {annualValue:number(b.benefit_value_nzd_y),valueLow:number(b.benefit_value_nzd_y_low),valueHigh:number(b.benefit_value_nzd_y_high),
+          runoff:w?null:number(v.avoided_runoff_m3_y),carbonStored:w?null:number(v.stored_co2e_tonnes_est),sequestration:w?null:number(s.annual_sequestration_tco2e_y_est),
+          pm25:null,release63:true,withheld:b.withheld_reason||null};})()};
   }
   function card(label,value,unit,note) {return `<div class="evidence-metric"><span>${escape(label)}</span><strong>${escape(value)} <small>${escape(unit)}</small></strong><p>${escape(note)}</p></div>`;}
   function render(record) {
@@ -62,29 +68,82 @@
     html+='<section class="evidence-section future-section"><p>Calculating possible future heights…</p></section>';
     return html;
   }
+  // ---------- comparison of saved trees ----------
+  // The same words and rounding as the tree page and panel (0.2.9): trees by their tree number and species display name
+  // (species-names.js), values rounded by the design system's rules (alto-format.js), benefits as the ALTO benefit
+  // scenario's sensitivity scenario with its band, plain words for the height measure, and no method or release IDs.
+  const FMT=()=>root.ALTOFormat||null,SN=()=>root.ALTOSpeciesNames||null,SRC=()=>root.ALTOSources||null;
+  const DASH='–';
+  const qty=(key,v)=>{const F=FMT();return number(v)===null?DASH:F?F.quantityText(key,v):fmt(v);};
+  const numberOf=r=>r?.datasets?.tree_number?.number||null;
+  // The column's name: the recorded species as ALTO shows it; a record naming several species, or none, is "Tree".
+  function shown(r){
+    const d={...(r.datasets.record||{}),...Object.fromEntries(Object.entries(r.datasets.ground||{}).filter(([k,v])=>['species_common','species_latin'].includes(k)&&v))};
+    const ok=v=>typeof v==='string'&&v.trim()&&!/^(unknown|unidentified|not known)$/i.test(v.trim());
+    const N=SN(),common=ok(d.species_common)?d.species_common.trim():null,latin=ok(d.species_latin)?d.species_latin.trim():null;
+    if(common&&!(N?N.isMulti(common):/,/.test(common))){const t=N?N.display(common,{latin})||common:common;return {text:t,html:N?N.nameHtml(common,{display:t}):escape(t)};}
+    if(!common&&latin){const t=N?N.latinText(latin):latin;return {text:t,html:N?N.latinHtml(latin):`<i>${escape(t)}</i>`};}
+    return {text:'Tree',html:'Tree'};
+  }
+  const HEIGHT_MEASURE={v5:'2024 LiDAR survey, highest point of the crown',v4_outside_v5:'Earlier crown, outside the 2024 crown survey',
+    legacy_outside_v5:'Earlier crown, outside the 2024 crown survey',
+    record_seeded_v52:'2024 survey, crown drawn from the record (awaiting confirmation)'};
+  const dateText=iso=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso||''));return m?new Date(`${m[1]}-${m[2]}-${m[3]}T12:00:00Z`).toLocaleDateString('en-NZ',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).replace(/\bSept\b/,'Sep'):DASH;};
+  function sourceText(r){
+    const d=r.datasets.record||{},S=SRC();if(!d.source_primary)return DASH;
+    const s=S?S.source(S.classify(d).primary):null;return s?s.label:String(d.source_primary).replace(/_/g,' ');
+  }
+  const EST=' <span class="badge-estimate">Estimate</span>';
+  // [label, estimate?, value as text]
   const METRICS=[
-    ['Height estimate (m)',r=>fmt(explain(r).height)],
-    ['Height statistic',r=>explain(r).heightBasis],
-    ['Crown area (m²)',r=>fmt(explain(r).canopyArea)],
-    ['Trunk inputs (cm)',r=>explain(r).trunks.map(x=>`${x.label}: ${fmt(x.value)}`).join('; ')||'—'],
-    ['Avoided runoff (m³/year)',r=>fmt(explain(r).runoff)],
-    ['Carbon stored (tCO₂e)',r=>fmt(explain(r).carbonStored,3)],
-    ['Carbon sequestration (tCO₂e/year)',r=>fmt(explain(r).sequestration,3)],
-    ['PM₂.₅ removed (kg/year)',r=>fmt(explain(r).pm25,3)],
-    ['Annual value (NZ$/year)',r=>fmt(explain(r).annualValue,2)],
-    ['Value sensitivity scenarios (NZ$/year)',r=>{const x=explain(r);return x.valueLow===null||x.valueHigh===null?'—':`${fmt(x.valueLow,2)}–${fmt(x.valueHigh,2)}`;}],
-    ['Service method',r=>r.datasets.services?.method_id||'—'],
-    ['Source',r=>r.datasets.record?.source_primary||'—'],
-    ['Source record timestamp',r=>r.datasets.record?.as_of_utc||'—'],
-    ['Research snapshot',r=>r.snapshot||'—']
+    ['Source',false,r=>sourceText(r)],
+    ['Height',false,r=>qty('height',explain(r).height)],
+    ['Height measure',false,r=>explain(r).height===null?DASH:HEIGHT_MEASURE[r.datasets.crown?.crown_source]||'Stored canopy estimate'],
+    ['Crown area',false,r=>qty('crownArea',explain(r).canopyArea)],
+    ['Trunk diameter',true,r=>{const x=explain(r);if(x.low===null)return DASH;const F=FMT(),one=Math.round(x.low)===Math.round(x.high);
+      const t=one?qty('trunkDiameter',x.low):(F?.range('trunkDiameter',x.low,x.high)||`${fmt(x.low,0)}–${fmt(x.high,0)} cm`);return `${t} · not measured${x.trunks.length>1?`; ${x.trunks.length} models`:''}`;}],
+    // Release 6.3: stormwater and carbon (withheld where the height is not plausible); release 6.2: the services total.
+    ['Benefits',true,r=>{const x=explain(r),v=x.annualValue;return v===null?(x.withheld?'withheld: height not plausible':DASH):`${qty('benefits',v)} · ${x.release63?'stormwater and carbon':'sensitivity scenario'}`;}],
+    ['Benefits band',true,r=>{const x=explain(r),F=FMT();if(x.valueLow===null||x.valueHigh===null)return DASH;return F?.range('benefits',x.valueLow,x.valueHigh)||`${qty('benefits',x.valueLow)}–${qty('benefits',x.valueHigh)}`;}],
+    ['Stormwater runoff avoided',true,r=>qty('stormwater',explain(r).runoff)],
+    ['Carbon stored',true,r=>qty('carbonStored',explain(r).carbonStored)],
+    ['Carbon taken up a year',true,r=>{const v=explain(r).sequestration,F=FMT();return v===null?DASH:F?F.co2Rate(v):fmt(v,3);}],
+    ['PM2.5 removed a year',true,r=>{const v=explain(r).pm25,F=FMT();return v===null?DASH:`${F?F.sigText(v,2):fmt(v,3)} kg · coefficient under review`;}],
+    ['Benefit method',false,r=>r.datasets.services?'ALTO benefit scenario':DASH],
+    ['Source record date',false,r=>dateText(r.datasets.record?.as_of_utc)],
+    ['Record ID',false,r=>r.tree_id||DASH]
   ];
+  const NOTE='– means not available for this record. Benefits: ALTO benefit scenario (simplified equations adapted from published i-Tree Eco components; not run in i-Tree Eco), a sensitivity scenario rather than a valuation; from release 6.3, stormwater plus carbon; its band is ±30%, or ±60% for a tree found only by LiDAR. Carbon stored is a total; the other benefits are yearly. Summing trees needs care where crowns overlap or models share inputs.';
+  // Heights of 55 m or more (tree-record.js TALL_M, the one constant) as the tree page gives them (SKP-03 interim): the
+  // height with its caution, and each estimate computed from it marked "flagged height", as the tree page puts the
+  // caution on those cards; the note under the table says what the flag means.
+  const REC=()=>root.ALTOTreeRecord||null;
+  const tallM=()=>REC()?.TALL_M??55;
+  const tallText=()=>REC()?.TALL_TEXT||'unusually tall for Auckland: possibly a power line, structure or noise; not used in rankings';
+  // Release 6.3: the height check in the record (height_check: implausible or check) flags the height instead.
+  const checked=r=>['implausible','check'].includes(r.datasets?.height_check?.level)?r.datasets.height_check.level:null;
+  const flagged=r=>{if(checked(r))return true;const h=explain(r).height;return !r.datasets?.size&&h!==null&&h>=tallM();};
+  function cell([label,est,read],r){
+    const v=read(r);if(v===DASH||!flagged(r))return v;
+    const c=checked(r);
+    return label==='Height'?`${v} · ${c?(c==='implausible'?'height not plausible (height check)':'height to check (height check)'):tallText()}`:est?`${v} · flagged height`:v;
+  }
+  const tallNote=()=>`A flagged height is ${tallM()} m or more: ${tallText().replace(/: /,', ').replace(/; not used in rankings$/,'')}, and is not used in rankings. Estimates computed from it carry the same flag.`;
+  // The PM2.5 row is a release 6.2 measure: shown only when a compared record holds it (release 6.3 does not publish
+  // PM2.5 removal).
+  const metricsFor=records=>METRICS.filter(m=>m[0]!=='PM2.5 removed a year'||records.some(r=>explain(r).pm25!==null));
   function comparison(records) {
-    if(!records.length)return '<p>Save a tree from its profile, then choose another tree to compare. Up to four trees can be compared.</p>';
-    return '<div class="comparison-scroll" tabindex="0" aria-label="Tree comparison; scroll across for all trees"><table><caption>Individual-tree estimates · same measures side by side</caption><thead><tr><th scope="col">Measure</th>'+records.map(r=>`<th scope="col">${escape(name(r))}<small>${escape(r.tree_id)}</small><button type="button" data-remove-tree="${escape(r.tree_id)}">Remove</button></th>`).join('')+'</tr></thead><tbody>'+METRICS.map(([label,read])=>`<tr><th scope="row">${escape(label)}</th>${records.map(r=>`<td>${escape(read(r))}</td>`).join('')}</tr>`).join('')+'</tbody></table></div><p class="comparison-note">A dash means the data is missing. Carbon stored is a total; runoff, sequestration and air filtration are annual estimates. The value range reflects different assumptions. Summing trees needs care where crowns overlap or models share inputs.</p>';
+    if(!records.length)return '<p>Save a tree from its panel or page, then choose another tree to compare. Up to four trees can be compared.</p>';
+    const head=r=>{const n=numberOf(r),nm=shown(r);
+      return `<th scope="col"><span class="comparison-name">${nm.html}</span><small>${n?`Tree ${escape(n)}`:`Record ID ${escape(r.tree_id)}`}</small><button type="button" data-remove-tree="${escape(r.tree_id)}" aria-label="Remove ${escape(nm.text)}${n?` ${escape(n)}`:''} from the comparison">Remove</button></th>`;};
+    return '<div class="comparison-scroll" tabindex="0" aria-label="Tree comparison; scroll across for all trees"><table><caption>Individual-tree values · same measures side by side</caption><thead><tr><th scope="col">Measure</th>'+records.map(head).join('')+'</tr></thead><tbody>'+
+      metricsFor(records).map(m=>{const [label,est]=m;return `<tr><th scope="row">${escape(label)}${est?EST:''}</th>${records.map(r=>`<td>${label==='Record ID'?`<code>${escape(cell(m,r))}</code>`:escape(cell(m,r))}</td>`).join('')}</tr>`;}).join('')+
+      `</tbody></table></div><p class="comparison-note">${escape(NOTE)}${records.some(flagged)?` ${escape(records.some(checked)?'A flagged height is one the release’s height check marks not plausible or to check; it is not used in rankings, and estimates computed from it carry the same flag.':tallNote())}`:''}</p>`;
   }
   function csv(records) {
-    const cell=v=>'"'+String(v??'').replace(/^[=+@\-\t\r]/,"'$&").replace(/"/g,'""')+'"';
-    return [['tree_id','name',...METRICS.map(x=>x[0])],...records.map(r=>[r.tree_id,name(r),...METRICS.map(x=>x[1](r))])].map(row=>row.map(cell).join(',')).join('\r\n')+'\r\n';
+    const quote=v=>'"'+String(v??'').replace(/^[=+@\-\t\r]/,"'$&").replace(/"/g,'""')+'"';
+    const M=metricsFor(records);
+    return [['tree_number','record_id','name',...M.map(x=>x[0])],...records.map(r=>[numberOf(r)||'',r.tree_id,shown(r).text,...M.map(m=>cell(m,r))])].map(row=>row.map(quote).join(',')).join('\r\n')+'\r\n';
   }
   const api={number,explain,render,comparison,csv,name};root.ALTOEvidence=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;

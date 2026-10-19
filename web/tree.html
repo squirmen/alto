@@ -10,27 +10,29 @@
   <link rel="stylesheet" href="./fonts.css?v=tool-0.2.2">
   <meta name="color-scheme" content="light">
   <link rel="icon" type="image/svg+xml" href="./brand/bpl-mark.svg">
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
-        integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
-        crossorigin="anonymous">
-  <!-- Same data base and cache stamp as index.html; the release tool stamps both pages. -->
-  <script>window.AKL_DATA_BASE="./data";window.AKL_TILE_VERSION="20261010-v5.2";</script>
+  <!-- The site settings (data base, tiles' cache stamp), as on the map; the tool build writes site-config.js. -->
+  <script src="./site-config.js?v=tool-0.2.9"></script>
+  <!-- FE-03: the release metadata, then the two lookup schemas (tree numbers, tree details), start here, before the page's
+       scripts arrive; the page's lookups take them by URL from window.ALTO_PREFETCH. -->
+  <script src="./tree-prefetch.js?v=tool-0.2.9"></script>
   <link rel="stylesheet" href="./tokens.css?v=tool-0.2.2">
   <link rel="stylesheet" href="./alto-ui.css?v=tool-0.2.2">
   <link rel="stylesheet" href="./tree-page.css?v=tool-0.2.2">
+  <link rel="stylesheet" href="./site-nav.css?v=tool-0.2.9">
   <link rel="stylesheet" href="./tree-instrument.css?v=tool-0.2.2">
   <link rel="stylesheet" href="./tree-instrument-page.css?v=tool-0.2.2">
 </head>
 <body class="tpg ti-scope ti-page">
   <a class="skip-link" href="#main">Skip to the tree</a>
   <header class="tpg-top ti-scope">
-    <a class="tpg-brand ti-brand" href="./" aria-label="ALTO map"><img src="./alto-logo.png" alt="ALTO" height="28"><span>Tree</span></a>
+    <a class="tpg-brand ti-brand" href="./" aria-label="ALTO map"><img src="./brand/alto-wordmark.png?v=tool-0.2.9" alt="ALTO" width="282" height="84"><span>Tree</span></a>
     <nav class="tpg-top-actions" aria-label="Page actions">
       <a class="btn btn-quiet" id="backToMap" href="./"><svg class="ico" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>Map</span></a>
       <button class="btn btn-quiet" type="button" id="shareTree" disabled><span>Share</span></button>
       <button class="btn btn-quiet" type="button" id="citeTree" disabled><span>Cite</span></button>
     </nav>
   </header>
+  <nav class="site-nav" aria-label="ALTO pages"><ul><li><a href="./">Map</a></li><li><a href="./maxima.html">Species maxima</a></li><li><a href="./methods.html">Methods</a></li><li><a href="./credits.html">Sources and credits</a></li><li><a href="./kyte/">KYTE</a></li></ul></nav>
   <main id="main" class="ti-main" tabindex="-1">
     <section class="ti-id" id="hero" aria-busy="true">
       <div><i class="ti-skel" style="width:30%"></i><i class="ti-skel ti-skel-lg" style="height:40px;margin-top:12px"></i><i class="ti-skel" style="width:45%;margin-top:12px"></i></div>
@@ -41,8 +43,9 @@
   </main>
   <footer class="tpg-foot ti-scope">
     <a class="lab-link" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><img src="./brand/bpl-mark.svg" alt="" width="18" height="18"><span>Better Places Lab</span></a>
-    <span>Waipapa Taumata Rau, University of Auckland</span>
-    <span id="footVersion">Tool 0.2.3</span>
+    <span><span lang="mi">Waipapa Taumata Rau</span> | University of Auckland</span>
+    <span id="footVersion">Tool 0.2.12</span>
+    <a href="./credits.html">Sources and credits</a>
     <a href="./">ALTO map</a>
   </footer>
   <dialog id="citeDialog" class="tpg-dialog" aria-labelledby="citeTitle">
@@ -50,10 +53,12 @@
       <p class="tpg-note" id="citeNote">Cite the tree ID and the data and tool versions: values change between data releases, and the ID keeps working through them.</p>
       <div class="tpg-dialog-actions"><button type="button" class="btn" id="copyCite">Copy citation</button><button class="btn btn-primary" value="close">Done</button></div></form>
   </dialog>
+  <script src="./alto-format.js?v=tool-0.2.9"></script>
+  <script src="./release-fields.js?v=tool-0.2.12"></script>
   <script src="./palette.js?v=tool-0.2.2"></script>
+  <script src="./basemap-config.js?v=tool-0.2.7"></script>
+  <script src="./credits.js?v=tool-0.2.7"></script>
   <script src="./tree-details.js?v=20261001-v5c"></script>
-  <script src="./property.js?v=20261002-v5d"></script>
-  <script src="./tree-ground.js?v=20260928-v5b"></script>
   <script src="./record-links.js?v=20261010-v5.2"></script>
   <script src="./growth-form.js?v=V6_VERSION"></script>
   <script src="./evidence-workspace.js?v=tool-0.2.2"></script>
@@ -61,16 +66,15 @@
   <script src="./tree-id.js?v=tool-0.2.2"></script>
   <script src="./sources.js?v=tool-0.2.2"></script>
   <script src="./alto-viz.js?v=tool-0.2.2"></script>
+  <script src="./species-names.js?v=tool-0.2.9"></script>
   <script src="./tree-summary.js?v=tool-0.2.2"></script>
   <script src="./tree-record.js?v=tool-0.2.2"></script>
   <script src="./tree-instrument.js?v=tool-0.2.2"></script>
-  <script src="./tree-imagery.js?v=tool-0.2.2"></script>
-  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"
-          integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj"
-          crossorigin="anonymous" defer></script>
-  <script src="https://unpkg.com/pmtiles@3.0.7/dist/pmtiles.js"
-          integrity="sha384-MjejsnWXHmuz93aE35YWLh5AbS/6ceRB3Vb+ukOwqFzJRTpQ8vvbkLbNV7I0QK4f"
-          crossorigin="anonymous" defer></script>
+  <script src="./kyte-config.js?v=tool-0.2.8"></script>
+  <!-- Loaded by tree-page.js once the hero is drawn (FE-03): property.js, tree-ground.js, tree-imagery.js,
+       tree-imagery-viewer.js with imagery-viewer.css, and species-maxima.js; when the inset map nears the screen,
+       map-libs.js, tile-cache.js and map-sources.js, then MapLibre and PMTiles (with their stylesheet) from unpkg.com
+       with SRI, else the vendor copies in ./vendor/ (ALTOLibs.load). -->
   <script src="./tree-page.js?v=tool-0.2.2" defer></script>
 </body>
 </html>

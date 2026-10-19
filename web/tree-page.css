@@ -11,7 +11,7 @@
 }
 :root[data-theme="dark"] { color-scheme: dark; }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--ti-stack, 76px); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 /* Spacing (4 px grid) and type scale for the tree page. */
 body.tpg { --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px;
@@ -147,6 +147,8 @@ pre.json { max-height: 320px; overflow: auto; font-size: var(--fs-xs); backgroun
 .all-fields .pp-dataset summary span { display: block; font-size: var(--fs-xs); font-weight: 400; color: var(--muted); margin-left: 16px; }
 .all-fields .pp-row { display: grid; grid-template-columns: minmax(140px, 40%) 1fr; gap: 10px; padding: 4px 0; font-size: var(--fs-sm); border-bottom: 1px dashed var(--line-soft); }
 .all-fields .pp-label { color: var(--muted); } .all-fields .pp-value { font-weight: 600; overflow-wrap: anywhere; }
+/* A stored value's caveat (DB-11: a converted unit, a flag computed on the unconverted value): plain, muted. */
+.all-fields .pp-value .pp-sub { font-weight: 400; color: var(--muted); }
 .all-fields .pp-note { font-size: var(--fs-xs); color: var(--muted); }
 .all-fields .pp-raw-value { white-space: pre-wrap; font-size: 11px; max-height: 220px; overflow: auto; margin: 0; }
 .tpg-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; max-width: 1200px; margin: 0 auto; padding: 18px 16px 32px; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: var(--fs-sm); }
@@ -201,7 +203,7 @@ pre.json { max-height: 320px; overflow: auto; font-size: var(--fs-xs); backgroun
   .tpg .benefit-tiles { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
-  html { scroll-padding-top: 120px; }
+  html { scroll-padding-top: var(--ti-stack, 120px); }
   .tpg-top { padding: 8px 12px; } .tpg-brand img { height: 34px; }
   .tpg-top-actions .btn { padding: 6px 9px; min-height: 36px; }
   .tpg-main { padding: 12px 12px 32px; }

@@ -248,7 +248,9 @@ h1.brand img { display: block; width: 174px; height: auto; max-width: 100%; }
 .comparison-scroll th, .comparison-scroll td { min-width: 140px; max-width: 250px; padding: 10px; border-bottom: 1px solid #dce6da; vertical-align: top; overflow-wrap: anywhere; }
 .comparison-scroll tbody th { background: #f5f8f1; font-weight: 500; }
 .comparison-scroll thead th { color: #294a2c; }
-.comparison-scroll small { display: block; font-size: 9px; font-weight: 400; margin: 5px 0; }
+.comparison-scroll small { display: block; font-size: 11px; font-weight: 400; margin: 5px 0; }
+.comparison-scroll .comparison-name { display: block; font-weight: 600; }
+.comparison-scroll tbody th .badge-estimate { margin-left: 4px; }
 .comparison-scroll [data-remove-tree] { padding: 3px 7px; min-height: 30px; }
 .comparison-note { font-size: 11px; color: #526054; line-height: 1.5; }
 .comparison-actions { display: flex; gap: 8px; }
@@ -338,9 +340,14 @@ h1.brand img { display: block; width: 174px; height: auto; max-width: 100%; }
 #speciesTriggerText { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
 .species-empty { margin:0; padding:14px 8px; font-size:12px; color:var(--muted); line-height:1.5; }
 .species-option .count { font-variant-numeric:tabular-nums; }
-.dock-heading { display:grid; grid-template-columns:minmax(0,1fr) 44px; gap:6px; }
-.about-dock { display:flex; justify-content:center; align-items:center; padding:0; width:44px; min-height:48px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--accent); cursor:pointer; box-shadow:0 2px 12px #17201a14; }
-.about-dock svg { width:20px; height:20px; }
+.dock-heading { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:6px; }
+/* "Saved trees (n)" beside About where the panel's header is out of sight (panel hidden, or a phone): opens the comparison. */
+.saved-dock { grid-column:3; grid-row:1; padding:0 12px; min-height:48px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--accent); font:600 var(--fs-sm, 13px)/1 var(--font-sans, inherit); white-space:nowrap; cursor:pointer; box-shadow:0 2px 12px #17201a14; }
+.saved-dock[hidden] { display:none; }
+.map-dock:has(.saved-dock:not([hidden])) { width:auto; min-width:290px; }
+.saved-dock:hover { background:#f1f5ef; }
+.about-dock { display:flex; justify-content:center; align-items:center; gap:6px; padding:0 12px; width:auto; min-height:48px; font:600 var(--fs-sm, 13px)/1 var(--font-sans, inherit); border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--accent); cursor:pointer; box-shadow:0 2px 12px #17201a14; }
+.about-dock svg { width:20px; height:20px; flex:none; }
 .about-dock:hover { background:#f1f5ef; }
 .reveal-aside .dock-action { margin-left:auto; }
 .reveal-aside .filter-count { flex:0 0 auto; font-size:10px; font-weight:700; }

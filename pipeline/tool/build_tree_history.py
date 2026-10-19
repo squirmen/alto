@@ -11,6 +11,10 @@ writes the tree_history derived product for one release:
 Shard = FNV-1a of the tree ID mod --shards, hex (as in the tree record). Crown changes from v4 to v5
 are not repeated here: every record already carries its v4 and v5 crowns.
 
+--built-on DATASET_VERSION: the release the history was built on (default: the metadata's dataset_version), stamped
+beside release in index.json and the derived manifest (DB-13); a release that changes no tree ID (6.3) reuses the
+earlier transitions under its own release.
+
 Usage:
   build_tree_history.py --metadata release-metadata.json --out DERIVED/<dataset_version> \
       --transition v5.1=changes_v5_to_v51.parquet --transition v5.2=changes_v51_to_v52.parquet
@@ -38,13 +42,15 @@ def write_json(path, obj):
         json.dump(obj, f, separators=(',', ':'))
 
 
-def register(out_root, release, key, path):
+def register(out_root, release, key, path, built_on=None):
     mf = os.path.join(out_root, 'manifest.json')
     m = json.load(open(mf)) if os.path.exists(mf) else {'schema': 'alto.derived-manifest/1', 'release': release, 'products': {}}
     if m.get('release') != release:
         raise SystemExit(f'{mf} is for {m.get("release")}, not {release}')
     m['products'][key] = path
     m['updated_utc'] = datetime.now(timezone.utc).isoformat(timespec='seconds')
+    if built_on:
+        m['built_on'] = built_on
     write_json(mf, m)
 
 
@@ -61,8 +67,10 @@ def main():
     ap.add_argument('--transition', action='append', required=True, help='RELEASE=changes.parquet (the release the change arrived in)')
     ap.add_argument('--shards', type=int, default=256)
     ap.add_argument('--source', default='ALTO tree-ID audit: release comparison of tree IDs and crown keys')
+    ap.add_argument('--built-on', help='the release the history was built on (default: the metadata dataset_version)')
     a = ap.parse_args()
     release = json.load(open(a.metadata))['release']['dataset_version']
+    built_on = a.built_on or release
     width = max(1, len(format(a.shards - 1, 'x')))
     shards = defaultdict(dict)
     counts = {}
@@ -86,8 +94,9 @@ def main():
         'schema': 'alto.tree-history/1', 'release': release, 'generated_utc': datetime.now(timezone.utc).isoformat(timespec='seconds'),
         'source': a.source, 'transitions': counts, 'releases': list(counts), 'shards': a.shards, 'path': '{shard}.json',
         'changes': {'became_rep': 'became the map marker of its crown', 'rep_demoted_marker_lost': 'no longer the crown’s map marker; marker removed',
-                    'marker_lost': 'map marker removed', 'marker_gained': 'map marker added', 'rep_repointed': 'now names a different crown'}})
-    register(a.out, release, 'tree_history', 'tree_history/index.json')
+                    'marker_lost': 'map marker removed', 'marker_gained': 'map marker added', 'rep_repointed': 'now names a different crown'},
+        'built_on': built_on})
+    register(a.out, release, 'tree_history', 'tree_history/index.json', built_on=built_on)
     print(json.dumps({'release': release, 'transitions': counts, 'ids': sum(len(v) for v in shards.values()), 'shards': len(shards)}))
 
 

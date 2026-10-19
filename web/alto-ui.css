@@ -113,6 +113,8 @@
 .prob-track span { display: block; height: 100%; background: #9db892; border-radius: 4px; }
 .prob-bars li.is-top .prob-track span { background: var(--alto-green); }
 .prob-bars b { text-align: right; font-variant-numeric: tabular-nums; }
+.prob-bars b small { display: block; font: 400 var(--fs-2xs, 11px)/1.2 var(--font-sans); color: var(--color-text-muted, #5b655f); white-space: nowrap; }
+.prob-bars li:has(b small) { grid-template-columns: minmax(120px, 1fr) 2fr 72px; }
 
 .kpis { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .kpi { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; align-items: start; padding: 10px 12px; border-radius: 12px; background: var(--card-2); border: 1px solid var(--line-soft); min-width: 0; }
@@ -162,3 +164,14 @@
 .id-list code a { color: var(--alto-green); }
 .id-list small { grid-column: 2; color: var(--muted); font-size: 11.5px; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stage-scale li.is-current { background: var(--alto-green); color: #0f1a12; } :root:not([data-theme="light"]) .stage-scale li.is-current b, :root:not([data-theme="light"]) .stage-scale li.is-current span { color: #0f1a12; } }
+
+/* The Notable Trees schedule in charts: its segment and swatch carry the schedule ring (a mark, not only a colour). */
+.comp-bar span.is-ringed { box-shadow: inset 0 0 0 2px var(--color-protected, #b02e6f); }
+.comp-legend i.is-ringed { box-shadow: inset 0 0 0 1px var(--color-surface, #fff), 0 0 0 2px var(--color-protected, #b02e6f); }
+
+/* A11Y-03: keyboard focus on a map (the map page and the tree page's inset map) is a two-tone ring drawn inside the
+   canvas, on top of the map: dark green outside, white inside. Whatever the pixel beside it (aerial imagery, the light
+   basemap, either theme), one of the two stands at 3.6:1 or more against it. Drawn inside because the map clips
+   anything outside it; the inner ring sits on the canvas container (a canvas has no ::after). */
+.maplibregl-map .maplibregl-canvas:focus-visible { outline: 3px solid var(--alto-green-800); outline-offset: -3px; }
+.maplibregl-map .maplibregl-canvas-container:has(> .maplibregl-canvas:focus-visible)::after { content: ""; position: absolute; inset: 3px; z-index: 1; box-shadow: inset 0 0 0 2px var(--neutral-0); pointer-events: none; }

@@ -27,12 +27,35 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 WEB = REPO / 'web'
 # Files the live site already serves from its root, or that describe a data release.
-SKIP = {'release-metadata.json', 'v5-methods.html', 'v51-methods.html', 'v52-methods.html', 'v6-methods.html', 'v61-methods.html', 'htaccess.example'}
-PAGES = ('index.html', 'tree.html')
-METHODS_PAGES = ('v5-methods.html', 'v51-methods.html', 'v52-methods.html', 'v6-methods.html', 'v61-methods.html')
-# Every page's own scripts and styles carry the build's stamp (?v=tool-<version>), whatever stamp the source
-# page had, so a browser never pairs a new page with a cached script or style from an earlier build.
-LOCAL_ASSET = re.compile(r'(["\'](?:\./)?[\w./-]+\.(?:js|mjs|css))\?v=[^"\'&#]*')
+SKIP = {'release-metadata.json', 'v5-methods.html', 'v51-methods.html', 'v52-methods.html', 'v6-methods.html', 'v61-methods.html', 'v62-methods.html', 'v63-methods.html',
+        'methods.html', 'methods-index.js', 'how-alto-is-made.html', 'htaccess.example'}
+PAGES = ('index.html', 'tree.html', 'maxima.html')
+METHODS_PAGES = ('v5-methods.html', 'v51-methods.html', 'v52-methods.html', 'v6-methods.html', 'v61-methods.html', 'v62-methods.html', 'v63-methods.html',
+                 'methods.html', 'how-alto-is-made.html')
+# The ALTO pages menu (web/site-nav.css, UX-01) as every page carries it; the changelog gets it too. A build under a
+# subfolder (beta) points its Methods and KYTE links at the site root, where those pages live.
+SITE_NAV = ('<nav class="site-nav" aria-label="ALTO pages"><ul><li><a href="./">Map</a></li><li><a href="./maxima.html">Species maxima</a></li>'
+            '<li><a href="./methods.html">Methods</a></li><li><a href="./credits.html">Sources and credits</a></li><li><a href="./kyte/">KYTE</a></li></ul></nav>')
+
+
+SITE_CONFIG_TAG = re.compile(r'<script src="\./site-config\.js\?v=[^"]*"></script>')
+SITE_CONFIG_NOTE = ('/* Site settings for the map, the tree page and Species maxima, written by pipeline/tool/build_web_beta.py for this\n'
+                    ' * build: the data base, "auto" (the tiles\' cache stamp is read from release-metadata.json), the site root and\n'
+                    ' * the channel. */\n')
+INLINE_SCRIPT = re.compile(r'<script\b(?![^>]*\bsrc=)[^>]*>', re.I)
+INLINE_HANDLER = re.compile(r'<[a-z][^>]*\son[a-z]+\s*=', re.I)
+
+
+def site_links(html, root):
+    if root in ('', '.'):
+        return html
+    return re.sub(r'href="\./(v\d+-methods\.html)', lambda m: f'href="{root}/{m.group(1)}', html.replace('href="./methods.html', f'href="{root}/methods.html')
+                  .replace('href="./kyte/"', f'href="{root}/kyte/"').replace('href="./how-alto-is-made.html', f'href="{root}/how-alto-is-made.html'))
+CREDITS_PAGE = 'credits.html'
+# Every page's own scripts, styles and stamped images (the wordmark, the About lockup) carry the build's stamp
+# (?v=tool-<version>), whatever stamp the source page had, so a browser never pairs a new page with a cached file from
+# an earlier build.
+LOCAL_ASSET = re.compile(r'(["\'](?:\./)?[\w./-]+\.(?:js|mjs|css|png|svg))\?v=[^"\'&#]*')
 
 
 def stamp_assets(html, stamp):
@@ -70,8 +93,10 @@ def changelog_html(md, version):
     return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             '<meta name="robots" content="noindex, nofollow"><title>ALTO changelog</title><style>body{max-width:760px;margin:0 auto;padding:24px 16px 48px;'
             'font:15px/1.6 Inter,system-ui,sans-serif;color:#17201a;background:#f7f8f5}h1{font-size:26px}h2{margin-top:28px;font-size:20px;border-bottom:1px solid #d8ddd6}'
-            'h3{font-size:16px}code{font-size:13px}a{color:#4a6f46}</style></head><body><p><a href="./">ALTO map (tool ' + h.escape(version) + ')</a></p>'
-            + '\n'.join(out) + '</body></html>\n')
+            'h3{font-size:16px}code{font-size:13px;overflow-wrap:anywhere}a{color:#4a6f46;overflow-wrap:anywhere}.site-nav{margin:-24px -16px 24px}</style>'
+            '<link rel="stylesheet" href="./tokens.css?v=tool-' + h.escape(version) + '"><link rel="stylesheet" href="./site-nav.css?v=tool-' + h.escape(version) + '">'
+            '</head><body>' + SITE_NAV + '<p>ALTO tool ' + h.escape(version) + '</p>'
+            + '\n'.join(out) + '<p><a href="./credits.html">Sources and credits</a> · <a href="./">ALTO map</a></p></body></html>\n')
 
 
 def write_upload_notes(out, version, commit, files, total, root, derived=(), public=False):
@@ -104,16 +129,31 @@ live map (for example `https://<site>/{out.name}/`). Nothing outside `{out.name}
 
 ## What it uses from the live site (same origin, read only)
 
-- `{root}/release-metadata.json`: the data release (v6 now, v6.1 next). The cache stamp for every data
+- `{root}/release-metadata.json`: the data release (v6.2 now; tool 0.2.12 also reads release 6.3's fields). The cache stamp for every data
   request is read from its `assembly.tile_version`, so the build follows the live data release
   without a rebuild, and growth form appears only when the metadata lists it.
 - `{root}/data/…` (tiles, tree and property records), `{root}/kyte/…` (photos, KYTE links),
-  `{root}/v6-methods.html` / `{root}/v61-methods.html` (release notes); from data release 6.1, the tree-number
+  `{root}/v61-methods.html` / `{root}/v62-methods.html` / `{root}/v63-methods.html` (release notes); from data release 6.1, the tree-number
   alias table `{root}/data/tree_ids/` (without it the pages keep record IDs as the tree IDs).
 - `{root}/data/tree_change_v1.pmtiles`: Change since 2013 v1, a new file name (upload it before this build goes
   live; the screened `tree_change.pmtiles` stays for rollback).
 - The site root `.htaccess` applies to `{out.name}/` too: `.mjs` as JavaScript, Range requests,
   the CSP (scripts from self and unpkg.com; tiles from arcgisonline.com and openstreetmap.org).
+- From tool 0.2.9 no page runs inline script: the site settings are `site-config.js` (written by this
+  build, its URL stamped with a hash of its content), the map's script is `map-app.js` and the tree
+  page's early fetches are `tree-prefetch.js`. The stricter CSP in `web/htaccess.example` (`script-src
+  'self'` and the two pinned unpkg paths, no `'unsafe-inline'`; unpkg left out of `connect-src`) can
+  replace the live one once every page the site root serves is from tool 0.2.9 or later, this folder
+  included; switch it after the pages, never before (older pages with inline script stop working
+  under it). KYTE sets its own policy in `kyte/.htaccess`.
+- Tool 0.2.9 adds three blocks to the site template `web/htaccess.example`; copy them into the site root `.htaccess`
+  with the public build: **HTTPS only** (plain HTTP answers 301 to the same https URL, ahead of every other rewrite
+  rule, and HTTPS responses carry `Strict-Transport-Security "max-age=31536000"`); in **Caching**,
+  `release-metadata.json` at `public, max-age=60, stale-while-revalidate=600` (the pages fetch it without no-store)
+  and `public, max-age=31536000, immutable` for files asked for with `?v=` and for `/derived/<release>/`; and
+  **Permanent tree links and the 404 page** (the `/tree/<number>` rule with `[NC,B,R=302,L,QSA]` in place of the
+  release 6.1 rule, and `ErrorDocument 404 /404.html`). Then `curl -sI -A "Mozilla/5.0" "http://<site>/tree/TZ69KK1G?x=1"`
+  answers 301 to the same https URL, and an address that names no file answers 404 with ALTO's page.
 - The tree page's aerial imagery reads LINZ's open imagery archive from the browser: the CSP's
   `connect-src` must also allow `https://nz-imagery.s3.ap-southeast-2.amazonaws.com` (see
   `web/htaccess.example`). Until it does, that section says the site does not yet allow it; nothing
@@ -131,13 +171,46 @@ live map (for example `https://<site>/{out.name}/`). Nothing outside `{out.name}
    derived folder in this build (otherwise it says the tables are not published for this release);
    "Aerial imagery through time" shows the crown in each LINZ survey once the CSP allows the archive.
 4. `/{base}?property=6563788`: a property opens; the Area tab summarises it.
-5. Browser console: no errors; the pages {'do not carry' if public else 'carry'} `noindex`.{chr(10)+'6. `/v6-methods.html` and `/v61-methods.html`: the release 6 and 6.1 methods pages on the methods template.' if public else ''}
+4a. `/{base}credits.html`: Sources and credits on the methods template; the map's attribution ("Powered by Esri",
+   "© OpenStreetMap contributors", the tree and land credit) ends with a link to it, and the Streets basemap loads from
+   `tile.openstreetmap.org` once the CSP allows that host.
+4b. `/{base}maxima.html`: Species maxima lists the largest measured tree of each species when the live release has a
+   derived folder in this build with `species_maxima` (otherwise it says they are not published for this release);
+   About links it. A tree page such as `/{base}tree.html?id=TSG2SSKH` shows "Maximum · …" under the name and the
+   Recognition block; the map's Filters › Sources › Species maxima rings those trees.
+5. Browser console: no errors; the pages {'do not carry' if public else 'carry'} `noindex`.{chr(10)+'6. `/v6-methods.html`, `/v61-methods.html`, `/v62-methods.html` and `/v63-methods.html`: the release 6, 6.1, 6.2 and 6.3 methods pages on the methods template.' if public else ''}
 
 ## Undo
 
 {'Restore the previous tool files at the site root from the copy taken before this upload (the data release, `kyte/` and `.htaccess` were not touched).' if public else f'Delete the `{out.name}/` folder. Nothing else was changed.'}
 """
     (out.parent / 'UPLOAD.md').write_text(text)
+
+
+def split_facts(folder, products):
+    """Notable facts by tree number: <facts>/index.json (the file's header and the shard list) and <facts>/{shard}.json
+    ({trees}), shard = the first character after T of the tree number. Release 6.3's notable_facts.json is 1.4 MB (group
+    areas); a page reads the header and its tree's shard (species-maxima.js factsFor). The file itself stays, unchanged,
+    for any reader of the whole file. -> {trees, shards} or None when the folder lists no notable facts."""
+    rel = products.get('notable_facts')
+    src = folder / str(rel or '')
+    if not rel or not src.is_file():
+        return None
+    facts = json.loads(src.read_text())
+    trees = facts.get('trees') or {}
+    shards = {}
+    for number, entry in trees.items():
+        c = str(number).strip().upper()[1:2]
+        shards.setdefault(c if re.match(r'^[0-9A-Z]$', c) else '_', {})[number] = entry
+    out = src.with_suffix('')
+    out.mkdir(parents=True, exist_ok=True)
+    for key, part in shards.items():
+        (out / f'{key}.json').write_text(json.dumps({'trees': part}, separators=(',', ':'), ensure_ascii=False))
+    head = {k: v for k, v in facts.items() if k != 'trees'}
+    (out / 'index.json').write_text(json.dumps({**head, 'shards': {'by': 'tree number: the first character after T', 'path': '{shard}.json',
+                                                                     'keys': sorted(shards), 'trees': len(trees), 'file': str(rel)}},
+                                               separators=(',', ':'), ensure_ascii=False))
+    return {'trees': len(trees), 'shards': len(shards)}
 
 
 def main():
@@ -199,29 +272,50 @@ def main():
         shutil.copytree(d, out / 'derived' / d.name, ignore=lambda folder, names: [n for n in names if Path(folder) == d and n in skip])
         if skip:
             (out / 'derived' / d.name / 'manifest.json').write_text(json.dumps({**mf, 'products': products}, separators=(',', ':')))
-        derived.append({'release': d.name, 'products': products, 'left_out': sorted(skip)})
+        facts = split_facts(out / 'derived' / d.name, products)
+        derived.append({'release': d.name, 'products': products, 'left_out': sorted(skip), **({'notable_facts_split': facts} if facts else {})})
     derived_js = 'window.ALTO_DERIVED_BASE="./derived/{release}";' if derived else ''
-    boot = (f'<script>window.AKL_DATA_BASE="{root}/data";window.AKL_TILE_VERSION="auto";'
-            f'window.ALTO_SITE_ROOT="{root}";window.ALTO_CHANNEL="{a.channel}";window.ALTO_CHANGELOG="./changelog.html";{derived_js}</script>')
+    # FE-15: the site settings are a file, site-config.js, never an inline script, so the site's Content-Security-Policy
+    # needs no 'unsafe-inline'. Its URL carries a hash of its content after the build stamp: the host keeps ?v= files for a
+    # year, and a rebuild of one tool version with other settings (another site root, channel or derived folder) must not
+    # be served from a cache.
+    config = (SITE_CONFIG_NOTE + f'window.AKL_DATA_BASE="{root}/data";window.AKL_TILE_VERSION="auto";'
+              f'window.ALTO_SITE_ROOT="{root}";window.ALTO_CHANNEL="{a.channel}";{derived_js}\n')
+    (out / 'site-config.js').write_text(config)
+    config_stamp = f'{stamp}.{hashlib.sha256(config.encode()).hexdigest()[:10]}'
     for name in PAGES:
         p = out / name
         html = p.read_text()
-        html, n = re.subn(r'<script>window\.AKL_DATA_BASE="[^"]*";window\.AKL_TILE_VERSION="[^"]*";</script>', boot, html)
-        assert n == 1, f'{name}: data base script not found'
+        assert len(SITE_CONFIG_TAG.findall(html)) == 1, f'{name}: the site settings script (site-config.js) not found'
         if not a.public:
             html = html.replace('<meta name="viewport" content="width=device-width, initial-scale=1">',
                                 '<meta name="viewport" content="width=device-width, initial-scale=1">\n  <meta name="robots" content="noindex, nofollow">', 1)
         html = stamp_assets(html.replace('?v=V6_VERSION', f'?v={stamp}'), stamp)
+        html = html.replace(f'"./site-config.js?v={stamp}"', f'"./site-config.js?v={config_stamp}"')
         if not a.public:
             html = re.sub(r'<title>(.*?)</title>', lambda m: f'<title>{m.group(1)} (beta)</title>', html, count=1)
-        p.write_text(html)
+        p.write_text(site_links(html, root))
     if a.public:
         for name in METHODS_PAGES:
             p = out / name
             if p.exists():
                 p.write_text(stamp_assets(p.read_text(), stamp))
-    (out / 'changelog.html').write_text(changelog_html((REPO / 'CHANGELOG.md').read_text(), version).replace('href="VERSIONING.md"', 'href="versioning.html"'))
-    (out / 'versioning.html').write_text(changelog_html((REPO / 'VERSIONING.md').read_text(), version).replace('<title>ALTO changelog</title>', '<title>ALTO versioning</title>'))
+    # Sources and credits (credits.html, on the methods template) ships with every build: the map, the tree page, the
+    # methods pages, the changelog and KYTE link it.
+    p = out / CREDITS_PAGE
+    p.write_text(site_links(stamp_assets(p.read_text(), stamp), root))
+    # Its basemap entries follow the build's channel (credits-page.js reads site-config.js), so it carries the site
+    # settings' own stamp, as the other pages do.
+    p.write_text(p.read_text().replace(f'"./site-config.js?v={stamp}"', f'"./site-config.js?v={config_stamp}"'))
+    # The 404 page (ErrorDocument 404 /404.html) addresses everything from the site root; it carries the build's stamp.
+    p = out / '404.html'
+    p.write_text(stamp_assets(p.read_text(), stamp))
+    (out / 'changelog.html').write_text(site_links(changelog_html((REPO / 'CHANGELOG.md').read_text(), version).replace('href="VERSIONING.md"', 'href="versioning.html"'), root))
+    (out / 'versioning.html').write_text(site_links(changelog_html((REPO / 'VERSIONING.md').read_text(), version).replace('<title>ALTO changelog</title>', '<title>ALTO versioning</title>'), root))
+    # FE-15: no page of the build runs inline script or inline event handlers (the CSP allows scripts from files only).
+    for p in sorted(out.glob('*.html')):
+        html = p.read_text()
+        assert not INLINE_SCRIPT.search(html) and not INLINE_HANDLER.search(html), f'{p.name}: inline script'
     vjs = out / 'version.js'
     vjs.write_text(vjs.read_text().replace(f"version:'{base_version}'", f"version:'{version}'").replace("status:'prototype'", f"status:'{a.channel}'"))
 
@@ -237,7 +331,8 @@ def main():
                  'metadata': f'{root}/release-metadata.json', 'base': f'{root}/data', 'kyte': f'{root}/kyte',
                  'tile_version': 'read at run time from the live metadata (assembly.tile_version)',
                  'tested_with': ['v5.2 (metro-2026.10.10-pointcloud-v5.2)', 'v6 (metro-2026.10.12-pointcloud-v6)',
-                                 'v6.1 (metro-2026.10.13-pointcloud-v6.1)'],
+                                 'v6.1 (metro-2026.10.13-pointcloud-v6.1)', 'v6.2 (metro-2026.10.13-pointcloud-v6.2)',
+                                 'v6.3 preview (metro-2026.10.17-pointcloud-v6.3)'],
                  'derived': derived or None},
         'see': ['CHANGELOG.md', 'VERSIONING.md']
     }

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · Species maxima"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Species maxima · ALTO</title>
+<meta name="description" content="The largest measured tree of each species in Auckland and in local boards, by height, crown spread and crown area, from the 2024 LiDAR survey, with each tree's own crown outline, its margin and its tree page.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- The site settings (data base, tiles' cache stamp), as on the map and the tree page; the tool build writes site-config.js. -->
+<script src="./site-config.js?v=tool-0.2.9"></script>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.8">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.8">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.8">
+<link rel="stylesheet" href="./site-nav.css?v=tool-0.2.9">
+<link rel="stylesheet" href="./maxima.css?v=tool-0.2.8">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./brand/alto-wordmark.png?v=tool-0.2.9" alt="ALTO map" width="282" height="84"></a>
+      <span class="app-bar-context">Species maxima</span>
+    </div>
+  </div>
+</header>
+<nav class="site-nav" aria-label="ALTO pages"><ul><li><a href="./">Map</a></li><li><a href="./maxima.html" aria-current="page">Species maxima</a></li><li><a href="./methods.html">Methods</a></li><li><a href="./credits.html">Sources and credits</a></li><li><a href="./kyte/">KYTE</a></li></ul></nav>
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">ALTO measurements</p>
+    <h1>Species maxima</h1>
+    <dl class="release">
+      <div><dt>Release</dt><dd id="mxRelease">…</dd></div>
+      <div><dt>Survey</dt><dd>2024 LiDAR</dd></div>
+    </dl>
+    <p class="lede" id="mxScope">The largest measured tree of each species, by height, crown spread and crown area.</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#list">Largest by species</a></li>
+      <li><a href="#measured">How these are measured</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="list" aria-labelledby="list-title">
+      <h2 id="list-title">Largest by species</h2>
+      <p class="mx-scope" id="scope">Trees without a named species are not ranked; larger trees may stand elsewhere; not field-verified.</p>
+      <p class="mx-coverage" id="mxCoverage"><b>Coverage.</b> Only trees whose species comes from a record are included: Auckland Council’s tree register or its Notable Trees schedule. Most are on the central isthmus, where the register names species.</p>
+      <div class="mx-controls" id="mxControls" data-loading>
+        <div class="mx-tabs" role="group" aria-label="Measure">
+          <button type="button" data-measure="max_height" aria-pressed="true" disabled>Height</button>
+          <button type="button" data-measure="max_crown_spread" aria-pressed="false" disabled>Crown spread</button>
+          <button type="button" data-measure="max_crown_area" aria-pressed="false" disabled>Crown area</button>
+        </div>
+        <div class="mx-fields">
+          <label class="mx-field" for="mxSpecies"><span>Species</span><input id="mxSpecies" type="search" list="mxSpeciesList" placeholder="Common or Latin name" autocomplete="off" spellcheck="false" disabled></label>
+          <datalist id="mxSpeciesList"></datalist>
+          <label class="mx-field" for="mxArea"><span>Area</span><select id="mxArea" disabled><option>Auckland</option></select></label>
+          <label class="mx-field mx-sort-m" for="mxSort"><span>Sort by</span><select id="mxSort" disabled>
+            <option value="value:desc">Largest first</option><option value="species:asc">Species</option><option value="tree:asc">Tree number</option>
+            <option value="board:asc">Local board</option><option value="n:desc">Trees measured</option></select></label>
+          <a class="btn mx-map" id="mxMap" href="./?maxima=Auckland" aria-disabled="true" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Show on the map</a>
+        </div>
+      </div>
+      <p class="mx-count" id="mxCount" role="status" aria-live="polite">Loading…</p>
+      <div class="table-wrap mx-wrap" tabindex="0" aria-labelledby="list-title" data-loading="list">
+        <table class="data-table mx-table" id="mxTable" hidden>
+          <thead><tr>
+            <th scope="col" class="mx-c">Crown</th>
+            <th scope="col" aria-sort="none"><button type="button" data-sort="species">Species</button></th>
+            <th scope="col" aria-sort="descending"><button type="button" data-sort="value" id="mxValueHead">Height</button></th>
+            <th scope="col" aria-sort="none"><button type="button" data-sort="tree">Tree</button></th>
+            <th scope="col" aria-sort="none"><button type="button" data-sort="board">Local board</button></th>
+            <th scope="col" class="num" aria-sort="none"><button type="button" data-sort="n">Measured</button></th>
+          </tr></thead>
+          <tbody id="mxRows"></tbody>
+        </table>
+      </div>
+      <p class="table-note" id="mxScale"></p>
+      <p class="table-note" id="mxMargin"></p>
+    </section>
+
+    <section id="measured">
+      <h2>How these are measured</h2>
+      <ul id="mxMethod"></ul>
+      <p id="mxMethodLink"></p>
+    </section>
+
+    <section id="sources">
+      <h2>Sources</h2>
+      <ul id="mxSources"></ul>
+      <p id="mxReleaseNote"></p>
+      <p>Every source ALTO uses, with its licence: <a href="./credits.html">Sources and credits</a>.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span> | University of Auckland</span><a href="./credits.html">Sources and credits</a><a href="./">ALTO map</a></p>
+    </div>
+  </div>
+</footer>
+<script src="./version.js?v=tool-0.2.8"></script>
+<script src="./credits.js?v=tool-0.2.8"></script>
+<script src="./species-names.js?v=tool-0.2.9"></script>
+<script src="./species-maxima.js?v=tool-0.2.8"></script>
+<script src="./maxima-page.js?v=tool-0.2.8"></script>
+</body>
+</html>

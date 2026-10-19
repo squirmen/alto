@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use ALTO, please cite it as below."
 title: "ALTO: Aotearoa Long-term Tree Observatory"
-version: "v6.1 (2026-10-13 Auckland release), tool 0.2.4"
-date-released: 2026-10-13
+version: "v6.3 (2026-10-17 Auckland release), tool 0.2.13"
+date-released: 2026-10-19
 url: "https://alto.tfwelch.com"
 license: PolyForm-Noncommercial-1.0.0
 repository-code: "https://github.com/squirmen/alto"
@@ -23,3 +23,27 @@ authors:
     given-names: Timothy F.
     affiliation: "Better Places Lab, Waipapa Taumata Rau | University of Auckland"
     email: t.welch@auckland.ac.nz
+references:
+  - type: dataset
+    title: "Auckland Part 1 and Part 2 LiDAR (2024): point clouds, 1 m DEM and DSM"
+    authors:
+      - name: "Toitū Te Whenua Land Information New Zealand"
+    publisher:
+      name: "LINZ Data Service"
+    license: CC-BY-4.0
+    url: "https://data.linz.govt.nz/layer/121990"
+    notes: >-
+      Flown by Woolpert, 30 April to 4 November 2024. Sourced from the LINZ Data Service and licensed by Regional
+      Software Holdings Limited (Part 1 DEM and DSM, Part 2 DEM) and Auckland Council (Part 2 DSM) for re-use under
+      the Creative Commons Attribution 4.0 International licence.
+  - type: dataset
+    title: "Auckland Council tree register (incl. Auckland Transport)"
+    authors:
+      - name: "Auckland Council"
+    notes: "TreeRegisterPoints, retrieved June 2026. The public service has required a token since October 2026."
+  - type: database
+    title: "OpenStreetMap"
+    authors:
+      - name: "OpenStreetMap contributors"
+    license: ODbL-1.0
+    url: "https://www.openstreetmap.org/copyright"

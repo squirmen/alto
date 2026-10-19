@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en-NZ" data-theme="light" style='--print-running: "ALTO · Methods"'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods · ALTO</title>
+<meta name="description" content="How each ALTO data release was made: what changed, the methods, the checks and the limits, newest release first.">
+<meta name="theme-color" content="#4a6f46">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADiklEQVRYhe2XX2wTBRzHPzeP7nr9s7YxG7oojBEGo0NlbOI2E4aGqz2CMbxso7DMVx+8GCPRYOKLifGBbP6LYhQBXxhODbGyEjNfZANxD0tBEgczMrduY52opLB2a3noWsvW9q5Eshd+yT3c3ff3+33v9+d7d0IikWA5rWhZs98nAIiFgFVN2QoM6MCe9HcGfjYas9AKtP9PmLQJRrdA1RQJCAEOHegMUO7vDNwyEreQCuwykBzABew0GrQQAh33AmuoBaqmPAz8gfGhnQMe8XcGJvSARivgKyA5C1ifEaBRAndMtlkyU7WqqiCfXKbbAlVT6oFzqXNPw3N4tnpZU17JUf9hTvR1IyDkcq/zdwZ+yRffSAXST+KudLPX087UzASRWxFaduyh65X3MRebdX3visDC7rcAOGwlHHjxLfqDP4EAPw7+gGmFiTXla9nr3YfL7swWok3VFNNdEyC5zy53ZQ0fvXYI8QGR+fg8/cEzWMxWRsauJEFNz9OyY082f11N0CPQAdC8ZTtW2UYoPI7L5qLUWYpdtiMI//X+5uxNHLasOpVXE3IOoaopK4HRBAnx+Ns9yJJMPB4neHmIUHicEquDp2oa0/gbkX+xyFa+7jvB6bO9hMJpCcirCfkq4ANEAYFjp75IgouKeGzdE6x7dD09fd0c8X9ONBZl7NqfWGUb5y+ew26x80Lz7sxqiEBbriT5xCU9wafPBnDanFSt2sD09SlkycLw6GV+uzrMRHiCV337GZ28ysw/YSKzESSTxD5vO+8d70qF6AAOGq6AqilbAHfqPDYX48tTx3jz49c58t1h1q+uRhST3MenxxkInkEySczH5/l15CJlrpU8W69kipVb1ZTNhgmQc38Frt/4m95+P42bmgD4fWyEd4++w8sHX+LaX1Ns29zM6ocqAJicmcx0zjqMS4ZwYW9DJFcoq7kra2jz+Hjjw/00Pf401RXVzMaiXLgSpGFTI3KxTO/A9wwND2W6TZP8TohmXsw2A7vyJQdYIYqUOctoVdqwSFYOffNJ+t7gpZzK+yDgBb7NvJitBbryua12OyU2B9FYlM9OfqoHz7QlbbiDwMLue/JFqNtYT3PtM3zQ3UVP31cU+GPjVTWlNCcBkvua973vbUgq6+Cl84UkTtkSTVhMoBWILjrmUjelYonqio0A1G6o00u2OE7qaM0EGf4qvle27H9G9wncBvVhEcVqo6Z5AAAAAElFTkSuQmCC">
+<meta name="color-scheme" content="light">
+<link rel="preload" href="./fonts/InterVariable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./fonts.css?v=tool-0.2.9">
+<link rel="stylesheet" href="./tokens.css?v=tool-0.2.9">
+<link rel="stylesheet" href="./methods.css?v=tool-0.2.9">
+<link rel="stylesheet" href="./site-nav.css?v=tool-0.2.9">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<header class="app-bar">
+  <div class="app-bar-inner">
+    <div class="app-bar-row">
+      <a class="app-bar-mark" href="./"><img src="./brand/alto-wordmark.png?v=tool-0.2.9" alt="ALTO map" width="282" height="84"></a>
+      <span class="app-bar-context">Methods</span>
+    </div>
+  </div>
+</header>
+<nav class="site-nav" aria-label="ALTO pages"><ul><li><a href="./">Map</a></li><li><a href="./maxima.html">Species maxima</a></li><li><a href="./methods.html" aria-current="page">Methods</a></li><li><a href="./credits.html">Sources and credits</a></li><li><a href="./kyte/">KYTE</a></li></ul></nav>
+
+<main id="main" class="doc" tabindex="-1">
+  <header class="doc-head">
+    <p class="eyebrow">ALTO methods</p>
+    <h1>Methods</h1>
+    <p class="lede">How each data release was made: what changed, the methods, the checks and the limits. Newest release first; the map shows the current release, and each release’s page links the others. <a href="./how-alto-is-made.html">How ALTO is made</a> gives the overview.</p>
+  </header>
+
+  <nav class="toc" aria-labelledby="toc-title">
+    <h2 class="toc-title" id="toc-title">Contents</h2>
+    <ol>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#releases">Releases</a></li>
+      <li><a href="#release-6-2">Release 6.2</a></li>
+      <li><a href="#release-6-1">Release 6.1</a></li>
+      <li><a href="#release-6">Release 6</a></li>
+      <li><a href="#release-5-2">Release 5.2</a></li>
+      <li><a href="#release-5-1">Release 5.1</a></li>
+      <li><a href="#release-5">Release 5</a></li>
+    </ol>
+  </nav>
+
+  <div class="doc-body">
+    <section id="overview" aria-labelledby="overview-title">
+      <h2 id="overview-title">Overview</h2>
+      <ul class="link-list">
+        <li><a href="./how-alto-is-made.html">How ALTO is made</a><span class="meta">Sources, crowns, record links, estimates, reviews and releases</span></li>
+      </ul>
+    </section>
+    <section id="releases" aria-labelledby="releases-title">
+      <h2 id="releases-title">Releases</h2>
+      <ol class="mi-list">
+        <li class="mi-release" data-release="6.3" id="release-6-3">
+          <h3><a href="./v63-methods.html">Release 6.3: Benefit value, height checks and group areas</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-17">17 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+          <p>Makes the benefit value stormwater plus carbon (about NZ$76.7 million a year, down from about NZ$295 million) and withholds PM2.5 removal and the cooling index; checks heights and record-to-crown links; stores the height class and crown replacement time; joins Notable Group of Trees areas and Schedule 10 entries; records every source’s licence; fixes species names. Tree numbers, positions and crown outlines are those of release 6.2.</p>
+        </li>
+        <li class="mi-release is-current" data-release="6.2" id="release-6-2">
+          <h3><a href="./v62-methods.html" aria-current="true">Release 6.2: Reviewer-confirmed crowns and palm-type crowns</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-13">13 Oct 2026</time><span class="mi-current"> · Current release</span></p>
+          <p>Applies reviewer confirmations to 326 records and shows 16,226 crowns that release 6 left undetermined as palm-type. Tree numbers, positions and crown outlines are those of release 6.1.</p>
+        </li>
+        <li class="mi-release" data-release="6.1" id="release-6-1">
+          <h3><a href="./v61-methods.html">Release 6.1: Permanent tree numbers</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-13">13 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+          <p>Issues 4,200,336 permanent tree numbers (3,574,821 markers on the map and 625,515 earlier LiDAR detections kept as records), publishes a table that resolves every tree ID and crown key ALTO has published, and applies the corrections ledger in full.</p>
+        </li>
+        <li class="mi-release" data-release="6" id="release-6">
+          <h3><a href="./v6-methods.html">Release 6: Growth form and smoothed crown outlines</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-12">12 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+          <p>Estimates a growth form for each crown of the 2024 LiDAR survey, redraws every crown with a smoothed outline of the same cells and revises the benefit estimates with the growth form.</p>
+        </li>
+        <li class="mi-release" data-release="5.2" id="release-5-2">
+          <h3><a href="./v52-methods.html">Release 5.2: Linking records to crowns</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-10">10 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+          <p>Links records that release 5.1 left without a crown to the crowns they stand on.</p>
+        </li>
+        <li class="mi-release" data-release="5.1" id="release-5-1">
+          <h3><a href="./v51-methods.html">Release 5.1: Restoring links between records and crowns</a></h3>
+          <p class="mi-meta"><time datetime="2026-10-08">8 Oct 2026</time><span class="mi-current" hidden> · Current release</span></p>
+          <p>Reconnects existing records to existing crowns. The canopy is not redrawn.</p>
+        </li>
+        <li class="mi-release" data-release="5" id="release-5">
+          <h3><a href="./v5-methods.html">Release 5: Redrawing Auckland’s canopy</a></h3>
+          <p class="mi-meta"><time datetime="2026-09-23">23 Sep 2026</time><span class="mi-current" hidden> · Current release</span></p>
+          <p>Redraws the canopy from the 2024 LiDAR survey and aerial imagery: 3,352,851 LiDAR crowns 3&nbsp;m or taller across all 3,149 completed tiles of the survey.</p>
+        </li>
+      </ol>
+      <p>Release 4 (18 Sep 2026) and earlier have no methods page. How Species maxima are measured: <a href="./maxima.html#measured">Species maxima</a>. Every source ALTO uses, with its licence: <a href="./credits.html">Sources and credits</a>.</p>
+      <p>The map tool has its own version number, shown in About. Every change to the tool and to the data files, in developer terms, is listed in the <a href="./changelog.html">changelog</a>.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-body">
+      <p class="footer-name"><strong>ALTO</strong> · Aotearoa Long-term Tree Observatory</p>
+      <p class="credit"><a class="bpl" href="https://betterplaces.blogs.auckland.ac.nz" target="_blank" rel="noopener"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="11"><path d="M28 12H52V36"/><path d="M36 52H12V28"/></g></svg>Better Places Lab</a><span><span lang="mi">Waipapa Taumata Rau</span> | University of Auckland</span><a href="./credits.html">Sources and credits</a><span>Updated 13 Oct 2026</span></p>
+    </div>
+  </div>
+</footer>
+<script src="./methods-index.js?v=tool-0.2.9"></script>
+</body>
+</html>

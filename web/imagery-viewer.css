@@ -1,0 +1,74 @@
+/* The larger view of an aerial survey (tree-imagery-viewer.js): a dialog on a desktop, a full-screen sheet on a
+   phone. Shared by the tree page ("Aerial imagery through time") and the map (a change's "Aerial photos of this
+   spot"); the map loads it when the view is first opened. Its buttons use .ti-yb (tree-instrument.css) and .btn. */
+html.ixv-lock { overflow: hidden; }
+.ixv { box-sizing: border-box; width: min(1180px, calc(100vw - 48px)); height: min(920px, calc(100vh - 48px)); height: min(920px, calc(100dvh - 48px)); max-width: none; max-height: none; margin: auto; padding: 0; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-3); overflow: hidden; overscroll-behavior: contain; }
+.ixv[open] { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto auto auto; }
+.ixv::backdrop { background: var(--color-scrim, rgb(15 20 17 / 45%)); }
+.ixv-head { display: flex; align-items: center; gap: var(--space-3); min-width: 0; padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); }
+.ixv-title { min-width: 0; margin: 0; overflow: hidden; font: 600 var(--fs-lg)/1.25 var(--font-sans); font-variant-numeric: var(--numeric-data); white-space: nowrap; text-overflow: ellipsis; }
+.ixv-title span { margin-left: var(--space-1); font-weight: 400; color: var(--color-text-secondary); }
+.ixv-n { flex: 0 0 auto; margin: 0 0 0 auto; font: var(--text-caption); font-variant-numeric: var(--numeric-data); color: var(--color-text-muted); white-space: nowrap; }
+.ixv .ixv-ib { flex: 0 0 auto; width: var(--control-md); padding: 0; }
+.ixv [aria-disabled="true"] { opacity: .4; cursor: default; }
+.ixv .btn[aria-disabled="true"]:hover { background: var(--color-surface); }
+.ixv-stage { position: relative; min-height: 0; overflow: hidden; background: var(--neutral-900); touch-action: none; user-select: none; -webkit-user-select: none; outline: none; }
+.ixv-stage:focus-visible::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 3px var(--color-focus); pointer-events: none; }
+.ixv-stage.is-zoomed { cursor: grab; }
+.ixv-stage.is-drag { cursor: grabbing; }
+.ixv-stage canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.ixv-load, .ixv-msg { position: absolute; margin: 0; background: var(--viz-overlay-halo); color: var(--neutral-0); font: var(--text-caption); }
+.ixv-load { top: var(--space-3); right: var(--space-3); padding: 2px var(--space-2); border-radius: var(--radius-pill); }
+.ixv-msg { top: 50%; left: 50%; max-width: min(420px, 80%); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); text-align: center; transform: translate(-50%, -50%); }
+/* After a failed read (FE-18): outside the photograph (role=img), right under it. */
+.ixv-again { margin: 0; padding: var(--space-2) var(--space-3); text-align: center; background: var(--color-surface); }
+.ixv-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-4); padding: var(--space-2) var(--space-3); border-top: 1px solid var(--color-border-subtle); }
+.ixv-years { display: flex; flex: 1 1 360px; align-items: center; gap: var(--space-1); min-width: 0; }
+.ixv-strip { display: flex; gap: 2px; min-width: 0; padding: 2px; overflow-x: auto; border-radius: var(--radius-sm); background: var(--color-surface-sunken); scrollbar-width: none; }
+.ixv-strip::-webkit-scrollbar { display: none; }
+.ixv-strip .ti-yb { flex: 0 0 auto; }
+/* The scanned historical surveys in the year strip: the word "Scanned" before them, a rule between them and the
+   surveys since 2010. */
+.ixv-gl { flex: 0 0 auto; align-self: center; padding: 0 var(--space-1-5) 0 var(--space-1); font: 600 var(--fs-xs)/1 var(--font-sans); color: var(--color-text-muted); }
+.ixv-gsep { flex: 0 0 1px; align-self: stretch; margin: 4px var(--space-1); background: var(--color-border-strong); }
+/* More years than fit: the strip fades at the side that scrolls (tree-imagery-viewer.js sets data-more). */
+.ixv-strip[data-more~="start"] { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
+.ixv-strip[data-more~="end"] { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
+.ixv-strip[data-more~="start"][data-more~="end"] { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
+.ixv-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.ixv-seg { display: flex; gap: 2px; padding: 2px; border-radius: var(--radius-sm); background: var(--color-surface-sunken); }
+.ixv-seg .ti-yb { font: 600 var(--fs-sm)/1 var(--font-sans); }
+.ixv-cap { padding: 0 var(--space-4); }
+.ixv-cap p, .ixv-help { margin: 0; font: var(--text-caption); color: var(--color-text-muted); }
+.ixv-cap .ixv-what { color: var(--color-text-secondary); font-variant-numeric: var(--numeric-data); }
+.ixv-what b { font-weight: 600; color: var(--color-text); }
+.ixv-attr a { color: var(--color-text-link); }
+.ixv-help { padding: var(--space-1) var(--space-4) var(--space-3); }
+.ixv-help-t { display: none; }
+.ixv-short { display: none; }
+@media (pointer: coarse) {
+  .ixv-help-k { display: none; } .ixv-help-t { display: inline; }
+  .ixv .ixv-ib { width: var(--target-touch); }
+  .ixv-seg .ti-yb { min-width: 32px; }
+}
+@media screen and (max-width: 640px) {
+  .ixv { width: 100vw; height: 100vh; height: 100dvh; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+  .ixv-head { padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3); }
+  .ixv-bar { gap: var(--space-2); padding: var(--space-2); }
+  .ixv-years { flex-basis: 100%; }
+  .ixv-tools { width: 100%; justify-content: space-between; gap: var(--space-1); }
+  .ixv-long { display: none; } .ixv-short { display: inline; }
+  .ixv-cap { padding: 0 var(--space-3); }
+  .ixv-help { padding: var(--space-1) var(--space-3) var(--space-2); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ixv[open] { animation: ixv-in var(--dur-base) var(--ease-standard); }
+}
+@media screen and (prefers-reduced-motion: no-preference) and (max-width: 640px) {
+  .ixv[open] { animation-name: ixv-up; }
+}
+@keyframes ixv-in { from { opacity: 0; transform: scale(.98); } }
+@keyframes ixv-up { from { opacity: 0; transform: translateY(24px); } }
+/* A change's photos (the map) mark the surveys before and after it in the year strip: a word, not a colour. */
+.ixv-strip .ti-yb .ixv-mark { font-weight: 600; color: var(--color-text); }
+@media print { .ixv { display: none !important; } }

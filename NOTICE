@@ -12,13 +12,35 @@ International (CC BY-NC 4.0); see docs/LICENSE.md.
 The Better Places Lab name and logo (web/brand/) are not covered by either licence and may not be
 reused without permission.
 
-Third-party material keeps its own licence:
+Third-party material keeps its own licence. Every source, with its licence and a link to the original:
+https://alto.tfwelch.com/credits.html
+
+Included in this repository:
 - web/vendor/three/: three.js, MIT License (web/vendor/three/LICENSE).
+- web/vendor/maplibre-gl@4.7.1/: MapLibre GL JS 4.7.1 (MapLibre contributors), BSD-3-Clause
+  (web/vendor/maplibre-gl@4.7.1/LICENSE.txt); web/vendor/pmtiles@3.0.7/: PMTiles 3.0.7 (Protomaps),
+  BSD-3-Clause, which bundles fflate (MIT) (web/vendor/pmtiles@3.0.7/NOTICE.txt). The web map loads both
+  from unpkg.com and uses these copies only when unpkg.com cannot be reached.
 - web/fonts/: the Inter typeface (The Inter Project Authors), Latin subsets served as the family
   "ALTO Inter", SIL Open Font License 1.1 (web/fonts/Inter-LICENSE-OFL.txt).
-- pipeline/base/config/notable_tree_identity_registry.json: features from Auckland Council's
-  Notable Trees Overlay, Auckland Council open data, CC BY 4.0.
-- Data the pipeline downloads or produces from Auckland Council, Auckland Transport and
-  Toitu Te Whenua LINZ (CC BY 4.0) and from OpenStreetMap (Open Database Licence) remains under
-  those terms. Exports containing OpenStreetMap-derived records carry the ODbL share-alike
-  condition.
+- pipeline/base/config/notable_tree_identity_registry.json: features from Auckland Council's Notable
+  Trees Overlay (Plans and Places, Auckland Council), CC BY 4.0.
+
+Used but not included:
+- DINOv2 (Meta, Apache License 2.0), LightGBM (Microsoft, MIT), DeepForest (Weecology, MIT) and
+  torchvision (BSD-3-Clause), used by the growth-form pipeline.
+- Data from Auckland Council, Toitū Te Whenua LINZ and the licensors it names (Auckland Council,
+  Regional Software Holdings Limited, AAM NZ, NIWA), the Department of Conservation (Crown copyright)
+  and Stats NZ, CC BY 4.0, except: the Council's kauri survey records (Ruru ObsKauri Tiaki; Bio Info
+  Team, Environmental Services, Auckland Council), which are under Auckland Council's own terms; and
+  the Auckland Council tree register (incl. Auckland Transport), retrieved June 2026, © Auckland
+  Council, whose public service has required a token since October 2026.
+- Data from OpenStreetMap: © OpenStreetMap contributors, Open Database Licence 1.0. Records derived
+  from it remain under the ODbL, and exports that contain them carry its share-alike condition.
+- i-Tree Database values (USDA Forest Service and cooperators), under i-Tree's terms.
+- iNaturalist observations (iNaturalist contributors): tree pages show a record's facts and its
+  observer's credit only where the record's own licence allows, and otherwise link to the record; no
+  photographs, notes or identifications are copied.
+- Street-level imagery on Mapillary (Mapillary contributors, CC BY-SA 4.0): tree pages link to a
+  photograph's page; no image is copied or shown.
+- Esri basemaps, used by the web map under Esri's terms; no Esri content is included.

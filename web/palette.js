@@ -13,8 +13,14 @@
  *    from slot 1 green under deuteranopia: Council Parks and "owner not recorded" would merge.
  *  - Height classes use sequential steps 300, 500, 700 and 900. Neighbouring steps 400–700 are ΔE2000 7.1–7.7
  *    apart for every viewer.
- * Categories that share a colour differ by mark: a ring (protected), a hollow marker (no crown linked), a
- * dashed ring (possible duplicate), a dashed crown outline (crown drawn from the record). */
+ * Categories that share a colour differ by mark: a ring (Notable Trees schedule), a hollow marker (no crown linked), a
+ * dashed ring (possible duplicate), a dashed crown outline (crown drawn from the record).
+ *
+ * Never red or brick against green or olive with the same mark (the hard rule; the test checks it in normal vision):
+ *  - Growth form: "Broadleaf, leaf habit not determined" is the light green of the sequential ramp (--viz-seq-300) in
+ *    place of slot 5 brick, which stood beside slot 1 green (evergreen broadleaf) with the same dot (tool 0.2.9).
+ *  - Source: the Notable Trees schedule keeps slot 5 brick, drawn as a dot with the schedule ring (every schedule record
+ *    carries it on the map), so it differs by mark from Council tree register · Parks (slot 1 green). */
 (function(root){
   'use strict';
   const FALLBACK={
@@ -34,7 +40,7 @@
     '--viz-src-council-parks':'--viz-cat-1','--viz-src-auckland-transport':'--viz-cat-2','--viz-src-community':'--viz-cat-3',
     '--viz-src-lidar-detected':'--viz-cat-4','--viz-src-notable-schedule':'--viz-cat-5',
     '--viz-form-evergreen-broadleaf':'--viz-cat-1','--viz-form-conifer':'--viz-cat-2','--viz-form-deciduous-broadleaf':'--viz-cat-3',
-    '--viz-form-palm-fern':'--viz-cat-4','--viz-form-broadleaf-undetermined':'--viz-cat-5',
+    '--viz-form-palm-fern':'--viz-cat-4','--viz-form-broadleaf-undetermined':'--viz-seq-300',
     '--viz-land-park':'--viz-cat-1','--viz-land-street':'--viz-cat-2','--viz-land-institution':'--viz-cat-3','--viz-land-private':'--viz-cat-4'};
   const MAP_OTHER='--neutral-600';
   let css=null;
@@ -48,7 +54,7 @@
     return null;
   }
 
-  // mark: dot | ring | hollow | dashed-ring | triangle | diamond (point marks), crown | crown-dashed (a crown's
+  // mark: dot | ringed-dot | ring | hollow | dashed-ring | triangle | diamond (point marks), crown | crown-dashed (a crown's
   // outline and light fill), fill (an area at `alpha` opacity), outline | dashed-outline (a parcel or board edge),
   // dashed-line (a link). kind: categorical | ordinal | diverging.
   const r=(key,label,tok,mark='dot',extra={})=>({key,label,token:tok,mark,...extra});
@@ -57,8 +63,9 @@
       r('register_parks','Council tree register · Parks','--viz-src-council-parks'),
       r('register_at','Council tree register · Auckland Transport','--viz-src-auckland-transport'),
       r('register_other','Council tree register · owner not recorded',MAP_OTHER),
-      r('notable','Notable Trees schedule','--viz-src-notable-schedule'),
-      r('community','Community records','--viz-src-community','dot',{keys:['osm','kauri'],detail:'OpenStreetMap, RŪRU kauri survey'}),
+      // Every Notable Trees schedule record is drawn with the schedule ring, so it differs by mark from Council Parks.
+      r('notable','Notable Trees schedule','--viz-src-notable-schedule','ringed-dot',{detail:'With the schedule ring'}),
+      r('community','Community records','--viz-src-community','dot',{keys:['osm','kauri'],detail:'OpenStreetMap, Ruru kauri survey'}),
       r('lidar','LiDAR-detected tree','--viz-src-lidar-detected','dot',{detail:'Found in the 2024 LiDAR survey; no record describes it'})]},
     structure:{title:'Growth form',kind:'categorical',estimate:true,note:'Estimated from the 2024 LiDAR survey and aerial imagery. A recorded species takes precedence.',rows:[
       r('evergreen','Evergreen broadleaf','--viz-form-evergreen-broadleaf'),
@@ -67,16 +74,16 @@
       r('palm_type','Palm, cabbage tree or tree fern','--viz-form-palm-fern'),
       r('broadleaf','Broadleaf, leaf habit not determined','--viz-form-broadleaf-undetermined'),
       r('other','Not determined or not estimated',MAP_OTHER,'dot',{keys:['not_determined','none']})]},
-    height:{title:'Height',kind:'ordinal',note:'Highest LiDAR return in the crown, 2024 LiDAR survey.',rows:[
+    height:{title:'Height',kind:'ordinal',note:'Highest point of the 2024 LiDAR canopy height model within the crown.',rows:[
       r('h0','Under 5 m','--viz-seq-300','dot',{from:0,to:5}),
       r('h5','5–15 m','--viz-seq-500','dot',{from:5,to:15}),
       r('h15','15–25 m','--viz-seq-700','dot',{from:15,to:25}),
       r('h25','25 m and over','--viz-seq-900','dot',{from:25,to:null}),
       r('none','No height: no crown linked',MAP_OTHER,'hollow')]},
-    change:{title:'Change since 2013',kind:'diverging',note:'Earlier tree canopy and the 2024 crowns matched across the 2013, 2016 and 2024 LiDAR surveys by overlap and height, and checked in dated aerial photos. Removed: the top of an earlier crown is now open ground or a new structure. New: a 2024 crown at least 5 m tall where the earlier survey found no canopy. In a blind check of aerial photos about nine in ten shown changes were confirmed (13 Oct 2026). Partial losses, and young trees already growing in 2013, are not shown.',rows:[
-      r('removed_to_open','Removed by 2024','--viz-div-loss-2'),
-      r('established_since_2013','New since 2013','--viz-div-gain-2'),
-      r('established_since_2016','New since 2016','--viz-div-gain-1')]},
+    change:{title:'Canopy change since 2013 (central isthmus only)',kind:'diverging',note:'Canopy in the 2013 and 2016 LiDAR surveys matched to the 2024 crowns by overlap and height, with dated aerial photos. Shows about 83,000 changes. In a blind check of 315 shown changes, 92% (88–95%) agreed with the reference labels from machine-learning image-interpretation models (two, with a third for disagreements; no field check). About 114,000 (91,000–137,000) more likely changes are not shown, mostly partial losses.',rows:[
+      r('removed_to_open','Canopy gone by 2024 (cause not known)','--viz-div-loss-2'),
+      r('established_since_2013','Grew into canopy since 2013 (under 2 m in 2013, 5 m or taller in 2024)','--viz-div-gain-2'),
+      r('established_since_2016','Grew into canopy since 2016 (under 2 m in 2016, 5 m or taller in 2024)','--viz-div-gain-1')]},
     quality:{title:'Link status',kind:'ordinal',note:'How a record is tied to a crown found in the 2024 LiDAR survey.',rows:[
       r('linked','Linked','--viz-conf-4'),
       r('probable','Probable link','--viz-conf-2'),
@@ -97,7 +104,7 @@
       r('other','Other / unknown',MAP_OTHER,'dot',{keys:['other','unknown']})]},
     // Marks that mean the same in every colour mode.
     marks:{title:'In every mode',kind:'categorical',rows:[
-      r('protected','Protected','--color-protected','ring',{detail:'Notable Trees schedule (Auckland Unitary Plan)'}),
+      r('protected','Notable Trees schedule','--color-protected','ring',{detail:'Linked to an entry of Schedule 10 (Auckland Unitary Plan)'}),
       r('unlinked','No crown linked','--viz-conf-none','hollow',{detail:'Hollow marker, outlined in the tree’s colour'}),
       r('crown','Crown, 2024 LiDAR survey','--viz-seq-700','crown',{detail:'Outlined in the tree’s colour'}),
       r('drawn','Crown drawn from the record','--viz-seq-700','crown-dashed',{detail:'Dashed outline, awaiting confirmation'})]},
@@ -154,7 +161,7 @@
   }
   const other=()=>token(MAP_OTHER);
   // The marks shown with a colour mode: a mode that already has a "no crown linked" row keeps one row for it;
-  // "Change since 2013" fades the tree markers, so it shows only its own rows.
+  // "Canopy change since 2013" fades the tree markers, so it shows only its own rows.
   function marksFor(mode){
     if(mode==='change')return [];
     const hollow=LEGENDS[mode]?.rows.some(x=>x.mark==='hollow');

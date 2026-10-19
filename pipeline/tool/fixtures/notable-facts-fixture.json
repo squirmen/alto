@@ -1,0 +1,208 @@
+{
+"_note": "Test fixture: a subset of notable_facts.json (alto-notable-facts/1, built 13 Oct 2026), plus synthetic tree TTESTUV1 (an unverified Council position without a GlobalID, and a group).",
+"schema": "alto-notable-facts/1",
+"release": "20261013-v6.1",
+"built": "2026-10-13",
+"links": {
+"council_entry_by_gid": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Notable_Trees_Overlay/FeatureServer/0/query?where=GlobalID%3D%27{gid}%27&outFields=OBJECTID%2CSCHEDULE%2CNAME%2CTYPE&f=html",
+"council_entry_by_schedule": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Notable_Trees_Overlay/FeatureServer/0/query?where=SCHEDULE%3D%27{schedule}%27&outFields=OBJECTID%2CSCHEDULE%2CNAME%2CTYPE&f=html",
+"council_group_by_schedule": "https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/Notable_Group_of_Trees_Overlay/FeatureServer/0/query?where=SCHEDULE%3D%27{schedule}%27&outFields=OBJECTID%2CSCHEDULE%2CNAME&f=html",
+"schedule_10_pdf": "https://unitaryplan.aucklandcouncil.govt.nz/Images/Auckland%20Unitary%20Plan%20Operative/Chapter%20L%20Schedules/Schedule%2010%20Notable%20Trees%20Schedule.pdf",
+"tree": "https://alto.tfwelch.com/tree/{tree}"
+},
+"credits": {
+"council_schedule_10": {
+"name": "Auckland Unitary Plan Schedule 10 Notable Trees (Notable Trees Overlay, Notable Group of Trees Overlay)",
+"by": "Auckland Council",
+"licence": "CC BY 4.0",
+"as_at": "2026-06-04",
+"checked": "2026-10-13"
+},
+"nz_tree_register": {
+"name": "New Zealand Tree Register",
+"by": "New Zealand Notable Trees Trust",
+"url": "https://www.treeregister.nz/",
+"use": "identifier and link only"
+}
+},
+"copy": {
+"council_schedule_10": "Listed in Auckland Council's Notable Trees schedule (Auckland Unitary Plan Schedule 10), item {schedule}: \"{name}\".",
+"council_group": "Stands inside a group listed in Auckland Council's Notable Trees schedule, item {schedule}: \"{name}\".",
+"nz_tree_register": "On the New Zealand Tree Register as {id}. ALTO links this tree to that entry; the register holds its measurements, history and photographs.",
+"nz_former_site": "Site of {id} on the New Zealand Tree Register; the registered tree is no longer standing.",
+"flagged": "ALTO highlights this tree because {sources} list it."
+},
+"trees": {
+"TSG2SSKH": {
+"schedule": [
+{
+"schedule": "297",
+"name": "Norfolk Island Pine",
+"position": "verified",
+"gid": "60d9f6ad-c8ef-49a8-b8ad-1888b99d8221"
+}
+],
+"flagged_by": [
+"council_schedule_10"
+],
+"alto": {
+"h": 46.5,
+"a": 154.0,
+"s": 15.2
+},
+"maxima": [
+35,
+36
+]
+},
+"T47VMHR8": {
+"schedule": [
+{
+"schedule": "212",
+"name": "South Queensland Kauri",
+"position": "verified",
+"gid": "86d15d82-085a-48d3-acfe-9a53fd6fa97a"
+}
+],
+"nztr": [
+{
+"id": "AR/0367",
+"url": "https://www.treeregister.nz/tree/view/367",
+"status": "accepted",
+"reviewed": "2026-10-06"
+}
+],
+"flagged_by": [
+"council_schedule_10",
+"nz_tree_register"
+],
+"alto": {
+"h": 26.8,
+"a": 370.0,
+"s": 23.1
+}
+},
+"T055W90F": {
+"schedule": [
+{
+"schedule": "388",
+"name": "Pohutukawa",
+"position": "verified",
+"gid": "e5b95c15-8478-4748-bdce-df6474002242"
+}
+],
+"flagged_by": [
+"council_schedule_10"
+],
+"alto": {
+"h": 21.9,
+"a": 388.0,
+"s": 24.2
+},
+"maxima": [
+128,
+129
+]
+},
+"TXHC62Y9": {
+"nztr": [
+{
+"id": "AR/0591",
+"url": "https://www.treeregister.nz/tree/view/591",
+"status": "former_site",
+"reviewed": "2026-10-05"
+}
+],
+"flagged_by": [
+"nz_tree_register"
+],
+"alto": {
+"h": 7.2,
+"a": 30.0,
+"s": 6.6
+}
+},
+"TX1KVWKM": {
+"nztr": [
+{
+"id": "AR/0581",
+"url": "https://www.treeregister.nz/tree/view/581",
+"status": "accepted",
+"reviewed": "2026-10-06"
+}
+],
+"flagged_by": [
+"nz_tree_register"
+],
+"alto": {
+"h": 12.6,
+"a": 199.0,
+"s": 20.2
+},
+"held_schedule": [
+"15"
+]
+},
+"T00JGB4T": {
+"group": [
+{
+"schedule": "128",
+"name": "Plane Tree"
+}
+],
+"flagged_by": [
+"council_schedule_10"
+],
+"alto": {
+"h": 15.2,
+"a": 343.0,
+"s": 23.6
+}
+},
+"T8PZBYKH": {
+"schedule": [
+{
+"schedule": "1811",
+"name": "Gum / Smooth Barked Apple",
+"position": "verified",
+"gid": "3cb8f959-bf61-41ba-8dac-abecbfbc6fdc"
+}
+],
+"nztr": [
+{
+"id": "AR/0334",
+"url": "https://www.treeregister.nz/tree/view/334",
+"status": "accepted",
+"reviewed": "2026-10-06"
+}
+],
+"flagged_by": [
+"council_schedule_10",
+"nz_tree_register"
+],
+"alto": {
+"h": 26.6,
+"a": 520.0,
+"s": 31.2
+}
+},
+"TTESTUV1": {
+"schedule": [
+{
+"schedule": "9999",
+"name": "Oak",
+"position": "unverified"
+}
+],
+"group": [
+{
+"schedule": "2924",
+"name": "Native Bush"
+}
+],
+"flagged_by": [
+"council_schedule_10"
+]
+}
+}
+}

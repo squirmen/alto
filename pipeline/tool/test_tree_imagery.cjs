@@ -83,7 +83,12 @@ assert.throws(()=>X.parseTiff(new ArrayBuffer(64)),/Not a TIFF/);
 (async()=>{
   const {bytes,tileAt}=tiff(),reqs=[];
   const SURVEY={...X.SURVEYS[X.SURVEYS.length-1],id:'test',path:'test/rgb/2193'};
+  // The coverage index (imagery-coverage.json, FE-18): survey "test" holds BA32_1000_3603 (row 36, column 3: bit 1752),
+  // survey "none" holds no file on that sheet; any other survey is not in the index.
+  const bits=new Uint8Array(313);bits[1752>>3]|=1<<(1752&7);
+  const INDEX={grid:{1000:[50,50]},surveys:{test:{scale:1000,sheets:{BA32:Buffer.from(bits).toString('base64')}},none:{scale:1000,sheets:{BA32:Buffer.from(new Uint8Array(313)).toString('base64')}}}};
   globalThis.fetch=async(url,init)=>{
+    if(String(url).includes('imagery-coverage.json')){reqs.push(['imagery-coverage.json',null,null]);return {status:200,ok:true,json:async()=>INDEX};}
     const m=/bytes=(\d+)-(\d+)/.exec(init?.headers?.Range||'');reqs.push([String(url).split('/').pop(),m?+m[1]:null,m?+m[2]:null]);
     if(!String(url).endsWith('/BA32_1000_3603.tiff'))return {status:404,ok:false,arrayBuffer:async()=>new ArrayBuffer(0)};
     const a=+m[1],b=Math.min(+m[2],bytes.length-1);
@@ -98,19 +103,38 @@ assert.throws(()=>X.parseTiff(new ArrayBuffer(64)),/Not a TIFF/);
   const r=await X.read(SURVEY,v,{makeCanvas:canvas});
   assert.equal(r.status,'ready',JSON.stringify(r));
   assert.equal(r.res,0.15);
-  assert.deepEqual(reqs[0],['BA32_1000_3603.tiff',0,16383],'one header request');
+  assert.deepEqual(reqs[0],['imagery-coverage.json',null,null],'the coverage index, read once');
+  assert.deepEqual(reqs[1],['BA32_1000_3603.tiff',0,16383],'one header request');
   const ov=tileAt.find(t=>t.level===1);
-  assert.deepEqual(reqs.slice(1),[['BA32_1000_3603.tiff',ov.off,ov.off+ov.len-1]],'then only the overview tile under the window');
+  assert.deepEqual(reqs.slice(2),[['BA32_1000_3603.tiff',ov.off,ov.off+ov.len-1]],'then only the overview tile under the window');
   assert.deepEqual(drawn,[[16,ov.len,'image/webp',-(v.x0-1756960)/0.15,-(5920800-v.y1)/0.15]]);
   // Cached: the same survey and window is not read twice.
   const n=reqs.length;await X.read(SURVEY,v,{makeCanvas:canvas});assert.equal(reqs.length,n);
-  // A survey without a file at the tree: not covering it (404), never an error.
-  const none=await X.read({...SURVEY,id:'none',path:'none/rgb/2193'},{...v,x0:1700000,x1:1700030,y0:5900000,y1:5900030,tree:[1700015,5900015]},{makeCanvas:canvas});
-  assert.deepEqual([none.status,none.reason],['none','no_file']);
+  // A survey the index says has no file at the tree: not covering it, with no request (no 404 probe).
+  const m0=reqs.length,none=await X.read({...SURVEY,id:'none',path:'none/rgb/2193'},v,{makeCanvas:canvas});
+  assert.deepEqual([none.status,none.reason,reqs.length],['none','no_file',m0],'not covering, no request');
+  // A survey missing from the index is probed as before: not covering it (404), never an error.
+  const unknown=await X.read({...SURVEY,id:'unknown',path:'unknown/rgb/2193'},{...v,x0:1700000,x1:1700030,y0:5900000,y1:5900030,tree:[1700015,5900015]},{makeCanvas:canvas});
+  assert.deepEqual([unknown.status,unknown.reason],['none','no_file']);
+  assert.equal(reqs.filter(r=>r[0]==='imagery-coverage.json').length,1,'the index is read once');
+  // Small screens and Save-Data read one overview coarser (at least 80 pixels across the window, not 160).
+  const C={levels:[{res:0.075},{res:0.15},{res:0.3},{res:0.6}]};
+  assert.deepEqual([X.pickLevel(C,30),X.pickLevel(C,30,80)],[1,2],'one overview level lower');
+  // ... where that reads fewer of the archive's 512-px tiles; a window in one tile at both overviews keeps the sharper.
+  {const file={originX:0,originY:1000,levels:[{res:0.15,tw:512,th:512,across:20,down:20},{res:0.3,tw:512,th:512,across:10,down:10}]};
+    const inOne={x0:10,x1:44,y0:956,y1:990,side:34},straddles={x0:60,x1:94,y0:956,y1:990,side:34};
+    assert.deepEqual([X.tileCount([file],inOne,0.15),X.tileCount([file],inOne,0.3),X.tileCount([file],straddles,0.15),X.tileCount([file],straddles,0.3)],[1,1,2,1]);
+    assert.deepEqual([X.thumbLevel([file],inOne,true),X.thumbLevel([file],straddles,true),X.thumbLevel([file],straddles,false)],[0,1,0],'coarser on a small screen only where it reads fewer tiles');}
+  const keep=globalThis.matchMedia;globalThis.matchMedia=q=>({matches:/max-width: 760px/.test(q)});assert.equal(X.lite(),true,'a phone-width screen reads lighter thumbnails');
+  const nav=v=>Object.defineProperty(globalThis,'navigator',{value:v,configurable:true,writable:true});   // Node's navigator is read-only
+  globalThis.matchMedia=()=>({matches:false});nav({connection:{saveData:true}});assert.equal(X.lite(),true,'Save-Data reads lighter thumbnails');
+  nav({connection:{saveData:false}});assert.equal(X.lite(),false);globalThis.matchMedia=keep;
   // The page wiring: the imagery section, its script and the site requirement are in place.
   const page=fs.readFileSync(web+'tree-page.js','utf8'),html=fs.readFileSync(web+'tree.html','utf8'),mod=fs.readFileSync(web+'tree-imagery.js','utf8');
   assert.ok(page.includes("mod('imagery'")&&page.includes('X.timeline(el,'),'tree page: aerial imagery section');
-  assert.ok(html.indexOf('tree-imagery.js')>0&&html.indexOf('tree-imagery.js')<html.indexOf('tree-page.js'),'tree.html loads tree-imagery.js before tree-page.js');
+  // The reader arrives after the hero (FE-03): tree-page.js loads it (later()) and starts the section once it has.
+  assert.ok(html.indexOf('tree-imagery.js')<0||html.indexOf('<script src="./tree-imagery.js')<0,'tree.html does not load the reader with the page');
+  assert.ok(page.includes("'./tree-imagery.js','./tree-imagery-viewer.js'")&&page.includes('if(pos&&!X&&!imageryWaited){imageryWaited=true;later().then(startImagery);return;}'),'tree-page.js loads tree-imagery.js after the hero, then starts the section');
   assert.ok(/Content-Security-Policy must allow https:\/\/nz-imagery\.s3\.ap-southeast-2\.amazonaws\.com in connect-src/.test(mod.replace(/\s*\n\s*\*\s*/g,' ')),'the CSP requirement is stated');
   assert.ok(!fs.existsSync(web+'wayback.js'),'the Esri Wayback attempt is gone');
   console.log('tree-imagery checks passed (NZTM, LINZ tile names, TIFF/BigTIFF headers, windows, one survey read through Range requests)');

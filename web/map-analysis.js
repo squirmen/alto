@@ -13,10 +13,13 @@
       seen.add(id); return true;
     });
   }
-  function summarise(features) {
+  // Heights of 55 m or more (tree-record.js TALL_M, the one constant; options.tallM in offline checks) are left out of
+  // the mean height and counted apart (tallCount), as Area leaves them out of its figures (SKP-03 interim).
+  function summarise(features, options = {}) {
     const trees = uniqueTrees(features);
+    const tallM = number(options.tallM ?? root.ALTOTreeRecord?.TALL_M);
     const s = {count: trees.length, crownArea: 0, crownCount: 0, heightCount: 0,
-      meanHeight: null, speciesCount: 0, protectedCount: 0, confirmedCount: 0,
+      meanHeight: null, tallCount: 0, tallM, speciesCount: 0, protectedCount: 0, confirmedCount: 0,
       noPointcloudCount: 0, topSpecies: null};
     let heightSum = 0; const species = new Map(), labels = new Map(), commonTaxa = new Map();
     const name = v => typeof v==='string' && !/^(unknown|unidentified|not known|species not recorded|0 records found\.|n\/a|none|null)?$/i.test(v.trim()) ? v.trim().replace(/\s+/g,' ') : null;
@@ -29,9 +32,12 @@
     }
     for (const {properties: p} of trees) {
       const area = number(p.crown_area_m2);
-      const height = number(p.height_max_m) ?? number(p.crown_max_chm_m);
+      // The height Area reads (area.js): the stored maximum, the crown's, or the record's own.
+      const height = number(p.height_max_m) ?? number(p.crown_max_chm_m) ?? number(p.height_m);
       if (area !== null && area > 0) { s.crownArea += area; s.crownCount++; }
-      if (height !== null && height >= 0) { heightSum += height; s.heightCount++; }
+      // Release 6.3's height check (hchk) leaves a flagged height out of the mean, as Area does.
+      if (height !== null && (p.hchk === "implausible" || p.hchk === "check" || tallM !== null && height >= tallM)) s.tallCount++;
+      else if (height !== null && height >= 0) { heightSum += height; s.heightCount++; }
       if (flag(p.is_protected_notable)) s.protectedCount++;
       if (flag(p.pc_canopy_present)||p.crown_source==='v5') s.confirmedCount++;
       if (p.pointcloud_class === "no_data") s.noPointcloudCount++;

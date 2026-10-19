@@ -1,0 +1,681 @@
+{
+"_note": "Test fixture: a subset of maxima.json (alto-species-maxima/1, built 13 Oct 2026 on release 6.1) with outlines thinned, plus synthetic rows on trees TTEST… (a kauri maximum, a held row, a species whose common name is shared, a partly surveyed area).",
+"schema": "alto-species-maxima/1",
+"release": "20261013-v6.1",
+"dataset": "metro-2026.10.13-pointcloud-v6.1",
+"built": "2026-10-13",
+"label": "Maximum",
+"list_title": "Species maxima",
+"copy": {
+"badge": "{label} · {measure} measured {species} in {area} (2024 LiDAR, ±{margin})",
+"badge_partial_area": "{label} · {measure} measured {species} in the surveyed part of {area} (2024 LiDAR, ±{margin})",
+"measures": {
+"max_height": "tallest",
+"max_crown_spread": "widest crown of any",
+"max_crown_area": "largest crown area of any"
+},
+"scope_note": "Ranks trees whose species is named in Auckland Council's tree register or Notable Trees schedule and whose 2024 LiDAR crown passed ALTO's checks. Trees without a named species are not ranked, and larger trees may stand elsewhere. Girth is not measured.",
+"margin_note": {
+"max_height": "Height is the highest point of the 2024 LiDAR canopy model of the crown; the highest single laser return is usually 0.3-1.9 m higher.",
+"max_crown_spread": "Crown spread is the mean of the widest width and the width at right angles, from the 0.5 m crown cells.",
+"max_crown_area": "Crown area is the area of the 0.5 m crown cells; margin = crown perimeter × 0.5 m."
+},
+"within_margin": "within the margin of the next measured tree"
+},
+"measures": {
+"max_height": {
+"unit": "m",
+"field": "height_m"
+},
+"max_crown_spread": {
+"unit": "m",
+"field": "crown_spread_m"
+},
+"max_crown_area": {
+"unit": "m²",
+"field": "crown_area_m2"
+}
+},
+"sources": [
+{
+"name": "Auckland LiDAR 2024 point cloud",
+"by": "Auckland Council / Toitū Te Whenua LINZ",
+"licence": "CC BY 4.0",
+"url": "https://data.linz.govt.nz/"
+},
+{
+"name": "Auckland 0.075 m urban aerial photos 2024-2025",
+"by": "Auckland Council / Toitū Te Whenua LINZ",
+"licence": "CC BY 4.0",
+"url": "https://registry.opendata.aws/nz-imagery/"
+},
+{
+"name": "Tree register (TreeRegisterPoints)",
+"by": "Auckland Council",
+"licence": "CC BY 4.0",
+"url": "https://data-aucklandcouncil.opendata.arcgis.com/"
+},
+{
+"name": "Notable Trees Overlay and Notable Group of Trees Overlay (Auckland Unitary Plan Schedule 10)",
+"by": "Auckland Council",
+"licence": "CC BY 4.0",
+"url": "https://data-aucklandcouncil.opendata.arcgis.com/"
+},
+{
+"name": "Territorial authority local board 2026 boundaries",
+"by": "Stats NZ Tatauranga Aotearoa",
+"licence": "CC BY 4.0",
+"url": "https://datafinder.stats.govt.nz/"
+}
+],
+"species": {
+"Alectryon excelsus": {
+"name": "tītoki",
+"latin_needed": false
+},
+"Araucaria heterophylla": {
+"name": "Norfolk Island pine",
+"latin_needed": false
+},
+"Metrosideros excelsa": {
+"name": "pōhutukawa",
+"latin_needed": false
+},
+"Platanus x acerifolia": {
+"name": "London plane",
+"latin_needed": false
+},
+"Quercus robur": {
+"name": "English oak",
+"latin_needed": false
+},
+"Agathis australis": {
+"name": "kauri",
+"latin_needed": false
+},
+"Sophora microphylla": {
+"name": "kōwhai",
+"latin_needed": true
+}
+},
+"areas": {
+"Albert-Eden": {
+"coverage": 1.0
+},
+"Auckland": {
+"coverage": 1.0
+},
+"Devonport-Takapuna": {
+"coverage": 1.0
+},
+"Maungakiekie-Tāmaki": {
+"coverage": 1.0
+},
+"Waitematā": {
+"coverage": 1.0
+},
+"Ōrākei": {
+"coverage": 1.0
+},
+"Test Partial": {
+"coverage": 0.8
+}
+},
+"maxima": [
+{
+"measure": "max_crown_area",
+"area": "Ōrākei",
+"species": "Alectryon excelsus",
+"tree": "TW9QK0A0",
+"value": 169.0,
+"margin": 23.0,
+"unit": "m²",
+"n": 17,
+"next": 127.0,
+"within_margin": false
+},
+{
+"measure": "max_crown_spread",
+"area": "Ōrākei",
+"species": "Alectryon excelsus",
+"tree": "TW9QK0A0",
+"value": 15.6,
+"margin": 1.0,
+"unit": "m",
+"n": 17,
+"next": 14.3,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Ōrākei",
+"species": "Alectryon excelsus",
+"tree": "TW9QK0A0",
+"value": 14.3,
+"margin": 2.0,
+"unit": "m",
+"n": 16,
+"next": 12.2,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Auckland",
+"species": "Araucaria heterophylla",
+"tree": "TSG2SSKH",
+"value": 46.5,
+"margin": 2.0,
+"unit": "m",
+"n": 83,
+"next": 42.7,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Albert-Eden",
+"species": "Araucaria heterophylla",
+"tree": "TSG2SSKH",
+"value": 46.5,
+"margin": 2.0,
+"unit": "m",
+"n": 12,
+"next": 38.4,
+"within_margin": false
+},
+{
+"measure": "max_crown_area",
+"area": "Auckland",
+"species": "Metrosideros excelsa",
+"tree": "TZ69KK1G",
+"value": 395.0,
+"margin": 35.0,
+"unit": "m²",
+"n": 440,
+"next": 388.0,
+"within_margin": true
+},
+{
+"measure": "max_crown_area",
+"area": "Albert-Eden",
+"species": "Metrosideros excelsa",
+"tree": "TZ69KK1G",
+"value": 395.0,
+"margin": 35.0,
+"unit": "m²",
+"n": 101,
+"next": 388.0,
+"within_margin": true
+},
+{
+"measure": "max_crown_area",
+"area": "Waitematā",
+"species": "Metrosideros excelsa",
+"tree": "TNXWY21K",
+"value": 372.0,
+"margin": 34.0,
+"unit": "m²",
+"n": 210,
+"next": 344.0,
+"within_margin": true
+},
+{
+"measure": "max_crown_spread",
+"area": "Auckland",
+"species": "Metrosideros excelsa",
+"tree": "TNXWY21K",
+"value": 25.5,
+"margin": 1.0,
+"unit": "m",
+"n": 440,
+"next": 24.3,
+"within_margin": false
+},
+{
+"measure": "max_crown_spread",
+"area": "Waitematā",
+"species": "Metrosideros excelsa",
+"tree": "TNXWY21K",
+"value": 25.5,
+"margin": 1.0,
+"unit": "m",
+"n": 210,
+"next": 23.9,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Auckland",
+"species": "Metrosideros excelsa",
+"tree": "T055W90F",
+"value": 21.9,
+"margin": 2.0,
+"unit": "m",
+"n": 440,
+"next": 21.9,
+"within_margin": true
+},
+{
+"measure": "max_height",
+"area": "Albert-Eden",
+"species": "Metrosideros excelsa",
+"tree": "T055W90F",
+"value": 21.9,
+"margin": 2.0,
+"unit": "m",
+"n": 101,
+"next": 21.3,
+"within_margin": true
+},
+{
+"measure": "max_height",
+"area": "Auckland",
+"species": "Platanus x acerifolia",
+"tree": "TF0TD1X1",
+"value": 31.7,
+"margin": 2.0,
+"unit": "m",
+"n": 177,
+"next": 27.7,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Waitematā",
+"species": "Platanus x acerifolia",
+"tree": "TF0TD1X1",
+"value": 31.7,
+"margin": 2.0,
+"unit": "m",
+"n": 137,
+"next": 27.7,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Auckland",
+"species": "Quercus robur",
+"tree": "T2GJBWHP",
+"value": 25.5,
+"margin": 2.0,
+"unit": "m",
+"n": 93,
+"next": 22.6,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Waitematā",
+"species": "Quercus robur",
+"tree": "T2GJBWHP",
+"value": 25.5,
+"margin": 2.0,
+"unit": "m",
+"n": 43,
+"next": 21.0,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Auckland",
+"species": "Agathis australis",
+"tree": "TTESTKA1",
+"value": 40.0,
+"margin": 2.0,
+"unit": "m",
+"n": 30,
+"next": 35.0,
+"within_margin": false
+},
+{
+"measure": "max_height",
+"area": "Test Partial",
+"species": "Sophora microphylla",
+"tree": "TTESTSO1",
+"value": 9.5,
+"margin": 2.0,
+"unit": "m",
+"n": 12,
+"next": 6.0,
+"within_margin": false
+},
+{
+"measure": "max_crown_area",
+"area": "Auckland",
+"species": "Quercus robur",
+"tree": "TTESTHE1",
+"value": 999.0,
+"margin": 50.0,
+"unit": "m²",
+"n": 93,
+"next": 10.0,
+"within_margin": false,
+"hold_reason": "held for the test"
+}
+],
+"trees": {
+"TSG2SSKH": {
+"lon": 174.775572,
+"lat": -36.883741,
+"board": "Albert-Eden",
+"h": 46.5,
+"s": 15.2,
+"a": 154,
+"flight": "2024-05-18",
+"outline": [
+[
+-2.0,
+7.0
+],
+[
+-6.5,
+-6.0
+],
+[
+2.5,
+-7.0
+],
+[
+7.5,
+0.5
+]
+],
+"kyte_girth": false
+},
+"TW9QK0A0": {
+"lon": 174.797853,
+"lat": -36.87213,
+"board": "Ōrākei",
+"h": 14.3,
+"s": 15.6,
+"a": 169,
+"flight": "2024-05-19",
+"outline": [
+[
+-4.5,
+7.0
+],
+[
+-7.0,
+-5.0
+],
+[
+7.0,
+-3.0
+],
+[
+0.0,
+5.5
+]
+],
+"kyte_girth": true
+},
+"T055W90F": {
+"lon": 174.776552,
+"lat": -36.8994,
+"board": "Albert-Eden",
+"h": 21.9,
+"s": 24.2,
+"a": 388,
+"flight": "2024-06-04",
+"outline": [
+[
+1.5,
+12.0
+],
+[
+-8.5,
+8.5
+],
+[
+-11.5,
+-0.5
+],
+[
+-5.5,
+-10.0
+],
+[
+6.5,
+-10.0
+],
+[
+12.0,
+-4.5
+],
+[
+9.5,
+7.0
+]
+],
+"kyte_girth": true
+},
+"TZ69KK1G": {
+"lon": 174.775287,
+"lat": -36.888161,
+"board": "Albert-Eden",
+"h": 18.7,
+"s": 24.0,
+"a": 395,
+"flight": "2024-06-04",
+"outline": [
+[
+1.0,
+13.0
+],
+[
+-7.5,
+8.5
+],
+[
+-11.0,
+2.0
+],
+[
+-3.5,
+-12.0
+],
+[
+2.5,
+-12.5
+],
+[
+7.5,
+-3.0
+],
+[
+9.5,
+8.0
+]
+],
+"kyte_girth": true
+},
+"TNXWY21K": {
+"lon": 174.780635,
+"lat": -36.863101,
+"board": "Waitematā",
+"h": 14.7,
+"s": 25.5,
+"a": 372,
+"flight": "2024-05-18",
+"outline": [
+[
+4.0,
+14.0
+],
+[
+-10.0,
+3.0
+],
+[
+-5.5,
+-9.0
+],
+[
+-1.5,
+-11.5
+],
+[
+5.0,
+-11.0
+],
+[
+11.0,
+-3.0
+],
+[
+5.0,
+1.0
+],
+[
+4.5,
+12.0
+]
+],
+"kyte_girth": false
+},
+"T2GJBWHP": {
+"lon": 174.7779,
+"lat": -36.856629,
+"board": "Waitematā",
+"h": 25.5,
+"s": 12.4,
+"a": 101,
+"flight": "2024-05-18",
+"outline": [
+[
+0.0,
+6.0
+],
+[
+-4.0,
+-1.5
+],
+[
+1.0,
+-6.5
+],
+[
+6.0,
+3.0
+]
+],
+"kyte_girth": true
+},
+"TF0TD1X1": {
+"lon": 174.754552,
+"lat": -36.857319,
+"board": "Waitematā",
+"h": 31.7,
+"s": 16.3,
+"a": 145,
+"flight": "2024-05-18",
+"outline": [
+[
+-2.0,
+7.0
+],
+[
+-2.5,
+1.0
+],
+[
+-7.5,
+-2.5
+],
+[
+1.0,
+-6.5
+],
+[
+8.0,
+3.0
+]
+],
+"kyte_girth": true
+},
+"TTESTKA1": {
+"lon": 174.7,
+"lat": -36.9,
+"board": "Albert-Eden",
+"h": 40.0,
+"s": 20.0,
+"a": 300,
+"flight": "2024-06-04",
+"outline": [
+[
+0,
+5
+],
+[
+5,
+0
+],
+[
+0,
+-5
+],
+[
+-5,
+0
+]
+],
+"kyte_girth": true
+},
+"TTESTSO1": {
+"lon": 174.75,
+"lat": -36.85,
+"board": "Test Partial",
+"h": 9.5,
+"s": 6.0,
+"a": 30,
+"flight": "2024-06-04",
+"outline": [
+[
+0,
+3
+],
+[
+3,
+0
+],
+[
+0,
+-3
+],
+[
+-3,
+0
+]
+],
+"kyte_girth": false
+},
+"TTESTHE1": {
+"lon": 174.76,
+"lat": -36.86,
+"board": "Waitematā",
+"h": 10.0,
+"s": 30.0,
+"a": 999,
+"flight": "2024-06-04",
+"outline": [
+[
+0,
+15
+],
+[
+15,
+0
+],
+[
+0,
+-15
+],
+[
+-15,
+0
+]
+],
+"kyte_girth": true
+}
+}
+}

@@ -39,21 +39,22 @@ const build=(id,meta,t=F.trees[id])=>R.assemble({id,record:t.record,schema:F.sch
   assert.deepEqual([rec.id,rec.number,rec.permalink],[REG,NUM,LINK]);
   assert.deepEqual(rec.numberRole,{role:'marker',kind:'crown',minted:'20261013-v6.1'});
   assert.ok(rec.url.endsWith(`tree.html?id=${NUM}`)&&rec.mapUrl.endsWith(`?tree=${NUM}`),'tree page and map links by number');
-  assert.ok(rec.citation.includes(`Tree ${NUM}. In ALTO`)&&rec.citation.includes(` ${LINK} (accessed `)&&!rec.citation.includes(REG),`citation by number and permalink: ${rec.citation}`);
-  // KYTE does not take numbers yet: its links keep the record ID.
-  for(const k of rec.know)assert.ok(k.href.includes(`?tree=${encodeURIComponent(REG)}&task=`)&&!k.href.includes(NUM),k.href);
+  // The citation names the tree by its species and number (FTA-23); the local board joins it once the page knows it.
+  assert.ok(/London Plane Tree \(tree T318JMKK\), at -?\d+\.\d{5}, -?\d+\.\d{5} \(WGS84\)\. In ALTO/.test(rec.citation)&&rec.citation.includes(`London Plane Tree (tree ${NUM}), at `)&&rec.citation.includes(` ${LINK} (accessed `)&&!rec.citation.includes(REG),`citation by number and permalink: ${rec.citation}`);
+  // Every link into KYTE sends the tree number, never the record ID (FTA-12, UX-12).
+  for(const k of rec.know)assert.ok(k.href.includes(`?tree=${NUM}&task=`)&&!k.href.includes(REG),k.href);
   // Tree page: the number (Copy, permalink) first, the record ID second.
   const line=I.idLine(rec);
   assert.ok(line.includes('<dt>Tree number</dt>')&&line.includes(`<code class="ti-tn">${NUM}</code>`)&&line.includes('aria-label="Copy the tree number"'),'number with Copy');
   assert.ok(line.includes(`href="${LINK}">${LINK}</a>`),'permalink shown and linked');
   assert.ok(line.includes('<dt class="ti-sub">Record ID</dt>')&&line.includes(`<code>${REG}</code>`)&&line.indexOf(NUM)<line.indexOf(REG),'record ID second');
   assert.ok(!line.includes('<dt>Tree ID</dt>'));
-  // Map panel: the same IDs under the badges; the footer names the number; KYTE keeps the record ID.
+  // Map panel: the same IDs under the badges; the footer names the number; KYTE gets the number.
   const panel=P.render(rec,{treeUrl:Id.url(NUM,{page:'tree',base:'https://alto.tfwelch.com/'}),kyteBase:'./kyte'});
   assert.ok(panel.includes('<dl class="tp-ids"><dt>Tree number</dt>')&&panel.includes(`<code class="tp-tn">${NUM}</code>`)&&panel.includes('data-panel-action="copy-number"'),'panel: number with Copy');
   assert.ok(panel.includes(`<a class="tp-permalink" href="${LINK}">${LINK}</a>`)&&panel.includes('<dt class="tp-sub">Record ID</dt>')&&panel.includes(`<dd class="tp-sub"><code>${REG}</code>`),'panel: permalink and record ID');
   assert.ok(panel.includes(`<footer class="tp-foot"><code>${NUM}</code>`),'panel footer: the number');
-  assert.ok(panel.includes(`href="./kyte/?tree=${encodeURIComponent(REG)}"`)&&!/kyte\/\?tree=T[0-9A-Z]{7}/.test(panel),'panel: KYTE by record ID');
+  assert.ok(panel.includes(`href="./kyte/?tree=${NUM}"`)&&!panel.includes(`kyte/?tree=${encodeURIComponent(REG)}`),'panel: KYTE by tree number');
   assert.ok(panel.indexOf('tp-ids')<panel.indexOf('tp-actions'),'IDs before the actions');
   const noted=P.render(rec,{treeUrl:'./tree.html',note:'Record ID akl_tree_lid_1097624 is tree T318JMKK.'});
   assert.ok(noted.includes('<p class="tp-idnote" role="status">Record ID akl_tree_lid_1097624 is tree T318JMKK.</p>'),'panel: one-line note for an older ID');
@@ -70,10 +71,11 @@ const build=(id,meta,t=F.trees[id])=>R.assemble({id,record:t.record,schema:F.sch
 {
   const rec=build(REG,META6);
   assert.deepEqual([rec.number,rec.permalink],[null,null]);
-  assert.ok(rec.url.endsWith(`tree.html?id=${REG}`)&&rec.citation.includes(`Tree ${REG}. In ALTO`),'record ID links and citation');
+  assert.ok(rec.url.endsWith(`tree.html?id=${REG}`)&&rec.citation.includes(`London Plane Tree (tree ${REG}), at `)&&/\(WGS84\)\. In ALTO/.test(rec.citation),'record ID links and citation');
   const line=I.idLine(rec),panel=P.render(rec,{treeUrl:Id.url(REG,{page:'tree',base:'https://alto.tfwelch.com/'}),kyteBase:'./kyte'});
   assert.ok(line.includes('<dt>Tree ID</dt>')&&line.includes(`<code>${REG}</code>`)&&!/Tree number|Record ID/.test(line),'tree page: Tree ID');
-  assert.ok(!panel.includes('tp-ids')&&!panel.includes('Tree number')&&panel.includes(`<footer class="tp-foot"><code>${REG}</code>`),'panel: as before');
+  assert.ok(!panel.includes('Tree number')&&!panel.includes('Record ID')&&panel.includes(`<footer class="tp-foot"><code>${REG}</code>`),'panel: as before');
+  assert.ok(/<dl class="tp-ids"><dt class="tp-sub tp-loc">Location<\/dt>/.test(panel),'panel: the location shows without a tree number (LOC-01)');
   assert.ok(I.provenance(rec.measures.height,rec).includes('<dt>Tree ID</dt>'));
   assert.equal(R.fromTile({tree_id:REG,source_primary:'council_trees'},env(META6)).number,null);
 }
@@ -159,6 +161,28 @@ const BASE='https://alto.tfwelch.com/';
   assert.equal(await Id.suggestNumber(A,OPT),null,'a valid number is not corrected');
   assert.equal(await Id.suggestNumber(typo,{...OPT,metadata:{}}),null,'no alias table (data before 6.1): none offered');
 
+  // UX-13: a number-shaped input with no correction says why it fails; a record ID the table does not hold is unknown
+  {
+    let v=await view('TZZZZZZZ');
+    assert.equal(v.title,'Not a valid tree number');
+    assert.ok(v.html.includes('<p class="ti-lead">The check character does not match: is a character mistyped?</p>'),'TZZZZZZZ: the check character fails');
+    v=await view('Takapuna');
+    assert.ok(v.title==='Not a valid tree number'&&v.html.includes('<p class="ti-lead">Tree numbers do not use the letter U: is a character mistyped?</p>'),'Takapuna as a link: a number with a U');
+    v=await view('akl_tree_does_not_exist');
+    assert.ok(v.title==='Unknown record ID'&&v.html.includes('Not in this release'),'a record ID the table does not hold');
+    v=await view('hello world');
+    assert.ok(v.title==='Not a tree number or record ID'&&!v.html.includes('ti-lead'),'not shaped like a number: no second line saying the same');
+    // In the map's panel (a ?tree= link): no "Open the map" on the map itself, a correction opens on the map, and the
+    // panel sets the view in its own type (map.css .tp-linkerror; the tree page's stylesheet is not on the map).
+    v=await view(typo,{fix:A,onMap:true});
+    assert.ok(!v.html.includes('Open the map')&&v.html.includes(`href="${Id.url(A,{page:'map'})}"`),'map panel: '+v.html);
+    assert.ok((await view('TZZZZZZZ')).html.includes('Open the map'),'the tree page keeps its map link');
+    const mcss=require('node:fs').readFileSync(path.join(__dirname,'..','..','web','map.css'),'utf8');
+    for(const rule of ['.tp-linkerror .ti-status-page { padding: 18px 18px 14px;','.tp-linkerror .ti-kv dd small { display: block;','.tp-linkerror .ti-lead a, .tp-linkerror .ti-kv a { color: var(--color-text-link);'])
+      assert.ok(mcss.includes(rule),rule);
+    assert.ok(/statusView\(r, \{ typed, fix, icon: ALTOViz\.icon, onMap: true \}\)/.test(require('node:fs').readFileSync(path.join(__dirname,'..','..','web','map-app.js'),'utf8')),'the map asks for the panel form');
+  }
+
   // one line beside the tree an older ID opens
   const say=async raw=>Id.describe(await res(raw)).note;
   assert.equal(await say('akl_tree_lid_1097624'),`Record ID akl_tree_lid_1097624 is tree ${N1}.`);
@@ -198,22 +222,44 @@ const BASE='https://alto.tfwelch.com/';
   v=await view(typoB,{fix:null});
   assert.equal(v.title,'Not a valid tree number');assert.ok(!v.html.includes('Did you mean'));
   v=await view('<x>');
-  assert.equal(v.title,'Not a tree ID','text that is no ID at all');
+  assert.equal(v.title,'Not a tree number or record ID','text that is no ID at all: named as a tree number or record ID (UX-12)');
   v=I.statusView(await Id.resolve(N1,{metadata:{}}),{typed:N1});
   assert.equal(v.title,'Tree number not in this release','data before 6.1: a number cannot be resolved');
   for(const raw of ['akl_tree_lid_0001873','3480000_11808040','akl_tree_pc4_3517546_11848800','3480000_11791216',typo])assert.notEqual((await view(raw)).title,'Not a tree ID',raw);
   // the visible copy names releases in words and makes no claim about who labelled anything
   for(const raw of ['akl_tree_lid_0001873','3480000_11808040','3480000_11791216']){const t=visible((await view(raw)).html);assert.ok(!/\bv\d\b|by hand|by eye/i.test(t),`${raw}: ${t}`);}
 
-  // the tree page uses these views and the record's number and permalink; the map keeps KYTE on record IDs
-  const page=read('tree-page.js'),map=read('index.html'),html=read('tree.html');
+  // the tree page uses these views and the record's number and permalink; KYTE links send the tree number
+  const page=read('tree-page.js'),map=(read('index.html')+read('map-app.js')),html=read('tree.html');
   assert.ok(/I\.idLine\(rec\)/.test(page)&&/I\.statusView\(r,/.test(page),'tree page: ID line and status pages from tree-instrument.js');
   assert.ok(/\['retired','merged','split'\]\.includes\(resolved\.status\)\)return statusPage/.test(page),'tree page: retired, merged and split IDs get a status page');
   assert.ok(/copy\(rec\.number\|\|rec\.id/.test(page)&&/rec\.permalink\|\|rec\.url\|\|location\.href/.test(page),'tree page: Copy and Share by number and permalink');
   assert.ok(/l\.rel='canonical'/.test(page)&&html.includes('id="citeNote"'),'tree page: canonical link and cite note');
-  assert.ok(/function setUrlTree\(number\)/.test(map)&&/if \(full\.number\) setUrlTree\(full\.number\)/.test(map)&&/setUrlTree\(null\); panelNote = null;/.test(map),'map: the number in the address while a tree is open');
+  // A panel opened from the map pushes one history entry (UX-05); closing it takes the entry off again.
+  assert.ok(/function setUrlTree\(number, \{ push = false \} = \{\}\)/.test(map)&&/if \(full\.number\) setUrlTree\(full\.number, \{ push: pushHistory && !panelPushed \}\)/.test(map)&&/else \{ setUrlTree\(null\); setUrlProperty\(null\); \}/.test(map)&&/window\.addEventListener\("popstate"/.test(map),'map: the number in the address while a tree is open');
   assert.ok(/Id\.searchEntry\(t,/.test(map)&&/openProfile\(\{ \.\.\.r, tree_id: record\.tree_id, tn: record\.datasets\.tree_number\?\.number \}, \{ resolved \}\)/.test(map),'map: search entries and the one-line note');
-  assert.ok(/kyteBase\)\}\/\?tree=\$\{encodeURIComponent\(rec\.id\)\}/.test(read('tree-panel.js'))&&/KYTE\)\}\/\?tree=\$\{encodeURIComponent\(rec\.id\)\}/.test(page),'KYTE links send the record ID');
+  assert.ok(/ALTOTreeRecord\.photoHref\(rec,kyteBase\)/.test(read('tree-panel.js'))&&/R\.photoHref\(rec,KYTE\)/.test(page)&&!/KYTE\)\}\/\?tree=\$\{encodeURIComponent\(rec\.id\)\}/.test(page),'KYTE links send the tree number');
+  assert.equal(R.photoHref({number:'T318JMKK',id:'akl_tree_x'},'./kyte'),'./kyte/?tree=T318JMKK');
+  // FE-02: a file that did not load is "Not loaded: <file> (<reason>)." with Retry, never an absent tree. The release
+  // metadata that did not load reaches tree-id.js as metadataError; a details bucket that did not load is caught
+  // separately from "Tree not found".
+  {
+    const u=I.statusView(await Id.resolve(N1,{metadataError:{file:'release-metadata.json',reason:'HTTP 500'}}),{typed:N1});
+    assert.equal(u.title,'Not loaded');
+    const t=visible(u.html);
+    assert.ok(t.includes('Not loaded: release-metadata.json (HTTP 500).')&&/<button type="button" class="btn btn-primary" data-retry>Retry<\/button>/.test(u.html),'metadata 500: Not loaded with Retry');
+    assert.ok(!/not in this release|No tree has this number|no table of permanent tree numbers|Status/i.test(t),t);
+    const d=I.statusView({status:'unavailable',note:'Not loaded: data/tree_details/12/47.json.gz (network error).',input:'TSG2SSKH',kind:'number'},{typed:'TSG2SSKH'});
+    assert.ok(visible(d.html).includes('Not loaded: data/tree_details/12/47.json.gz (network error).')&&d.html.includes('data-retry'),'a details bucket that did not load');
+    assert.ok(/resolved=await Id\.resolve\(raw,\{base:DATA_BASE,version:VERSION,metadata,metadataError\}\)/.test(page),'tree page: the metadata error goes to the resolver');
+    assert.ok(/if\(err\.code==='invalid'\|\|err\.code==='not_found'\)return fail\(/.test(page)&&/return unavailablePage\(raw,\{\.\.\.\(err\.resolved\|\|\{\}\),input:raw,note:err\.code==='unavailable'\?err\.message:/.test(page),'tree page: only an absent record reads "Tree not found"');
+    assert.ok(/if\(r\.status==='unavailable'\)return unavailablePage\(raw,r\);/.test(page)&&/\$\('#hero \[data-retry\]'\)\?\.addEventListener\('click',\(\)=>\{[\s\S]{0,400}main\(\);/.test(page),'tree page: Retry reads again in place');
+    assert.ok(page.includes("p.status==='unavailable'?'<p class=\"ti-def\">Not loaded: KYTE ground visits")&&page.includes("rec.place?.status==='unavailable'?'Not loaded: data/local_boards.json'"),'tree page: ground visits and local boards that did not load say so');
+    assert.ok(map.includes('Not loaded: release-metadata.json (${escapeHtml(releaseMetadataError || "error")}). <button type="button" class="link-button" data-meta-retry>Retry</button>')&&map.includes('Not loaded: data/species_options.json (${reason}). <button type="button" class="link-button" data-species-retry>Retry</button>'),'map: release metadata and species options that did not load say which file and why, with Retry');
+    assert.ok(!/Reload the page to try again/.test(map),'map: Retry, not "Reload the page"');
+    const ix=read('tree-imagery.js');
+    assert.ok(ix.includes('<button type="button" class="btn btn-quiet">Read again</button>')&&/againEl\.hidden=!\(!left&&err\.length&&!blocked\);/.test(ix)&&/async function again\(\)\{[\s\S]{0,200}status==='error'/.test(ix),'imagery: Read again after a failed read (not when the site policy blocks the archive)');
+  }
   fs.rmSync(dir,{recursive:true,force:true});
   console.log('tree numbers: display, fallback, search, check character and status pages checked');
 })().catch(e=>{console.error(e);process.exit(1);});

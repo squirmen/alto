@@ -6,13 +6,19 @@
   function dispose(){if(modelDispose){modelDispose();modelDispose=null;}}
   try{const stored=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(stored))ids=[...new Set(stored.filter(x=>typeof x==='string'&&x.length<200))].slice(0,MAX);}catch{}
   function persist(){try{localStorage.setItem(KEY,JSON.stringify(ids));return true;}catch{return false;}}
-  function update(){const b=document.getElementById('compareSavedTrees');if(b)b.textContent=`Compare saved trees (${ids.length})`;}
+  // Every "Saved trees (n)" control on the page follows the count, and shows only once a tree is saved.
+  function update(){
+    const b=document.getElementById('compareSavedTrees');if(b)b.textContent=`Compare saved trees (${ids.length})`;
+    document.querySelectorAll('[data-saved-trees]').forEach(el=>{el.hidden=!ids.length;const n=el.querySelector('[data-saved-count]')||el;n.textContent=`Saved trees (${ids.length})`;});
+  }
   function init(options){
     config=options;dialog=document.getElementById('treeComparison');
     document.getElementById('compareSavedTrees')?.addEventListener('click',show);
     document.getElementById('comparisonClose')?.addEventListener('click',()=>dialog.close());
     dialog?.addEventListener('close',()=>returnFocus?.focus({preventScroll:true}));
     update();
+    // ?compare opens the comparison (the tree page's "Compare saved trees" link).
+    if(new URL(window.location.href).searchParams.has('compare'))config.ready?.then(()=>show());
     const id=options.readLink===false?null:new URL(window.location.href).searchParams.get('tree');
     // The linked tree opens with how the link's ID resolved (the panel says which tree an older ID is); an ID that
     // names no current tree says why, at its last position when it has one.
@@ -65,9 +71,11 @@
   function has(id){return ids.includes(id);}
   function toggle(id){
     if(ids.includes(id)){ids=ids.filter(x=>x!==id);persist();update();return {saved:false,message:'Removed from comparison.'};}
-    if(ids.length>=MAX)return {saved:false,message:'Four trees are saved. Open Area › Compare saved trees and remove one to make room.'};
+    if(ids.length>=MAX)return {saved:false,message:'Four trees are saved. Open Compare saved trees and remove one to make room.',count:ids.length};
     ids.push(id);const stored=persist();update();
-    return {saved:true,message:stored?'Saved for comparison on this browser. Compare from the Area tab.':'Saved for this session; browser storage is unavailable.'};
+    return {saved:true,message:stored?'Saved for comparison on this browser.':'Saved for this session; browser storage is unavailable.',count:ids.length};
   }
-  root.ALTOEvidenceWorkspace={init,bind,dispose,has,toggle,show:()=>show()};
+  // The map's comparison, from another page: ./?compare
+  const compareHref=(siteRoot='.')=>`${String(siteRoot||'.').replace(/\/+$/,'')}/?compare=1`;
+  root.ALTOEvidenceWorkspace={init,bind,dispose,has,toggle,show:()=>show(),count:()=>ids.length,update,compareHref};
 })(window);

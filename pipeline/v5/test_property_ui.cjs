@@ -38,15 +38,23 @@ assert.ok(html.includes('not counted above') && html.includes('3.1 m outside'));
 assert.ok(html.includes('no property valuation') && html.includes('ownership records not used'));
 assert.ok(html.includes('LINZ') && html.includes('ODbL') && html.includes('Department of Conservation') && html.includes('golf courses'));
 assert.ok(!html.includes('data-property-rings'),'a full tree list needs no ring note');
+// The evidence tier names the tree ("tree very likely"), never a bare "very likely" (FTA-10).
+assert.ok(html.includes('tree very likely')&&!/(^|[^e] )very likely/.test(html.replace(/tree very likely/g,'')),'tier wording');
 const many=P.render({property:{...property,n_trees:418,trees_truncated:1},trees:Array.from({length:300},(_,i)=>({tree_id:'t'+i,total_value_nzd_y:1}))},{pid:'1'});
 assert.ok(many.includes('data-property-rings') && many.includes('ring all 418'),'a truncated list says which trees the map rings');
 assert.ok(!html.includes('$102'),'street trees are never added to the property total');
 assert.ok(P.render(null,{pid:'8542463'}).includes('No counted trees'));
-// The map credit for the land data opens over the bottom of the map with the basemap credit, so
-// it stays short (the full list is in About and the panel) and is one string on every source.
-const page=require('node:fs').readFileSync(web+'/index.html','utf8');
-const credit=page.match(/const LAND_CREDIT = "([^"]+)";/)[1];
-assert.ok(credit.length<=90,`land credit is ${credit.length} characters`);
-for(const name of ['LINZ','Auckland Council','DOC','CC BY 4.0','OpenStreetMap','ODbL'])assert.ok(credit.includes(name),name);
-assert.equal((page.match(/attribution: LAND_CREDIT \}/g)||[]).length,3,'points, crowns and parcels carry the same credit');
+// The tree, crown and parcel tiles carry one credit (web/credits.js) naming the providers in their own words: the
+// Council tree register with its retrieval date, OpenStreetMap (ODbL), LINZ's short form, the 2024 LiDAR licensors
+// and DOC's Crown copyright line. It opens over the bottom of the map with the basemap credit, so it stays one string.
+const page=(require('node:fs').readFileSync(web+'/index.html','utf8')+require('node:fs').readFileSync(web+'/map-app.js','utf8'));
+const Credits=require(web+'/credits.js');
+const credit=Credits.text(Credits.MAP.data);
+assert.ok(credit.length<=420,`data credit is ${credit.length} characters`);
+for(const name of ['Auckland Council','tree register','Auckland Transport','retrieved June 2026','Bio Info Team','© OpenStreetMap contributors','ODbL','Sourced from LINZ. CC BY 4.0','Regional Software Holdings Limited','Crown Copyright: Department of Conservation Te Papa Atawhai'])assert.ok(credit.includes(name),name);
+assert.ok(Credits.MAP.data.includes('href="https://www.openstreetmap.org/copyright"'),'the OpenStreetMap credit links its copyright page');
+assert.ok(page.includes('const DATA_CREDIT = ALTOCredits.MAP.data;'),'the map reads the credit from credits.js');
+assert.equal((page.match(/attribution: DATA_CREDIT \}/g)||[]).length,3,'points, crowns and parcels carry the same credit');
+// The property panel names each land dataset as its provider asks, and links Sources and credits.
+for(const name of ['NZ Primary Land Parcels','licensed for reuse under CC BY 4.0','not for defining legal boundaries','Plans and Places, Auckland Council','Crown Copyright: Department of Conservation Te Papa Atawhai','may be out of date','https://www.openstreetmap.org/copyright','./credits.html'])assert.ok(html.includes(name),'property sources: '+name);
 console.log('Property search normalisation, record decoding and panel checks passed.');

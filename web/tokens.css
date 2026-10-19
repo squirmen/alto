@@ -122,7 +122,7 @@
   --viz-form-conifer: var(--viz-cat-2);
   --viz-form-deciduous-broadleaf: var(--viz-cat-3);
   --viz-form-palm-fern: var(--viz-cat-4);
-  --viz-form-broadleaf-undetermined: var(--viz-cat-5);
+  --viz-form-broadleaf-undetermined: var(--viz-seq-300);   /* not slot 5 brick beside slot 1 green: the red-green rule */
   --viz-form-not-estimated: var(--viz-other);
   --viz-land-street: var(--viz-cat-2);
   --viz-land-park: var(--viz-cat-1);
