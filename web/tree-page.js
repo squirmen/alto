@@ -278,7 +278,7 @@
     const seen=new Map();for(const c of [...rs.map(r=>r.credit),...(rec.identifiers||[]).map(x=>x.dataset)])if(c&&!seen.has(c.text))seen.set(c.text,c);
     const credits=seen.size?`<p class="ti-cap ti-credits">Sources: ${[...seen.values()].map(c=>esc(c.text)+(c.links.length?` (${c.links.map(l=>link(l.href,l.text)).join(' · ')})`:'')).join('; ')}. ${link('./credits.html','Sources and credits')}</p>`:'';
     return mod('records',b?esc(b.label):'',`<div class="ti-scroll"><table class="ti-table"><thead><tr><th scope="col">Source</th><th scope="col">Record ID</th><th scope="col">Role</th><th scope="col">Species as supplied</th><th scope="col">Retrieved</th><th scope="col">Link to the crown</th></tr></thead><tbody>${rows}</tbody></table></div>${more}
-      <p class="ti-cap">Girths: Auckland Unitary Plan and New Zealand Tree Register girths are taken at 1.4 m; ALTO’s and KYTE’s at 1.3 m above the uphill ground.</p>
+      <p class="ti-cap">Girths: ALTO and KYTE use 1.4 m above the ground (on a slope, from mid-slope); Auckland Unitary Plan and New Zealand Tree Register girths are also taken at 1.4 m. Earlier KYTE visits asked for 1.3 m; each visit records the height used.</p>
       <h3 class="ti-h3">Identifiers</h3>${ids?`<ul class="ti-ids">${ids}</ul>`:none('no other identifiers')}${credits}`,'ti-mod-wide');
   }
 
@@ -421,8 +421,10 @@
   function metricsMod(){
     const C=I.contextLines(rec);
     numberNotes();
-    const foot=`<p class="ti-foot">${C?`Comparison lines: from the release's comparison tables; more in <a href="#m-compare">Among similar trees</a>. `:rec.context?.status==='excluded'?`${esc(rec.context.note)} `:''}Height: ${esc(R.HEIGHT_DEF.charAt(0).toLowerCase()+R.HEIGHT_DEF.slice(1))}; survey vertical accuracy ±0.2 m; airborne LiDAR usually reads below a field hypsometer height on pointed crowns. Trunk diameter is at 1.3 m above the uphill ground. Estimates come from the ALTO release model and are not independently validated.</p>`;
-    return mod('metrics','Select any value for its source, date, method and range',I.strip(rec,KEYS,{id:'pgPop',cls:'ti-band-page',ctx:C?.lines||null,notes:pnum})+foot,'ti-mod-wide');
+    // A tree measured in the field: its readings (each at its own height) and ALTO's estimate under the band.
+    const field=I.fieldRows(rec),trunkAt=field?'Field measurements are at the height given with each; ALTO’s trunk estimate is at 1.4 m above the ground (on a slope, from mid-slope).':'Trunk diameter is at 1.4 m above the ground (on a slope, from mid-slope).';
+    const foot=`<p class="ti-foot">${C?`Comparison lines: from the release's comparison tables; more in <a href="#m-compare">Among similar trees</a>. `:rec.context?.status==='excluded'?`${esc(rec.context.note)} `:''}Height: ${esc(R.HEIGHT_DEF.charAt(0).toLowerCase()+R.HEIGHT_DEF.slice(1))}; survey vertical accuracy ±0.2 m; airborne LiDAR usually reads below a field hypsometer height on pointed crowns. ${trunkAt} Estimates come from the ALTO release model and are not independently validated.</p>`;
+    return mod('metrics','Select any value for its source, date, method and range',I.strip(rec,KEYS,{id:'pgPop',cls:'ti-band-page',ctx:C?.lines||null,notes:pnum})+(field?`<h3 class="ti-h3">Field measurements</h3>${field}`:'')+foot,'ti-mod-wide');
   }
   function render(){
     addExtras();
@@ -562,6 +564,9 @@
         s?.querySelector('[data-photos-retry]')?.addEventListener('click',e=>{e.currentTarget.disabled=true;R.enrich(rec,env,{parts:['photos'],onPart});},{once:true});
         if(p.lead)$('#photoLead').innerHTML=`<p class="ti-cap">Photo identification lead, unconfirmed (${link(PLANTNET,'Pl@ntNet')}): <i>${esc(p.lead.name)}</i>${p.lead.common?` (${esc(p.lead.common)})`:''}, ${Math.round(p.lead.score*100)}%, ${esc(p.lead.organ)} photograph.</p>`;
         if(p.live){addExtras();const m=$('#m-metrics');if(m){m.outerHTML=metricsMod();keepYear();}const r=$('#m-roots');if(r)r.outerHTML=rootsMod();}}
+      // Field measurements: a tree in the file is measured; the measurements, root space and the sources table follow it.
+      else if(name==='field'){if(rec.field?.status==='ready'){addExtras();const m=$('#m-metrics');if(m){m.outerHTML=metricsMod();keepYear();}const r=$('#m-roots');if(r)r.outerHTML=rootsMod();
+        swapMod('sources',sources());linkRecordIds($('#m-sources'));}}
       else if(name==='inat'){const s=$('#inatSlot');if(s)s.innerHTML=inatBody();}
       else if(name==='streetview'){const s=$('#streetSlot');if(s)s.innerHTML=streetBody();}
       else if(name==='scenario')scenarioDraw();
@@ -792,7 +797,7 @@
     // returns viewer is a workbench tool).
     const crown=rec.membersPending?R.loadMembers(rec).catch(()=>{rec.membersPending=false;}).then(()=>swapMod('records',records())):Promise.resolve();
     // The imagery, place and KYTE parts read files that arrive after the hero (later()); so does the comparisons' board.
-    const early=Promise.all([R.enrich(rec,env,{parts:['history','corrections'],onPart}),later().then(()=>R.enrich(rec,env,{parts:['imagery','place','photos','inat','streetview'],onPart}))]);
+    const early=Promise.all([R.enrich(rec,env,{parts:['history','corrections','field'],onPart}),later().then(()=>R.enrich(rec,env,{parts:['imagery','place','photos','inat','streetview'],onPart}))]);
     const context=Promise.all([crown,later()]).then(()=>R.enrich(rec,env,{parts:['context'],onPart}));
     Promise.allSettled([early,context]).finally(()=>done('parts'));
     (window.requestIdleCallback||setTimeout)(()=>script(window.ALTOVersion?.asset?window.ALTOVersion.asset('./tree-future.js'):'./tree-future.js').then(()=>R.enrich(rec,env,{parts:['scenario'],onPart})).catch(()=>{}));

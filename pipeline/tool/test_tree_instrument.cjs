@@ -27,6 +27,8 @@ assert.equal(I.text(Q('crownArea',315.5,'measured')),'316 m²');
 assert.equal(I.text(Q('crownArea',8.25,'measured')),'8.3 m²');
 assert.equal(I.text(Q('crownDiameter',20.04,'derived')),'20 m');
 assert.equal(I.text(Q('trunkDiameter',36.19)),'36 cm');
+assert.equal(I.LABELS.trunkDiameter,'Trunk diameter at 1.4 m');
+assert.equal(I.LABELS.largestStem,'Largest stem at 1.4 m');
 assert.equal(I.text(Q('benefits',537.9)),'$540/yr');
 assert.equal(I.text(Q('carbonStored',1.165)),'1.2 t CO₂e');
 assert.equal(I.text(Q('carbonStored',2.98)),'3.0 t CO₂e');
@@ -61,8 +63,11 @@ for(const id of Object.keys(F.trees)){
     assert.equal(cell.includes('badge-estimate'),q.kind==='model',`${id} ${k}: Estimate badge for kind ${q.kind}`);
     const pop=I.provenance(q,rec);
     assert.ok(/<dt>Source<\/dt>/.test(pop)&&/<dt>Release<\/dt>/.test(pop)&&pop.includes(rec.id),`${id} ${k}: provenance popover`);
-    assert.ok(pop.includes('Release 6 · 11 Oct 2026 · Tool 0.2.13 · Preview'),`${id} ${k}: release named by its number and date`);
+    assert.ok(pop.includes('Release 6 · 11 Oct 2026 · Tool 0.2.17.1 · Preview'),`${id} ${k}: release named by its number and date`);
   }
+  // Trunk measuring height, the New Zealand convention from tool 0.2.15: 1.4 m, never the earlier 1.3 m above the uphill ground.
+  if(rec.measures.trunkDiameter)assert.ok(I.metric(rec,'trunkDiameter').includes('Trunk diameter at 1.4 m'),`${id}: trunk card at 1.4 m`);
+  assert.ok(!/1\.3 m|uphill/.test(text),`${id}: no 1.3 m trunk wording`);
   // The year control has one button per survey and a selected 2024.
   const years=I.years(rec);
   assert.equal((years.match(/class="ti-yb[ "]/g)||[]).length,rec.surveys.length);
@@ -144,7 +149,7 @@ assert.ok(/@media screen and \(max-width: 759px\)[\s\S]*\.ti-bar-nav a \{[^}]*mi
 assert.ok(!/@media \(max-width/.test(css),'narrow layouts are for screens; print keeps the wide layout');
 // The citation names the release by its date, with its number for exactness; no development-build wording.
 const cite=require(web+'version.js').citation({treeId:DET,metadata:META});
-assert.ok(cite.includes('Release 11 Oct 2026 (release 6, preview), tool 0.2.13')&&!/development build|Data v6/.test(cite),cite);
+assert.ok(cite.includes('Release 11 Oct 2026 (release 6, preview), tool 0.2.17.1')&&!/development build|Data v6/.test(cite),cite);
 // ---- Release 6.2 records: the 22 trees the 13 Oct 2026 review names (fixtures/tree-records-v62.json) ----
 {
   const F62=require('./fixtures/tree-records-v62.json'),M62=F62.metadata;

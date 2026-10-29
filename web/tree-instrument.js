@@ -40,7 +40,7 @@
     if(!q)return ['–',''];
     // The release's wording with its hedge kept ("Probably evergreen broadleaf"); the card's Estimate mark says it is a model's.
     if(q.key==='growthForm')return [String(q.text||'').replace(/\s*\(model\)$/,'').replace(/\(model,\s*/,'('),''];
-    const f=fmtValue(q.key,q.value,{measuredTape:q.kind==='measured'&&/KYTE/.test(q.provenance?.source||'')});
+    const f=fmtValue(q.key,q.value,{measuredTape:q.kind==='measured'&&(!!q.tape||/KYTE/.test(q.provenance?.source||''))});
     if(f)return f;
     const m=String(q.text??'').match(/^(\$?\d[\d.,]*)\s*(.*)$/);return m?[m[1],m[2]]:[String(q.text??''),''];
   }
@@ -93,6 +93,8 @@
     if(q.key==='rootZone')return `at least ${text(q)}, trunk to canopy edge`;
     if(q.key==='rootZoneColumnar')return `Half the tree height: ${text(q)} (columnar crown)`;
     if(q.key==='largestStem')return `${q.text} · KYTE ground visit · not the tree’s trunk diameter`;
+    // A field measurement: who and how are in the field rows under the band (fieldRows).
+    if(q.field)return ['Measured in the field',q.field.dates?.text].filter(Boolean).join(' · ');
     // Release 6.3 names what the value adds up (stormwater and carbon).
     if(q.key==='benefits')return [q.components?cap(q.components):null,rt&&!/^Range not/.test(rt)?rt:null,'Sensitivity scenario',num(q.band)!==null?`±${nf(q.band*100)}% band set by confidence tier`:null,rt&&/^Range not/.test(rt)?rt:null].filter(Boolean).join(' · ');
     // Height class (TS-07): "85% of the 22 m evergreen-broadleaf reference height"; the class band when the height shown
@@ -102,7 +104,7 @@
     if(q.key==='crownReplacement')return q.notClassed?cap(q.notClassed.label):[num(q.years)!==null?`About ${nf(q.years,q.years<10?1:0)} years to regrow this crown area`:null,HOW.crownReplacement,rt].filter(Boolean).join(' · ');
     if(q.key==='lifeStage'){const b=q.basisClass,share=num(q.share)!==null?`${nf(q.share)}%`:q.band;
       return [b&&share?cap(`${share} of the ${nf(b.ref)} m ${b.words.replace(/ /g,'-')} reference height${b.differs?' (this crown’s release 5.2 class)':''}`):q.band?`${cap(q.band)} of the class reference height`:HOW.lifeStage,rt].filter(Boolean).join(' · ');}
-    if(q.kind==='model')return [rt,HOW[q.key]||sourceName(p)].filter(Boolean).join(' · ');
+    if(q.kind==='model')return [rt,q.how||HOW[q.key]||sourceName(p)].filter(Boolean).join(' · ');
     if(q.kind==='rule')return HOW[q.key]||`Inferred · ${sourceName(p)}`;
     if(q.kind==='derived')return HOW[q.key]||`From ${sourceName(p).toLowerCase()}`;
     if(q.key==='crownSpread')return HOW.crownSpread;
@@ -314,7 +316,7 @@
   const BAR={lifeStage:stageBar,irreplaceability:classBar,crownReplacement:bandBar};
   // Card labels. The dripline card names its own measure (dripline radius, or the equal-area radius when the outline is
   // not loaded), so its label comes from the quantity.
-  const LABELS={height:'Height',crownArea:'Crown area',crownDiameter:'Crown diameter (equal-area circle)',crownSpread:'Crown spread',trunkDiameter:'Trunk diameter at 1.3 m',largestStem:'Largest stem at 1.3 m',dripline:'Dripline radius (2024 crown outline)',
+  const LABELS={height:'Height',crownArea:'Crown area',crownDiameter:'Crown diameter (equal-area circle)',crownSpread:'Crown spread',trunkDiameter:'Trunk diameter at 1.4 m',largestStem:'Largest stem at 1.4 m',dripline:'Dripline radius (2024 crown outline)',
     rootProtection:'BS 5837 root protection radius (UK standard; 12 × trunk estimate), for comparison',rootZone:'Unitary Plan protected root zone (Chapter J)',
     rootZoneColumnar:'Unitary Plan protected root zone, columnar crown (Chapter J)',lifeStage:'Height class',benefits:'Benefits',carbonStored:'Carbon stored',stormwater:'Stormwater runoff avoided',
     replacementYears:'Years for a new crown to reach this crown area at the planning rate (crown area only)',irreplaceability:'Irreplaceability',crownReplacement:'Crown replacement time',growthForm:'Growth form'};
@@ -327,7 +329,7 @@
     const alts=alt?[2013,2016].map(y=>{const a=yearAlt(rec,key,y);
       return `<span class="ti-m-alt" data-for-year="${y}" hidden><span class="ti-m-v${a.q?'':' is-none'}"><b>${esc(a.v[0])}</b>${a.v[1]?`<small>${esc(a.v[1])}</small>`:''}</span><span class="ti-m-p">${esc(a.line)}</span></span>`;}).join(''):'';
     const extra=notes(q).map(t=>`<span class="ti-m-p ti-m-caution">${esc(cap(t))}</span>`).join('');
-    const lab=key==='dripline'?q.label:label||LABELS[key]||q.label;
+    const lab=key==='dripline'||q.field?q.label:label||LABELS[key]||q.label;
     return `<li class="ti-m" data-kind="${esc(q.kind)}" data-q="${esc(key)}"${q.flag?` data-flag="${esc(q.flag)}"`:''}${alt?' data-years="2013 2016 2024"':''}><button type="button" class="ti-m-b" aria-haspopup="dialog" aria-expanded="false" aria-controls="${esc(id)}">
       <span class="ti-m-l">${esc(lab)}</span>
       <span class="ti-m-cur"${alt?' data-for-year="2024"':''}><span class="ti-m-v${txt}"><b>${esc(v)}</b>${u?`<small${tight(u)?' class="is-tight"':''}>${esc(u)}</small>`:''}${fn}${isEstimate(q)?estimateBadge:''}</span>${bar||''}
@@ -537,6 +539,15 @@
       ${m.carbonStored?row('Carbon stored',esc(text(m.carbonStored)),true,esc(`Held in the trunk, branches and roots.${nc(m.carbonStored)}${caution}`),'carbonStored'):''}
       </dl>${variant==='page'?'<p class="ti-def">Replacement cost in dollars: none for this record (not estimated in this release).</p>':''}`;
   }
+  // Field measurements as data rows, for the panel and the tree page (tree-record.js field): each reading first (value; the
+  // method at its own height, the dates and who measured; how many measured and the spread across teams; the review),
+  // newest first, then ALTO's estimate with its own method. '' for a tree without one, so nothing changes for it.
+  function fieldRows(rec){
+    const list=rec.field?.status==='ready'?rec.field.entries||[]:[];if(!list.length)return '';
+    const row=(label,q,badge,lines)=>`<div class="ti-row"><dt>${esc(label)}</dt><dd><button type="button" class="ti-v" data-q="${esc(q.key)}" aria-haspopup="dialog"><b>${esc(text(q))}</b></button>${badge?estimateBadge:''}${lines.filter(Boolean).map(t=>`<small>${esc(t)}</small>`).join('')}</dd></div>`;
+    const est=rec.measures?.trunkEstimate;
+    return `<dl class="ti-rows ti-field">${list.map(q=>row('Measured',q,false,[[q.words.method,q.field.dates?.text,q.field.by].filter(Boolean).join(' · '),q.words.counts,q.words.review])).join('')}${est?row('ALTO estimate',est,true,[rangeText(est),est.how]):''}</dl>`;
+  }
   // Root space as data rows (concept A): the dripline radius (2024 crown outline) and, for a scheduled tree, the Unitary
   // Plan protected root zone (Chapter J); the BS 5837 radius (a UK standard, 12 × the trunk estimate) for comparison; the
   // effective rooting radius and its basis; an explicit line when the release has no scenario for the tree.
@@ -637,7 +648,7 @@
     const [ci,key]=String(ref).split(':'),c=rec.bySource?.columns?.[Number(ci)];if(!c)return null;
     const qk={height:'height',crownDiameter:'crownDiameter',crownArea:'crownArea',trunk:'trunkDiameter'}[key]||key;
     const kind=key==='trunk'?(c.trunkKind||'model'):key==='crownDiameter'?'derived':c.key==='source'?'recorded':'measured';
-    const trunkQ=key==='trunk'&&kind==='model'?rec.measures?.trunkDiameter:null;
+    const trunkQ=key==='trunk'&&kind==='model'&&rec.measures?.trunkDiameter?.kind==='model'?rec.measures.trunkDiameter:null;
     return {key:qk,label:`${({height:'Height',crownDiameter:'Crown diameter',crownArea:'Crown area',trunk:'Trunk diameter'})[key]||key}: ${COL[c.key]||c.label}`,value:c[key],unit:UNIT_OF[qk]||null,text:null,kind,
       range:trunkQ?.range||null,provenance:trunkQ?trunkQ.provenance:{source:c.label,date:c.when?{text:c.when}:null,method:c.method||null,note:key==='height'?c.heightNote||null:c.note||null,release:rec.release?.data||null}};
   }
@@ -689,7 +700,7 @@
   function sectionScroll(sectionTop,scrollY,offset){return Math.max(0,Math.round((+sectionTop||0)+(+scrollY||0)-(+offset||0)));}
 
   // ---------- binding: one selected survey year across a whole view; provenance on any value ----------
-  function quantity(rec,key){return rec.measures?.[key]||(rec.lidar?.measurements||[]).find(x=>x.key===key)||null;}
+  function quantity(rec,key){return rec.measures?.[key]||(rec.lidar?.measurements||[]).find(x=>x.key===key)||(rec.field?.entries||[]).find(x=>x.key===key)||null;}
   function setYear(scope,year,{preview=false}={}){
     const y=String(year);
     scope.dataset.year=y;
@@ -828,7 +839,7 @@
     return {title,primary,mapHref,html};
   }
 
-  const api={KINDS,LABELS,SECTIONS,estimateBadge,fmt,fmtValue,fmtRange,text,line,sourceName,rangeBar,stageBar,classBar,bandBar,stageShare,eyebrow,title,crownForm,scheduleLine,protectionLine,groupAreaLine,releaseLines,evidence,evidenceRow,councilPosition,surveyCodes,badges,versionLine,metric,strip,missing,
+  const api={KINDS,LABELS,SECTIONS,estimateBadge,fmt,fmtValue,fmtRange,text,line,sourceName,rangeBar,stageBar,classBar,bandBar,stageShare,eyebrow,title,crownForm,scheduleLine,protectionLine,groupAreaLine,releaseLines,evidence,evidenceRow,councilPosition,surveyCodes,badges,versionLine,metric,strip,missing,fieldRows,
     provenance,years,yearsNote,rateText,surveySentence,heightFigure,surveyChart,crownFigure,figureKey,imageryText,regrowthLine,lost,rootRows,METRICS,distStrip,contextLines,contextSentence,boardName,
     matrix,cellQuantity,teasers,pageLinks,setYear,bind,quantity,nice,ticks,money,sig2,areaText,hybrid,esc,idLine,statusView,stickyPlan,sectionScroll};
   root.ALTOInstrument=api;

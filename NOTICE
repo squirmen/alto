@@ -12,8 +12,12 @@ International (CC BY-NC 4.0); see docs/LICENSE.md.
 The Better Places Lab name and logo (web/brand/) are not covered by either licence and may not be
 reused without permission.
 
+ALTO's own data, as served at https://alto.org.nz, is not covered by either licence. Its terms
+(free for non-commercial use with credit; ask first for commercial or consultancy use) are at
+https://alto.org.nz/terms.html
+
 Third-party material keeps its own licence. Every source, with its licence and a link to the original:
-https://alto.tfwelch.com/credits.html
+https://alto.org.nz/credits.html
 
 Included in this repository:
 - web/vendor/three/: three.js, MIT License (web/vendor/three/LICENSE).

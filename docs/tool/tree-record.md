@@ -34,10 +34,12 @@ await ALTOTreeRecord.parcel(rec, env, parcelId);             // parcel id from t
 - `fromTile(props, env)`: a record from map-tile properties alone (`loaded: false`; identity and
   `summary` only) so a panel can draw at once.
 - `enrich(rec, env, {parts, onPart})`: fills `context`, `history` (lineage), `corrections`,
-  `lidar.points`, `imagery`, `place`, `photos`; `scenario` only when asked for and `tree-future.js` is
+  `lidar.points`, `imagery`, `place`, `photos`, `field`; `scenario` only when asked for and `tree-future.js` is
   loaded. Each part is set on `rec` and reported through `onPart(name, rec)` as it arrives.
 - `fromMap(rec, {points, tileProps, radius = 40})`: nearby trees and land type from rendered map features.
 - `setLive(rec, live)`: a reviewed ground measurement (KYTE) replaces modelled values where it measures them.
+- `fieldFile(env)`: reads `<siteRoot>/field/measurements_v1.json` once a page load (shared by every tree);
+  `fieldTrunk(number)`: a tree's newest field trunk measurement once it is read, for pages without a record.
 - `toJSON(rec)`: a plain copy (internal fields `summary`, `_ctx`, `_env` are not enumerable).
 - Helpers: `percentile(value, quantiles, probabilities)`, `exact(value, sortedValues)`, `tileOf(lon,
   lat, z)`, `fnvShard(id, n)`, `methodRef(methodId)`.
@@ -70,11 +72,13 @@ rule (irreplaceability).
 A `range` exists only when its two ends differ as printed, so no value carries a zero-width range
 ("23.7–23.7 m"); the same holds for the spreads written into `provenance.uncertainty.text`.
 
-**Trunk diameter** (DBH, at 1.3 m above the uphill ground) is never measured by the release. It holds two
-models: `assets.dbh_cm_crown_est` (crown size and height; `roots.dbh_cm` repeats it) and
+**Trunk diameter** (DBH, at 1.4 m above the ground, on a slope from mid-slope: the New Zealand convention, from
+tool 0.2.15; earlier tools said 1.3 m above the uphill ground, and no estimate changed) is never measured by the
+release. It holds two models: `assets.dbh_cm_crown_est` (crown size and height; `roots.dbh_cm` repeats it) and
 `services.dbh_cm_est` (the benefit equations). `measures.trunkDiameter` is their median, the central
 estimate (design system 4.8), with their spread as its range (`label: 'Trunk models'`); its method links
-to `v5-methods.html#trunk-diameter`. A reviewed KYTE tape measurement replaces both (`kind: 'measured'`).
+to `v5-methods.html#trunk-diameter`. A reviewed KYTE tape measurement replaces both (`kind: 'measured'`); its
+method names the height the visit stored (`measuring_height_m`).
 `measures.rootProtection` is the root protection radius from that value: 12 × trunk diameter, the area
 capped at 707 m² (the release's rule), with the range the trunk range implies.
 
@@ -109,7 +113,7 @@ repository; `method.doc` is the repository document. `model.validation` comes fr
 | `release` | `{data: 'v6', dev, datasetVersion, updated, public{text: 'Release 11 Oct 2026 · Tool 0.2.0', preview}, snapshot, bucketSchema, tool, status, statusText, label, methodsHref, repository}`; `public` is the release as the interface names it (by its date; the number stays in provenance) |
 | `citation` | citation string with tree ID, data and tool versions |
 | `identity` | `{title, latin, nameKind: recorded\|model\|none, nameNote, category, detection, growthForm, protection, protectionStatus, notable, evidence, crownLink, quality, primarySource, badges[{key,label,tone,title}], recordCount, sources[{key,label,count}], recordSources[{key,label}], position{lon,lat,basis}, crownRepresentative}`. `protection` is the schedule entry or `null`; `protectionStatus` is said for every tree: `{status: protected\|not_protected\|unknown, label, entry, schedule, law: 'Auckland Unitary Plan, Schedule 10', line, sentence, checked, source}` (`unknown` only for a map-tile record whose tile does not carry the flag; `checked` says what "not protected" was checked against: the Notable Trees schedule as published in the release). `sources` names every kind of evidence on the crown; `recordSources` only the datasets of the records counted in `recordCount`, and the records badge (`N records · M sources`, with `records` and `sources` counts) uses it |
-| `measures`, `measureOrder` | key measurements by key, in display order: `species`, `growthForm`, `height`, `crownArea`, `crownOutline`, `crownDiameter`, `trunkDiameter`, `rootProtection`, `lifeStage`, `benefits`, `carbonStored`, `stormwater`, `replacementYears`, `irreplaceability`, `protection` (each a Quantity; absent when the record has no value) |
+| `measures`, `measureOrder` | key measurements by key, in display order: `species`, `growthForm`, `height`, `crownArea`, `crownOutline`, `crownDiameter`, `trunkDiameter`, `trunkEstimate` (a tree measured in the field), `rootProtection`, `lifeStage`, `benefits`, `carbonStored`, `stormwater`, `replacementYears`, `irreplaceability`, `protection` (each a Quantity; absent when the record has no value) |
 | `records`, `moreRecords` | every source record on the crown, this tree first: `{treeId, self, mapMarker, detection, source{key,name,kind,group}, role, sourceId, objectId, href, species{common,latin,basis}, owner{raw,class}, snapshot, position, link{class,text,score,edgeDistance,topDistance}, protection{label,type}, crosswalk{from,to}, review, streetView}`; `moreRecords` = linked records not loaded |
 | `identifiers` | every code that identifies the tree `{kind, code, href, tree_id, self, note}` |
 | `bySource` | `{columns[{key,label,when,height,crownDiameter,crownArea,outlineArea,trunk,trunkKind,form,formKind,note,heightNote,method}], rows[{key,label,unit}]}`: values side by side by source (v5 crown, v4 crown, raster crown, canopy height at the record, 2016/2013 LiDAR, the source record, KYTE) |
@@ -130,6 +134,7 @@ repository; `method.doc` is the repository document. `model.validation` comes fr
 | `place` | `{status, board{name,canopyCover,canopyCoverBasis}, outsideBoards, landType{key,label,basis}, parcel{status,id,landType,zone,area,canopy,canopyCover,trees,benefits,href}}` |
 | `nearby` | `{status, radius, basis, trees[{treeId,title,nameKind,protected,source,height,crownArea,distance,href}]}` |
 | `photos` | `{status, visits[] (KYTE API), lead{name,common,score,organ,source}, live}` |
+| `field` | field measurements: `{status: ready\|none\|not_published\|unavailable\|pending, updated, entries[Quantity]}`, each entry a measured trunk diameter (`field1`, `field2`…, newest first) with `field{value, height, measurements, teams, classes, spread, method, from, to, dates, by, review, ref}` and `words{method, counts, review}`. Read from `<siteRoot>/field/measurements_v1.json` (`field_measurements_v1`; outside `data/`, so a data release leaves it; read once a page load with `cache: 'no-cache'`, no version stamp). A 404 or 403, or another file version, is `not_published`; a failed read is `unavailable`; entries without a trunk diameter, the height it was read at or who read it are left out. A tree with an entry is measured: `measures.trunkDiameter` is the newest entry (labelled with its own height), `measures.trunkEstimate` keeps the release's models (with `how`, its method), and the root protection radius and root space follow the measured trunk, as for a KYTE reading. A reviewed KYTE single-trunk reading stays first; the field entries are still listed |
 | `scenario` | `{status, kind:'scenario', anchor{year,height}, points[{year,height,low,high}], rate, personalRate, neighbourWeight, model{id,validation}, basis}` |
 | `know` | KYTE routes `{task: species\|age\|removed\|outline, title, text, href: <kyte>/?tree=<id>&task=<task>&release=<dataset version>}` (KYTE `docs/REPORTS.md`; `release` is left out when the metadata gives no dataset version) |
 | `provenance` | all provenance entries on the record, for footnotes |

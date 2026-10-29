@@ -1,0 +1,7 @@
+{"version":"field_measurements_v1","updated":"2026-10-27",
+ "trees":{
+  "TZ69KK1G":[
+   {"kind":"trunk_diameter","value_cm":11.1,"n_measurements":3,"n_teams":3,"n_classes":1,"spread_cm":1.1,"height_m":1.3,"method":"diameter tape","date_from":"2026-10-26","date_to":"2026-10-27","by":"Example data","review":"example only, not a real measurement","ref":"EXAMPLE-1"},
+   {"kind":"trunk_diameter","value_cm":22.2,"n_measurements":2,"n_teams":2,"n_classes":1,"spread_cm":2.2,"height_m":1.4,"method":"diameter tape","date_from":"2026-09-01","date_to":"2026-09-01","by":"Example data","review":"example only, not a real measurement","ref":"EXAMPLE-2"}],
+  "TADY8HB7":[
+   {"kind":"trunk_diameter","value_cm":33.3,"n_measurements":6,"n_teams":3,"n_classes":2,"spread_cm":3.3,"height_m":1.3,"method":"diameter tape","date_from":"2026-10-28","date_to":"2026-10-30","by":"Example data","review":"example only, not a real measurement","ref":"EXAMPLE-3"}]}}

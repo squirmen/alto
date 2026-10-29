@@ -135,6 +135,20 @@ DirectoryIndex index.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^tree/([^/]{1,190})/?$ /tree.html?id=$1 [NC,B,R=302,L,QSA]
+  # Printed short links (flyers, posters): /go/<code> answers 302 with ?from=<source>, so the access log shows which
+  # flyer was used. 302, never 301: a printed code can be pointed somewhere else later without reprinting.
+  RewriteRule ^go/dps/?$ /kyte/?from=dps [NC,R=302,L]
+  RewriteRule ^go/dps-map/?$ /?from=dps [NC,R=302,L]
+  RewriteRule ^go/leafy/?$ /kyte/?from=leafylab [NC,R=302,L]
+  RewriteRule ^go/leafy-map/?$ /?from=leafylab [NC,R=302,L]
+  RewriteRule ^go/flyer/?$ /kyte/?from=flyer [NC,R=302,L]
+  RewriteRule ^go/flyer-map/?$ /?from=flyer [NC,R=302,L]
+  RewriteRule ^go/card/?$ /kyte/?from=card [NC,R=302,L]
+  RewriteRule ^go/card-map/?$ /?from=card [NC,R=302,L]
+  RewriteRule ^go/cmap/?$ /?from=card [NC,R=302,L]
+  RewriteRule ^go/kyte/?$ /kyte/?from=go [NC,R=302,L]
+  RewriteRule ^go/map/?$ /?from=go [NC,R=302,L]
+  RewriteRule ^go(/.*)?$ / [NC,R=302,L]
 </IfModule>
 # Any other address that names no file: ALTO's page (search, Map, Species maxima,
 # Sources and credits), not the host's.

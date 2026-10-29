@@ -166,6 +166,8 @@
 .ti-row dd { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px var(--space-2); }
 .ti-row dd b { font: var(--text-value); font-variant-numeric: var(--numeric-data); color: var(--color-text); }
 .ti-row dd small { flex-basis: 100%; font: var(--text-caption); color: var(--color-text-muted); }
+/* Field measurements under the key measurements (fieldRows): the panel's sub-heading. */
+.ti-field-h { margin: var(--space-4) 0 0; }
 
 /* ---------- comparisons ---------- */
 .ti-dist { max-width: 320px; }

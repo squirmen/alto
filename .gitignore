@@ -25,6 +25,8 @@ __pycache__/
 *.mbtiles
 *.geojsonl
 *.json.gz
+# except the tree-number fixture shards test_tree_id.cjs reads (a few rows of the release alias table)
+!pipeline/tool/fixtures/tree_ids/**/*.json.gz
 pipeline/base/data/raw/*
 pipeline/base/data/interim/*
 pipeline/base/data/processed/*

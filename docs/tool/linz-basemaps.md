@@ -29,7 +29,7 @@ Sources: <https://www.linz.govt.nz/guidance/data-service/linz-basemaps-guide/lin
 
 ## What to request
 
-Developer access, locked to `https://alto.tfwelch.com` (it covers `/beta/`). Do not use a Standard key from the
+Developer access, locked to `https://alto.org.nz` (it covers `/beta/`). Do not use a Standard key from the
 LINZ Basemaps website: it is meant for internal apps and stops working after 90 days.
 
 Email **basemaps@linz.govt.nz** with the subject **Request Basemaps Developer Access** and the three fields the
@@ -38,12 +38,12 @@ request link on the LINZ Basemaps website fills in:
 ```
 Your Name: Tim Welch, Better Places Lab, Waipapa Taumata Rau | University of Auckland
 Your Email: t.welch@auckland.ac.nz
-Your Service/App URL: https://alto.tfwelch.com (and https://alto.tfwelch.com/kyte/ if KYTE should use it)
+Your Service/App URL: https://alto.org.nz (and https://alto.org.nz/kyte/ if KYTE should use it)
 ```
 
 Useful to add: ALTO is a free, noncommercial public map of Auckland's trees; the key would serve the aerial basemap
 on the beta site first and then the public site, mostly at street-tree zooms (17–21); please lock it to
-alto.tfwelch.com. LINZ replies with the site's key.
+alto.org.nz. LINZ replies with the site's key.
 
 ## Switching it on
 
@@ -69,7 +69,7 @@ date. LINZ serves an attribution list for the imagery at `/v1/tiles/aerial/WebMe
 KYTE's two maps (`app/app.js` in the KYTE repository, from branch `credits-2026-10`) read the same switch from
 `kyte/config.js`: add `"aerial": "linz", "linzApiKey": "<key>"` to `window.KYTE_CONFIG`, leaving the build stamp as
 it is, and add `https://basemaps.linz.govt.nz` to `img-src` in KYTE's `.htaccess`. Without both keys KYTE stays on
-Esri. Ask LINZ for the key to cover `https://alto.tfwelch.com/kyte/` too.
+Esri. Ask LINZ for the key to cover `https://alto.org.nz/kyte/` too.
 
 ## Reference
 

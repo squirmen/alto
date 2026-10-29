@@ -128,7 +128,7 @@
   .tree-profile { width: 100%; height: 48dvh; top: auto; bottom: 0; border-radius: 18px 18px 0 0; box-shadow: 0 -10px 30px rgb(23 32 26 / 16%); }
   .tree-profile[data-sheet="full"] { height: calc(100dvh - 56px); }
   .sheet-handle { display: grid; place-items: center; width: 100%; height: 22px; padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; flex: 0 0 auto; }
-  .sheet-handle span { width: 42px; height: 5px; border-radius: 3px; background: #c8cfc6; }
+  .sheet-handle .sheet-grip { width: 42px; height: 5px; border-radius: 3px; background: var(--color-border-strong); }
   @media (pointer: coarse) { .sheet-handle { height: var(--target-touch); } }
   .tree-profile-head { padding: 0 12px 6px; border-bottom: 0; }
   .tp-id { padding: 4px 16px 12px; background: var(--color-surface); }
@@ -490,13 +490,13 @@
   #explorer.lp, body[data-aside-collapsed="true"] #explorer.lp {
     position: fixed; top: auto; left: 0; right: 0; bottom: 0; width: 100%; height: calc(100dvh - 48px); max-height: none;
     border-width: 1px 0 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -8px 28px rgb(23 32 26 / 14%);
-    transform: translateY(var(--sheet-offset, calc(100% - 168px))); visibility: visible; opacity: 1; pointer-events: auto;
+    transform: translateY(var(--sheet-offset, calc(100% - var(--sheet-bar)))); visibility: visible; opacity: 1; pointer-events: auto;
     transition: transform 260ms var(--ease-standard), visibility 0s linear 0s; z-index: 30;
   }
   #explorer.lp.is-dragging, #explorer.lp.is-instant { transition: none; }
   body[data-profile-open="true"] #explorer.lp { transform: translateY(100%); visibility: hidden; transition: transform 260ms var(--ease-standard), visibility 0s linear 260ms; }
   .lp-handle { display: grid; place-items: center; flex: none; width: 100%; height: 24px; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; }
-  .lp-handle span { width: 40px; height: 4px; border-radius: 2px; background: #b9c1b7; }
+  .lp-handle span { width: 40px; height: 4px; border-radius: 2px; background: var(--color-border-strong); }
   /* A11Y-13: the handles are 44 px tall on a touch screen (the sheet's stops follow its content). */
   @media (pointer: coarse) { .lp-handle { height: var(--target-touch); } }
   #explorer.lp .lp-head { display: none; }
@@ -525,10 +525,10 @@
   .about-dock { min-height: 40px; width: auto; padding: 0 var(--space-3); }
   body[data-profile-open="true"][data-sheet="full"] .map-dock { display: none; }
   /* Map controls and the colour key sit above the visible part of the sheet. They move by transform, from the sheet's
-     peek height in CSS (168 px) until the sheet has measured itself: moving their bottom edge shifted the page as the
-     sheet settled (FE-09, CLS). */
-  .maplibregl-ctrl-bottom-right { bottom: env(safe-area-inset-bottom); transform: translateY(calc(-1 * var(--sheet-clear, 168px))); transition: transform 260ms var(--ease-standard); }
-  .maplibregl-ctrl-bottom-left { bottom: 0; transform: translateY(calc(-1 * (var(--sheet-clear, 168px) + var(--scale-lift, 0px)))); transition: transform 260ms var(--ease-standard); }
+     peek height in CSS (--sheet-bar) until the sheet has measured itself: moving their bottom edge shifted the page as
+     the sheet settled (FE-09, CLS). The measured height counts the safe area under a home indicator, so both sit on 0. */
+  .maplibregl-ctrl-bottom-right { bottom: 0; transform: translateY(calc(-1 * var(--sheet-clear, var(--sheet-bar)))); transition: transform 260ms var(--ease-standard); }
+  .maplibregl-ctrl-bottom-left { bottom: 0; transform: translateY(calc(-1 * (var(--sheet-clear, var(--sheet-bar)) + var(--scale-lift, 0px)))); transition: transform 260ms var(--ease-standard); }
   .pick-banner { bottom: calc(var(--sheet-clear, 0px) + 16px); }
 }
 
@@ -691,7 +691,7 @@ body .basemap-switch button.active { background: var(--color-surface); color: va
 .search-pin::after { content: ""; position: absolute; left: 6px; top: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--color-selection-halo); }
 /* The note that says the map shows OpenStreetMap's streets for street names above zoom 16 (Light basemap). */
 .basemap-note { position: absolute; z-index: var(--z-map-ui, 5); top: max(12px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); margin: 0; padding: 4px var(--space-2, 8px); border: 1px solid var(--color-border); border-radius: var(--radius-sm, 6px); background: var(--color-surface); box-shadow: var(--shadow-1); font: var(--text-caption); color: var(--color-text-secondary); white-space: nowrap; pointer-events: none; }
-@media (max-width: 760px) { .basemap-note { top: auto; bottom: calc(var(--sheet-clear, 168px) + 56px); white-space: normal; max-width: calc(100vw - 120px); text-align: center; } }
+@media (max-width: 760px) { .basemap-note { top: auto; bottom: calc(var(--sheet-clear, var(--sheet-bar)) + 56px); white-space: normal; max-width: calc(100vw - 120px); text-align: center; } }
 
 /* The sheet's legend button (phones only): the legend starts folded, under the Filters, Layers and Area tabs. */
 .lp-legend-toggle { display: none; }
@@ -703,4 +703,34 @@ body .basemap-switch button.active { background: var(--color-surface); color: va
   #explorer.lp:not([data-sheet-legend="open"]) .lp-legend { display: none; }
   #explorer.lp .lp-body { order: 3; }
   #explorer.lp .panel-foot { order: 4; }
+}
+
+/* Phones, minimised sheets (26 Oct 2026): slim bars that leave the map its height. The map panel's bar is its handle and
+   the search box (map-app.js measures its stops); the tree or property panel's bar is its handle, carrying the panel's
+   title on one line, beside the close button, and its body takes no room. Each handle is its sheet's toggle
+   (aria-expanded) and its chevron points the way a press goes. The map's zoom, scale and attribution ride above whichever
+   sheet shows (--sheet-clear); over the tree panel they follow its height frame by frame, with no transition of their own.
+   Heights count the safe area under a home indicator (--sheet-safe; 0 unless the page reaches under one). --sheet-bar is
+   the map panel's bar until it has measured itself: the handle (24 px, 44 px on touch), the 44 px search box, 8 px. */
+@media (max-width: 760px) {
+  :root { --sheet-safe: env(safe-area-inset-bottom, 0px); --sheet-bar: calc(24px + var(--target-touch) + var(--space-2) + var(--sheet-safe)); --tree-bar: 60px; }
+  @media (pointer: coarse) { :root { --sheet-bar: calc(var(--target-touch) * 2 + var(--space-2) + var(--sheet-safe)); } }
+  .lp-handle, .sheet-handle { position: relative; }
+  /* Focus rings drawn inside the handles: the sheets clip what lies outside them. */
+  #explorer.lp .lp-handle { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .sheet-handle { border-radius: 18px 18px 0 0; }
+  #explorer.lp .lp-handle:focus-visible, .sheet-handle:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -3px; }
+  .sheet-chev { position: absolute; left: var(--space-4); top: 50%; color: var(--color-text-muted); transform: translateY(-50%); transition: transform var(--dur-fast) var(--ease-standard); pointer-events: none; }
+  [aria-expanded="true"] > .sheet-chev { transform: translateY(-50%) rotate(180deg); }
+  .tree-profile { overflow: hidden; }
+  .sheet-title { display: none; }
+  .tree-profile[data-sheet="peek"] { height: calc(var(--tree-bar) + var(--sheet-safe)); }
+  .tree-profile[data-sheet="peek"] .sheet-handle { height: var(--tree-bar); place-items: center start; padding: var(--space-2) calc(var(--space-2) + 40px + var(--space-3)) 0 calc(var(--space-4) + 20px + var(--space-2)); cursor: pointer; }
+  .tree-profile[data-sheet="peek"] .sheet-grip { position: absolute; top: 6px; left: calc(50% - 21px); }
+  .tree-profile[data-sheet="peek"] .sheet-chev { top: calc(50% + var(--space-1)); }
+  .tree-profile[data-sheet="peek"] .sheet-title { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--text-h3); color: var(--color-text); }
+  .tree-profile[data-sheet="peek"] .tree-profile-head { top: calc((var(--tree-bar) - 40px) / 2 + var(--space-1)); }
+  .tree-profile[data-sheet="peek"] .profile-back { display: none; }
+  body[data-profile-open="true"] :is(.maplibregl-ctrl-bottom-right, .maplibregl-ctrl-bottom-left) { transition: none; }
+  @media (prefers-reduced-motion: reduce) { .sheet-chev { transition: none; } }
 }

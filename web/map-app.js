@@ -145,16 +145,23 @@
       });
     }
 
-    // Phone: a bottom sheet. Peek shows search, the summary and the chips; half adds "Colour by",
-    // the colour key and the drawer buttons; full shows an open drawer. Drag or tap the handle.
-    // The map's own controls sit above the visible part of the sheet (--sheet-clear).
+    // Phone: a bottom sheet. Peek is a slim bar, the handle and the search box, so the map keeps its height; half adds
+    // the summary and the chips, "Colour by", the colour key and the drawer buttons; full shows an open drawer. Drag or
+    // tap the handle. The map's own controls sit above the visible part of the sheet (--sheet-clear).
     // On a phone the Filters, Layers and Area tabs sit above the legend, which starts folded under its own "Legend"
     // button; half shows the sheet down to that button.
+    // A stop is measured to the bottom of the last part it shows (through its offset parents: the search box sits in
+    // .property-search), plus the safe area under a home indicator (--sheet-safe in map.css; 0 on most pages). The
+    // status line above the search box is part of the bar while it has something to say (its Retry button works there).
+    const SHEET_PEEK_INERT = ".lp-summary, .lp-colour, .lp-legend, .lp-legend-toggle, .lp-drawers, .panel-foot";
+    const sheetSafe = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sheet-safe")) || 0;
     function sheetStop(state) {
       if (state === "full") return explorer.offsetHeight;
       const toggle = document.getElementById("sheetLegendToggle");
-      const anchor = state === "peek" ? explorer.querySelector(".lp-summary") : toggle && toggle.offsetParent ? toggle : explorer.querySelector(".lp-drawers");
-      return Math.min(explorer.offsetHeight, anchor.offsetTop + anchor.offsetHeight + 8);
+      const anchor = state === "peek" ? document.getElementById("propertySearch") : toggle && toggle.offsetParent ? toggle : explorer.querySelector(".lp-drawers");
+      let bottom = anchor.offsetHeight;
+      for (let el = anchor; el && el !== explorer; el = el.offsetParent) bottom += el.offsetTop;
+      return Math.min(explorer.offsetHeight, bottom + 8 + sheetSafe());
     }
     document.getElementById("sheetLegendToggle").addEventListener("click", e => {
       const open = e.currentTarget.getAttribute("aria-expanded") !== "true";
@@ -163,8 +170,10 @@
     });
     function placeSheet(visible) {
       explorer.style.setProperty("--sheet-offset", `${Math.max(0, explorer.offsetHeight - visible)}px`);
-      // Map controls ride above the sheet up to its half stop; over a full sheet they stay behind it.
-      const hidden = document.body.dataset.profileOpen === "true" || explorer.dataset.sheet === "full" && !explorer.classList.contains("is-dragging");
+      // Map controls ride above the sheet up to its half stop; over a full sheet they stay behind it. While a tree or
+      // property panel is open, its own sheet places them (see setSheet).
+      if (document.body.dataset.profileOpen === "true") return;
+      const hidden = explorer.dataset.sheet === "full" && !explorer.classList.contains("is-dragging");
       const clear = hidden ? 0 : Math.min(visible, sheetStop("half"));
       document.documentElement.style.setProperty("--sheet-clear", `${Math.round(clear)}px`);
     }
@@ -176,9 +185,12 @@
       const handle = document.getElementById("panelHandle");
       handle.setAttribute("aria-expanded", String(state !== "peek"));
       handle.setAttribute("aria-label", state === "peek" ? "Show more of the panel" : "Show more of the map");
-      // What lies below the visible part of the sheet takes no focus.
+      // What lies below the visible part of the sheet takes no focus; a control that had it as the sheet went down to its
+      // bar hands it to the handle.
       document.getElementById("panelBody").inert = state !== "full";
-      for (const el of explorer.querySelectorAll(".lp-colour, .lp-legend, .lp-legend-toggle, .lp-drawers, .status, .panel-foot")) el.inert = state === "peek";
+      const hiding = state === "peek" && explorer.contains(document.activeElement) && !!document.activeElement.closest(SHEET_PEEK_INERT);
+      for (const el of explorer.querySelectorAll(SHEET_PEEK_INERT)) el.inert = state === "peek";
+      if (hiding) handle.focus({ preventScroll: true });
       // A full sheet covers the map: its controls take no focus underneath it.
       document.getElementById("map").inert = state === "full";
       if (state !== "full" && panelDrawer) { panelDrawer = null; setDrawer(null, { scroll: false }); return; }
@@ -235,7 +247,7 @@
       search.addEventListener("focus", () => {
         if (!sheetLayout.matches || panelSheet !== "peek") return;
         panelSheet = "full"; explorer.dataset.sheet = "full"; document.body.dataset.asideCollapsed = "false";
-        for (const el of explorer.querySelectorAll(".lp-colour, .lp-legend, .lp-legend-toggle, .lp-drawers, .status, .panel-foot")) el.inert = false;
+        for (const el of explorer.querySelectorAll(SHEET_PEEK_INERT)) el.inert = false;
         document.getElementById("map").inert = true;
         if (tabbing) raiseNow(); else requestAnimationFrame(() => placeSheet(explorer.offsetHeight));
       });
@@ -263,14 +275,16 @@
         sheetAfterPaint = true;
         requestAnimationFrame(() => setTimeout(() => { sheetAfterPaint = false; if (sheetLayout.matches) placeSheet(sheetStop(panelSheet)); }, 0));
       }).observe(document.body, { attributes: true, attributeFilter: ["data-profile-open"] });
-      new ResizeObserver(() => { if (sheetLayout.matches && !explorer.classList.contains("is-dragging")) placeSheet(sheetStop(panelSheet)); }).observe(explorer.querySelector(".lp-summary"));
+      // The stops move when the summary changes height, and the bar when the status line above the search box comes or goes.
+      const restop = new ResizeObserver(() => { if (sheetLayout.matches && !explorer.classList.contains("is-dragging")) placeSheet(sheetStop(panelSheet)); });
+      for (const el of [explorer.querySelector(".lp-summary"), document.getElementById("status")]) restop.observe(el);
       window.addEventListener("resize", () => { if (sheetLayout.matches) placeSheet(sheetStop(panelSheet)); });
     })();
     function applyPanelLayout() {
       if (sheetLayout.matches) { explorer.dataset.sheet = panelSheet; }
       else {
         explorer.style.removeProperty("--sheet-offset"); document.documentElement.style.removeProperty("--sheet-clear");
-        for (const el of explorer.querySelectorAll("#panelBody, .lp-colour, .lp-legend, .lp-legend-toggle, .lp-drawers, .status, .panel-foot")) el.inert = false;
+        for (const el of explorer.querySelectorAll(`#panelBody, ${SHEET_PEEK_INERT}`)) el.inert = false;
         document.getElementById("map").inert = false;
       }
       setSidebarCollapsed(mobileLayout.matches);
@@ -2662,7 +2676,7 @@
     }
     for (const id of ["savedTreesBtn", "savedTreesDock"]) document.getElementById(id)?.addEventListener("click", () => ALTOEvidenceWorkspace.show());
     window.addEventListener('DOMContentLoaded', () => ALTOEvidenceWorkspace.init({
-      dataBase: DATA_BASE, version: TILE_VERSION,
+      dataBase: DATA_BASE, version: TILE_VERSION, siteRoot: SITE_ROOT,
       load: loadTree, readLink: false,
       ready: evidenceMapReady, open: openProfile,
       locate: coordinates => map.flyTo({center:coordinates,zoom:18})
@@ -2687,6 +2701,7 @@
       const v = r.status === "unavailable" ? { html: `<div class="ti-id-main ti-status-page" data-status="unavailable"><p class="ti-eyebrow ti-kicker">Tree link</p><h1>Not loaded</h1><p class="ti-lead">${escapeHtml(r.note || err?.message || "The tree's record did not load.")}</p></div><div class="ti-id-actions"><button type="button" class="btn btn-primary" data-link-retry>Retry</button></div>` }
         : ALTOInstrument.statusView(r, { typed, fix, icon: ALTOViz.icon, onMap: true });
       // Links in the panel stay on the map: a corrected number opens here.
+      if (mobileLayout.matches && profilePanel.hidden) setSheet("half");
       profilePanel.hidden = false; profilePanel.inert = false; setProfileMode("tree");
       document.body.dataset.profileOpen = "true"; profilePanel.setAttribute("aria-hidden", "false");
       profileBody.innerHTML = `<article class="tp ti-scope tp-linkerror">${v.html}</article>`;
@@ -2834,23 +2849,62 @@
       const article = profileBody.querySelector("article.tp");
       if (rec.loaded && article) ALTOInstrument.bind(article, rec, { onYear: year => showYearLink(rec, year), popId: "tpPop" });
     }
+    // Phone: the tree or property panel is a bottom sheet with three stops. It opens at half; full shows the whole panel;
+    // minimised (peek) it is a slim bar: the handle, carrying the panel's title on one line (a tree's name and number, a
+    // property's address), beside the close button, so the map keeps its height. The handle is the sheet's toggle
+    // (aria-expanded), as the map panel's is: a press expands the bar to half and minimises a half sheet, and steps a full
+    // one down to half. What the bar hides takes no focus; a control there that had it hands it to the handle.
     function setSheet(stateName) {
       profilePanel.dataset.sheet = stateName;
       document.body.dataset.sheet = stateName;
-      const handle = document.getElementById("sheetHandle");
-      handle.setAttribute("aria-expanded", String(stateName === "full"));
-      handle.setAttribute("aria-label", stateName === "full" ? "Show more of the map" : "Expand the panel");
+      const handle = document.getElementById("sheetHandle"), bar = stateName === "peek";
+      handle.setAttribute("aria-expanded", String(!bar));
+      labelSheetHandle();
+      const hide = bar && sheetLayout.matches, active = document.activeElement;
+      if (hide && profilePanel.contains(active) && active !== handle && active.id !== "treeProfileClose") handle.focus({ preventScroll: true });
+      profileBody.inert = hide;
     }
+    // The bar names what the panel shows, read whenever the panel renders: a tree's name and number, a property's address
+    // (else its parcel, as the page title has it), or the panel's heading. In the bar the handle's name starts with that
+    // title, as it reads on screen.
+    function labelSheetHandle() {
+      const handle = document.getElementById("sheetHandle"), title = document.getElementById("sheetTitle").textContent, s = profilePanel.dataset.sheet;
+      handle.setAttribute("aria-label", s === "peek" ? `${title || "Panel"}: expand the panel` : s === "full" ? "Show more of the map" : "Minimise the panel");
+    }
+    new MutationObserver(() => {
+      const name = profileBody.querySelector("#tpName")?.textContent.trim(), number = profileBody.querySelector(".tp-tn")?.textContent.trim();
+      const mode = document.getElementById("treeProfileTitle").textContent;
+      const parcel = mode === "Property" && currentProperty ? (currentProperty.address ? ALTOProperty.label(currentProperty.address) : `Parcel ${currentProperty.pid}`) : null;
+      const heading = profileBody.querySelector("h1, h2, h3")?.textContent.trim();
+      document.getElementById("sheetTitle").textContent = name ? [name, number].filter(Boolean).join(" · ") : parcel || heading || mode;
+      labelSheetHandle();
+    }).observe(profileBody, { childList: true });
+    sheetLayout.addEventListener("change", () => setSheet(profilePanel.dataset.sheet || "half"));
+    // While the panel is open on a phone the map's zoom, scale and attribution ride above its sheet (--sheet-clear), up to
+    // half the screen; a full sheet covers them. Read after layout, frame by frame while the sheet moves (map.css gives
+    // them no transition of their own then), so nothing is measured inside a tap (FE-17).
+    new ResizeObserver(entries => {
+      if (!sheetLayout.matches || document.body.dataset.profileOpen !== "true") return;
+      const box = entries[entries.length - 1], h = box.borderBoxSize?.[0]?.blockSize ?? box.target.offsetHeight;
+      document.documentElement.style.setProperty("--sheet-clear", `${Math.round(Math.min(h, window.innerHeight / 2))}px`);
+    }).observe(profilePanel);
     (function bottomSheet() {
-      const handle = document.getElementById("sheetHandle");
+      const handle = document.getElementById("sheetHandle"), STOPS = ["peek", "half", "full"];
       let start = null;
-      handle.addEventListener("click", () => { if (!start?.moved) setSheet(profilePanel.dataset.sheet === "full" ? "peek" : "full"); });
+      handle.addEventListener("click", () => { if (!start?.moved) setSheet(profilePanel.dataset.sheet === "half" ? "peek" : "half"); });
       handle.addEventListener("pointerdown", e => { start = { y: e.clientY, moved: false }; handle.setPointerCapture(e.pointerId); });
       handle.addEventListener("pointermove", e => { if (start && Math.abs(e.clientY - start.y) > 12) start.moved = true; });
+      // A drag up or down moves one stop, a long one (over a third of the screen) two; down from the bar closes the panel.
       handle.addEventListener("pointerup", e => {
-        if (start?.moved) { const dy = e.clientY - start.y; if (dy < -30) setSheet("full"); else if (dy > 60 && profilePanel.dataset.sheet === "full") setSheet("peek"); else if (dy > 60) closeProfile(); }
+        if (start?.moved) {
+          const dy = e.clientY - start.y, at = Math.max(0, STOPS.indexOf(profilePanel.dataset.sheet)), steps = Math.abs(dy) > window.innerHeight / 3 ? 2 : 1;
+          if (dy < -30) setSheet(STOPS[Math.min(2, at + steps)]);
+          else if (dy > 40 && at === 0) closeProfile();
+          else if (dy > 60) setSheet(STOPS[Math.max(0, at - steps)]);
+        }
         setTimeout(() => { start = null; }, 0);
       });
+      handle.addEventListener("pointercancel", () => { start = null; });
     })();
 
     // options.resolved: how the tree was asked for (a link or a search), for the panel's one-line note.
@@ -2863,7 +2917,8 @@
       panelNote = options.resolved ? ALTOTreeId.describe(options.resolved)?.note || null : null;
       ALTOEvidenceWorkspace.dispose();
       propertyRequestId++; setProfileMode("tree");
-      if (mobileLayout.matches) { setSidebarCollapsed(true); setSheet("peek"); }
+      // A panel opens at half; one already open keeps its stop, so a tree tapped under the bar is named in the bar.
+      if (mobileLayout.matches) { setSidebarCollapsed(true); if (!wasOpen) setSheet("half"); }
       profilePanel.hidden = false; profilePanel.inert = false;
       const requestId = ++profileRequestId;
       clearYearLink();
@@ -2920,9 +2975,16 @@
           const year = Number(article.dataset.year || 2024);
           ALTOInstrument.setYear(article, year); showYearLink(full, year);
         });
-        // Where it sits among similar trees, from the release's comparison tables (when published).
-        ALTOTreeRecord.enrich(full, env, { parts: ["context"], onPart: () => {
+        // Where it sits among similar trees, from the release's comparison tables (when published), and its field
+        // measurements (field/measurements_v1.json): a tree measured in the field has its key measurements drawn again.
+        ALTOTreeRecord.enrich(full, env, { parts: ["context", "field"], onPart: name => {
           if (requestId !== profileRequestId) return;
+          if (name === "field") {
+            if (full.field?.status !== "ready") return;
+            const metricsSection = profileBody.querySelector("#tpMetrics")?.closest("section"), article = profileBody.querySelector("article.tp");
+            if (metricsSection) metricsSection.outerHTML = ALTOTreePanel.metrics(full);
+            if (article) ALTOInstrument.setYear(article, Number(article.dataset.year || 2024));
+          }
           const slot = profileBody.querySelector("#tpCtx"); if (slot) slot.innerHTML = ALTOInstrument.contextSentence(full);
           const links = profileBody.querySelector("#tpPage")?.closest("section")?.querySelector(".ti-pagelinks");
           if (links) links.outerHTML = ALTOInstrument.pageLinks(full, ALTOTreeId.url(full.number || full.id, { page: "tree" }));
@@ -3036,7 +3098,7 @@
       const requestId = ++propertyRequestId, same = currentProperty?.pid === pid;
       currentProperty = { pid, address: address || (same ? currentProperty.address : null), tile: options.tile || (same ? currentProperty.tile : null),
         treeIds: same ? currentProperty.treeIds : [], streetIds: same ? currentProperty.streetIds : [], tenure: same ? currentProperty.tenure : null, bbox: same ? currentProperty.bbox : null, record: same ? currentProperty.record : null };
-      if (mobileLayout.matches) setSidebarCollapsed(true);
+      if (mobileLayout.matches) { setSidebarCollapsed(true); if (!wasOpen) setSheet("half"); }
       setProfileMode("property");
       profileHighlightId = null;
       if (map.getLayer("points-highlight")) setRings("points-highlight", ["==", ["get", "tree_id"], "__none__"]);

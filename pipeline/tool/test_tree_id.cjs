@@ -36,7 +36,7 @@ assert.equal(Id.normalise('pc_BA32_1000_3310:1760512.25:5922649.75'),'pc_BA32_10
 assert.equal(Id.normalise('3520950_11845304'),'3520950_11845304');
 for(const bad of ['','<script>','a b','../x'])assert.equal(Id.normalise(bad),null,bad);
 // links
-assert.equal(Id.permalink(N1.toLowerCase()),`https://alto.tfwelch.com/tree/${N1}`);
+assert.equal(Id.permalink(N1.toLowerCase()),`https://alto.org.nz/tree/${N1}`);
 assert.equal(Id.url(N1,{base:'https://alto.tfwelch.com/beta/tree.html?id=x'}),`https://alto.tfwelch.com/beta/tree.html?id=${N1}`);
 assert.equal(Id.fromLocation({href:`https://alto.tfwelch.com/tree/${N1}`}),N1);
 assert.equal(Id.fromLocation({href:`https://alto.tfwelch.com/tree.html?id=${N1}#m-crown`}),N1);

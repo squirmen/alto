@@ -34,7 +34,8 @@ const shard=n=>(fnv(n)%256).toString(16).padStart(2,'0');
     [111,'cc-by','2024-12','c',0,'Metrosideros excelsa','pōhutukawa','f','someone',null],
     [222,'cc0','2023-09','n',6,'Coprosma robusta','karamū',null,null],
     [333,'cc-by-nc',null,'n',4,null,null,null,null],
-    [444,null,null,'m',9,null,null,null,null]]}});
+    [444,null,null,'m',9,null,null,null,null],
+    [555,'none',null,'n',2,null,null,null,null]]}});
   serve(`${D}/streetview/index.json`,{schema:'alto.tree-streetview/1',release:DV,shards:256,path:'{shard}.json',licence:'Mapillary contributors, CC BY-SA 4.0',link:'https://www.mapillary.com/app/?pKey={id}&focus=photo'});
   serve(`${D}/streetview/${shard(N)}.json`,{[N]:['1234567890','2019-03-02','p',12.3,-8,'987','2024-11-05',9.1]});
   await R.enrich(rec,ENV,{parts:['inat','streetview']});
@@ -49,6 +50,8 @@ const shard=n=>(fnv(n)%256).toString(16).padStart(2,'0');
   assert.deepEqual([b.facts,b.licence,b.login,b.where],[true,'cc0',null,'6 m from this crown'],'CC0: facts, no login');
   assert.deepEqual([c.facts,c.taxon,c.monthText,c.licenceText],[false,null,null,'CC BY-NC'],'NC: link only');
   assert.deepEqual([d.facts,d.licenceText,d.where],[false,'all rights reserved','9 m from this tree’s map position'],'no licence: all rights reserved, link only');
+  const e=x.records[4];
+  assert.deepEqual([e.facts,e.licence,e.licenceText],[false,null,'all rights reserved'],'iNaturalist "none" = all rights reserved, never "NONE"');
   assert.match(x.near,/^https:\/\/www\.inaturalist\.org\/observations\?lat=-?\d+\.\d{5}&lng=\d+\.\d{5}&radius=0\.05&taxon_id=47126$/);
 
   const v=rec.streetview;

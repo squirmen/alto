@@ -87,7 +87,7 @@ for(const href of [...MENU.matchAll(/href="([^"]+)"/g)].map(m=>m[1]).filter(h=>h
 function finish(){
   // ---- Species maxima: "Girth is not measured" links KYTE's girth missions; About says what KYTE is
   const mx=read('maxima-page.js');
-  assert.ok(mx.includes('`<a href="${esc(SITE_ROOT)}/kyte/missions/#girth">Girth is not measured</a>: KYTE’s girth missions ask for a tape reading at 1.3 m.`'),'maxima: the girth line links the missions');
+  assert.ok(mx.includes('`<a href="${esc(SITE_ROOT)}/kyte/missions/#girth">Girth is not measured</a>: KYTE’s girth missions ask for a tape reading at 1.4 m above the ground (on a slope, from mid-slope).`'),'maxima: the girth line links the missions');
   const map=(read('index.html')+read('map-app.js'));
   assert.ok(map.includes('<p id="aboutKyte"><strong>KYTE</strong> (Know Your Tree Explorer) is ALTO’s field app: photograph a tree, match it to its ALTO record and add what you see; accepted visits appear on the tree’s page. <a class="about-link" href="./kyte/" data-site-link="kyte/">Open KYTE</a>.</p>'),'About: one line on KYTE, linked');
 

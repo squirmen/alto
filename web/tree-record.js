@@ -11,7 +11,7 @@
  *   ALTOTreeRecord.assemble({...})                       the synchronous core (used by load and tests)
  *   ALTOTreeRecord.fromTile(props, env)                  a record from map-tile properties alone (loaded:false)
  *   await ALTOTreeRecord.enrich(rec, env, {parts, onPart})   network parts: context, history, corrections,
- *                                                        imagery, points, place, photos
+ *                                                        imagery, points, place, photos, field (field measurements)
  *   ALTOTreeRecord.fromMap(rec, {points, parcelId, tileProps})   nearby trees and land type from a map
  *
  * env = {dataBase:'./data', siteRoot:'.', derivedBase (default <siteRoot>/derived/<dataset_version>),
@@ -156,13 +156,26 @@
   // root-space scenario repeats it as roots.dbh_cm) and services.dbh_cm_est (the benefit equations). Neither is
   // measured. The central estimate is the median of the distinct model values (design system 4.8: show the
   // central estimate, never the low end) and the range is their spread; a reviewed KYTE tape measurement replaces
-  // both. Explained on the release methods page (v5-methods.html#trunk-diameter).
+  // both, and next a field measurement (field/measurements_v1.json, below), which keeps the models beside it as ALTO's
+  // estimate. Explained on the release methods page (v5-methods.html#trunk-diameter).
+  // Where a trunk is measured: 1.4 m above the ground, on a slope from mid-slope, the New Zealand convention (NZ Tree
+  // Register, Unitary Plan), from tool 0.2.15 and KYTE v22; before, ALTO and KYTE said 1.3 m above the uphill ground.
+  // A KYTE visit stores the height its tape was read at, so a measured value names that height.
+  const TRUNK_HEIGHT_M=1.4,TRUNK_AT=`${TRUNK_HEIGHT_M} m above the ground (on a slope, from mid-slope)`;
+  const tapeAt=h=>num(h)!==null?`${nf(num(h),2)} m above the ground`:TRUNK_AT;
   const TRUNK_MODELS=[['assets','dbh_cm_crown_est','Crown size and height model'],['services','dbh_cm_est','Benefit equations']];
   const median=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n?(n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2):null;};
   function trunk(env,c){
     const live=c.live;
     // A multi-stem tape reading is the largest stem, not the tree's trunk: the models stay the trunk estimate.
     if(num(live?.diameter_cm)!==null&&!live.multiStem)return {kind:'measured',central:num(live.diameter_cm),low:null,high:null,models:[],basis:'Measured at a reviewed KYTE ground visit'};
+    // A field measurement (the newest, when a tree has several) unless a KYTE visit measured the trunk.
+    const fm=c.field?.[0];
+    if(fm)return {kind:'measured',central:fm.value,low:null,high:null,models:[],basis:`Measured in the field by ${fm.by}`,field:fm};
+    return trunkModels(env,c);
+  }
+  // The release's trunk-diameter models alone: their central estimate and spread, or null.
+  function trunkModels(env,c){
     const d=c.record?.datasets||{},models=[];
     // Release 6.3 withholds every estimate of a crown whose height is not plausible, and values the 103 crowns drawn
     // outside the v5 survey on their drawn crown (services_drawn).
@@ -187,6 +200,52 @@
     href:`${env.siteRoot||'.'}/${releaseNumber(env)>=6?'v6':'v5'}-methods.html#trunk-diameter`,doc:REPO+'docs/methods/tree_asset_model.md'});
   const rootMethod=(env,id)=>({id:id||'root_space_sensitivity_v5_inputs',text:`Root protection radius: ${RPA_FACTOR} × trunk diameter (central estimate), area capped at ${RPA_AREA_CAP_M2} m²; a planning scenario, not a measured root extent`,
     href:`${env.siteRoot||'.'}/v5-methods.html#roots`,doc:REPO+'docs/validation/root_zone_summary.md'});
+
+  // ---------- field measurements ----------
+  // Trunk diameters measured on the ground by a named group (the first: primary school students with diameter tapes),
+  // checked, and published apart from data and tool releases in <siteRoot>/field/measurements_v1.json; a data release
+  // replaces data/, so the file has a top-level folder of its own. {version:'field_measurements_v1', updated, trees:{<tree
+  // number>:[{kind:'trunk_diameter', value_cm, n_measurements, n_teams, n_classes, spread_cm, height_m, method, date_from,
+  // date_to, by, review, ref}]}}. Trunk diameters only; an entry without its value, the height it was read at or who read
+  // it is left out, as is a file of another version. Each value names its own height (the first pilot measured at 1.3 m;
+  // ALTO's own trunk values are at TRUNK_HEIGHT_M).
+  const FIELD_VERSION='field_measurements_v1',FIELD_PATH='field/measurements_v1.json';
+  const own=(o,k)=>!!o&&typeof o==='object'&&Object.prototype.hasOwnProperty.call(o,k);
+  const isoDay=v=>/^\d{4}-\d{2}-\d{2}$/.test(String(v??''))?String(v):null;
+  const said=v=>typeof v==='string'&&v.trim()?v.trim():null;
+  const whole=v=>{const n=num(v);return n!==null&&n>0&&Number.isInteger(n)?n:null;};
+  // "28–30 Oct 2026", "28 Oct – 2 Nov 2026", "30 Dec 2026 – 2 Jan 2027": a measuring period from its first and last days.
+  function dayRange(from,to){
+    const [a,b]=[from,to].filter(Boolean).sort(),ta=dayText(a),tb=dayText(b);if(!ta)return null;
+    if(!tb||ta===tb)return {iso:a,text:ta};
+    const [da,ma,ya]=ta.split(' '),[,mb,yb]=tb.split(' ');
+    return {iso:a,text:ya!==yb?`${ta} – ${tb}`:ma!==mb?`${da} ${ma} – ${tb}`:`${da}–${tb}`};
+  }
+  function fieldEntry(e){
+    if(!e||typeof e!=='object'||e.kind!=='trunk_diameter')return null;
+    const value=num(e.value_cm),height=num(e.height_m),by=said(e.by),sp=num(e.spread_cm),from=isoDay(e.date_from),to=isoDay(e.date_to);
+    if(value===null||value<=0||value>=1000||height===null||height<=0||height>5||!by)return null;
+    return {kind:'trunk_diameter',value,height,measurements:whole(e.n_measurements),teams:whole(e.n_teams),classes:whole(e.n_classes),spread:sp!==null&&sp>=0?sp:null,
+      method:said(e.method),from,to,dates:dayRange(from,to),by,review:said(e.review),ref:said(e.ref)};
+  }
+  // A tree's entries, the newest first (by the last day measured; undated entries last, in file order).
+  const fieldEntries=list=>(Array.isArray(list)?list:[]).map(fieldEntry).filter(Boolean).sort((a,b)=>String(b.to||b.from||'').localeCompare(String(a.to||a.from||'')));
+  // A tape reading as measured, to 0.1 cm ("21.5 cm", "2 cm").
+  const tapeText=v=>F.quantityText('trunkDiameter',v,{measuredTape:true});
+  const plural=(n,one,many=one+'s')=>`${nf(n)} ${n===1?one:many}`;
+  // An entry in words: the method at its height, who took part with the spread across teams, and the review.
+  function fieldWords(e){
+    const who=[e.measurements?plural(e.measurements,'measurement'):null,e.teams?`by ${plural(e.teams,'team')}`:null,e.classes?`in ${plural(e.classes,'class','classes')}`:null].filter(Boolean).join(' ');
+    return {method:`${cap(e.method||'tape')} at ${tapeAt(e.height)}`,counts:cap([who,e.spread!==null?`spread across teams ${tapeText(e.spread)}`:null].filter(Boolean).join('; '))||null,
+      review:e.review?cap(e.review):null};
+  }
+  const fieldNote=e=>{const w=fieldWords(e);return [w.counts,w.review].filter(Boolean).map(s=>`${s.replace(/\.$/,'')}.`).join(' ')||null;};
+  // One entry as a measured Quantity: the tree's trunkDiameter, or field1, field2… in rec.field.
+  function fieldQ(env,key,e){
+    const w=fieldWords(e);
+    return Object.assign(q(env,key,`Trunk diameter at ${nf(e.height,2)} m`,e.value,'cm','measured',prov(env,key,{source:e.by,date:e.dates,method:{id:null,text:w.method,href:null},
+      note:fieldNote(e)}),{text:tapeText(e.value)}),{field:e,words:w,tape:true});
+  }
 
   // ---------- identity ----------
   // The sources of the records counted on this crown (one per dataset; LiDAR detections are one source). The
@@ -464,25 +523,33 @@
       method:o.method_id||'pointcloud_v53_outline_B',dataset:'outline',field:'outline_area_m2',note:o.outline_method?`Outline method: ${words(o.outline_method)}`:null})));
     put(q(env,'crownDiameter','Crown diameter (equal-area circle)',z.diameter,'m','derived',prov(env,'crownDiameter',{source:'Derived from the crown area',date:flown,
       method:{id:null,text:'Diameter of the circle with the crown’s area (equal-area circle); a crown spread is measured across the crown instead',href:`${env.siteRoot||'.'}/how-alto-is-made.html#crown-measures`},dataset:'crown',field:'crown_diameter_m'})));
-    // Trunk diameter at 1.3 m above the uphill ground: the central estimate of the release's models, with their spread,
-    // unless a reviewed ground visit measured a single trunk. A multi-stem tape reading is its largest stem, not the tree's
-    // trunk diameter, and is shown as that.
+    // Trunk diameter at 1.4 m above the ground (on a slope, from mid-slope): the central estimate of the release's models,
+    // with their spread, unless a reviewed ground visit or a field measurement measured a single trunk. A multi-stem tape
+    // reading is its largest stem, not the tree's trunk diameter, and is shown as that. A tape reading's method names the
+    // height it was read at; a field measurement's label does too.
     const live=c.live,tk=trunk(env,c);
-    if(live?.multiStem&&num(live.diameter_cm)!==null)put(q(env,'largestStem','Largest stem at 1.3 m',num(live.diameter_cm),'cm','measured',prov(env,'largestStem',{source:SOURCE.kyte,
-      date:live.observed_on?{iso:null,text:live.observed_on}:null,method:{id:null,text:'Tape round the largest stem at 1.3 m above the uphill ground; several stems',href:null},dataset:'ground',
+    if(live?.multiStem&&num(live.diameter_cm)!==null)put(q(env,'largestStem',`Largest stem at ${TRUNK_HEIGHT_M} m`,num(live.diameter_cm),'cm','measured',prov(env,'largestStem',{source:SOURCE.kyte,
+      date:live.observed_on?{iso:null,text:live.observed_on}:null,method:{id:null,text:`Tape round the largest stem at ${tapeAt(live.measuring_height_m)}; several stems`,href:null},dataset:'ground',
       note:`${live.stems?`${nf(live.stems)} stems`:'Several stems'}; not the tree’s trunk diameter, and not used for the root protection radius`}),{text:`${nf(Math.round(num(live.diameter_cm)))} cm${live.stems?` (${nf(live.stems)} stems)`:''}`}));
-    if(tk?.kind==='measured')put(q(env,'trunkDiameter','Trunk diameter at 1.3 m',tk.central,'cm','measured',prov(env,'trunkDiameter',{source:SOURCE.kyte,date:live.observed_on?{iso:null,text:live.observed_on}:null,
-      method:{id:null,text:live.circumference_cm?'Circumference tape at 1.3 m above the uphill ground, divided by π':'Diameter tape at 1.3 m above the uphill ground',href:null},dataset:'ground'})));
-    else if(tk){
+    // The release's models as a Quantity: the trunk diameter itself, or (trunkEstimate) ALTO's estimate beside a field
+    // measurement, with its own method (how).
+    const modelled=(key,label,tk,extra={})=>{
       const tsp=spread(tk.models.map(x=>x.value),v=>nf(Math.round(v))),n=tk.models.length;
-      put(q(env,'trunkDiameter','Trunk diameter at 1.3 m',tk.central,'cm','model',prov(env,'trunkDiameter',{source:SOURCE.alto,date:{iso:null,text:'not measured'},
+      put(q(env,key,label,tk.central,'cm','model',prov(env,key,{source:SOURCE.alto,date:{iso:null,text:'not measured'},
         // A computed central value: the stored fields are named in the note, not as the value's own field.
         method:trunkMethod(env),model:modelOf(env,'services',a.method_id||null),dataset:n>1?null:tk.models[0].dataset,
         field:n>1?null:tk.models[0].field,
         note:`${tk.basis}: ${tk.models.map(x=>`${nf(Math.round(x.value))} cm (${x.label.toLowerCase()}, ${x.dataset}.${x.field})`).join(', ')}.${a.dbh_confidence?` Release confidence: ${words(a.dbh_confidence)}.`:''} Not calibrated on measured trunks.`,
         uncertainty:tsp?{text:`Model spread (${n} models) ${tsp} cm; not a calibrated range`,low:tk.low,high:tk.high,basis:'spread across models'}:null}),
-        {range:tsp?rangeOf(tk.low,tk.high,'cm','spread across trunk models',0):null}),{rangeLabel:`Model spread (${n} models)`,rangeNote:tsp?null:NC});
-    }
+        {range:tsp?rangeOf(tk.low,tk.high,'cm','spread across trunk models',0):null}),{rangeLabel:`Model spread (${n} models)`,rangeNote:tsp?null:NC,...extra});
+    };
+    if(tk?.field)put(fieldQ(env,'trunkDiameter',tk.field));
+    else if(tk?.kind==='measured')put(q(env,'trunkDiameter',`Trunk diameter at ${TRUNK_HEIGHT_M} m`,tk.central,'cm','measured',prov(env,'trunkDiameter',{source:SOURCE.kyte,date:live.observed_on?{iso:null,text:live.observed_on}:null,
+      method:{id:null,text:live.circumference_cm?`Circumference tape at ${tapeAt(live.measuring_height_m)}, divided by π`:`Diameter tape at ${tapeAt(live.measuring_height_m)}`,href:null},dataset:'ground'})));
+    else if(tk)modelled('trunkDiameter',`Trunk diameter at ${TRUNK_HEIGHT_M} m`,tk);
+    // A tree measured in the field keeps ALTO's estimate (each value at its own height).
+    const est=c.field?.length?trunkModels(env,c):null;
+    if(est)modelled('trunkEstimate',`Trunk diameter at ${TRUNK_HEIGHT_M} m, ALTO estimate`,est,{how:`${est.basis}, at ${TRUNK_AT}`});
     // BS 5837 root protection radius (a UK standard): 12 × the trunk estimate, kept for comparison below the dripline radius
     // and, for a scheduled tree, the Unitary Plan protected root zone (extras()).
     const rt=d.roots;
@@ -491,7 +558,7 @@
       const rsp=lo!==null&&hi!==null?spread([lo,hi],v=>nf(v,1)):null,stored=num(rt.rpa_radius_m);
       put(q(env,'rootProtection','BS 5837 root protection radius (UK standard; 12 × trunk estimate), for comparison',r,'m','model',prov(env,'rootProtection',{source:SOURCE.alto,date:{iso:null,text:'not measured'},
         method:rootMethod(env,rt.method_id),model:modelOf(env,'roots',rt.method_id||null),dataset:null,field:null,
-        note:`Area ${nf(Math.round(Math.PI*r*r))} m². ${tk?.kind==='measured'?'From the measured trunk diameter.':`From the central trunk estimate (${nf(Math.round(tk?.central??0))} cm).`}${stored!==null&&tk&&Math.abs(stored-r)>=0.05?` The release stores ${nf(stored,1)} m (roots.rpa_radius_m), from the ${nf(Math.round(num(rt.dbh_cm)??tk.low))} cm model.`:''} A UK planning standard, for comparison; it is not the Unitary Plan protected root zone.`,
+        note:`Area ${nf(Math.round(Math.PI*r*r))} m². ${tk?.field?`From the trunk diameter measured in the field (${tapeAt(tk.field.height)}).`:tk?.kind==='measured'?'From the measured trunk diameter.':`From the central trunk estimate (${nf(Math.round(tk?.central??0))} cm).`}${stored!==null&&tk&&Math.abs(stored-r)>=0.05?` The release stores ${nf(stored,1)} m (roots.rpa_radius_m), from the ${nf(Math.round(num(rt.dbh_cm)??tk.low))} cm model.`:''} A UK planning standard, for comparison; it is not the Unitary Plan protected root zone.`,
         uncertainty:rsp?{text:`${rsp} m from the model spread of the trunk estimate (${spread(tk.models.map(x=>x.value),v=>nf(Math.round(v)))} cm)`,low:lo,high:hi,basis:'trunk-diameter range'}:null}),
         {range:rsp?rangeOf(lo,hi,'m','trunk-diameter range'):null}),{rangeLabel:'Range',rangeSuffix:'from the model spread',rangeNote:rsp||tk?.kind==='measured'?null:NC});
     }
@@ -620,6 +687,7 @@
   }
   function extras(rec,{geometry=null,spread:sp=null}={}){
     const c=rec._ctx;if(!c||!c.record)return rec;
+    if(Object.prototype.hasOwnProperty.call(rec,'_extras'))rec._extras={geometry,spread:sp};
     const E=rec._env||envOf({},null),flown=SURVEY_2024.captured,out=rec.measures;
     for(const k of ['dripline','rootZone','rootZoneColumnar','crownSpread'])delete out[k];
     const area=num(rec.summary?.size?.area),pos=rec.identity?.position;
@@ -712,8 +780,11 @@
     const L=c.live;
     if(L&&(L.diameter_cm||L.height_m||L.crown_spread_m))cols.push({key:'kyteMeasure',label:'KYTE measurement',when:L.observed_on||'',height:L.height_m||null,crownDiameter:L.crown_spread_m||null,
       trunk:L.multiStem?null:L.diameter_cm||null,trunkKind:'measured',form:L.species?.name||null,formKind:'observed',
-      note:L.multiStem&&L.diameter_cm?`Largest stem at 1.3 m: ${nf(Math.round(L.diameter_cm))} cm${L.stems?` (${nf(L.stems)} stems)`:''}; not the tree’s trunk diameter`:null});
-    const rows=[['height','Height','m'],['crownDiameter','Crown diameter','m'],['crownArea','Crown area','m²'],['trunk','Trunk diameter at 1.3 m','cm'],['form','Species or form',null],['note','Notes',null]].filter(([k])=>cols.some(x=>x[k]!==null&&x[k]!==undefined));
+      note:L.multiStem&&L.diameter_cm?`Largest stem at ${TRUNK_HEIGHT_M} m: ${nf(Math.round(L.diameter_cm))} cm${L.stems?` (${nf(L.stems)} stems)`:''}; not the tree’s trunk diameter`:null});
+    // A column for each field measurement: who measured and when; the note gives the method at its height.
+    (c.field||[]).forEach((e,i)=>cols.push({key:`fieldMeasure${i+1}`,label:e.by,when:e.dates?.text||'',trunk:e.value,trunkKind:'measured',
+      note:[`${fieldWords(e).method}.`,fieldNote(e)].filter(Boolean).join(' '),method:{id:null,text:fieldWords(e).method,href:null}}));
+    const rows=[['height','Height','m'],['crownDiameter','Crown diameter','m'],['crownArea','Crown area','m²'],['trunk',`Trunk diameter at ${TRUNK_HEIGHT_M} m`,'cm'],['form','Species or form',null],['note','Notes',null]].filter(([k])=>cols.some(x=>x[k]!==null&&x[k]!==undefined));
     // One provenance entry per column: where that column's values come from.
     const flown=d.growth_form?.lidar_flight_date?dated(d.growth_form.lidar_flight_date,'flown '):SURVEY_2024.captured;
     const COL={v5:[SOURCE.lidar2024,flown,cr.method_id,'crown'],v4:[SOURCE.lidar2024,flown,pv?.method_id||'pointcloud_v4_vegetation_watershed','previous_crown_v4'],
@@ -722,6 +793,7 @@
       source:[S?S.dataset(rec.source_primary).name:words(rec.source_primary),dated(rec.as_of_utc,'snapshot '),null,'record'],
       kyte:[SOURCE.kyte,dated(g?.observed_on),g?.method_id||null,'ground'],field:['Field report (reviewed)',f?.reported_on?dated(f.reported_on):null,null,'field'],
       kyteMeasure:[SOURCE.kyte,L?.observed_on?{iso:null,text:L.observed_on}:null,null,'ground']};
+    (c.field||[]).forEach((e,i)=>{COL[`fieldMeasure${i+1}`]=[e.by,e.dates,{id:null,text:fieldWords(e).method,href:null},null];});
     for(const col of cols){const x=COL[col.key];if(x)col.provenance=prov(env,'col-'+col.key,{label:col.label,kind:col.key==='source'?'recorded':'measured',source:x[0],date:x[1],method:x[2]||null,dataset:x[3],
       uncertainty:['v5','v4','raster','chm'].includes(col.key)?{text:`Survey specification ${SURVEY_2024.vertical}, ${SURVEY_2024.horizontal}`,low:null,high:null,basis:'survey specification'}:null});}
     return {columns:cols,rows:rows.map(([key,label,unit])=>({key,label,unit}))};
@@ -902,7 +974,7 @@
     return {kind:'scenario',provenance:prov(env,'roots',{label:'Root space',kind:'model',source:SOURCE.alto,method:rootMethod(env,r.method_id),
         model:modelOf(env,'roots',r.method_id||null),dataset:'roots',note:r.constraint_basis||null}),
       rpaRadius:radius,rpaArea:area,rpaRange:ranged?{low:lo,high:hi,areaLow:Math.PI*lo*lo,areaHigh:Math.min(Math.PI*hi*hi,RPA_AREA_CAP_M2)}:null,
-      rpaBasis:tk?(tk.kind==='measured'?'From the measured trunk diameter':`${RPA_FACTOR} × the central trunk estimate (${nf(Math.round(tk.central))} cm)`):'The release’s stored radius',
+      rpaBasis:tk?(tk.field?'From the trunk diameter measured in the field':tk.kind==='measured'?'From the measured trunk diameter':`${RPA_FACTOR} × the central trunk estimate (${nf(Math.round(tk.central))} cm)`):'The release’s stored radius',
       rule:{factor:RPA_FACTOR,areaCap:RPA_AREA_CAP_M2},trunk:tk?{central:tk.central,low:tk.low,high:tk.high,kind:tk.kind}:null,
       stored:{rpaRadius:num(r.rpa_radius_m),rpaArea:num(r.rpa_area_m2),dbh:num(r.dbh_cm)},
       effectiveRadius:num(r.effective_radius_m),effectiveArea:num(r.effective_area_m2),
@@ -1106,12 +1178,14 @@
       outline:null,lidar:null,species:null,surveys:[],surveyChange:null,setting:null,benefits:null,lifeStage:null,replacement:null,roots:null,
       context:{status:'pending',scopes:[]},history:{status:'pending',releases:[]},corrections:{status:'pending',items:[]},
       imagery:{status:'pending'},place:{status:'pending'},nearby:{status:'pending',trees:[]},photos:{status:'pending',visits:[]},scenario:{status:'pending'},
-      inat:{status:'pending',records:[]},streetview:{status:'pending'},
+      inat:{status:'pending',records:[]},streetview:{status:'pending'},field:{status:'pending',updated:null,entries:[]},
       know:know(E,c,number),kauri:isKauri(c),release63:!!summary.release63,lines:[],provenance:[]};
     rec.maximaBlocked=maximaBlocked(c);
     Object.defineProperty(rec,'_ctx',{value:c,enumerable:false,writable:true});
     Object.defineProperty(rec,'_env',{value:E,enumerable:false,writable:true,configurable:true});
     Object.defineProperty(rec,'summary',{value:summary,enumerable:false,writable:true});
+    // What a page last gave extras() (the outline, the crown spread), so refresh() draws the measures again with them.
+    Object.defineProperty(rec,'_extras',{value:null,enumerable:false,writable:true});
     if(record){
       // The crown's own measures first; extras() adds the dripline radius (equal-area until a page has the outline) and,
       // for a scheduled tree, the protected root zone, so every surface that shows the record has them.
@@ -1129,6 +1203,7 @@
     const out=[],seen=new Set();
     const add=x=>{if(x?.provenance&&!seen.has(x.provenance.id)){seen.add(x.provenance.id);out.push(x.provenance);}};
     for(const k of rec.measureOrder)add(rec.measures[k]);
+    for(const x of rec.field?.entries||[])add(x);
     for(const x of rec.lidar?.measurements||[])add(x);
     for(const s of rec.surveys||[])add(s.height);
     add(rec.surveyChange);
@@ -1140,18 +1215,23 @@
     return out;
   }
   function fromTile(props,env={}){return assemble({id:props?.tree_id,record:null,props,env});}
-  // Refresh the parts that read the ground visit (measured trunk, KYTE measurement column).
+  // The parts that read the trunk diameter, again, when a ground measurement arrives: the key measurements (with the
+  // outline and spread a page last gave extras()), the measurements by source and root space.
+  function refresh(rec,E){
+    const c=rec._ctx;
+    rec.measures=measures(E,c);rec.measureOrder=Object.keys(rec.measures);extras(rec,rec._extras||{});rec.bySource=bySource(E,c);rec.roots=roots(E,c);rec.provenance=collectProvenance(rec);
+    return rec;
+  }
+  // A reviewed KYTE ground visit (measured trunk, KYTE measurement column).
   function setLive(rec,live,env={}){
     const c=rec._ctx;if(!c||!c.record)return rec;
-    c.live=live;const E=envOf(env,env.metadata||null);
-    rec.measures=measures(E,c);rec.measureOrder=Object.keys(rec.measures);extras(rec);rec.bySource=bySource(E,c);rec.provenance=collectProvenance(rec);
-    return rec;
+    c.live=live;return refresh(rec,envOf(env,env.metadata||null));
   }
 
   // ---------- network ----------
-  async function getJSON(url,{optional=false}={}){
+  async function getJSON(url,{optional=false,init=null}={}){
     const fx=root.fetch;if(!fx)throw new Error('fetch unavailable');
-    const res=await fx(url);
+    const res=await (init?fx(url,init):fx(url));
     if(!res.ok){if(optional&&(res.status===404||res.status===403))return null;throw new Error(`${url}: ${res.status}`);}
     let bytes=new Uint8Array(await res.arrayBuffer());
     if(bytes[0]===31&&bytes[1]===139&&root.DecompressionStream){
@@ -1367,11 +1447,12 @@
     const r=await byNumber(env,'inat',rec.number);
     if(r.status!=='ready')return {status:r.status,records:[],source:r.index?.source||null};
     const e=r.entry;
-    const records=(e.r||[]).map(([id,lic,month,where,metres,taxon,common,phen,login])=>({id,url:`https://www.inaturalist.org/observations/${id}`,
-      licence:lic||null,licenceText:lic?INAT_LICENCE[lic]||String(lic).toUpperCase():'all rights reserved',facts:!!taxon,
+    // No licence code (iNaturalist's "none", or empty) means all rights reserved.
+    const records=(e.r||[]).map(([id,lic,month,where,metres,taxon,common,phen,login])=>{lic=lic&&lic!=='none'?lic:null;return {id,url:`https://www.inaturalist.org/observations/${id}`,
+      licence:lic,licenceText:lic?INAT_LICENCE[lic]||String(lic).toUpperCase():'all rights reserved',facts:!!taxon,
       month:month||null,monthText:month?new Date(`${month}-15T00:00:00Z`).toLocaleDateString('en-NZ',{month:'short',year:'numeric',timeZone:'UTC'}).replace(/\bSept\b/,'Sep'):null,
       where:where==='c'?'inside this crown':where==='n'?`${metres} m from this crown`:`${metres} m from this tree’s map position`,
-      taxon:taxon||null,common:common||null,phenology:(phen||'').split('').map(k=>PHENOLOGY[k]).filter(Boolean),login:login||null}));
+      taxon:taxon||null,common:common||null,phenology:(phen||'').split('').map(k=>PHENOLOGY[k]).filter(Boolean),login:login||null};});
     const pos=rec.summary?.position;
     return {status:'ready',count:e.n||records.length,records,source:r.index.source||null,fetched:r.index.source?.fetched||null,
       near:pos?`https://www.inaturalist.org/observations?lat=${pos.lat.toFixed(5)}&lng=${pos.lon.toFixed(5)}&radius=0.05&taxon_id=47126`:null};
@@ -1387,6 +1468,28 @@
     return {status:'ready',id:String(id),url:href(id),date:date?dated(date):null,pano:kind==='360',metres:num(metres),offset:num(offset),
       newer:panoId?{id:String(panoId),url:href(panoId),date:panoDate?dated(panoDate):null,metres:num(panoMetres)}:null,
       licence:idx.licence||'Mapillary contributors, CC BY-SA 4.0',queried:idx.source?.queried||null};
+  }
+  // Field measurements (above): the file is read once a page load and shared by every tree, revalidated with the server
+  // (no cache stamp: it changes without a tool or data release). {status: ready|not_published|unavailable, updated, trees}
+  let fieldRead=null,fieldNow=null;
+  function fieldFile(env){
+    if(!fieldRead)fieldRead=getJSON(`${env.siteRoot||'.'}/${FIELD_PATH}`,{optional:true,init:{cache:'no-cache'}})
+      .then(j=>!j?{status:'not_published'}:j.version!==FIELD_VERSION||!j.trees||typeof j.trees!=='object'?{status:'not_published',version:j.version??null}:
+        {status:'ready',updated:dated(isoDay(j.updated)),trees:j.trees},()=>({status:'unavailable'}))
+      .then(f=>(fieldNow=f));
+    return fieldRead;
+  }
+  // The newest trunk-diameter entry for a tree number once the file is read (for pages that hold no tree record), else null.
+  const fieldTrunk=number=>fieldNow?.status==='ready'&&own(fieldNow.trees,number)?fieldEntries(fieldNow.trees[number])[0]||null:null;
+  // This tree's entries as measured Quantities (field1, field2…, the newest first); a tree with one is measured from then on
+  // (trunk(): after a reviewed KYTE tape reading, before the models). A tree without one is left as it was.
+  async function field(rec,env){
+    const f=await fieldFile(env);
+    if(f.status!=='ready')return {status:f.status,updated:null,entries:[]};
+    const list=own(f.trees,rec.number)?fieldEntries(f.trees[rec.number]):[];
+    if(!list.length)return {status:'none',updated:f.updated,entries:[]};
+    const c=rec._ctx;if(c?.record){c.field=list;refresh(rec,env);}
+    return {status:'ready',updated:f.updated,entries:list.map((e,i)=>fieldQ(env,`field${i+1}`,e))};
   }
   function fnv(id){let h=2166136261;for(const b of new TextEncoder().encode(id))h=Math.imul(h^b,16777619)>>>0;return h;}
   function fnvShard(id,n){const w=Math.max(1,Math.ceil(Math.log(n)/Math.log(16)));return (fnv(id)%n).toString(16).padStart(w,'0');}
@@ -1527,7 +1630,7 @@
     rec.place={...(rec.place||{}),parcel:out};rec.provenance=collectProvenance(rec);return out;
   }
   const inited=new WeakSet();
-  const PARTS={context,history,corrections,points,imagery,place,photos,scenario,inat,streetview};
+  const PARTS={context,history,corrections,points,imagery,place,photos,scenario,inat,streetview,field};
   async function enrich(rec,env={},{parts=Object.keys(PARTS).filter(p=>p!=='scenario'),onPart=null}={}){
     const E=envOf(env,env.metadata||rec._env?.metadata||null);
     const Gr=dep('ALTOGround');if(Gr?.init&&!inited.has(Gr)){inited.add(Gr);Gr.init({kyteBase:E.kyteBase,dataBase:E.dataBase,version:E.version});}
@@ -1611,7 +1714,8 @@
 
   const api={SCHEMA,SOURCE,SURVEY_2024,METHODS,RELEASES,MIN_STREET_N,scheduleWords,otherRules,decodePoints,loadPoints,load,loadMembers,assemble,fromTile,enrich,fromMap,parcel:(rec,env,pid)=>parcel(rec,envOf(env,env.metadata||rec._env?.metadata||null),pid),setLive,toJSON,percentile,exact,tileOf,fnvShard,methodRef:(m,env={})=>methodRef(envOf(env),m),envOf,
     TALL_M,TALL_TEXT,HEIGHT_IMPLAUSIBLE_TEXT,HEIGHT_CHECK_TEXT,checksOf,releaseLines,maximaBlocked,MERGE_CAP_M2,NEAR_CAP_M2,NEAR_CAP_TEXT,SMALL_BIAS_TEXT,HEIGHT_DEF,NO_CHANGE_M,isTall,extras,modelOf:(env,component,id)=>modelOf(envOf(env),component,id),
-    relWords,recite,problemHref,photoHref,KAURI_PHOTO,COORD_DP,coordText,mapLinks,location,nearLine,nztm,fromNztm,_internal:{receiptItems,historyFromRecord,completeRows,rankEntry,irrEntry,derivedUrls,trunk,rpaRadius,RPA_FACTOR,RPA_AREA_CAP_M2,rateClass,farthest,farthestFromTop,crownTop,nztm,inOutline,outlineCentre,clearCache:()=>cache.clear()}};
+    relWords,recite,problemHref,photoHref,KAURI_PHOTO,COORD_DP,coordText,mapLinks,location,nearLine,nztm,fromNztm,
+    FIELD_PATH,fieldFile:(env={})=>fieldFile(envOf(env,env.metadata||null)),fieldTrunk,_internal:{receiptItems,historyFromRecord,completeRows,rankEntry,irrEntry,derivedUrls,trunk,rpaRadius,RPA_FACTOR,RPA_AREA_CAP_M2,rateClass,farthest,farthestFromTop,crownTop,nztm,inOutline,outlineCentre,clearCache:()=>cache.clear(),clearField:()=>{fieldRead=null;fieldNow=null;},fieldEntries,dayRange,trunkModels}};
   root.ALTOTreeRecord=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?window:globalThis);

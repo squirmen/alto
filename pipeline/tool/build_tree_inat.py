@@ -48,7 +48,7 @@ def fnv(s):
 
 
 def row(r):
-    lic = r.license_code if isinstance(r.license_code, str) and r.license_code else None
+    lic = r.license_code if isinstance(r.license_code, str) and r.license_code not in ('', 'none') else None  # 'none': all rights reserved
     where = WHERE[r.match_type]
     metres = 0 if where == 'c' else max(1, round(float(r.distance_m)))
     if lic not in FACTS:

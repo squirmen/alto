@@ -87,6 +87,9 @@ assert.ok(!/\b(\w+), not (a|an|the)?\s*\w+/i.test(v62.replace(/<[^>]+>/g,' ')),'
   const deferred=v63.slice(v63.indexOf('<section id="deferred">'),v63.indexOf('<section id="limits">'));
   for(const w of ['PM2.5 removal and the cooling index','Plantation forest','Trunk diameter calibration','400 m² merge limit','benefit class of a recorded species','multi-tree Schedule 10 entry'])assert.ok(deferred.includes(w),`v6.3 deferred: ${w}`);
   assert.ok(!/\bAI\b|by hand|by eye|human-labelled|champion/i.test(txt),'v6.3: public wording');
+  // Tool 0.2.15 (20 Oct 2026): the trunk label follows the New Zealand convention; the estimates are unchanged.
+  const unchanged=v63.slice(v63.indexOf('<section id="unchanged">'),v63.indexOf('<section id="deferred">'));
+  assert.ok(unchanged.includes('from tool 0.2.15 its label follows the New Zealand convention of 1.4&nbsp;m above the ground (on a slope, from mid-slope)')&&unchanged.includes('ALTO’s trunk diameters are estimates from the crown, so no number changed.'),'v6.3: trunk diameter at 1.4 m from tool 0.2.15');
   assert.ok(!/<figure/.test(v63)&&!/#[0-9a-f]{6}\b/i.test(v63.replace(/<head>[\s\S]*?<\/head>/,'')),'v6.3: tables only, no colour literals');
   assert.ok(!/\b(\w+), not (a|an|the)?\s*\w+/i.test(txt),'v6.3: no "X, not Y" phrasing');
   assert.ok(/METHODS_PAGES = \([^)]*'v63-methods\.html'[^)]*\)/.test(fs.readFileSync(path.join(__dirname,'build_web_beta.py'),'utf8')),'public build: release 6.3 page stamped');
@@ -132,6 +135,7 @@ assert.ok(read('v5-methods.html').includes('<p id="merge-limit">Crowns are not m
   assert.ok(!/\b(\w+), not (a|an|the)?\s*\w+/i.test(t),'overview: no "X, not Y" phrasing');
   assert.ok(!/using i-Tree methods|made with i-Tree|i-Tree Eco methods/i.test(t)&&t.includes('ALTO benefit scenario')&&t.includes('sensitivity scenarios'),'overview: benefits named as ALTO’s scenario');
   assert.ok(t.includes('machine-learning image-interpretation model in one pass; no independent second labeller'),'overview: labelling worded as on the release 6 page');
+  assert.ok(t.includes('The diameter at 1.4 m above the ground (on a slope, from mid-slope), the New Zealand convention')&&!/1\.3 m above the uphill ground\./.test(t),'overview: trunk diameter at 1.4 m');
   const known=new Set([...Object.keys(PAGES),'methods.html','credits.html'].flatMap(f=>text(read(f)).match(/(?<![\w.])\d+(?:[.,]\d+)*(?!\w)/g)||[]));
   const nums=t.match(/(?<![\w.])\d+(?:[.,]\d+)*(?!\w)/g)||[];
   assert.ok(nums.length>10,'overview: numbers found');

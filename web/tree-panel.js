@@ -63,9 +63,12 @@
 
   // ---- instrument sections ----
   const sec=(id,title,meta,body,more='')=>body?`<section class="ti-sec" aria-labelledby="${id}"><div class="ti-sec-head"><h4 class="ti-h" id="${id}">${esc(title)}</h4>${meta?`<span>${meta}</span>`:''}</div>${body}${more}</section>`:'';
+  // A tree measured in the field has its readings and ALTO's estimate under the band (the map draws this section again
+  // when the field measurements arrive).
   function metrics(rec){
-    const body=I().strip(rec,KEYS,{id:'tpPop'});
-    return sec('tpMetrics','Key measurements',rec.loaded?'Select a value for its source':'',body+(rec.loaded?`<p class="ti-ctx" id="tpCtx" aria-live="polite">${I().contextSentence(rec)}</p>`:''));
+    const body=I().strip(rec,KEYS,{id:'tpPop'}),field=rec.loaded?I().fieldRows(rec):'';
+    return sec('tpMetrics','Key measurements',rec.loaded?'Select a value for its source':'',body+(rec.loaded?`<p class="ti-ctx" id="tpCtx" aria-live="polite">${I().contextSentence(rec)}</p>`:'')+
+      (field?`<h5 class="ti-h ti-field-h">Field measurements</h5>${field}`:''));
   }
   function linked(rec,{geometry=null,treeUrl}){
     if(!rec.loaded)return sec('tpLinked','Crown by survey','','<i class="ti-skel" style="height:220px"></i>');

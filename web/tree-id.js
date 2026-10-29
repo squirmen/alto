@@ -28,7 +28,7 @@
   const CROWN_V5=/^pc_[A-Z]{2}\d{2}_\d{4}_\d{4}:\d+\.\d+:\d+\.\d+$/;   // v5 and v5.2 record-seeded crown keys
   const CROWN_V4=/^\d{7}_\d{8}$/;                                     // v4 crown keys (2 x NZTM crown top)
   const FAMILY=/^(akl_tree_)?(trp|not|kau|osm|lid|pc4|pc5|lcp|pcm)_[A-Za-z0-9_]+$/i;
-  const PUBLIC_ORIGIN='https://alto.tfwelch.com';
+  const PUBLIC_ORIGIN='https://alto.org.nz';
 
   // ---- typed and copied text
   // Separators in a typed or copied number, as KYTE reads them (app/treeid.js, api/lib/numbers.php): any space (a
@@ -257,7 +257,7 @@
     u.searchParams.set(page==='tree'?'id':'tree',id);
     return u.href;
   }
-  // The permanent public address: https://alto.tfwelch.com/tree/<number> (any ID works there; numbers are the ones to share).
+  // The permanent public address: https://alto.org.nz/tree/<number> (any ID works there; numbers are the ones to share).
   function permalink(id,{origin=null}={}){
     const key=normalise(id)||String(id||'');
     return `${String(origin||root.ALTO_PUBLIC_ORIGIN||PUBLIC_ORIGIN).replace(/\/+$/,'')}/tree/${encodeURIComponent(key)}`;

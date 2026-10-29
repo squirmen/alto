@@ -100,8 +100,12 @@
     ['Height',false,r=>qty('height',explain(r).height)],
     ['Height measure',false,r=>explain(r).height===null?DASH:HEIGHT_MEASURE[r.datasets.crown?.crown_source]||'Stored canopy estimate'],
     ['Crown area',false,r=>qty('crownArea',explain(r).canopyArea)],
-    ['Trunk diameter',true,r=>{const x=explain(r);if(x.low===null)return DASH;const F=FMT(),one=Math.round(x.low)===Math.round(x.high);
-      const t=one?qty('trunkDiameter',x.low):(F?.range('trunkDiameter',x.low,x.high)||`${fmt(x.low,0)}–${fmt(x.high,0)} cm`);return `${t} · not measured${x.trunks.length>1?`; ${x.trunks.length} models`:''}`;}],
+    // A tree measured in the field (tree-record.js field measurements): the newest reading as measured, at its own height,
+    // with its dates, then ALTO's estimate.
+    ['Trunk diameter',true,r=>{const x=explain(r),F=FMT(),fm=fieldOf(r);
+      const t=x.low===null?null:Math.round(x.low)===Math.round(x.high)?qty('trunkDiameter',x.low):(F?.range('trunkDiameter',x.low,x.high)||`${fmt(x.low,0)}–${fmt(x.high,0)} cm`);
+      if(fm)return `${F?F.quantityText('trunkDiameter',fm.value,{measuredTape:true}):`${fmt(fm.value)} cm`} · measured at ${fmt(fm.height,2)} m${fm.dates?`, ${fm.dates.text}`:''}${t?`; ALTO estimate ${t}`:''}`;
+      if(t===null)return DASH;return `${t} · not measured${x.trunks.length>1?`; ${x.trunks.length} models`:''}`;}],
     // Release 6.3: stormwater and carbon (withheld where the height is not plausible); release 6.2: the services total.
     ['Benefits',true,r=>{const x=explain(r),v=x.annualValue;return v===null?(x.withheld?'withheld: height not plausible':DASH):`${qty('benefits',v)} · ${x.release63?'stormwater and carbon':'sensitivity scenario'}`;}],
     ['Benefits band',true,r=>{const x=explain(r),F=FMT();if(x.valueLow===null||x.valueHigh===null)return DASH;return F?.range('benefits',x.valueLow,x.valueHigh)||`${qty('benefits',x.valueLow)}–${qty('benefits',x.valueHigh)}`;}],
@@ -118,6 +122,8 @@
   // height with its caution, and each estimate computed from it marked "flagged height", as the tree page puts the
   // caution on those cards; the note under the table says what the flag means.
   const REC=()=>root.ALTOTreeRecord||null;
+  // The newest field measurement of a tree's trunk, once the map has read the file (evidence-workspace.js waits for it).
+  const fieldOf=r=>REC()?.fieldTrunk?.(numberOf(r))||null;
   const tallM=()=>REC()?.TALL_M??55;
   const tallText=()=>REC()?.TALL_TEXT||'unusually tall for Auckland: possibly a power line, structure or noise; not used in rankings';
   // Release 6.3: the height check in the record (height_check: implausible or check) flags the height instead.

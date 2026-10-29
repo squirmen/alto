@@ -8,18 +8,18 @@ require(web+'growth-form.js');require(web+'record-links.js');
 const V=require(web+'alto-viz.js'),T=require(web+'tree-summary.js'),P=require(web+'tree-panel.js'),A=require(web+'area.js');
 
 // Versions: the tool owns its version; the data label comes from the release metadata.
-assert.equal(Ver.TOOL.version,'0.2.13');
+assert.equal(Ver.TOOL.version,'0.2.17.1');
 assert.deepEqual([Ver.data({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}).label,Ver.data({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}).dev],['v5.2',false]);
 assert.deepEqual([Ver.data({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}).label,Ver.data({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}).dev],['v6',true]);
 assert.equal(Ver.data({release:{data_release:'6',dataset_version:'x'}}).label,'v6');
-assert.equal(Ver.label({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),'Data v5.2 · Tool v0.2.13');
-assert.equal(Ver.label(null),'Data release unknown · Tool v0.2.13');
+assert.equal(Ver.label({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),'Data v5.2 · Tool v0.2.17.1');
+assert.equal(Ver.label(null),'Data release unknown · Tool v0.2.17.1');
 // The public label names the release by its number and its date, since two releases can share a date (6.1 and 6.2,
-// 13 Oct 2026): "Release 6.2 · 13 Oct 2026 · Tool 0.2.13".
-assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}),{text:'Release 6 · 11 Oct 2026 · Tool 0.2.13',preview:true,number:'6',date:'11 Oct 2026'});
-assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),{text:'Release 5.2 · 10 Oct 2026 · Tool 0.2.13',preview:false,number:'5.2',date:'10 Oct 2026'});
-assert.equal(Ver.publicLabel({release:{dataset_version:'metro-2026.10.13-pointcloud-v6.2'}}).text,'Release 6.2 · 13 Oct 2026 · Tool 0.2.13');
-assert.equal(Ver.publicLabel({release:{dataset_version:'metro-2026.10.17-pointcloud-v6.3'}}).text,'Release 6.3 · 17 Oct 2026 · Tool 0.2.13');
+// 13 Oct 2026): "Release 6.2 · 13 Oct 2026 · Tool 0.2.17.1".
+assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.11-pointcloud-v6-dev'}}),{text:'Release 6 · 11 Oct 2026 · Tool 0.2.17.1',preview:true,number:'6',date:'11 Oct 2026'});
+assert.deepEqual(Ver.publicLabel({release:{dataset_version:'metro-2026.10.10-pointcloud-v5.2'}}),{text:'Release 5.2 · 10 Oct 2026 · Tool 0.2.17.1',preview:false,number:'5.2',date:'10 Oct 2026'});
+assert.equal(Ver.publicLabel({release:{dataset_version:'metro-2026.10.13-pointcloud-v6.2'}}).text,'Release 6.2 · 13 Oct 2026 · Tool 0.2.17.1');
+assert.equal(Ver.publicLabel({release:{dataset_version:'metro-2026.10.17-pointcloud-v6.3'}}).text,'Release 6.3 · 17 Oct 2026 · Tool 0.2.17.1');
 assert.ok(Ver.citation({treeId:'akl_tree_x',metadata:{release:{dataset_version:'a-v6',dataset_last_updated_utc:'2026-10-11'}}}).includes('Tree akl_tree_x'));
 
 // IDs: one tree, however it is typed; anything else is refused; links are canonical.
@@ -317,12 +317,12 @@ assert.equal(Id.url('akl_tree_x',{page:'map',base:'https://alto.tfwelch.com/tree
     for(const [cond,id] of [['state.showLowBand || state.showSubBand','akl-near-canopy'],['state.showLowCanopy','akl-low-canopy'],['state.showChange','akl-change'],['state.showRootZone','akl-rootshape'],['state.showProperties || state.showLandType','akl-properties']])
       assert.ok(idx.includes(`if (${cond}) ensureSource("${id}");`),`applyFilters adds ${id} when its layer is on`);
     assert.ok(/async function openProperty\(pid, address = null, options = \{\}\) \{\s*if \(!pid\) return;\s*pid = String\(pid\);\s*ensureSource\("akl-properties"\);/.test(idx),'a property opening adds the parcels');
-    // FE-09: on a phone the map's controls ride above the sheet by transform (from the sheet's peek height in CSS), and the
-    // attribution is folded from the start, so nothing moves as the archives arrive; the tree page keeps a screen's
-    // height until its record has rendered.
+    // FE-09: on a phone the map's controls ride above the sheet by transform (from the sheet's peek height in CSS, the slim
+    // bar's --sheet-bar), and the attribution is folded from the start, so nothing moves as the archives arrive; the tree
+    // page keeps a screen's height until its record has rendered.
     {const mcss=fs.readFileSync(web+'map.css','utf8'),tcss=fs.readFileSync(web+'tree-instrument-page.css','utf8');
-      assert.ok(mcss.includes('.maplibregl-ctrl-bottom-right { bottom: env(safe-area-inset-bottom); transform: translateY(calc(-1 * var(--sheet-clear, 168px))); transition: transform 260ms var(--ease-standard); }'),'bottom-right controls move by transform');
-      assert.ok(mcss.includes('.maplibregl-ctrl-bottom-left { bottom: 0; transform: translateY(calc(-1 * (var(--sheet-clear, 168px) + var(--scale-lift, 0px)))); transition: transform 260ms var(--ease-standard); }'),'bottom-left controls move by transform');
+      assert.ok(mcss.includes('.maplibregl-ctrl-bottom-right { bottom: 0; transform: translateY(calc(-1 * var(--sheet-clear, var(--sheet-bar)))); transition: transform 260ms var(--ease-standard); }'),'bottom-right controls move by transform');
+      assert.ok(mcss.includes('.maplibregl-ctrl-bottom-left { bottom: 0; transform: translateY(calc(-1 * (var(--sheet-clear, var(--sheet-bar)) + var(--scale-lift, 0px)))); transition: transform 260ms var(--ease-standard); }'),'bottom-left controls move by transform');
       assert.ok(!/maplibregl-ctrl-bottom-(?:right|left) \{ bottom: calc\(var\(--sheet-clear/.test(mcss),'no control moves by its bottom edge');
       assert.ok(idx.includes('fold();\n      map.on("styledata", fold); map.on("sourcedata", fold); map.on("resize", fold);')&&idx.includes('a?.querySelector(".maplibregl-ctrl-attrib-button")?.addEventListener("click", () => { opened = true; });'),'attribution folded from the start until the reader opens it');
       assert.ok(tcss.includes('body:not([data-ready="true"]) .ti-main { min-height: 100vh; min-height: 100dvh; }'),'tree page: main keeps a screen height until ready');}

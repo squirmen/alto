@@ -22,7 +22,7 @@ const META61={release:{dataset_version:'metro-2026.10.13-pointcloud-v6.1',datase
   assembly:{tile_version:'20261013-v6.1'},derived_products:{tree_ids:'data/tree_ids/schema.json'}};
 const META6={release:{dataset_version:'metro-2026.10.12-pointcloud-v6',dataset_last_updated_utc:'2026-10-11T21:30:30+00:00',status:'research_only_not_independently_validated'},
   assembly:{tile_version:'20261012-v6'}};
-const REG='akl_tree_trp_ACCT0245027',NUM='T318JMKK',LINK=`https://alto.tfwelch.com/tree/${NUM}`;
+const REG='akl_tree_trp_ACCT0245027',NUM='T318JMKK',LINK=`https://alto.org.nz/tree/${NUM}`;
 assert.ok(Id.validNumber(NUM));
 const env=meta=>({siteRoot:'.',dataBase:'./data',metadata:meta});
 // The fixture record as release 6.1 publishes it: every record carries its tree's number.
@@ -150,7 +150,7 @@ global.Response=global.Response||require('node:buffer').Response;
 const OPT={base:'./data',version:'t',metadata:{derived_products:{tree_ids:'data/tree_ids/schema.json'}}};
 const res=raw=>Id.resolve(raw,OPT);
 const view=async(raw,o={})=>I.statusView(await res(raw),{typed:raw,...o});
-const BASE='https://alto.tfwelch.com/';
+const BASE='https://alto.org.nz/';
 
 (async()=>{
   // validate: the one correction the release holds, else none

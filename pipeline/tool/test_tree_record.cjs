@@ -92,7 +92,7 @@ for(const id of [DET,REG,NOT]){
   assert.equal(rec.roots.stored.rpaRadius,dd.roots.rpa_radius_m);
   for(const x of quantities(rec))if(x.range)assert.notEqual(x.range.text.replace(/ .*$/,'').split('–')[0],x.range.text.replace(/ [^–]*$/,'').split('–')[1]?.replace(/ .*$/,''),`${id} ${x.key}: zero-width range ${x.range.text}`);
   for(const s of strings(R.toJSON(rec)))assert.ok(!/(\d[\d.,]*)–\1 (m|cm|m²)\b/.test(s),`zero-width range in "${s}"`);
-  assert.deepEqual(rec.release.public,{text:'Release 6 · 11 Oct 2026 · Tool 0.2.13',preview:true,number:'6',date:'11 Oct 2026'});
+  assert.deepEqual(rec.release.public,{text:'Release 6 · 11 Oct 2026 · Tool 0.2.17.1',preview:true,number:'6',date:'11 Oct 2026'});
   // Parts that need the network start as pending.
   for(const p of ['context','imagery','place','photos','scenario'])assert.equal(rec[p].status,'pending',p);
   assert.equal(rec.lidar.points.status,'pending');
@@ -340,6 +340,20 @@ for(const id of [DET,REG,NOT]){
   assert.equal(rec.measures.trunkDiameter.kind,'measured');
   assert.ok(Math.abs(rec.measures.rootProtection.value-7.344)<1e-9);
   assert.equal(rec.measures.rootProtection.range,null);
+  // Trunk measuring height (20 Oct 2026, tool 0.2.15): labels say 1.4 m, the New Zealand convention; a tape reading's
+  // method names the height its visit stored (KYTE asked for 1.3 m before v22), else the rule.
+  assert.equal(rec.measures.trunkDiameter.label,'Trunk diameter at 1.4 m');
+  assert.equal(rec.measures.trunkDiameter.provenance.method.text,'Circumference tape at 1.4 m above the ground (on a slope, from mid-slope), divided by π');
+  R.setLive(rec,{diameter_cm:61.2,circumference_cm:192.3,measuring_height_m:1.3,observed_on:'2026-10-05'},ENV);
+  assert.equal(rec.measures.trunkDiameter.provenance.method.text,'Circumference tape at 1.3 m above the ground, divided by π');
+  R.setLive(rec,{diameter_cm:58,circumference_cm:null,measuring_height_m:1.4,observed_on:'2026-10-21'},ENV);
+  assert.equal(rec.measures.trunkDiameter.provenance.method.text,'Diameter tape at 1.4 m above the ground');
+  R.setLive(rec,{diameter_cm:52.1,circumference_cm:163.7,measuring_height_m:1.25,multiStem:true,stems:3,observed_on:'2026-10-21'},ENV);
+  assert.equal(rec.measures.largestStem.label,'Largest stem at 1.4 m');
+  assert.equal(rec.measures.largestStem.provenance.method.text,'Tape round the largest stem at 1.25 m above the ground; several stems');
+  assert.equal(rec.measures.trunkDiameter.kind,'model');
+  assert.equal(rec.measures.trunkDiameter.label,'Trunk diameter at 1.4 m');
+  for(const q of Object.values(rec.measures))assert.ok(!/1\.3 m|uphill/.test(`${q.label} ${q.provenance?.method?.text||''}`),`${q.key}: no 1.3 m or uphill wording`);
 }
 
 // Percentiles from published quantiles: ties split evenly, interpolation between quantiles, both ends.

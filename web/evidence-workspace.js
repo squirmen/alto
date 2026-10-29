@@ -34,7 +34,11 @@
     const body=document.getElementById('comparisonBody');
     body.textContent='Loading saved trees from this release…';
     const version=ids.join('|');
+    // Field measurements (tree-record.js; read once a page load) are waited for with the records: the trunk row says which
+    // trees were measured.
+    const field=root.ALTOTreeRecord?.fieldFile?root.ALTOTreeRecord.fieldFile({siteRoot:config.siteRoot}):null;
     const results=await Promise.allSettled(ids.map(id=>config.load(id)));
+    await field;
     if(version!==ids.join('|'))return;
     const records=results.filter(r=>r.status==='fulfilled').map(r=>r.value.record);
     body.innerHTML=ALTOEvidence.comparison(records);

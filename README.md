@@ -12,24 +12,26 @@ form, canopy history from the 2013 and 2016 surveys where a match exists, a heig
 replacement time, estimates of trunk size, roots and benefits (stormwater and carbon), checks on its
 height and its record link, and the assumptions behind every estimate.
 
-- **Map:** https://alto.tfwelch.com · every tree also has its own page, at a permanent link
-  (`https://alto.tfwelch.com/tree/<tree number>`), with its source records, key measurements and where
-  each comes from, checks, history, aerial imagery through time (scanned surveys from 1939 and the surveys
-  since 2010), iNaturalist records at the tree, a link to street-level imagery, benefits, photos and citation.
+- **Map:** https://alto.org.nz · every tree also has its own page, at a permanent link
+  (`https://alto.org.nz/tree/<tree number>`), with its source records, key measurements and where
+  each comes from, field measurements where a tree has been measured on the ground, checks, history, aerial
+  imagery through time (scanned surveys from 1939 and the surveys since 2010), iNaturalist records at the
+  tree, a link to street-level imagery, benefits, photos and citation. ALTO moved to alto.org.nz on
+  29 October 2026; links to alto.tfwelch.com still reach the same page.
 - **Versions:** the interface (tool) and the data release are versioned separately and shown together;
-  the site now runs data release v6.3 with tool 0.2.13 ("Release 6.3 · 17 Oct 2026 · Tool 0.2.13"), tagged
-  `data-v6.3` and `tool-v0.2.13` in this repository. See [`VERSIONING.md`](VERSIONING.md) and
+  the site now runs data release v6.3 with tool 0.2.17.1 ("Release 6.3 · 17 Oct 2026 · Tool 0.2.17.1"),
+  tagged `data-v6.3` and `tool-v0.2.17.1` in this repository. See [`VERSIONING.md`](VERSIONING.md) and
   [`CHANGELOG.md`](CHANGELOG.md).
-- **Release notes:** [Methods](https://alto.tfwelch.com/methods.html) lists every release, and
-  [How ALTO is made](https://alto.tfwelch.com/how-alto-is-made.html) gives one overview.
-  [v6.3](https://alto.tfwelch.com/v63-methods.html) (benefit value, height and record checks, height class,
+- **Release notes:** [Methods](https://alto.org.nz/methods.html) lists every release, and
+  [How ALTO is made](https://alto.org.nz/how-alto-is-made.html) gives one overview.
+  [v6.3](https://alto.org.nz/v63-methods.html) (benefit value, height and record checks, height class,
   group areas, licences, species names),
-  [v6.2](https://alto.tfwelch.com/v62-methods.html) (reviewer-confirmed crowns and palm-type crowns),
-  [v6.1](https://alto.tfwelch.com/v61-methods.html) (permanent tree numbers),
-  [v6](https://alto.tfwelch.com/v6-methods.html) (growth form and smoothed crown outlines),
-  [v5.2](https://alto.tfwelch.com/v52-methods.html) (record-to-crown links),
-  [v5.1](https://alto.tfwelch.com/v51-methods.html) (crown continuity repair),
-  [v5](https://alto.tfwelch.com/v5-methods.html) (crown redraw)
+  [v6.2](https://alto.org.nz/v62-methods.html) (reviewer-confirmed crowns and palm-type crowns),
+  [v6.1](https://alto.org.nz/v61-methods.html) (permanent tree numbers),
+  [v6](https://alto.org.nz/v6-methods.html) (growth form and smoothed crown outlines),
+  [v5.2](https://alto.org.nz/v52-methods.html) (record-to-crown links),
+  [v5.1](https://alto.org.nz/v51-methods.html) (crown continuity repair),
+  [v5](https://alto.org.nz/v5-methods.html) (crown redraw)
 - **Tree numbers:** every marker on the map has a permanent number, such as `TMCTT6X4`, with a check
   character that catches any single mistyped character. Every record ID and crown key published
   before still resolves, to the tree that carries it now or to a page saying why none does. See
@@ -40,10 +42,11 @@ height and its record link, and the assumptions behind every estimate.
   [`docs/v6/growth-form.md`](docs/v6/growth-form.md).
 - **Species maxima:** the largest measured tree of each recorded species by height, crown spread and crown
   area, across Auckland or in a local board, from the 2024 LiDAR survey
-  ([maxima.html](https://alto.tfwelch.com/maxima.html)).
+  ([maxima.html](https://alto.org.nz/maxima.html)).
 - **Data:** explore any tree on the map; field definitions are in
   [`docs/data-dictionary.md`](docs/data-dictionary.md). Bulk data is available to research
-  partners on request.
+  partners on request. How ALTO's data may be used is set out in
+  [Using ALTO's data](https://alto.org.nz/terms.html) (see [Licence](#licence)).
 - **Your property:** search an address on the map to see the trees on that parcel, the canopy over it and an estimate of
   the services they provide each year. Every tree also carries an inferred land type (street, park, institutional,
   private), which the map's Land filter uses. See [`docs/methods/property_tenure.md`](docs/methods/property_tenure.md).
@@ -51,20 +54,20 @@ height and its record link, and the assumptions behind every estimate.
   joined to a crown in v5.2, where its source recorded the tree and a line to the crown it was joined
   to. See [`docs/v52/linking.md`](docs/v52/linking.md).
 - **Sources and credits:** every source, with its licence and a link to the original:
-  https://alto.tfwelch.com/credits.html
-- **KYTE**, the companion phone app for adding ground observations: https://alto.tfwelch.com/kyte/
+  https://alto.org.nz/credits.html
+- **KYTE**, the companion phone app for adding ground observations: https://alto.org.nz/kyte/
 
 This is a research beta. The release is reproducible and openly documented, but it has not been
 independently validated. Read [`docs/v5/release-review.md`](docs/v5/release-review.md),
 [`docs/v52/linking.md`](docs/v52/linking.md), [`docs/v6/growth-form.md`](docs/v6/growth-form.md),
 [`docs/v61/tree-numbers.md`](docs/v61/tree-numbers.md), the
-[release 6.3 methods page](https://alto.tfwelch.com/v63-methods.html) and
+[release 6.3 methods page](https://alto.org.nz/v63-methods.html) and
 [`docs/methods/beta_known_limitations.md`](docs/methods/beta_known_limitations.md) before using
 any estimate for a decision.
 
 ## The current release
 
-Data release v6.3 (`20261017-v6.3`, 17 October 2026, live from 18 October), shown with tool 0.2.13. It
+Data release v6.3 (`20261017-v6.3`, 17 October 2026, live from 18 October), shown with tool 0.2.17.1. It
 values benefits as stormwater plus carbon, checks every height and record-to-crown link, replaces the
 life-stage label and the irreplaceability class with a height class and a crown replacement time, joins
 Schedule 10 entries and the Notable Group of Trees areas, gives every source its licence (OpenStreetMap
@@ -142,11 +145,14 @@ pipeline/
           build_tree_inat.py iNaturalist records at each tree); the aerial survey index
           (build_imagery_coverage.py); LiDAR point crops (not read by the public pages); and the
           interface tests with their fixtures (tree record, panel and page, tree numbers, search, aerial
-          imagery, methods pages, credits, Species maxima, release 6.3 fields, colour vision).
+          imagery, methods pages, credits, Species maxima, release 6.3 fields, field measurements, the
+          phone layout, colour vision).
 web/      The interface (tool) source: the MapLibre and PMTiles map with its tree panel, search, legend
           and Area dashboard; the tree page (tree.html) with aerial imagery through time
-          (tree-imagery.js, tree-imagery-viewer.js), iNaturalist records and street-level links; the
-          tree-number resolver (tree-id.js); Species maxima (maxima.html); Sources and credits
+          (tree-imagery.js, tree-imagery-viewer.js), iNaturalist records, street-level links and field
+          measurements (read from field/measurements_v1.json at the site root when the site has it; the
+          format is in docs/tool/field_measurements_example.json); the tree-number resolver (tree-id.js,
+          permanent links on alto.org.nz); Species maxima (maxima.html); Sources and credits
           (credits.html); the methods index (methods.html), How ALTO is made and the release notes
           pages (v5 to v6.3); growth form, ground evidence from KYTE and the Council recorded positions
           layer; with the live data release's release-metadata.json. Version in web/version.js. The
@@ -212,14 +218,14 @@ CHANGELOG.md, VERSIONING.md   Tool and data release history, and how each is ver
     label and the irreplaceability class with a height class and a crown replacement time, values benefits
     as stormwater plus carbon, joins Schedule 10 entries and the Notable Group of Trees areas, gives every
     source its licence and fixes species names. The release code is not in this repository yet; see the
-    [release 6.2](https://alto.tfwelch.com/v62-methods.html) and
-    [release 6.3](https://alto.tfwelch.com/v63-methods.html) methods pages (`web/v62-methods.html`,
+    [release 6.2](https://alto.org.nz/v62-methods.html) and
+    [release 6.3](https://alto.org.nz/v63-methods.html) methods pages (`web/v62-methods.html`,
     `web/v63-methods.html`) and [`docs/data-dictionary.md`](docs/data-dictionary.md).
 
 `pipeline/v51` and `pipeline/v52` each have a README with the order of their steps and the inputs they expect.
 
 The interface is versioned and released on its own (see [`VERSIONING.md`](VERSIONING.md)).
-`pipeline/tool/build_web_beta.py --out <folder> --public --site-root . --channel release --version 0.2.13`
+`pipeline/tool/build_web_beta.py --out <folder> --public --site-root . --channel release --version 0.2.17.1`
 (with `--derived <folder>` for each data release's tables) turns `web/` into the copy served at the site
 root: it stamps script, style and image URLs with the tool version, writes the site settings
 (`site-config.js`; the data release's cache stamp is read at run time), adds `tool-build.json`,
@@ -268,14 +274,13 @@ cd pipeline/v6 && node test_growth_form_ui.cjs
 cd pipeline/base && python -m pytest tests
 ```
 
-The v5 and v5.1 tests, the derived-table test and the interface tests pass, with one exception:
-`test_tree_id.cjs` stops at its check of the tree-number vectors shared with KYTE, which needs the trimmed
-alias-table shards in `pipeline/tool/fixtures/tree_ids/` (rows of the release's `data/tree_ids`, kept out of
-the repository with the other data files). The tool tests cover the tree record, the tree panel and page,
+The v5 and v5.1 tests, the derived-table test and the interface tests pass. `test_tree_id.cjs` reads a few
+rows of the release's alias table, trimmed into `pipeline/tool/fixtures/tree_ids/`, so it runs in a fresh clone. The tool tests cover the tree record, the tree panel and page,
 tree numbers and the alias-table resolver, search, aerial imagery through time and its larger view, the
 methods pages and release notes, credits and licences, Species maxima, the release 6.3 fields and checks,
-iNaturalist and street-level links, the site's security headers, and the map's colours under simulated
-colour-vision deficiencies. Tests that compare against a full release read it under `/data/alto` and are
+iNaturalist and street-level links, field measurements, the phone layout, the site's security headers and
+short links, and the map's colours under simulated colour-vision deficiencies. Tests that compare against a
+full release read it under `/data/alto` and are
 skipped when it is not there. In the base suite, two failures are known and open: the deploy gate notes
 that the base web build does not ship the v5 near-canopy tiles, and one tile-attestation edge case does not
 yet reject a pre-existing stale tile. `test_growth_form_abstention.py` can abort inside a native library on
@@ -283,7 +288,7 @@ some builds of the scientific stack.
 
 ## Data sources and attribution
 
-Every source, with its licence and a link to the original: [Sources and credits](https://alto.tfwelch.com/credits.html).
+Every source, with its licence and a link to the original: [Sources and credits](https://alto.org.nz/credits.html).
 
 - Auckland Council tree register (incl. Auckland Transport), retrieved June 2026. © Auckland Council; the public
   service now requires a token.
@@ -335,17 +340,21 @@ commercial.
   them for noncommercial purposes with credit.
 - **Commercial use**, including paid services, consulting deliverables or products built on ALTO's
   code, needs a separate licence from the University of Auckland. Contact Tim Welch.
+- **ALTO's data** (crowns and their outlines, heights and crown sizes, tree numbers, estimates, the links
+  between records and trees, and the figures built from them) is not covered by the code or document licences. Its terms are at [Using ALTO's data](https://alto.org.nz/terms.html):
+  free for non-commercial use with credit; ask first for commercial use, including consultancy or other paid
+  work for a client, and before copying it in bulk.
 - **Third-party material** keeps its own terms: three.js (MIT), MapLibre GL JS and PMTiles (BSD-3-Clause),
   the Inter typeface (SIL Open Font License 1.1), and the data above, each under its own licence. See
-  [`NOTICE`](NOTICE) and [Sources and credits](https://alto.tfwelch.com/credits.html).
+  [`NOTICE`](NOTICE) and [Sources and credits](https://alto.org.nz/credits.html).
 
 When you use ALTO, cite it as below.
 
 ## Citing ALTO
 
 Use the citation in [`CITATION.cff`](CITATION.cff), or "Welch, T. F. (2026). ALTO: Aotearoa
-Long-term Tree Observatory, Auckland release v6.3, tool 0.2.13. Better Places Lab, University of Auckland.
-https://alto.tfwelch.com". Each tree page gives a citation for that tree with the data and tool versions.
+Long-term Tree Observatory, Auckland release v6.3, tool 0.2.17.1. Better Places Lab, University of Auckland.
+https://alto.org.nz". Each tree page gives a citation for that tree with the data and tool versions.
 
 ## Contact
 

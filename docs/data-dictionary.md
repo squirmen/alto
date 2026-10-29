@@ -4,7 +4,7 @@ Release: 20261017-v6.3.
 
 Each tree profile exposes the datasets below. The schema gives their exact ordered fields. Blank means unavailable, not zero. All source IDs and original coordinates are retained.
 
-**Tree number** (`tree_number`) is the permanent public ID of the map tree a record belongs to: `T` + 6 Crockford base-32 characters + a Luhn mod 32 check character (any case; spaces and hyphens ignored; I and L read as 1, O as 0), drawn at random in v6.1 and never reused. Every record of a tree carries the same number: `role` marker for the record that is the tree's map marker, member for the other records on its crown, merged for records a reviewer joined to it. `akl_tree_*` stays the immutable record ID. Every record ID, v4 and v5 crown key and number ever published resolves through `data/tree_ids` (statuses current, member, merged, split, retired; see its schema.json). Link a tree as https://alto.tfwelch.com/tree/<number>.
+**Tree number** (`tree_number`) is the permanent public ID of the map tree a record belongs to: `T` + 6 Crockford base-32 characters + a Luhn mod 32 check character (any case; spaces and hyphens ignored; I and L read as 1, O as 0), drawn at random in v6.1 and never reused. Every record of a tree carries the same number: `role` marker for the record that is the tree's map marker, member for the other records on its crown, merged for records a reviewer joined to it. `akl_tree_*` stays the immutable record ID. Every record ID, v4 and v5 crown key and number ever published resolves through `data/tree_ids` (statuses current, member, merged, split, retired; see its schema.json). Link a tree as https://alto.org.nz/tree/<number>.
 
 **Current crown area** is the segmented horizontal footprint in square metres (`crown_area_m2`: the crown's 0.5 m LiDAR cells as v5 segmented them; it drives every estimate). The smoothed polygon the map draws has its own area, `outline_area_m2` in `outline`. **Crown spread** is a width in metres and is not the same measurement. The area-derived equivalent diameter (`crown_diameter_m`) is a circular approximation, not a measured crown spread. Where a reviewer drew a crown (v6.1; `outline.crown_source` reviewer_outline) the crown area is the area of that outline and the original polygon stays in the database; where a reviewer merged crowns, the area is the sum of their cell areas and the polygon their union.
 
@@ -44,7 +44,7 @@ Fields: `seg_key`, `current_primary_tree_id`, `evidence_tier`, `link_role`, `cur
 
 ## Tree number (permanent ID)
 
-The permanent public number of the map tree this record belongs to (T + 6 Crockford base-32 characters + a Luhn mod 32 check character; never reused). role: marker (this record is the tree's map marker), member (a record on the tree's crown without its own marker) or merged (joined to the tree by a reviewer correction). Old IDs and crown keys resolve through data/tree_ids (see its schema.json). Link: https://alto.tfwelch.com/tree/<number>.
+The permanent public number of the map tree this record belongs to (T + 6 Crockford base-32 characters + a Luhn mod 32 check character; never reused). role: marker (this record is the tree's map marker), member (a record on the tree's crown without its own marker) or merged (joined to the tree by a reviewer correction). Old IDs and crown keys resolve through data/tree_ids (see its schema.json). Link: https://alto.org.nz/tree/<number>.
 
 `tree_number` → `tree_number_v61`
 

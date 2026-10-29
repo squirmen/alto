@@ -8,7 +8,7 @@ ALTO has two things that change on their own schedules, and each has its own ver
 | **Data release** | Everything under `data/` on the site: tiles, per-tree and per-property records, release metadata | Release name, e.g. `v6.2`, `v6.3` | `release-metadata.json` (`release.data_release` from v6.2 on, and `release.dataset_version`) | `data-v6.3` |
 
 The interface shows both together, with the release's date, for example **Release 6.3 · 17 Oct 2026 · Tool
-0.2.13**, on the map, the tree page and Species maxima, and both go into every citation.
+0.2.17.1**, on the map, the tree page and Species maxima, and both go into every citation.
 
 ## Tool versions
 
@@ -39,7 +39,7 @@ record checks, height class and group areas). Its
   release tool should write it from `web/version.js` when it assembles the bundle). It is not the
   version of the interface people are using. The copy in `web/release-metadata.json` is the v6.3
   bundle's: it reads `0.2.12`, the tool v6.3 was checked with and went live with on 18 October 2026;
-  the site has run tool 0.2.13 since 19 October (see `CHANGELOG.md`). Releases before v6.2 left the
+  the site has run tool 0.2.17.1 since 29 October (see `CHANGELOG.md`). Releases before v6.2 left the
   field at `0.1.0`.
 
 ## Compatibility
@@ -57,7 +57,9 @@ The tool reads data through published contracts, and checks them rather than ass
   `crown_replacement` or `irreplaceability_class`), so one build serves either release;
 - the tool build's derived tables for each release (comparisons, history, Species maxima, notable facts,
   and from 0.2.13 iNaturalist records and street-level links), in `derived/<dataset_version>/`, read only
-  for the release whose `dataset_version` names them.
+  for the release whose `dataset_version` names them;
+- from 0.2.17, field measurements in `field/measurements_v1.json` at the site root, published apart from
+  data and tool releases; a site without the file shows no field measurements.
 
 So a tool release normally works with the current and the previous data release. A data release
 that changes a contract (a new bucket layout, renamed fields) needs a tool release that reads both
@@ -69,7 +71,8 @@ Tree links (`/tree/<ID>`, `tree.html?id=…`, `?tree=…`) go through `web/tree-
 v6.1 every marker on the map has a permanent tree number (`T` + 6 characters + a check character, e.g.
 `TMCTT6X4`), and the release lists an alias table under `derived_products.tree_ids` that resolves
 every tree number, record ID and crown key published so far. Tool 0.2.3 and later show the number
-as the tree's ID and use `https://alto.tfwelch.com/tree/<number>` as its permanent link; merged,
+as the tree's ID and use `https://alto.org.nz/tree/<number>` as its permanent link (from tool 0.2.17.1;
+links made before it name alto.tfwelch.com and still reach the same tree); merged,
 split and retired IDs open a page that says what became of them. With a release that has no alias
 table, the resolver accepts the release `tree_id` (`akl_tree_…`, or without the prefix) as before.
 Links made before v6.1 keep working. See [`docs/v61/tree-numbers.md`](docs/v61/tree-numbers.md).
@@ -82,9 +85,10 @@ that documents a data release (its release metadata, data dictionary and method 
 The public tags are the reference for each live build. At a `tool-v…` tag, `web/` is the interface
 served at the site root, apart from the build's version stamps; at a `data-v…` tag,
 `web/release-metadata.json` is the live release's. `tool-v0.2.1` and `data-v6` mark one snapshot,
-`tool-v0.2.4` and `data-v6.1` the next, and `tool-v0.2.13` and `data-v6.3` the one after; versions
-released between two snapshots (tool 0.2.2, 0.2.3 and 0.2.5 to 0.2.12; data v6.2) have no tag, and their
-changes are in the changelog and the next snapshot.
+`tool-v0.2.4` and `data-v6.1` the next, `tool-v0.2.13` and `data-v6.3` the one after, and
+`tool-v0.2.17.1` (with data v6.3 unchanged) the latest; versions released between two snapshots (tool
+0.2.2, 0.2.3, 0.2.5 to 0.2.12 and 0.2.14 to 0.2.17; data v6.2) have no tag, and their changes are in the
+changelog and the next snapshot.
 
 The commit ID in a live build's `tool-build.json` (`tool.source.commit`) belongs to the development
 branch the interface is built from, not to `main`; use the tag to find a build's source here.

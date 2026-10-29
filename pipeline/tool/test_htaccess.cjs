@@ -31,6 +31,10 @@ const rules=ht.split('\n').filter(l=>!/^\s*#/.test(l)).join('\n');
   assert.ok(ht.indexOf('# ---- HTTPS only')<ht.indexOf('# ---- MIME types'),'the HTTPS block opens the template');
   // UX-13: permanent tree links in any case, with whatever a copied link carries; ALTO's own 404 page
   assert.ok(rules.includes('RewriteRule ^tree/([^/]{1,190})/?$ /tree.html?id=$1 [NC,B,R=302,L,QSA]'),'/tree/<ID>: any case, any characters but /, escaped into ?id=');
+  // Printed short links: temporary (302) so a code on paper can be repointed; every /go/ path lands somewhere.
+  for(const [code,to] of [['dps','/kyte/?from=dps'],['dps-map','/?from=dps'],['leafy','/kyte/?from=leafylab'],['leafy-map','/?from=leafylab'],['flyer','/kyte/?from=flyer'],['flyer-map','/?from=flyer'],['kyte','/kyte/?from=go'],['map','/?from=go']])
+    assert.ok(rules.includes(`RewriteRule ^go/${code}/?$ ${to} [NC,R=302,L]`),`/go/${code} -> ${to} (302)`);
+  assert.ok(rules.includes('RewriteRule ^go(/.*)?$ / [NC,R=302,L]')&&!/R=301[^\n]*go\//.test(rules),'/go/<unknown> -> the map; no permanent go-links');
   assert.ok(/^ErrorDocument 404 \/404\.html$/m.test(rules)&&fs.existsSync(web+'404.html'),'ErrorDocument 404 /404.html, and the page exists');
   // FE-04: versioned files and a release's derived files are immutable; pages keep 10 minutes; the release metadata is
   // fresh for a minute and revalidated in the background; KYTE's folder is left to its own rules.

@@ -43,4 +43,4 @@
 - torchvision (BSD 3-Clause): https://github.com/pytorch/vision
 - iNaturalist research-grade observations through GBIF.org: iNaturalist contributors, iNaturalist (2026), iNaturalist Research-grade Observations, occurrence dataset https://doi.org/10.15468/ab3s5x, accessed via GBIF.org on 2026-10-02 · each observation under its observer's licence (dataset licence CC BY-NC 4.0).
 
-Every source as the public site credits it: https://alto.tfwelch.com/credits.html
+Every source as the public site credits it: https://alto.org.nz/credits.html

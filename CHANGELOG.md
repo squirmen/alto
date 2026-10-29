@@ -5,6 +5,60 @@ Two sections: the **Tool** (the interface, semantic versions) and the **Data** (
 
 ## Tool
 
+### 0.2.17.1 (29 October 2026)
+
+- Tree permalinks now use alto.org.nz (`https://alto.org.nz/tree/<number>`) wherever a tree's link is shown, copied,
+  shared, printed or cited. Links to alto.tfwelch.com still reach the same tree.
+
+Tests: the permalink and the tree-number vectors shared with KYTE.
+
+### 0.2.17 (27 October 2026)
+
+- Field measurements: a tree measured on the ground shows the reading beside ALTO's estimate. On the tree page they sit
+  under Key measurements ("Field measurements"), and in the map's tree panel among the key measurements. Each reading
+  gives:
+  - the value, the method and the height it was read at (each reading names its own height);
+  - the dates, and who measured;
+  - how many measurements, teams and classes, and the spread across teams;
+  - the review.
+  ALTO's own trunk estimate follows, with its method and model spread.
+- The trunk diameter of a measured tree is the newest reading, unless a reviewed KYTE tape reading of a single trunk
+  exists; the root protection radius follows it. The measurements are published apart from data and tool releases, in
+  `field/measurements_v1.json` at the site root. A tree without one, or a site without the file, is unchanged.
+- The saved-trees comparison gives a measured tree's reading, its height and dates, then ALTO's estimate.
+- Root space follows a measured trunk (a reviewed KYTE tape reading, or a field measurement), as the root protection
+  radius line already did; before, it kept the model radius.
+
+Tests: the field file missing, unreachable or of another version; entries left out (no value, height or measurer);
+trees with none, one and two readings; the precedence of a KYTE reading; the number formats.
+
+### 0.2.16 (26 October 2026)
+
+- On a phone the map is usable with a panel open. Minimised, the tree or property panel is a slim bar (about 60 px:
+  the handle, the tree's name and number or the address, and a close button) instead of half the screen; the map
+  panel shows only its handle and the search box. Tapping the bar expands it; the handle (with a chevron) minimises it
+  again; dragging moves between sizes, and dragging the bar down closes it. Zoom, scale and attribution sit above
+  whichever panel is showing. Desktop is unchanged.
+- The handles carry aria-expanded; hidden content takes no focus; reduced motion is respected.
+
+Tests: the phone sheets (heights, states, controls above the bar) and the version labels.
+
+### 0.2.15 (20 October 2026)
+
+- Trunk measuring height follows the New Zealand convention, as the New Zealand Tree Register does: 1.4 m above the
+  ground (on a slope, from mid-slope), where ALTO and KYTE said 1.3 m above the uphill ground. The labels read "Trunk
+  diameter at 1.4 m" and "Largest stem at 1.4 m"; the map's size markers, the tree page's girth note, the Species maxima
+  girth line, How ALTO is made and the release 6.3 methods page say the same. ALTO's trunk diameters are estimates from
+  the crown, so no number changed. Methods pages of releases before 6.3 keep their wording.
+- A KYTE tape reading's method line names the height its visit stored (KYTE asked for 1.3 m before v22).
+
+Tests: the labels, the method line at a stored height and without one, and the 6.3 methods sentence.
+
+### 0.2.14 (19 October 2026)
+
+- iNaturalist records with no licence code (iNaturalist's "none") read "all rights reserved", not "(NONE)"; they were
+  already shown as links only. `build_tree_inat.py` now writes them with no code.
+
 ### 0.2.13 (19 October 2026)
 
 Two outside sources on the tree page, each linked and credited, neither copied; one credit corrected.

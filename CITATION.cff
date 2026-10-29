@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use ALTO, please cite it as below."
 title: "ALTO: Aotearoa Long-term Tree Observatory"
-version: "v6.3 (2026-10-17 Auckland release), tool 0.2.13"
-date-released: 2026-10-19
-url: "https://alto.tfwelch.com"
+version: "v6.3 (2026-10-17 Auckland release), tool 0.2.17.1"
+date-released: 2026-10-29
+url: "https://alto.org.nz"
 license: PolyForm-Noncommercial-1.0.0
 repository-code: "https://github.com/squirmen/alto"
 abstract: >-

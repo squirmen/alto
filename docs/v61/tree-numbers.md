@@ -72,10 +72,12 @@ Example: `TMCTT6X4`.
 
 ## Permanent links
 
-A tree's permanent link is `https://alto.tfwelch.com/tree/<number>`. Any older ID works in the same
-place, and `tree.html?id=…` and the map's `?tree=…` links made before v6.1 keep working: the tree page
-and the map read every ID through the resolver. The site redirects `/tree/<ID>` to the tree page rather
-than rewriting it, because the page loads its scripts and data by relative paths:
+A tree's permanent link is `https://alto.org.nz/tree/<number>` (the site moved there on 29 October
+2026; links made before, on `https://alto.tfwelch.com/tree/<number>`, reach the same tree). Any older
+ID works in the same place, and `tree.html?id=…` and the map's `?tree=…` links made before v6.1 keep
+working: the tree page and the map read every ID through the resolver. The site redirects `/tree/<ID>`
+to the tree page rather than rewriting it, because the page loads its scripts and data by relative
+paths:
 
 ```apache
 <IfModule mod_rewrite.c>

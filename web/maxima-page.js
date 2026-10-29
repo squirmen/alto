@@ -62,7 +62,7 @@
     // Girth is not measured: the line links KYTE's girth missions (UX-01), where a tape reading can be added.
     $('#mxReleaseNote').innerHTML=[from?esc(`Computed on release ${from}${built?` (${built})`:''}.`):null,
       check&&live&&live!==from?esc(`${check.text||`Checked against release ${live}`}${check.on?`; checked ${M.dateText(check.on)}`:''}.`):null,
-      `<a href="${esc(SITE_ROOT)}/kyte/missions/#girth">Girth is not measured</a>: KYTE’s girth missions ask for a tape reading at 1.3 m.`].filter(Boolean).join(' ');
+      `<a href="${esc(SITE_ROOT)}/kyte/missions/#girth">Girth is not measured</a>: KYTE’s girth missions ask for a tape reading at 1.4 m above the ground (on a slope, from mid-slope).`].filter(Boolean).join(' ');
     const sel=$('#mxArea');
     sel.innerHTML=M.areaList(D).map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
     const names=Object.entries(D.species||{}).filter(([sp])=>D.maxima.some(m=>m.species===sp));

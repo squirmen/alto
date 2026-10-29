@@ -726,9 +726,10 @@
     <!-- Left panel, concept A ("calm by default"). On open: search, the live summary, the active
          filters and layers as chips, one "Colour by" control, and three drawers (Filters, Layers,
          Area) that open below it. Groups of three or more options fold under a row that states
-         their current value. On a phone the panel is a bottom sheet (peek, half, full). -->
+         their current value. On a phone the panel is a bottom sheet (peek, half, full); at peek it is a bar
+         of its handle and the search box. -->
     <aside id="explorer" class="lp" aria-label="Map controls" data-open-drawer="" data-sheet="peek">
-      <button id="panelHandle" class="lp-handle" type="button" aria-label="Show more of the panel" aria-controls="explorer" aria-expanded="false"><span></span></button>
+      <button id="panelHandle" class="lp-handle" type="button" aria-label="Show more of the panel" aria-controls="explorer" aria-expanded="false"><svg class="sheet-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg><span></span></button>
       <header class="lp-head">
         <div class="title-block">
           <h1 class="brand"><img src="./brand/alto-wordmark.png?v=tool-0.2.9" alt="ALTO — Aotearoa Long-term Tree Observatory" width="282" height="84" decoding="async"></h1>
@@ -861,7 +862,7 @@
             <h3 class="lp-group-title">Tree display</h3>
             <div class="toggle-list">
               <label class="check" for="showCrowns"><input id="showCrowns" type="checkbox" checked><span>Crown outlines<small>2024 LiDAR survey, from zoom 12</small></span></label>
-              <label class="check" for="showTrunk"><input id="showTrunk" type="checkbox"><span>Size markers by trunk diameter<small>Estimate at 1.3 m, not measured</small></span></label>
+              <label class="check" for="showTrunk"><input id="showTrunk" type="checkbox"><span>Size markers by trunk diameter<small>Estimate at 1.4 m, not measured</small></span></label>
             </div>
             <input id="groupRecords" type="checkbox" checked hidden>
             <p id="recordLinksStatus" class="control-note" role="status" hidden>Loading record matches…</p>
@@ -942,8 +943,10 @@
       <p id="basemapNote" class="basemap-note" role="status" hidden>Street names: OpenStreetMap streets above zoom 16</p>
       <p id="pickBanner" class="pick-banner" role="status" hidden>Tap a parcel to select it · Esc to cancel</p>
     </main>
-    <aside id="treeProfile" class="tree-profile" aria-label="Tree profile" aria-hidden="true" hidden inert data-sheet="peek">
-      <button id="sheetHandle" class="sheet-handle" type="button" aria-label="Expand the panel" aria-expanded="false"><span></span></button>
+    <!-- On a phone the tree or property panel is a bottom sheet (peek, half, full). It opens at half; at peek it is a bar:
+         its handle carries the panel's title on one line (#sheetTitle) beside the close button. -->
+    <aside id="treeProfile" class="tree-profile" aria-label="Tree profile" aria-hidden="true" hidden inert data-sheet="half">
+      <button id="sheetHandle" class="sheet-handle" type="button" aria-label="Minimise the panel" aria-controls="treeProfileBody" aria-expanded="true"><svg class="sheet-chev" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg><span class="sheet-grip"></span><span class="sheet-title" id="sheetTitle"></span></button>
       <div class="tree-profile-head">
         <button id="profileBack" class="profile-back" type="button" hidden>‹ Property</button>
         <h2 id="treeProfileTitle">Tree</h2>
